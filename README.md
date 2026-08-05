@@ -141,22 +141,8 @@ streamlit run app.py
 ```
 
 Uygulama tarayıcınızda otomatik olarak `http://localhost:8501` adresinde açılacaktır. Giriş için `TT-6G-2026-KEY` anahtarını kullanabilirsiniz.
-
 ---
 
-## 🌐 Streamlit Cloud Canlıya Yayınlama Rehberi
-
-Bu proje Streamlit Community Cloud üzerinde sorunsuz çalışacak şekilde yapılandırılmıştır.
-
-1. **[share.streamlit.io](https://share.streamlit.io)** adresine gidin ve GitHub hesabınızla oturum açın.
-2. **"Create app"** veya **"New app"** butonuna tıklayın.
-3. Ayarları şu şekilde yapılandırın:
-   - **Repository:** `zeynep-ebrar-pala/6G-Teknoloji-Patent-Zekas--Platformu`
-   - **Branch:** `main`
-   - **Main file path:** `app.py`
-4. **"Deploy!"** butonuna basarak platformu canlıya alın.
-
----
 
 ## 🛠️ Teknoloji Yığını (Tech Stack)
 
