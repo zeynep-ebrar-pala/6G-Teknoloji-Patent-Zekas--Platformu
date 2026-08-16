@@ -7,7 +7,7 @@ Safe fallback if networkx is missing.
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 # Defensive import for networkx
 try:
@@ -74,35 +74,25 @@ def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
     )
     return fig
 
-def render_technology_performance_chart(tech_id: str) -> go.Figure:
-    """Renders performance metric comparison chart for a selected tech."""
-    metrics_map = {
-        "isac": {"Target 6G": 100, "5G Baseline": 10, "Unit": "Geniş Bant Sinyal (GHz)"},
-        "ris": {"Target 6G": 95, "5G Baseline": 20, "Unit": "Kapsama Artışı (%)"},
-        "cell_free": {"Target 6G": 99.9, "5G Baseline": 90, "Unit": "Hücre Kenarı Deneyimi (%)"},
-        "thz": {"Target 6G": 1000, "5G Baseline": 20, "Unit": "Veri Hızı (Gbps)"},
-        "ai_ran": {"Target 6G": 40, "5G Baseline": 5, "Unit": "Enerji Tasarrufu (%)"},
-        "ntn": {"Target 6G": 100, "5G Baseline": 60, "Unit": "Küresel Kapsama (%)"},
-        "ambient_iot": {"Target 6G": 0.001, "5G Baseline": 10, "Unit": "Güç Tüketimi (mW)"}
-    }
-    
-    data = metrics_map.get(tech_id, {"Target 6G": 100, "5G Baseline": 20, "Unit": "Skor"})
-    
+def render_technology_record_counts_chart(df_counts: pd.DataFrame, tech_label: str) -> go.Figure:
+    """Doğrulanmış patent kayıtlarının yıla göre sayısı — temsili hedef metriği yok."""
     fig = go.Figure()
+    y_col = [c for c in df_counts.columns if c != "Years"][0]
     fig.add_trace(go.Bar(
-        x=["5G Mevcut Durum", "6G Hedeflenen Performans"],
-        y=[data["5G Baseline"], data["Target 6G"]],
-        marker=dict(color=['#0066B3', '#00E5FF']),
-        text=[f"{data['5G Baseline']} {data['Unit']}", f"{data['Target 6G']} {data['Unit']}"],
-        textposition='auto',
-        width=0.4
+        x=df_counts["Years"],
+        y=df_counts[y_col],
+        marker=dict(color="#00E5FF"),
+        name=tech_label,
     ))
-
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
-        title=dict(text=f"<b>5G vs 6G Kıyaslama Metriği ({data['Unit']})</b>", x=0.02, y=0.95, font=dict(size=14, color='#FFFFFF')),
-        yaxis=dict(gridcolor='rgba(200, 209, 220, 0.1)'),
-        height=320
+        title=dict(
+            text=f"<b>Doğrulanmış {tech_label} Patent Kayıt Sayısı / Yıl</b>",
+            x=0.02, y=0.95, font=dict(size=14, color="#FFFFFF"),
+        ),
+        xaxis=dict(title="Yıl", gridcolor="rgba(200, 209, 220, 0.1)", dtick=1),
+        yaxis=dict(title="Kayıt sayısı", gridcolor="rgba(200, 209, 220, 0.1)", rangemode="tozero"),
+        height=320,
     )
     return fig
 
@@ -125,9 +115,9 @@ def render_patent_trends_chart(df_trends: pd.DataFrame) -> go.Figure:
 
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Yıllara Göre 6G Patent Başvuru Trendi (2020-2026)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        title=dict(text="<b>Yıllara Göre 6G Patent Kayıt Sayısı (doğrulanmış küme)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=dict(title="Yıl", gridcolor='rgba(200, 209, 220, 0.1)'),
-        yaxis=dict(title="Kumülatif Patent Sayısı", gridcolor='rgba(200, 209, 220, 0.1)'),
+        yaxis=dict(title="Patent kayıt sayısı", gridcolor='rgba(200, 209, 220, 0.1)'),
         height=420
     )
     return fig
@@ -158,7 +148,7 @@ def render_company_patent_domain_chart(df_domains: pd.DataFrame) -> go.Figure:
         **DARK_LAYOUT_TEMPLATE,
         title=dict(text="<b>Firma Bazlı 6G Teknoloji Yetkinlik Dağılımı (%)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         polar=dict(
-            radialaxis=dict(visible=True, range=[0, 30], gridcolor='rgba(200, 209, 220, 0.15)'),
+            radialaxis=dict(visible=True, range=[0, 100], gridcolor='rgba(200, 209, 220, 0.15)'),
             angularaxis=dict(gridcolor='rgba(200, 209, 220, 0.15)', tickfont=dict(color='#FFFFFF')),
             bgcolor='#121620'
         ),
@@ -207,52 +197,48 @@ def render_academic_trends_chart(df_academic: pd.DataFrame) -> go.Figure:
 
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Akademik Yayın Sayıları Trendi (Konu Bazlı 2020-2026)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        title=dict(text="<b>Akademik Yayın Sayıları Trendi (OpenAlex, konu bazlı)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=dict(title="Yıl", gridcolor='rgba(200, 209, 220, 0.1)'),
         yaxis=dict(title="Yayın Sayısı", gridcolor='rgba(200, 209, 220, 0.1)'),
         height=400
     )
     return fig
 
-def render_academic_database_chart(db_dict: Dict[str, float]) -> go.Figure:
-    """Renders donut chart of database indexing shares."""
-    fig = go.Figure(data=[go.Pie(
-        labels=list(db_dict.keys()),
-        values=list(db_dict.values()),
-        hole=.45,
-        marker=dict(colors=['#0099FF', '#00C2FF', '#00E5FF', '#00C853'])
+def render_academic_database_chart(db_dict: Dict[str, int]) -> go.Figure:
+    """Renders bar chart of verified sample paper publisher counts."""
+    fig = go.Figure(data=[go.Bar(
+        x=list(db_dict.keys()),
+        y=list(db_dict.values()),
+        marker=dict(color=['#0099FF', '#00C2FF', '#00E5FF', '#00C853'][:len(db_dict)])
     )])
     
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Veritabanı Bazında Akademik Yayın Payı (%)</b>", x=0.02, y=0.95, font=dict(size=15, color='#FFFFFF')),
+        title=dict(text="<b>Doğrulanmış Örnek Set — Yayıncı Sayısı</b>", x=0.02, y=0.95, font=dict(size=15, color='#FFFFFF')),
+        yaxis=dict(title="Makale sayısı", gridcolor='rgba(200, 209, 220, 0.1)'),
         height=360
     )
     return fig
 
-def render_patent_network_graph() -> go.Figure:
-    """Renders interactive technology and patent citation graph using NetworkX or Plotly fallback."""
+def render_patent_network_graph(edges: Optional[List[tuple]] = None) -> go.Figure:
+    """Renders assignee–technology domain graph from verified patent edges."""
+    if edges is None:
+        edges = []
+
     if HAS_NETWORKX:
         G = nx.Graph()
-        
-        # Nodes: Tech Domains & Key Assignees
+
         G.add_node("6G Core", size=25, color="#00E5FF")
-        G.add_node("ISAC", size=18, color="#0099FF")
-        G.add_node("RIS", size=18, color="#0099FF")
-        G.add_node("NTN", size=18, color="#0099FF")
-        G.add_node("Huawei", size=15, color="#00C853")
-        G.add_node("Qualcomm", size=15, color="#00C853")
-        G.add_node("Ericsson", size=15, color="#00C853")
-        G.add_node("Nokia", size=15, color="#00C853")
-        G.add_node("Türk Telekom Ar-Ge", size=20, color="#FFB020")
-        
-        # Edges
-        edges = [
-            ("6G Core", "ISAC"), ("6G Core", "RIS"), ("6G Core", "NTN"),
-            ("ISAC", "Huawei"), ("ISAC", "Qualcomm"), ("RIS", "Nokia"),
-            ("RIS", "Qualcomm"), ("NTN", "Ericsson"), ("RIS", "Türk Telekom Ar-Ge"),
-            ("ISAC", "Türk Telekom Ar-Ge")
-        ]
+        domain_nodes = sorted({e[1] for e in edges})
+        assignee_nodes = sorted({e[0] for e in edges})
+
+        for domain in domain_nodes:
+            G.add_node(domain, size=18, color="#0099FF")
+            G.add_edge("6G Core", domain)
+
+        for assignee in assignee_nodes:
+            G.add_node(assignee, size=15, color="#00C853")
+
         G.add_edges_from(edges)
         
         pos = nx.spring_layout(G, seed=42)
@@ -302,22 +288,145 @@ def render_patent_network_graph() -> go.Figure:
         )
         fig = go.Figure(data=[edge_trace, node_trace])
     else:
-        # Fallback direct Plotly scatter graph if networkx is loading
         fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=[0, 1, -1, 0, 2, -2],
-            y=[0, 1, 1, -1, -2, -2],
-            mode='markers+text',
-            text=["6G Core", "ISAC", "RIS", "Türk Telekom Ar-Ge", "Huawei", "Qualcomm"],
-            marker=dict(size=[25, 18, 18, 20, 15, 15], color=['#00E5FF', '#0099FF', '#0099FF', '#FFB020', '#00C853', '#00C853'])
-        ))
+        fig.add_annotation(
+            text="NetworkX yüklü değil; ağ grafiği gösterilemiyor.",
+            showarrow=False,
+            font=dict(color="#94A3B8"),
+        )
 
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>6G Patent & Teknoloji Lisanslama Bağlantı Ağacı (Network Graph)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        title=dict(text="<b>Assignee ↔ Teknoloji Alanı Ağ Grafiği</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         showlegend=False,
         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
         height=450
     )
     return fig
+
+
+def render_company_counts_chart(counts: Dict[str, int]) -> go.Figure:
+    """En çok kayıtlı firmalar — doğrulanmış küme sayımı."""
+    sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+    fig = go.Figure(go.Bar(
+        x=[c for c, _ in sorted_items],
+        y=[n for _, n in sorted_items],
+        marker=dict(color="#0099FF"),
+    ))
+    fig.update_layout(
+        **DARK_LAYOUT_TEMPLATE,
+        title=dict(text="<b>En Çok Kayıtlı Firmalar (doğrulanmış küme)</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
+        xaxis=dict(title="Firma", gridcolor="rgba(200, 209, 220, 0.1)"),
+        yaxis=dict(title="Patent kayıt sayısı", gridcolor="rgba(200, 209, 220, 0.1)"),
+        height=360,
+    )
+    return fig
+
+
+def render_patent_density_heatmap(df_density: pd.DataFrame) -> go.Figure:
+    """Firma × teknoloji alanı yoğunluk ısı haritası."""
+    companies = df_density["Company"].tolist()
+    domains = [c for c in df_density.columns if c != "Company"]
+    z = df_density[domains].values.tolist()
+    fig = go.Figure(data=go.Heatmap(
+        z=z,
+        x=domains,
+        y=companies,
+        colorscale=[[0, "#121620"], [0.5, "#0066B3"], [1, "#00E5FF"]],
+        hoverongaps=False,
+    ))
+    fig.update_layout(
+        **DARK_LAYOUT_TEMPLATE,
+        title=dict(text="<b>Patent Yoğunluğu (firma × alan, kayıt sayısı)</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
+        height=max(360, 40 * len(companies) + 120),
+    )
+    return fig
+
+
+def render_patent_sunburst(df_tree: pd.DataFrame) -> go.Figure:
+    """Firma → alan → patent numarası ağacı."""
+    fig = px.sunburst(
+        df_tree,
+        path=["company", "domain", "patent"],
+        color="domain",
+        color_discrete_sequence=["#0099FF", "#00E5FF", "#00C853", "#FFB020", "#FF5252", "#9333EA", "#EC4899"],
+    )
+    fig.update_layout(
+        **DARK_LAYOUT_TEMPLATE,
+        title=dict(text="<b>Patent Ağacı (firma → alan → kayıt)</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
+        height=480,
+    )
+    fig.update_traces(insidetextorientation="radial")
+    return fig
+
+
+def render_patent_tfidf_map(df_map: pd.DataFrame) -> go.Figure:
+    """Patent başlıklarının TF-IDF + PCA 2D haritası."""
+    fig = px.scatter(
+        df_map,
+        x="x",
+        y="y",
+        color="domain",
+        hover_name="title",
+        hover_data={"company": True, "id": True, "year": True, "x": False, "y": False},
+        color_discrete_sequence=["#0099FF", "#00E5FF", "#00C853", "#FFB020", "#FF5252", "#9333EA", "#EC4899"],
+    )
+    fig.update_traces(marker=dict(size=12, line=dict(width=1, color="#FFFFFF")))
+    fig.update_layout(
+        **DARK_LAYOUT_TEMPLATE,
+        title=dict(text="<b>Patent Teknoloji Haritası (TF-IDF + PCA, başlık vektörleri)</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=dict(title="PCA-1", gridcolor="rgba(200, 209, 220, 0.1)", zeroline=False),
+        yaxis=dict(title="PCA-2", gridcolor="rgba(200, 209, 220, 0.1)", zeroline=False),
+        height=440,
+    )
+    return fig
+
+
+def render_patent_wordcloud(keywords_dict: Dict[str, int]):
+    """Patent başlıklarından kelime bulutu (matplotlib). Başarısızsa None döner."""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        from wordcloud import WordCloud
+    except ImportError:
+        return None
+    if not keywords_dict:
+        return None
+    wc = WordCloud(
+        width=900,
+        height=380,
+        background_color="#1A1F2B",
+        colormap="Blues",
+        prefer_horizontal=0.9,
+        min_font_size=10,
+    ).generate_from_frequencies(keywords_dict)
+    fig, ax = plt.subplots(figsize=(9, 3.8))
+    ax.imshow(wc, interpolation="bilinear")
+    ax.axis("off")
+    fig.patch.set_facecolor("#1A1F2B")
+    ax.set_facecolor("#1A1F2B")
+    fig.tight_layout(pad=0)
+    return fig
+
+
+def render_academic_bar_chart(items: List[Dict[str, Any]], title: str, name_key: str = "name") -> go.Figure:
+    """Kurum veya ülke yayın sayımı (OpenAlex group_by)."""
+    names = [i[name_key] for i in items]
+    counts = [i["count"] for i in items]
+    fig = go.Figure(go.Bar(
+        x=counts,
+        y=names,
+        orientation="h",
+        marker=dict(color="#00C2FF"),
+    ))
+    fig.update_layout(
+        **DARK_LAYOUT_TEMPLATE,
+        title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=dict(title="Yayın sayısı (OpenAlex)", gridcolor="rgba(200, 209, 220, 0.1)"),
+        yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
+        height=max(360, 28 * len(items) + 80),
+    )
+    return fig
+

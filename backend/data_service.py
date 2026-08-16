@@ -36,7 +36,16 @@ class DataService:
         query_lower = query.lower()
         results = {}
         for t_id, data in TECHNOLOGIES.items():
-            content_str = f"{data['title']} {data['acronym']} {data['executive_summary']} {' '.join(data['use_cases'])}".lower()
-            if query_lower in content_str:
+            use_case_text = " ".join(
+                uc.get("title", "") + " " + uc.get("description", "")
+                if isinstance(uc, dict) else str(uc)
+                for uc in data.get("use_cases", [])
+            )
+            content_str = (
+                f"{data['title']} {data['acronym']} {data['executive_summary']} {use_case_text}"
+            ).lower()
+            if query_lower in content_str or any(
+                query_lower in part for part in t_id.split("_")
+            ):
                 results[t_id] = data
         return results

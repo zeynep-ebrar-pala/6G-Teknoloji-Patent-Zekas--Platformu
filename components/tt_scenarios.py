@@ -10,15 +10,10 @@ def render_tt_scenario_calculator():
     """Interactive deployment scenario UI component for Türk Telekom Ar-Ge."""
     
     st.markdown("""<div class="glass-card" style="border-left: 5px solid #0099FF; margin-bottom: 20px;">
-<div style="display: flex; align-items: center; gap: 14px;">
-<span style="font-size: 2.2rem;">🇹🇷</span>
-<div>
-<h3 style="color: #FFFFFF; margin: 0;">Türk Telekom 6G Saha Dağıtım ve Senaryo Çözümleyici</h3>
-<p style="color: #CBD5E1; font-size: 0.92rem; margin-top: 4px; margin-bottom: 0;">
+<h2 style="color: #FFFFFF; margin: 0 0 6px 0; font-size: 1.45rem;">Türk Telekom 6G Saha Dağıtım ve Senaryo Çözümleyici</h2>
+<p style="color: #CBD5E1; font-size: 0.92rem; margin: 0;">
 Türkiye coğrafyası, Türk Telekom altyapısı ve stratejik Ar-Ge hedeflerine göre 6G teknoloji eşleştirme motoru.
 </p>
-</div>
-</div>
 </div>""", unsafe_allow_html=True)
 
     col_inputs, col_results = st.columns([1, 1.15])
@@ -72,6 +67,7 @@ Türkiye coğrafyası, Türk Telekom altyapısı ve stratejik Ar-Ge hedeflerine 
             st.caption(f"💰 Tahmini CAPEX Ölçeği: **{eval_res['capex_estimate']}**")
 
     with col_results:
+        st.caption("KPI değerleri kural tabanlı senaryo motoru çıktısıdır; saha ölçümü değildir.")
         with st.container(border=True):
             st.markdown("### 🎯 Önerilen Türk Telekom Mimarisi ve KPI Analizi")
             

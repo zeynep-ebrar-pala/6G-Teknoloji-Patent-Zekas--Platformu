@@ -93,7 +93,7 @@ class ScenarioEngine:
         elif "Düşük Enerji" in priority_input:
             if "Ambient IoT" not in recommended_techs and "AI-Native RAN" not in recommended_techs:
                 recommended_techs.append("AI-Native RAN")
-            priority_kpi = "%60 Şebeke Enerji Tasarrufu & Yeşil 6G Standartları"
+            priority_kpi = "Yeşil 6G — yüksek enerji verimliliği hedefi (AI-RAN derin uyku)"
             energy_score = 98
             feasibility_score += 3
         elif "Afet Dayanıklılığı" in priority_input:

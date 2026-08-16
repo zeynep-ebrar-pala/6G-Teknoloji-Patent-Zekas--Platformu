@@ -1,101 +1,197 @@
 """
 Türk Telekom 6G AI Assistant Service
-Rule-based + RAG-ready knowledge retrieval engine answering user queries about 6G technologies, patents, and Türk Telekom strategic scenarios.
+sklearn TF-IDF yerel geri getirme + Groq / Gemini.
+LLM yalnızca getirilen doğrulanmış parçaları kullanır.
 """
 
-from typing import Dict, Any, List
+from __future__ import annotations
+
+import re
+from typing import Any, Dict, List, Optional
+
+from backend.academic_service import AcademicService
+from backend.data_service import DataService
+from backend.patent_service import PatentService
+
+
+def _strip_html(text: str) -> str:
+    return re.sub(r"<[^>]+>", " ", text or "").replace("\n", " ").strip()
+
+
+def _corpus() -> List[Dict[str, str]]:
+    """Modül 1–3 doğrulanmış metin parçaları."""
+    chunks: List[Dict[str, str]] = []
+    for tech in DataService.get_all_technologies().values():
+        body = " ".join(
+            [
+                tech.get("title", ""),
+                tech.get("acronym", ""),
+                _strip_html(tech.get("executive_summary", "")),
+                _strip_html(tech.get("working_principle", "")),
+                _strip_html(tech.get("system_architecture", "")),
+                " ".join(tech.get("advantages", [])),
+                " ".join(tech.get("disadvantages", [])),
+            ]
+        )
+        chunks.append(
+            {
+                "id": f"tech:{tech['id']}",
+                "title": f"{tech['acronym']} — {tech['title']} (TRL {tech['trl']})",
+                "text": body,
+            }
+        )
+    for pat in PatentService.get_top_patents():
+        chunks.append(
+            {
+                "id": f"patent:{pat['publication_number']}",
+                "title": f"{pat['publication_number']} — {pat['title']}",
+                "text": f"{pat['title']} {pat.get('assignee','')} {pat.get('domain','')} {pat.get('abstract','')}",
+            }
+        )
+    for paper in AcademicService.get_most_cited_papers():
+        cite = paper.get("citations")
+        cite_txt = f"{cite} atıf" if isinstance(cite, int) else "atıf sayısı OpenAlex'ten alınamadı"
+        chunks.append(
+            {
+                "id": f"paper:{paper.get('doi','')}",
+                "title": paper["title"],
+                "text": f"{paper['title']} {paper.get('authors','')} {paper.get('journal','')} {cite_txt} DOI {paper.get('doi','')}",
+            }
+        )
+    return chunks
+
+
+def _retrieve(question: str, k: int = 6) -> List[Dict[str, str]]:
+    chunks = _corpus()
+    if not chunks:
+        return []
+    try:
+        from sklearn.feature_extraction.text import TfidfVectorizer
+        from sklearn.metrics.pairwise import cosine_similarity
+    except ImportError:
+        q = question.lower()
+        scored = []
+        for ch in chunks:
+            hay = (ch["title"] + " " + ch["text"]).lower()
+            score = sum(1 for w in q.split() if len(w) > 3 and w in hay)
+            scored.append((score, ch))
+        scored.sort(key=lambda x: x[0], reverse=True)
+        return [c for s, c in scored[:k] if s > 0] or chunks[:k]
+
+    docs = [c["title"] + " " + c["text"] for c in chunks]
+    vectorizer = TfidfVectorizer(stop_words="english")
+    matrix = vectorizer.fit_transform(docs + [question])
+    sims = cosine_similarity(matrix[-1], matrix[:-1]).flatten()
+    ranked = sorted(enumerate(sims), key=lambda x: x[1], reverse=True)
+    selected = []
+    for idx, score in ranked[:k]:
+        if score <= 0:
+            continue
+        item = dict(chunks[idx])
+        item["score"] = f"{score:.3f}"
+        selected.append(item)
+    return selected or chunks[: min(k, len(chunks))]
+
+
+def _format_context(chunks: List[Dict[str, str]]) -> str:
+    lines = [
+        "=== DOĞRULANMIŞ 6G VERİ BAĞLAMI (TF-IDF ile seçilmiş parçalar) ===",
+        "KURAL: Bu bağlamda olmayan sayı, patent ID veya makale uydurma.",
+        "Emin değilsen 'Platform verisinde bu bilgi yok' de.",
+        "",
+    ]
+    for ch in chunks:
+        lines.append(f"[{ch['id']}] {ch['title']}")
+        lines.append(ch["text"][:900])
+        lines.append("")
+    return "\n".join(lines)
+
+
+def _answer_with_groq(question: str, api_key: str, context: str) -> str:
+    from groq import Groq
+
+    client = Groq(api_key=api_key)
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "Türk Telekom 6G Ar-Ge asistanısın. Yalnızca verilen bağlamı kullan. "
+                    "Tahmin veya uydurma yapma.\n\n" + context
+                ),
+            },
+            {"role": "user", "content": question},
+        ],
+        temperature=0.2,
+        max_tokens=900,
+    )
+    return response.choices[0].message.content or ""
+
+
+def _answer_with_gemini(question: str, api_key: str, context: str) -> str:
+    from google import genai
+
+    client = genai.Client(api_key=api_key)
+    prompt = (
+        "Türk Telekom 6G Ar-Ge asistanısın. Yalnızca aşağıdaki doğrulanmış bağlamı kullan; "
+        "bilgi yoksa uydurma.\n\n"
+        f"{context}\n\nKullanıcı sorusu: {question}"
+    )
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=prompt,
+    )
+    return response.text or ""
+
+
+def _fallback_from_chunks(question: str, chunks: List[Dict[str, str]]) -> str:
+    if not chunks:
+        return (
+            "### 6G Asistan (veri tabanlı mod)\n\n"
+            "Sorunuz platform veri kümesinde eşleşmedi. "
+            "6G Teknolojileri, Patent Zekası veya Yayın Trendleri sayfalarındaki "
+            "doğrulanmış kaynakları inceleyin."
+        )
+    parts = [f"### {chunks[0]['title']}\n\n{chunks[0]['text'][:700]}"]
+    if len(chunks) > 1:
+        extras = "\n".join(f"- {c['title']}" for c in chunks[1:4])
+        parts.append(f"\n\n**İlgili doğrulanmış kayıtlar:**\n{extras}")
+    parts.append("\n\n*Yanıt TF-IDF ile seçilen platform kayıtlarındandır; sayı uydurulmaz.*")
+    return "".join(parts)
+
 
 class AIAssistantService:
-    """Intelligent Q&A Assistant Service for Türk Telekom 6G Platform."""
-
-    KNOWLEDGE_BASE = {
-        "isac": {
-            "title": "ISAC (Integrated Sensing and Communication)",
-            "summary": "ISAC, 6G baz istasyonlarının ve frekans bantlarının hem yüksek hızlı veri aktarımı hem de radyo frekanslı radar algılama (nesne tespiti, konumlandırma, hız tayini) yapabilmesini sağlayan çığır açıcı teknolojidir.",
-            "tt_use_case": "Türk Telekom akıllı otoyol takibi, İHA/Drone trafik yönetimi, stadyum ve sınır güvenliği alanlarında radar ve mobil kapsama birleştirerek devasa maliyet avantajı yakalar.",
-            "key_patent_holder": "Huawei ve Ericsson"
-        },
-        "ris": {
-            "title": "RIS (Reconfigurable Intelligent Surfaces)",
-            "summary": "RIS, sinyalleri pasif metamalzeme yansıtan yüzeylerle istenen yöne kıran ve kapsama kör noktalarını ek enerji harcamadan ortadan kaldıran akıllı yüzey teknolojisidir.",
-            "tt_use_case": "Türk Telekom'un yoğun şehir içi binalarının arkasındaki kör noktaları ve metro istasyon çıkışlarını ultra düşük maliyetle 6G sinyali ile kapsamasını sağlar.",
-            "key_patent_holder": "Nokia, Qualcomm ve Samsung"
-        },
-        "cell_free": {
-            "title": "Cell-Free Massive MIMO",
-            "summary": "Geleneksel hücre (cell) sınırlarını kaldırarak kullanıcının etrafındaki onlarca küçük erişim noktasının (AP) aynı anda aynı frekansta kullanıcıya hizmet vermesidir.",
-            "tt_use_case": "Stadyumlar, havalimanları ve konser alanlarında 'hücre kenarı kesintisi' yaşamadan kesintisiz 1 Gbps+ kullanıcı deneyimi sunar.",
-            "key_patent_holder": "Ericsson ve Qualcomm"
-        },
-        "ntn": {
-            "title": "NTN (Non-Terrestrial Networks)",
-            "summary": "LEO/GEO uyduları ve HAPS (yüksek irtifa balon/İHA platformları) ile karasal 6G şebekelerinin 3GPP standartlarında doğrudan entegrasyonudur.",
-            "tt_use_case": "Türk Telekom'un kapsama alanı dışında kalan dağlık bölgelerde, denizcilik ve doğal afet anlarında sıfır kesinti ile iletişim garantisi verir.",
-            "key_patent_holder": "Huawei, Samsung ve Qualcomm"
-        },
-        "thz": {
-            "title": "THz (Terahertz) Communication",
-            "summary": "0.1 THz ile 10 THz frekans aralığında 100 Gbps ile 1 Tbps arası ultra yüksek veri hızları sağlayan 6G spektrum katmanıdır.",
-            "tt_use_case": "Veri merkezleri arası kablosuz haberleşme (Wireless Backhaul), holografik canlı yayın ve 8K canlı yayın aktarımında kullanılır.",
-            "key_patent_holder": "Qualcomm ve Samsung"
-        },
-        "ai_ran": {
-            "title": "AI-Native RAN",
-            "summary": "Radyo erişim ağının PHY ve MAC katmanlarının derin öğrenme modelleri ve nöral ağlar ile otomatik olarak dinamik yönetilmesidir.",
-            "tt_use_case": "Türk Telekom baz istasyonlarının enerji tüketimini %40'a varan oranlarda azaltır ve dinamik spektrum paylaşımını anlık optimize eder.",
-            "key_patent_holder": "Nokia, Intel ve Huawei"
-        },
-        "ambient_iot": {
-            "title": "Ambient IoT (Zero-Energy IoT)",
-            "summary": "Pilsiz (batteryless) mikro sensörlerin ortamdaki RF dalgalarından enerji hasadı yaparak geri saçılım (backscatter) ile veri iletmesidir.",
-            "tt_use_case": "Türk Telekom akıllı tarım, tedarik zinciri ve milyonlarca pilsiz sensör takibini sıfır pil değişim maliyetiyle yürütür.",
-            "key_patent_holder": "Samsung ve Qualcomm"
-        }
-    }
+    """Groq/Gemini destekli, TF-IDF geri getirmeli 6G asistan servisi."""
 
     @classmethod
-    def answer_question(cls, question: str) -> Dict[str, Any]:
-        """Processes user query and generates dynamic corporate response."""
-        q_lower = question.lower()
-        
-        # Check direct technology matches
-        matched_tech = None
-        for key, tech_data in cls.KNOWLEDGE_BASE.items():
-            if key in q_lower or tech_data["title"].lower() in q_lower or key.replace("_", "") in q_lower:
-                matched_tech = tech_data
-                break
+    def answer_question(
+        cls,
+        question: str,
+        provider: Optional[str] = None,
+        api_key: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        if not (question or "").strip():
+            return {"response": "Lütfen bir soru yazın.", "type": "error"}
 
-        if "fark" in q_lower or "karşılaştır" in q_lower or "vs" in q_lower:
-            return {
-                "response": "### ⚖️ 6G Teknoloji Karşılaştırma Analizi\n\n"
-                            "**ISAC vs RIS:** ISAC hem haberleşme hem radyo algılama yaparken (aktif sinyal üretir), RIS sadece var olan sinyali akıllıca yansıtır (pasif metamalzeme).\n\n"
-                            "**NTN vs Karasal Ağlar:** NTN uydular ile kapsama boşluklarını kapatır; karasal ağlar ise yüksek kapasiteli şehir merkezlerini besler.\n\n"
-                            "**Türk Telekom Stratejisi:** Hibrit mimari ile şehirlerde RIS + Cell-Free, kırsal ve lojistikte NTN + ISAC kullanımı hedeflenmektedir.",
-                "type": "comparison"
-            }
+        chunks = _retrieve(question)
+        context = _format_context(chunks)
+        provider = (provider or "groq").lower()
+        key = (api_key or "").strip()
 
-        if matched_tech:
-            return {
-                "response": f"### 📡 {matched_tech['title']}\n\n"
-                            f"**Özet:** {matched_tech['summary']}\n\n"
-                            f"**🇹🇷 Türk Telekom Kullanım Senaryosu:** {matched_tech['tt_use_case']}\n\n"
-                            f"**🏆 Öncü Patent Sahipleri:** {matched_tech['key_patent_holder']}",
-                "type": "technology_detail"
-            }
+        if key and provider in ("groq", "gemini"):
+            try:
+                if provider == "gemini":
+                    text = _answer_with_gemini(question, key, context)
+                else:
+                    text = _answer_with_groq(question, key, context)
+                if text.strip():
+                    return {"response": text, "type": "llm"}
+            except Exception as exc:
+                fallback = _fallback_from_chunks(question, chunks)
+                return {
+                    "response": f"{fallback}\n\n---\n*LLM yanıtı alınamadı: {exc}*",
+                    "type": "fallback",
+                }
 
-        if "patent" in q_lower:
-            return {
-                "response": "### 📊 6G Patent Liderliği Analizi\n\n"
-                            "Güncel 6G patent başvurularında **Huawei**, **Qualcomm** ve **Samsung** toplam patent portföyünün %60'ından fazlasını elinde tutmaktadır.\n\n"
-                            "Türk Telekom Ar-Ge ekibi, öncelikli olarak **RIS (Yansıtıcı Yüzeyler)** ve **ISAC (Entegre Algılama)** konularında yerli patent başvuru süreçlerini yürütmektedir.",
-                "type": "patent_info"
-            }
-
-        # Fallback intelligent answer
-        return {
-            "response": f"### 🤖 Türk Telekom 6G AI Asistanı\n\n"
-                        f"Sorunuz ('*{question}*') 6G Ar-Ge bilgi tabanımızda analiz edildi.\n\n"
-                        f"6G vizyonunda **1 Tbps pik veri hızı**, **0.1 ms gecikme**, **ISAC algılama**, **RIS akıllı yüzeyler** ve **AI-Native şebeke** mimarisi öne çıkmaktadır. "
-                        f"Detaylı bilgi için sol menüden '6G Teknolojileri' veya 'Patent Intelligence' sayfalarını ziyaret edebilirsiniz.",
-            "type": "general"
-        }
+        return {"response": _fallback_from_chunks(question, chunks), "type": "fallback"}

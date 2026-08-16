@@ -1,106 +1,227 @@
 """
-Türk Telekom 6G Patent Intelligence Dataset
-Contains company patent data, annual trends, topic distributions, keyword frequencies, and patent graph relationships.
+Doğrulanmış 6G patent veri kümesi.
+Her kayıt Google Patents / USPTO üzerinden kontrol edilebilir.
+Kaynak: patents.google.com — assignee + teknoloji anahtar kelime taraması (Şubat 2026).
 """
 
-PATENT_COMPANIES = ["Huawei", "Qualcomm", "Samsung", "Ericsson", "Nokia", "ZTE", "NEC", "Intel"]
+PATENT_DATA_SOURCE = "Google Patents / USPTO — doğrulanmış kayıtlar"
 
-TECHNOLOGY_DOMAINS = [
-    "ISAC (Integrated Sensing & Comm)",
-    "RIS (Reconfigurable Surfaces)",
-    "Cell-Free Massive MIMO",
-    "THz & Sub-THz Communications",
-    "AI-Native RAN & O-RAN",
-    "NTN (Non-Terrestrial Networks)",
-    "Ambient IoT & Energy Harvesting"
+# Şartnamede zorunlu firmalar (kayıt yoksa UI boş durum gösterir; sayı uydurulmaz)
+SPEC_COMPANIES = [
+    "Nokia",
+    "Ericsson",
+    "Huawei",
+    "Samsung",
+    "Qualcomm",
 ]
 
-# Annual Patent Application Trends (2020 - 2026)
-PATENT_TRENDS = {
-    "Years": [2020, 2021, 2022, 2023, 2024, 2025, 2026],
-    "Huawei": [450, 780, 1250, 1890, 2450, 3100, 3800],
-    "Qualcomm": [380, 620, 1020, 1540, 2100, 2750, 3350],
-    "Samsung": [310, 540, 890, 1380, 1850, 2400, 2950],
-    "Ericsson": [280, 480, 760, 1150, 1600, 2050, 2500],
-    "Nokia": [250, 430, 710, 1080, 1500, 1920, 2380],
-    "ZTE": [190, 340, 580, 890, 1220, 1600, 1980],
-    "NEC": [110, 210, 350, 520, 740, 980, 1250],
-    "Intel": [90, 180, 290, 430, 610, 820, 1050]
-}
+# Doğrulanmış veri kümesinde en az bir kaydı olan assignee'ler
+PATENT_COMPANIES = [
+    "Nokia",
+    "Huawei",
+    "Qualcomm",
+    "Samsung",
+    "Ericsson",
+    "InterDigital",
+    "Northeastern Univ.",
+    "AT&T",
+    "Deutsche Telekom",
+    "LG Electronics",
+]
 
-# Patent Share by Technology Domain per Company
-COMPANY_DOMAIN_DISTRIBUTION = {
-    "Huawei": {"ISAC": 28, "RIS": 20, "Cell-Free": 15, "THz": 12, "AI-RAN": 15, "NTN": 7, "Ambient IoT": 3},
-    "Qualcomm": {"ISAC": 22, "RIS": 15, "Cell-Free": 18, "THz": 18, "AI-RAN": 14, "NTN": 8, "Ambient IoT": 5},
-    "Samsung": {"ISAC": 18, "RIS": 22, "Cell-Free": 14, "THz": 16, "AI-RAN": 16, "NTN": 9, "Ambient IoT": 5},
-    "Ericsson": {"ISAC": 25, "RIS": 18, "Cell-Free": 20, "THz": 10, "AI-RAN": 17, "NTN": 6, "Ambient IoT": 4},
-    "Nokia": {"ISAC": 24, "RIS": 24, "Cell-Free": 16, "THz": 8, "AI-RAN": 18, "NTN": 6, "Ambient IoT": 4},
-    "ZTE": {"ISAC": 20, "RIS": 21, "Cell-Free": 17, "THz": 11, "AI-RAN": 15, "NTN": 10, "Ambient IoT": 6},
-    "NEC": {"ISAC": 19, "RIS": 25, "Cell-Free": 15, "THz": 14, "AI-RAN": 13, "NTN": 8, "Ambient IoT": 6},
-    "Intel": {"ISAC": 15, "RIS": 12, "Cell-Free": 12, "THz": 15, "AI-RAN": 28, "NTN": 10, "Ambient IoT": 8}
-}
+TECHNOLOGY_DOMAINS = [
+    "ISAC",
+    "RIS",
+    "Cell-Free",
+    "THz",
+    "AI-RAN",
+    "NTN",
+    "Ambient IoT",
+]
 
-# Top Keywords and Frequency in 6G Patent Claims
-PATENT_KEYWORDS = {
-    "Beamforming": 1420,
-    "Sensing Matrix": 1180,
-    "Phase Shift Profile": 1050,
-    "Deep Reinforcement Learning": 980,
-    "Sub-THz Channel Estimation": 870,
-    "Zero Energy Transceiver": 760,
-    "Satellite Direct-to-Cell": 690,
-    "Distributed MIMO Processing": 640,
-    "Joint Waveform Design": 580,
-    "Metamaterial Surface": 530,
-    "Semantic Communications": 490,
-    "O-RAN xApp/rApp": 440
-}
-
-# Sample Key Patents for Intelligence Feed
-TOP_PATENTS_FEED = [
+# Doğrulanmış patent kayıtları — uydurma ID veya atıf sayısı yok
+VERIFIED_PATENTS = [
     {
-        "id": "EP-4019283-B1",
-        "title": "Integrated Sensing and Communications (ISAC) Waveform Optimization in Terahertz Bands",
-        "assignee": "Huawei Technologies",
+        "id": "US12284655B2",
+        "title": "Waveform adaptation for integrated communications and sensing",
+        "assignee": "Huawei Technologies Co., Ltd.",
         "year": 2025,
-        "domain": "ISAC & THz",
-        "citations": 142,
-        "abstract": "Methods and apparatuses for dual-functional radar-communication (DFRC) waveform generation leveraging spatio-temporal beamforming in sub-THz spectrum."
+        "domain": "ISAC",
+        "url": "https://patents.google.com/patent/US12284655B2/en",
+        "abstract": "ICS (Integrated Communications and Sensing) sinyalleri için hem iletişim hem algılama uygulamalarına uygun dalga şekli seçimi ve adaptasyonu.",
     },
     {
-        "id": "US-11894921-B2",
-        "title": "Active Reconfigurable Intelligent Surfaces (RIS) with Phase-Shift Self-Calibration",
+        "id": "US12562882B2",
+        "title": "Method and apparatus for sensing and communication",
+        "assignee": "Huawei Technologies Co., Ltd.",
+        "year": 2026,
+        "domain": "ISAC",
+        "url": "https://patents.google.com/patent/US12562882B2/en",
+        "abstract": "Algılama parametrelerine göre çerçeve yapılandırması; iletişim ve algılama sinyallerinin aynı spektrum kaynağını paylaşması.",
+    },
+    {
+        "id": "US20240406702A1",
+        "title": "Sensing operation using a mobile base station",
+        "assignee": "Qualcomm Inc.",
+        "year": 2024,
+        "domain": "ISAC",
+        "url": "https://patents.google.com/patent/US20240406702A1/en",
+        "abstract": "Mobil baz istasyonu kullanarak bistatik algılama (bistatic sensing) operasyonlarının etkinleştirilmesi.",
+    },
+    {
+        "id": "US12463692B2",
+        "title": "Reconfigurable intelligent surface (RIS)-assisted sensing",
+        "assignee": "Qualcomm Inc.",
+        "year": 2025,
+        "domain": "RIS",
+        "url": "https://patents.google.com/patent/US12463692B2/en",
+        "abstract": "RIS destekli algılama için karşılıklı (reciprocal) RIS hüzme çiftlerinin yapılandırılması.",
+    },
+    {
+        "id": "US20240106499A1",
+        "title": "Communications via a reconfigurable intelligent surface (RIS)",
         "assignee": "Qualcomm Inc.",
         "year": 2024,
         "domain": "RIS",
-        "citations": 118,
-        "abstract": "Self-optimizing active RIS architecture designed for dynamic NLOS blockage compensation in dense urban 6G micro-cells."
+        "url": "https://patents.google.com/patent/US20240106499A1/en",
+        "abstract": "RIS üzerinden kablosuz iletişim; RIS yapılandırma aralığı ve kontrol kanalı parametreleri.",
     },
     {
-        "id": "WO-2025-089123-A1",
-        "title": "Cell-Free Massive MIMO Joint Channel Estimation and Pilot Allocation via Federated Learning",
-        "assignee": "Ericsson AB",
-        "year": 2025,
-        "domain": "Cell-Free MIMO",
-        "citations": 95,
-        "abstract": "Distributed processing nodes coordinating AP cluster selection and power allocation for ultra-dense cell-free deployments."
-    },
-    {
-        "id": "US-11990155-B1",
-        "title": "AI-Native RAN Scheduling and PHY-Layer Autoencoder Architecture",
-        "assignee": "Nokia Solutions & Networks",
+        "id": "US12192043B2",
+        "title": "Reconfigurable intelligent surface (RIS) based beamforming and/or modulation",
+        "assignee": "InterDigital Patent Holdings Inc.",
         "year": 2024,
-        "domain": "AI-Native RAN",
-        "citations": 88,
-        "abstract": "End-to-end neural network transceiver adaptation using deep learning for non-linear power amplifier distortion correction."
+        "domain": "RIS",
+        "url": "https://patents.google.com/patent/US12192043B2/en",
+        "abstract": "RIS elemanlarının faz profili ile hüzme şekillendirme ve modülasyon.",
     },
     {
-        "id": "EP-4102933-A1",
-        "title": "Ambient IoT Energy Harvesting and Backscatter Communication Protocol",
-        "assignee": "Samsung Electronics",
+        "id": "US11916623B2",
+        "title": "Methods and apparatuses for cell-free massive MIMO communication",
+        "assignee": "Telefonaktiebolaget LM Ericsson AB",
+        "year": 2024,
+        "domain": "Cell-Free",
+        "url": "https://patents.google.com/patent/US11916623B2/en",
+        "abstract": "Cell-free massive MIMO sisteminde terminal verisi iletimi; dağıtık AP kümeleme ve merkezi işleme.",
+    },
+    {
+        "id": "US11349530B2",
+        "title": "Antenna arrangement for distributed massive MIMO",
+        "assignee": "Telefonaktiebolaget LM Ericsson AB",
+        "year": 2022,
+        "domain": "Cell-Free",
+        "url": "https://patents.google.com/patent/US11349530B2/en",
+        "abstract": "Coğrafi olarak dağıtılmış anten düzenlemesi; cell-free / distributed MIMO mimarisi.",
+    },
+    {
+        "id": "US12526844B2",
+        "title": "PRACH configuration for NR over NTN",
+        "assignee": "Telefonaktiebolaget LM Ericsson AB",
+        "year": 2026,
+        "domain": "NTN",
+        "url": "https://patents.google.com/patent/US12526844B2/en",
+        "abstract": "Karasal olmayan ağlarda (NTN) NR fiziksel rastgele erişim kanalı (PRACH) yapılandırması.",
+    },
+    {
+        "id": "US11903051B2",
+        "title": "Feeder link switch for airborne/orbital node in non-terrestrial network",
+        "assignee": "Telefonaktiebolaget LM Ericsson AB",
+        "year": 2024,
+        "domain": "NTN",
+        "url": "https://patents.google.com/patent/US11903051B2/en",
+        "abstract": "Hava/ yörünge platformlarında feeder link anahtarlama; NTN ağ düğümü yönetimi.",
+    },
+    {
+        "id": "US11997593B2",
+        "title": "Enhanced cell selection for non-terrestrial networks",
+        "assignee": "Telefonaktiebolaget LM Ericsson AB",
+        "year": 2024,
+        "domain": "NTN",
+        "url": "https://patents.google.com/patent/US11997593B2/en",
+        "abstract": "NTN senaryolarında uydu/hücre seçimi ve camping optimizasyonu.",
+    },
+    {
+        "id": "US12127059B2",
+        "title": "Intelligence and learning in O-RAN for 5G and 6G cellular networks",
+        "assignee": "Northeastern University",
+        "year": 2024,
+        "domain": "AI-RAN",
+        "url": "https://patents.google.com/patent/US12127059B2/en",
+        "abstract": "O-RAN mimarisinde derin pekiştirmeli öğrenme (DRL) ile RIC tabanlı ağ zekâsı.",
+    },
+    {
+        "id": "US11026103B2",
+        "title": "Machine learning deployment in radio access networks",
+        "assignee": "AT&T Intellectual Property I, L.P.",
+        "year": 2021,
+        "domain": "AI-RAN",
+        "url": "https://patents.google.com/patent/US11026103B2/en",
+        "abstract": "RAN ortamında makine öğrenmesi modeli dağıtımı ve yönetimi.",
+    },
+    {
+        "id": "US8755692B2",
+        "title": "Wireless data transmission with terahertz waves",
+        "assignee": "Deutsche Telekom AG",
+        "year": 2014,
+        "domain": "THz",
+        "url": "https://patents.google.com/patent/US8755692B2/en",
+        "abstract": "Terahertz dalgaları ile kablosuz veri iletimi; alıcı/verici THz RF zinciri.",
+    },
+    {
+        "id": "KR20230173474A",
+        "title": "Power control in wireless communication systems (6G / THz context)",
+        "assignee": "Samsung Electronics Co., Ltd.",
+        "year": 2023,
+        "domain": "THz",
+        "url": "https://patents.google.com/patent/KR20230173474A/en",
+        "abstract": "6G ve Terahertz spektrumunda güç kontrolü; Sub-6GHz'den THz bandına kadar iletim.",
+    },
+    {
+        "id": "WO2025234796A1",
+        "title": "Method for ambient IoT communication, and device therefor",
+        "assignee": "LG Electronics Inc.",
         "year": 2025,
         "domain": "Ambient IoT",
-        "citations": 76,
-        "abstract": "Ultra-low power passive backscatter signaling using RF energy harvesting in ambient 6G sub-6GHz and mmWave signals."
-    }
+        "url": "https://patents.google.com/patent/WO2025234796A1/en",
+        "abstract": "Ambient IoT cihazlarında geri saçılım (backscatter) ile düşük güçlü iletişim protokolü.",
+    },
+    {
+        "id": "WO2022182543A3",
+        "title": "RIS acquisition procedure based on sidelink discovery",
+        "assignee": "Qualcomm Inc.",
+        "year": 2022,
+        "domain": "RIS",
+        "url": "https://patents.google.com/patent/WO2022182543A3/en",
+        "abstract": "Sidelink keşfi üzerinden RIS bilgisi edinimi ve baz istasyonuna iletimi.",
+    },
+    {
+        "id": "WO2024086985A1",
+        "title": "Method and apparatus for interaction sensing",
+        "assignee": "Nokia Technologies Oy",
+        "year": 2024,
+        "domain": "ISAC",
+        "url": "https://patents.google.com/patent/WO2024086985A1/en",
+        "abstract": "Mobil iletişim cihazlarında etkileşim algılama (interaction sensing); radar ve zaman dilimi kaynaklı algılama.",
+    },
+    {
+        "id": "WO2025065478A1",
+        "title": "Active sensing in joint communication and sensing",
+        "assignee": "Nokia Technologies Oy",
+        "year": 2025,
+        "domain": "ISAC",
+        "url": "https://patents.google.com/patent/WO2025065478A1/en",
+        "abstract": "Ortak iletişim ve algılama (joint communication and sensing) için aktif algılama hüzme yönetimi.",
+    },
+    {
+        "id": "WO2025030345A1",
+        "title": "Mechanism for selecting a non-terrestrial network device",
+        "assignee": "Nokia Technologies Oy",
+        "year": 2025,
+        "domain": "NTN",
+        "url": "https://patents.google.com/patent/WO2025030345A1/en",
+        "abstract": "Karasal olmayan ağ (NTN) cihazı seçimi; aday NTN düğümleri arasından terminal seçimi.",
+    },
 ]
+
+# Geriye dönük uyumluluk
+TOP_PATENTS_FEED = VERIFIED_PATENTS

@@ -45,11 +45,26 @@ TECHNOLOGIES = {
             "$$CRB(\\theta) \\ge \\frac{1}{J(\\theta)}, \\quad C_{com} = B \\log_2 \\left(1 + \\frac{P_{com}|h|^2}{\\sigma_n^2}\\right)$$"
         ),
         "use_cases": [
-            "Otonom Araçlar & V2X Trafik Güvenliği (Kör nokta ve sis içi nesne tespiti)",
-            "Alçak İrtifa İHA/Dron Trafik Yönetimi (UTM) & İzinsiz Dron Engelleme",
-            "Akıllı Şehirler & Trafik Yoğunluğu / Yaya Akışı Haritalama",
-            "Endüstriyel Depo Otonom Robot (AGV) Navigasyonu",
-            "Sağlık & Yaşlı Bakımı (Kamera kullanmadan nefes/kalp atışı ve düşme tespiti)"
+            {
+                "title": "Otonom Araçlar & V2X Trafik Güvenliği",
+                "description": "Baz istasyonu hem veri taşır hem radar gibi çalışarak kör nokta ve sis altındaki araçları tespit eder; çarpışma önleme sistemlerine santimetre hassasiyetinde konum verir."
+            },
+            {
+                "title": "Alçak İrtifa İHA/Dron Trafik Yönetimi (UTM)",
+                "description": "6G kuleleri şehir üzerindeki ticari ve kaçak dronları duvar arkasından bile algılayarak hava koridorlarının güvenliğini ve izinsiz uçuşların engellenmesini sağlar."
+            },
+            {
+                "title": "Akıllı Şehir Trafik & Yaya Akışı Haritalama",
+                "description": "Kamera kurulmadan baz istasyonu sinyalleriyle kavşaklardaki araç yoğunluğu ve yaya hareketliliği gerçek zamanlı haritalanır; akıllı trafik ışığı optimizasyonu beslenir."
+            },
+            {
+                "title": "Endüstriyel Depo Otonom Robot (AGV) Navigasyonu",
+                "description": "Kapalı depolarda AGV'ler GPS veya LiDAR olmadan ISAC sinyalleriyle engelleri ve diğer robotları algılayarak çarpışmasız, milimetre doğrulukta rota izler."
+            },
+            {
+                "title": "Sağlık & Yaşlı Bakımı (Kamerasız İzleme)",
+                "description": "Ev içinde RF algılama ile nefes ritmi, kalp atışı ve düşme olayları gizlilik ihlali yapmadan tespit edilir; acil durum otomatik bildirimi tetiklenir."
+            },
         ],
         "advantages": [
             "Ek Radar Donanımı Maliyetini Sıfıra İndirme (Mevcut 6G şebekesi radar görevi görür)",
@@ -74,9 +89,18 @@ TECHNOLOGIES = {
             "<strong>AFAD Entegre Deprem Enkaz Algılama:</strong> Deprem anında binaların enkaz altındaki hareketliliklerin duvar arkası RF algılama ile kameralar olmadan tespiti."
         ],
         "references": [
-            "F. Liu et al., 'Integrated Sensing and Communications: Toward Dual-Functional Design for 6G', IEEE Transactions on Communications, 2022.",
-            "3GPP TR 22.837: 'Feasibility Study on Integrated Sensing and Communication (ISAC) for 6G', Rel-19.",
-            "Hexa-X Deliverable D3.2: 'Localization and sensing display in 6G environment'."
+            {
+                "text": "F. Liu et al., 'Integrated Sensing and Communications: Toward Dual-Functional Wireless Networks for 6G and Beyond', IEEE Journal on Selected Areas in Communications, 2022.",
+                "url": "https://doi.org/10.1109/jsac.2022.3156632"
+            },
+            {
+                "text": "3GPP TR 22.837: 'Study on Integrated Sensing and Communication', Rel-19.",
+                "url": "https://www.3gpp.org/DynaReport/22837.htm"
+            },
+            {
+                "text": "Hexa-X-II Deliverable D3.2: 'Initial architectural enablers'.",
+                "url": "https://hexa-x-ii.eu/wp-content/uploads/2023/11/Hexa-X-II_D3.2_v1.0.pdf"
+            }
         ]
     },
 
@@ -120,11 +144,26 @@ TECHNOLOGIES = {
             "$$P_r \\propto N^2 \\cdot |h_{Tx-RIS}|^2 \\cdot |h_{RIS-Rx}|^2$$"
         ),
         "use_cases": [
-            "Görüş Hattı Olmayan (N-LoS) Şehir İçi Binalar Arası Kapsama",
-            "Tüneller, Metro İstasyonları ve Yeraltı Tesisleri Sinyal Güçlendirme",
-            "İç Mekan (Home/Office) Ultra Yüksek Hızlı mmWave/THz Bağlantısı",
-            "Yeşil Haberleşme (Green Communications) & Düşük Karbon Ayak İzi",
-            "ISAC ile Entegre Konumlandırma & Yansıtmalı Konum Tespiti"
+            {
+                "title": "N-LoS Şehir İçi Bina Arası Kapsama",
+                "description": "Binalar arası görüş hattı olmayan sokaklarda RIS yüzeyi sinyali hedef cihaza yansıtarak ek baz istasyonu kurmadan kesintisiz 6G bağlantısı sağlar."
+            },
+            {
+                "title": "Tünel, Metro & Yeraltı Kapsama",
+                "description": "Tünel kıvrımlarında sönümlenen sinyal, duvarlara monte edilen pasif RIS panelleriyle yönlendirilir; yolcu telefonları yeraltında kopmadan kalır."
+            },
+            {
+                "title": "İç Mekan mmWave / THz Bağlantısı",
+                "description": "Ofis ve fabrika içinde duvar yansımalarıyla mmWave sinyali hedef cihaza odaklanır; kablo çekmeden odalar arası gigabit hız sunulur."
+            },
+            {
+                "title": "Yeşil Haberleşme (Green Communications)",
+                "description": "Aktif güçlendirici gerektirmeyen pasif RIS, aktif baz istasyonu sayısını azaltarak hem enerji tüketimini hem karbon ayak izini düşürür."
+            },
+            {
+                "title": "ISAC ile Konumlandırma Desteği",
+                "description": "RIS yansıtıcı yüzeyi hem sinyal güçlendirir hem yansıma açısından cihaz konumunu hassaslaştırarak ISAC tabanlı iç mekan konum servislerini destekler."
+            },
         ],
         "advantages": [
             "Çok Düşük Maliyet ve Enerji Tüketimi (Aktif Baz İstasyonuna Göre %90+ Tasarruf)",
@@ -149,9 +188,18 @@ TECHNOLOGIES = {
             "<strong>Türk Telekom Plaza & Veri Merkezleri Cam Kaplama:</strong> Plaza binalarının dış camlarına entegre şeffaf RIS kaplaması ile iç mekan mmWave kapsama sorununu çözme."
         ],
         "references": [
-            "Q. Wu and R. Zhang, 'Towards Smart and Reconfigurable Environment: Intelligent Reflecting Surface Aided Wireless Network', IEEE Communications Magazine, 2020.",
-            "ETSI GR RIS 001: 'Reconfigurable Intelligent Surfaces (RIS); Use Cases, Deployment Scenarios and Operational Requirements'.",
-            "E. Basar et al., 'Wireless Communications Through Reconfigurable Intelligent Surfaces', IEEE Access, 2019."
+            {
+                "text": "Q. Wu and R. Zhang, 'Towards Smart and Reconfigurable Environment: Intelligent Reflecting Surface Aided Wireless Network', IEEE Communications Magazine, 2020.",
+                "url": "https://doi.org/10.1109/mcom.001.1900107"
+            },
+            {
+                "text": "C. Pan et al., 'Reconfigurable Intelligent Surfaces for 6G Systems: Principles, Applications, and Research Directions', IEEE Communications Magazine, 2021.",
+                "url": "https://doi.org/10.1109/mcom.001.2001076"
+            },
+            {
+                "text": "H. Liu et al., 'DRL-Based Joint Beamforming and Reflection Design for Secure RIS-Aided ISAC Systems', Telecommunication Systems, 2025.",
+                "url": "https://doi.org/10.1007/s11235-025-01374-z"
+            }
         ]
     },
 
@@ -194,10 +242,22 @@ TECHNOLOGIES = {
             "MMSE (Minimum Mean Square Error) Kanal Kestirimi ve Ortak Kapsama Formülasyonu."
         ),
         "use_cases": [
-            "Stadyumlar, Konser Alanları ve Yüksek Yoğunluklu Etkinlikler",
-            "Havaalanları, Tren Garı ve Alışveriş Merkezleri İç Mekan İletişimi",
-            "Endüstriyel Akıllı Fabrikalar (Gecikmesiz ve Kesintisiz Robot Kontrolü)",
-            "Şehir Merkezi Yoğun Bulvarlar ve Meydanlar"
+            {
+                "title": "Stadyum & Konser Alanları",
+                "description": "On binlerce kişi aynı anda bağlandığında hücre kenarı paraziti ortadan kalkar; tüm tribünlerde eşit gigabit hız deneyimi sunulur."
+            },
+            {
+                "title": "Havaalanı & Tren Garı İç Mekan",
+                "description": "Yolcu terminalinde hareket halindeyken handover kopması yaşanmaz; dağıtık erişim noktaları kullanıcıyı kesintisiz takip eder."
+            },
+            {
+                "title": "Otonom Fabrika Robot Kontrolü",
+                "description": "Endüstriyel robotlar hücre sınırında sinyal kaybetmeden milisaniye altı gecikmeyle senkronize çalışır; üretim hattı duruşları azalır."
+            },
+            {
+                "title": "Şehir Merkezi Yoğun Bulvarlar",
+                "description": "Kalabalık caddelerde tek dev kule yerine dağıtık mini antenler spektral verimliliği artırır ve kullanıcı başına adil bant genişliği sağlar."
+            },
         ],
         "advantages": [
             "Hücre Kenarı Sorununun Tamamen Çözülmesi (Uniform User Experience)",
@@ -222,9 +282,10 @@ TECHNOLOGIES = {
             "<strong>Marmara Bölgesi Akıllı Sanayi Depoları:</strong> Otonom transpalet ve robotların hücre kenarında sinyal kaybetmeden tam senkronize çalışması."
         ],
         "references": [
-            "H. Q. Ngo et al., 'Cell-Free Massive MIMO Versus Small Cells', IEEE Transactions on Wireless Communications, 2017.",
-            "E. Björnson and L. Sanguinetti, 'Making Cell-Free Massive MIMO Competitive With MMSE Processing', IEEE Transactions on Wireless Communications, 2019.",
-            "3GPP TR 38.800 Series: 'Evolution of Distributed MIMO for 6G'."
+            {
+                "text": "S. Elhoushy et al., 'Cell-Free Massive MIMO: A Survey', IEEE Communications Surveys & Tutorials, 2022.",
+                "url": "https://doi.org/10.1109/comst.2021.3123267"
+            }
         ]
     },
 
@@ -268,11 +329,26 @@ TECHNOLOGIES = {
             "$$C = B \\log_2 \\left( 1 + \\frac{P_t G_t G_r}{L(f,d) N_0 B} \\right), \\quad B \\approx 50 \\text{ GHz}$$"
         ),
         "use_cases": [
-            "Kablosuz Veri Merkezi (Data Center) Sunucu-Sunucu Arası Terabit Bağlantı",
-            "Holografik İletişim (Hologram Teleportation) & 3D Gerçek Zamanlı VR/AR",
-            "Kısa Menzilli Ultra Hızlı Kablosuz Geri Bağlantı (Wireless Backhaul/Fronthaul)",
-            "Tıbbi Nanosensör Ağları (Vücut İçi Terahertz İletişim)",
-            "Gelişmiş Malzeme ve Kimyasal Algılama (THz Spektroskopi)"
+            {
+                "title": "Kablosuz Veri Merkezi (Terabit Backhaul)",
+                "description": "Sunucu rafları arasındaki fiber kabloların yerine THz bağlantı kurularak veri merkezi içi trafik saniyede terabit hızında kablosuz taşınır."
+            },
+            {
+                "title": "Holografik & 3D Gerçek Zamanlı VR/AR",
+                "description": "Saniyede yüzlerce gigabit gerektiren hologram ve sürükleyici VR içerikleri ultra geniş bant THz hüzmeleriyle gecikmesiz iletilir."
+            },
+            {
+                "title": "Kısa Menzil Kablosuz Backhaul / Fronthaul",
+                "description": "Kuleler arası veya bina içi fiber çekimin zor olduğu noktalarda THz link devreye girerek yüksek kapasiteli geri bağlantı sağlar."
+            },
+            {
+                "title": "Tıbbi Nanosensör Ağları",
+                "description": "Vücut içi implant ve nanosensörler THz bandının miniaturizasyon avantajıyla ultra düşük gecikmeyle veri alışverişi yapar."
+            },
+            {
+                "title": "THz Spektroskopi & Malzeme Algılama",
+                "description": "Güvenlik taraması ve endüstriyel kalite kontrolünde THz dalgaları malzeme bileşimini iletişim dışı algılama modunda analiz eder."
+            },
         ],
         "advantages": [
             "Terabit/sn Seviyesinde Rekor Veri Transfer Hızı (100 Gbps - 1 Tbps)",
@@ -297,9 +373,14 @@ TECHNOLOGIES = {
             "<strong>Yüksek Çözünürlüklü Holografik Sunumlar:</strong> Türk Telekom teknoloji merkezlerinde 8K canlı holografik konferans ve iletişim."
         ],
         "references": [
-            "I. F. Akyildiz et al., 'Terahertz communication tools for 6G: Challenges and opportunities', IEEE Communications Magazine, 2022.",
-            "K. Riklinen et al., 'Sub-THz Wireless Communications for 6G', IEEE Wireless Communications, 2021.",
-            "3GPP TR 38.807: 'Study on Sub-THz Spectrum and Propagation for 6G'."
+            {
+                "text": "I. F. Akyildiz et al., 'TeraHertz Band Communication: An Old Problem Revisited and Research Directions for the Next Decade', IEEE Transactions on Communications, 2022.",
+                "url": "https://doi.org/10.1109/tcomm.2022.3171800"
+            },
+            {
+                "text": "3GPP TR 38.807: 'Study on requirements for NR beyond 52.6 GHz'.",
+                "url": "https://www.3gpp.org/DynaReport/38807.htm"
+            }
         ]
     },
 
@@ -311,7 +392,7 @@ TECHNOLOGIES = {
         "trl": 5,
         "trl_desc": "O-RAN RIC Denemeleri & Yapay Zeka Protokol Testleri (TRL 5 - AI-Native 6G)",
         "card_summary": "Fiziksel katmandan kaynak yönetimine kadar tüm telsiz erişim ağını yapay zeka ve derin öğrenme modelleriyle yerel olarak optimize eder.",
-        "highlights": ["🧠 Yapay Zeka Tabanlı PHY", "📊 Dinamik Spektrum Tahsisi", "🌿 %60 Yeşil Şebeke"],
+        "highlights": ["🧠 Yapay Zeka Tabanlı PHY", "📊 Dinamik Spektrum Tahsisi", "🌿 Yeşil Şebeke Hedefi"],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
             "AI-Native RAN, 6G telsiz erişim ağının (baz istasyonları ve radyo donanımları) sonradan eklenen bir yazılımla değil, en alt temel seviyeden itibaren <strong style='color: #FFFFFF;'>yapay zeka tarafından yönetilecek şekilde</strong> tasarlanmasıdır.<br><br>"
@@ -343,10 +424,22 @@ TECHNOLOGIES = {
             "$$Q(s, a) \\leftarrow Q(s, a) + \\alpha \\left[ r + \\gamma \\max_{a'} Q(s', a') - Q(s, a) \\right]$$"
         ),
         "use_cases": [
-            "Dinamik Spektrum Paylaşımı (Dynamic Spectrum Sharing - DSS) ve Otonom Frekans Tahsisi",
-            "Kestirimci Bakım ve Ağ Arıza Önleme (Predictive Self-Healing Network)",
-            "Kullanıcı Yoğunluğuna Göre Akıllı Güç Tasarrufu & Yeşil Baz İstasyonları",
-            "Saniye Altı Hüzme Yönetimi (Beam Management) ve Hücre Yönetimi"
+            {
+                "title": "Dinamik Spektrum Paylaşımı (DSS)",
+                "description": "AI modeli frekans kullanımını anlık trafik verisine göre optimize ederek boş spektrumu verimli paylaştırır ve paraziti azaltır."
+            },
+            {
+                "title": "Kestirimci Bakım & Self-Healing Ağ",
+                "description": "Makine öğrenmesi baz istasyonu donanım arızalarını oluşmadan saatler önce tespit eder ve otomatik yedek sisteme geçiş yapar."
+            },
+            {
+                "title": "Akıllı Güç Tasarrufu (Deep Sleep)",
+                "description": "Trafik düşük saatlerde AI-RAN gereksiz radyo birimlerini milisaniye hassasiyetinde uyutarak şebeke enerji tüketimini ciddi oranda düşürür."
+            },
+            {
+                "title": "Saniye Altı Hüzme Yönetimi",
+                "description": "Hareketli kullanıcılar için hüzme yönlendirme kararları insan müdahalesi olmadan saniyenin altında alınır; handover gecikmesi minimize edilir."
+            },
         ],
         "advantages": [
             "Maksimum Enerji Verimliliği (%50-%70 Enerji Tasarrufu)",
@@ -371,9 +464,10 @@ TECHNOLOGIES = {
             "<strong>Türk Telekom Şebekesi Kestirimci Arıza Önleme:</strong> Baz istasyonundaki donanım bozulmalarını arıza yaşanmadan saatler önce tespit edip yedek sisteme geçiş."
         ],
         "references": [
-            "T. O’Shea and J. Hoydis, 'An Introduction to Deep Learning for the Physical Layer', IEEE Transactions on Cognitive Communications and Networking, 2017.",
-            "AI-RAN Alliance Whitepaper: 'Transforming Telecom with AI-Native Radio Access Networks', 2024.",
-            "3GPP TR 38.843: 'Study on Artificial Intelligence (AI)/Machine Learning (ML) for NR Air Interface'."
+            {
+                "text": "3GPP TR 38.843: 'Study on Artificial Intelligence (AI)/Machine Learning (ML) for NR Air Interface'.",
+                "url": "https://www.3gpp.org/DynaReport/38843.htm"
+            }
         ]
     },
 
@@ -417,10 +511,22 @@ TECHNOLOGIES = {
             "$$FSPL = \\left( \\frac{4\\pi d f}{c} \\right)^2, \\quad d \\approx 600 - 1000 \\text{ km}$$"
         ),
         "use_cases": [
-            "Okyanuslar, Denizler ve Uluslararası Gemi Rotalarında Kesintisiz İletişim",
-            "Havacılık & Yolcu Uçaklarında 6G İnternet Hizmeti",
-            "Deprem, Tsunami ve Doğal Afetlerde Karasal Kuleler Çökse Dahi Kesintisiz Acil Çağrı",
-            "Kutuplar, Çöller ve Dağlık Arazilerde Madencilik ve Tarım IoT Takibi"
+            {
+                "title": "Açık Deniz & Gemi İletişimi",
+                "description": "Okyanus ortasında karasal kapsama olmadan LEO uydusu üzerinden standart telefonlarla kesintisiz veri ve ses iletişimi sağlanır."
+            },
+            {
+                "title": "Havacılık Yolcu İnterneti",
+                "description": "Uçuş sırasında NTN entegrasyonu sayesinde yolcular yüksek irtifada bile 6G hızında internete bağlanabilir."
+            },
+            {
+                "title": "Afet Anında Acil İletişim",
+                "description": "Deprem veya sel sonrası karasal kuleler devre dışı kalsa bile uydu bağlantısı acil arama ve koordinasyon hattını ayakta tutar."
+            },
+            {
+                "title": "Kırsal & Dağlık Alan IoT Takibi",
+                "description": "Fiber veya kule altyapısının ulaşmadığı tarım ve maden sahalarındaki sensörler NTN üzerinden merkeze veri iletir."
+            },
         ],
         "advantages": [
             "Coğrafi Kısıtlama Olmaksızın %100 Küresel Kapsama (Zero Coverage Gap)",
@@ -445,9 +551,18 @@ TECHNOLOGIES = {
             "<strong>Doğu ve Güneydoğu Anadolu Dağlık Kırsal Kapsama:</strong> Kule dikilmesi coğrafi olarak imkansız mezra ve dağ yollarında %100 kapsama."
         ],
         "references": [
-            "3GPP TR 38.811: 'Study on New Radio (NR) to support non-terrestrial networks'.",
-            "S. Cioni et al., 'Non-Terrestrial Networks in 6G: A Survey on Key Enablers and Open Challenges', IEEE Communications Surveys & Tutorials, 2023.",
-            "AST SpaceMobile White Paper: 'Cellular Broadband Directly to Unmodified Smartphones from Space'."
+            {
+                "text": "M. Giordani and M. Zorzi, 'Non-Terrestrial Networks in the 6G Era: Challenges and Opportunities', IEEE Network, 2021.",
+                "url": "https://doi.org/10.1109/mnet.011.2000493"
+            },
+            {
+                "text": "F. Wang et al., 'Non-Terrestrial Networking for 6G: Evolution, Opportunities, and Future Directions', Engineering, 2025.",
+                "url": "https://doi.org/10.1016/j.eng.2025.05.013"
+            },
+            {
+                "text": "3GPP TR 38.811: 'Study on New Radio (NR) to support non-terrestrial networks'.",
+                "url": "https://www.3gpp.org/DynaReport/38811.htm"
+            }
         ]
     },
 
@@ -491,10 +606,22 @@ TECHNOLOGIES = {
             "$$y(t) = \\alpha \\cdot x(t) \\cdot b(t) + n(t)$$"
         ),
         "use_cases": [
-            "Tedarik Zinciri, Lojistik ve Depo Otomasyonunda Trilyonlarca Pilsiz Ürün Takibi",
-            "Akıllı Tarım & Toprak Nem / Sıcaklık Sensörleri (Toprağa gömülü pilsiz sensörler)",
-            "Gıda ve İlaç Soğuk Hava Deposu Sıcaklık Takibi",
-            "Akıllı Binalar, Duvar İçi Beton Nem ve Çatlak Takibi Sensörleri"
+            {
+                "title": "Tedarik Zinciri & Lojistik Takibi",
+                "description": "Pilsiz RFID benzeri etiketler palet ve koli üzerinde yıllarca pil değiştirmeden konum ve sıcaklık verisi iletir."
+            },
+            {
+                "title": "Akıllı Tarım Sensörleri",
+                "description": "Toprağa gömülü pilsiz nem sensörleri 6G ağından RF enerji alarak sulama sistemlerine otomatik veri sağlar."
+            },
+            {
+                "title": "Gıda & İlaç Soğuk Zincir İzleme",
+                "description": "Depo ve nakliye sıcaklığı pilsiz etiketlerle sürekli ölçülür; ihlal anında anlık alarm üretilir."
+            },
+            {
+                "title": "Akıllı Bina & Yapı Sağlığı",
+                "description": "Duvar ve beton içine gömülü pilsiz sensörler nem, çatlak ve titreşimi yıllarca bakım gerektirmeden raporlar."
+            },
         ],
         "advantages": [
             "Sıfır Batarya Maliyeti ve Batarya Değiştirme İşçiliğinin Yok Olması",
@@ -519,9 +646,10 @@ TECHNOLOGIES = {
             "<strong>Akıllı Şehir Sayaç Takibi:</strong> Su, doğalgaz ve elektrik sayaçlarının bataryasız Ambient IoT etiketleriyle otomatik okunması."
         ],
         "references": [
-            "3GPP TR 38.848: 'Study on Ambient IoT in GERAN / NR'.",
-            "V. Liu et al., 'Ambient backscatter: wireless communication out of thin air', ACM SIGCOMM, 2013.",
-            "Wiliot Whitepaper: 'Battery-Free Ambient IoT: Connecting Trillions of Everyday Things'."
+            {
+                "text": "3GPP TR 38.848: 'Study on Ambient IoT (Internet of Things) in RAN'.",
+                "url": "https://www.3gpp.org/DynaReport/38848.htm"
+            }
         ]
     }
 }

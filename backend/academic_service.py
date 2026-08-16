@@ -1,54 +1,125 @@
 """
-Türk Telekom 6G Academic Publication Intelligence Service
-Provides logic for paper trends, database distributions, top institutions, countries, and citation metrics.
-Optimized with Streamlit cache_data.
+Akademik yayın analitik servisi — OpenAlex canlı veri + DOI doğrulamalı makale seti.
+Atıf sayıları yalnızca OpenAlex cited_by_count; API yoksa None (uydurma yok).
 """
 
-import streamlit as st
-from typing import Dict, List, Any
+from __future__ import annotations
+
+from collections import Counter
+from typing import Any, Dict, List, Optional
+
 import pandas as pd
-from data.academic import (
-    ACADEMIC_SOURCES,
-    PUBLICATION_TRENDS_BY_TECH,
-    PUBLICATIONS_BY_DATABASE,
-    TOP_RESEARCH_INSTITUTIONS,
-    TOP_PUBLISHING_COUNTRIES,
-    MOST_CITED_PAPERS
+import streamlit as st
+
+from backend.data_validator import load_validated_papers
+from backend.openalex_client import (
+    TREND_YEARS,
+    fetch_publication_trends,
+    fetch_top_countries,
+    fetch_top_institutions,
+    fetch_topic_yearly_series,
+    fetch_work_by_doi,
 )
+from data.academic import ACADEMIC_DATA_SOURCE, ACADEMIC_SOURCES, MOST_CITED_PAPERS
+
+
+def _papers_raw() -> List[Dict[str, Any]]:
+    return load_validated_papers(MOST_CITED_PAPERS)
+
+
+@st.cache_data(ttl=3600)
+def _enriched_papers() -> List[Dict[str, Any]]:
+    """DOI doğrulamalı makaleleri OpenAlex ile zenginleştirir."""
+    enriched: List[Dict[str, Any]] = []
+    for paper in _papers_raw():
+        live = fetch_work_by_doi(paper["doi"])
+        merged = dict(paper)
+        merged["citations"] = None
+        merged["citations_live"] = False
+        if live:
+            merged["citations"] = live.get("citations")
+            merged["citations_live"] = True
+            if live.get("source_url"):
+                merged["source_url"] = live["source_url"]
+            if live.get("title"):
+                merged["title"] = live["title"]
+        enriched.append(merged)
+    return sorted(enriched, key=lambda p: p.get("citations") or 0, reverse=True)
+
+
+def _compute_summary() -> Dict[str, Any]:
+    papers = _enriched_papers()
+    trends = fetch_publication_trends()
+    total_latest = None
+    top_topic = ("—", 0)
+    latest_year = TREND_YEARS[-1] if TREND_YEARS else None
+    if trends and "Years" in trends:
+        latest_idx = len(trends["Years"]) - 1
+        latest_year = trends["Years"][latest_idx]
+        topic_counts = {
+            t: trends[t][latest_idx]
+            for t in trends
+            if t != "Years" and trends[t]
+        }
+        if topic_counts:
+            total_latest = sum(topic_counts.values())
+            top_topic = max(topic_counts.items(), key=lambda x: x[1])
+
+    live_cited = [p for p in papers if p.get("citations_live") and isinstance(p.get("citations"), int)]
+    top_paper_citations = max((p["citations"] for p in live_cited), default=None)
+    return {
+        "total_latest_year": total_latest,
+        "latest_year": latest_year,
+        "top_topic": top_topic[0],
+        "top_topic_count": top_topic[1],
+        "top_paper_citations": top_paper_citations,
+        "verified_paper_count": len(papers),
+        "source": ACADEMIC_DATA_SOURCE,
+        "trends_available": trends is not None,
+    }
+
 
 class AcademicService:
-    """Service layer handling academic publication trends and metadata."""
+    """Akademik literatür servis katmanı."""
 
     @staticmethod
     def get_sources() -> List[str]:
         return ACADEMIC_SOURCES
 
     @staticmethod
-    @st.cache_data
-    def get_tech_publication_trends_df() -> pd.DataFrame:
-        """Returns annual publication trends per 6G technology topic."""
-        return pd.DataFrame(PUBLICATION_TRENDS_BY_TECH)
+    def get_data_source() -> str:
+        return ACADEMIC_DATA_SOURCE
 
     @staticmethod
-    @st.cache_data
-    def get_database_distribution() -> Dict[str, float]:
-        """Returns publication share per academic indexing database."""
-        return PUBLICATIONS_BY_DATABASE
+    def get_summary() -> Dict[str, Any]:
+        return _compute_summary()
 
     @staticmethod
-    @st.cache_data
-    def get_top_institutions() -> List[Dict[str, Any]]:
-        """Returns top publishing global research labs and universities."""
-        return TOP_RESEARCH_INSTITUTIONS
+    def get_tech_publication_trends_df() -> Optional[pd.DataFrame]:
+        trends = fetch_publication_trends()
+        if not trends:
+            return None
+        return pd.DataFrame(trends)
 
     @staticmethod
-    @st.cache_data
-    def get_top_countries() -> Dict[str, float]:
-        """Returns global research publication volume share by country."""
-        return TOP_PUBLISHING_COUNTRIES
+    def get_topic_yearly_df(topic: str) -> Optional[pd.DataFrame]:
+        series = fetch_topic_yearly_series(topic)
+        if not series:
+            return None
+        return pd.DataFrame(series)
 
     @staticmethod
-    @st.cache_data
+    def get_database_distribution() -> Dict[str, int]:
+        return dict(Counter(p.get("source", "Diğer") for p in _enriched_papers()))
+
+    @staticmethod
     def get_most_cited_papers() -> List[Dict[str, Any]]:
-        """Returns benchmark high-citation 6G papers."""
-        return MOST_CITED_PAPERS
+        return _enriched_papers()
+
+    @staticmethod
+    def get_top_institutions() -> Optional[List[Dict[str, Any]]]:
+        return fetch_top_institutions()
+
+    @staticmethod
+    def get_top_countries() -> Optional[List[Dict[str, Any]]]:
+        return fetch_top_countries()
