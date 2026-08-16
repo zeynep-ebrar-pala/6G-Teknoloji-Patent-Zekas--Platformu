@@ -1,4 +1,4 @@
-"""Ortak UI bileşenleri — kaynak linkleri, boş/hata durumları."""
+"""Ortak UI bileşenleri — kaynak butonları, boş/hata durumları."""
 
 from __future__ import annotations
 
@@ -17,27 +17,23 @@ def render_module_header(title: str, subtitle: str, accent: str = "#0099FF") -> 
     )
 
 
-def render_source_footer(source: str, source_url: str, link_label: str) -> None:
-    """Kaynak bilgisi + tarayıcıda açılan doğrudan link."""
-    st.markdown(
-        f"""
-        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08);
-             font-size: 0.82rem; color: #94A3B8;">
-            <strong>Source:</strong> {source} ·
-            <a href="{source_url}" target="_blank" rel="noopener noreferrer"
-               style="color:#00E5FF; font-weight:600; text-decoration:none;
-               border-bottom:1px solid rgba(0,229,255,0.35);">{link_label}</a>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+def render_source_button(url: str, label: str = "Kaynakta Aç ↗") -> None:
+    """Orijinal sayfayı yeni sekmede açan gerçek Streamlit butonu."""
+    if not url:
+        st.caption("Kaynak bağlantısı yok.")
+        return
+    st.link_button(label, url, use_container_width=True, type="primary")
 
 
 def render_patent_card(patent: dict) -> None:
-    pub = patent["publication_number"]
+    pub = patent.get("publication_number") or patent.get("id", "")
+    url = patent.get("source_url") or patent.get("url") or ""
+    if pub and not url:
+        url = f"https://patents.google.com/patent/{pub}/en"
+
     st.markdown(
         f"""
-        <div class="glass-card" style="margin-bottom: 14px; padding: 18px;">
+        <div class="glass-card" style="margin-bottom: 8px; padding: 18px;">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
                 <span style="color:#00E5FF;font-weight:700;font-family:'JetBrains Mono',monospace;">{pub}</span>
                 <span class="trl-pill trl-mid">{patent.get('domain','')}</span>
@@ -47,11 +43,12 @@ def render_patent_card(patent: dict) -> None:
             <p style="color:#94A3B8;font-size:0.8rem;margin:0;">
                 Assignee: <strong>{patent.get('assignee','')}</strong> · Yıl: <strong>{patent.get('year','')}</strong>
             </p>
+            <p style="color:#64748B;font-size:0.75rem;margin:8px 0 0 0;word-break:break-all;">{url}</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
-    render_source_footer(patent["source"], patent["source_url"], "Kaynakta Aç ↗")
+    render_source_button(url, f"{pub} — Google Patents'te Aç ↗")
 
 
 def render_paper_card(paper: dict) -> None:
@@ -60,9 +57,11 @@ def render_paper_card(paper: dict) -> None:
         cite_label = f"{cites:,} Atıf"
     else:
         cite_label = "Atıf: —"
+    doi = paper.get("doi", "")
+    url = paper.get("source_url") or paper.get("url") or (f"https://doi.org/{doi}" if doi else "")
     st.markdown(
         f"""
-        <div class="glass-card" style="margin-bottom: 12px; padding: 16px;">
+        <div class="glass-card" style="margin-bottom: 8px; padding: 16px;">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
                 <h4 style="color:#00E5FF;margin:0;line-height:1.4;">{paper['title']}</h4>
                 <span class="trl-pill trl-high" style="white-space:nowrap;">{cite_label}</span>
@@ -70,12 +69,12 @@ def render_paper_card(paper: dict) -> None:
             <p style="color:#C8D1DC;font-size:0.88rem;margin-top:6px;margin-bottom:4px;">
                 Yazarlar: {paper.get('authors','')} · {paper.get('journal','')} ({paper.get('year','')})
             </p>
-            <p style="color:#64748B;font-size:0.78rem;margin:0;">DOI: {paper.get('doi','')}</p>
+            <p style="color:#64748B;font-size:0.78rem;margin:0;">DOI: {doi}</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
-    render_source_footer(paper["source"], paper["source_url"], "Makaleyi Kaynakta Aç ↗")
+    render_source_button(url, "Makaleyi DOI ile Aç ↗")
 
 
 def show_empty(message: str) -> None:

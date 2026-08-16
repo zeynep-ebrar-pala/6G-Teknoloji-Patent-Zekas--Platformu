@@ -17,7 +17,7 @@ from components.charts import (
     render_patent_trends_chart,
     render_patent_wordcloud,
 )
-from components.ui_helpers import render_module_header, render_patent_card, show_empty
+from components.ui_helpers import render_module_header, render_patent_card, render_source_button, show_empty
 
 
 def render_patent_intelligence_module():
@@ -55,7 +55,8 @@ def render_patent_intelligence_module():
     with col3:
         st.metric("Öne Çıkan Teknoloji Alanı", summary["top_domain"], f"{summary['top_domain_count']} kayıt")
     with col4:
-        st.metric("Veri Doğrulama", "Google Patents", "Kaynakta Aç ↗")
+        st.metric("Kaynak", "Google Patents")
+    render_source_button("https://patents.google.com", "Google Patents ana sayfasını aç ↗")
 
     st.divider()
 
@@ -69,7 +70,10 @@ def render_patent_intelligence_module():
 
     with tab_trends:
         st.markdown("### Yıllara Göre Dağılım")
-        st.caption("Grafik, doğrulanmış kümedeki gerçek yayın/tescil yıllarının sayımıdır; kümülatif portföy tahmini değildir.")
+        st.caption(
+            "Her çubuk bir takvim yılıdır (ör. 2024, 2025). "
+            "Kayıtlarda ay bilgisi olmadığı için 2024.2 gibi ara değer veya uydurma «2. Ay» dilimi yok."
+        )
         df_trends = PatentService.get_patent_trends_df(company_arg)
         if df_trends.empty:
             show_empty("Trend grafiği için yeterli patent verisi yok.")

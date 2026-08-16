@@ -90,6 +90,7 @@ def normalize_paper(raw: Dict[str, Any]) -> Dict[str, Any] | None:
         "source": raw.get("source") or "Crossref / DOI",
         "source_url": source_url.strip(),
         "url": source_url.strip(),
+        "topic": str(raw.get("topic") or "").strip(),
     }
 
 

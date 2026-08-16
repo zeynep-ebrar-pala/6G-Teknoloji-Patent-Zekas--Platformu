@@ -223,8 +223,14 @@ def inject_custom_styles():
             font-weight: 700 !important;
         }
 
-        /* Hide Default Streamlit Header */
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
+        /* Kaynakta Aç butonları */
+        div[data-testid="stLinkButton"] a,
+        .stLinkButton a {
+            background: linear-gradient(135deg, #0099FF 0%, #00C2FF 100%) !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            border: none !important;
+            box-shadow: 0 4px 14px rgba(0, 153, 255, 0.35);
+        }
         </style>
     """, unsafe_allow_html=True)

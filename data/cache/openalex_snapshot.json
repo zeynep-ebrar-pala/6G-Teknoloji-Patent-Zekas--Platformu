@@ -1,0 +1,346 @@
+{
+  "trends": {
+    "Years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "ISAC": [
+      11661,
+      14360,
+      16697,
+      20826,
+      19706,
+      21952
+    ],
+    "RIS": [
+      1254,
+      2079,
+      3267,
+      4525,
+      4673,
+      4921
+    ],
+    "NTN": [
+      722,
+      1311,
+      1381,
+      1745,
+      1735,
+      1689
+    ],
+    "AI-RAN": [
+      1417,
+      1816,
+      2098,
+      2594,
+      2554,
+      2123
+    ],
+    "THz": [
+      1449,
+      2395,
+      2888,
+      3975,
+      3512,
+      3633
+    ],
+    "Ambient IoT": [
+      269,
+      360,
+      472,
+      531,
+      415,
+      421
+    ]
+  },
+  "fetched_at": "2026-08-16 14:09 UTC",
+  "source_url": "https://openalex.org/works",
+  "institutions": [
+    {
+      "name": "Vellore Institute of Technology University",
+      "count": 323,
+      "key": "https://openalex.org/I876193797"
+    },
+    {
+      "name": "King Saud University",
+      "count": 265,
+      "key": "https://openalex.org/I28022161"
+    },
+    {
+      "name": "SRM Institute of Science and Technology",
+      "count": 228,
+      "key": "https://openalex.org/I145286018"
+    },
+    {
+      "name": "Centre National de la Recherche Scientifique",
+      "count": 219,
+      "key": "https://openalex.org/I1294671590"
+    },
+    {
+      "name": "King Abdulaziz University",
+      "count": 211,
+      "key": "https://openalex.org/I185163786"
+    },
+    {
+      "name": "Tsinghua University",
+      "count": 203,
+      "key": "https://openalex.org/I99065089"
+    },
+    {
+      "name": "Prince Sattam Bin Abdulaziz University",
+      "count": 197,
+      "key": "https://openalex.org/I142608572"
+    },
+    {
+      "name": "Chinese Academy of Sciences",
+      "count": 197,
+      "key": "https://openalex.org/I19820366"
+    },
+    {
+      "name": "Princess Nourah bint Abdulrahman University",
+      "count": 195,
+      "key": "https://openalex.org/I106778892"
+    },
+    {
+      "name": "University of Johannesburg",
+      "count": 188,
+      "key": "https://openalex.org/I24027795"
+    }
+  ],
+  "countries": [
+    {
+      "name": "China",
+      "count": 6753,
+      "key": "https://openalex.org/countries/CN"
+    },
+    {
+      "name": "India",
+      "count": 5108,
+      "key": "https://openalex.org/countries/IN"
+    },
+    {
+      "name": "United States",
+      "count": 4819,
+      "key": "https://openalex.org/countries/US"
+    },
+    {
+      "name": "United Kingdom",
+      "count": 3197,
+      "key": "https://openalex.org/countries/GB"
+    },
+    {
+      "name": "Saudi Arabia",
+      "count": 2117,
+      "key": "https://openalex.org/countries/SA"
+    },
+    {
+      "name": "Italy",
+      "count": 1924,
+      "key": "https://openalex.org/countries/IT"
+    },
+    {
+      "name": "Spain",
+      "count": 1707,
+      "key": "https://openalex.org/countries/ES"
+    },
+    {
+      "name": "Germany",
+      "count": 1409,
+      "key": "https://openalex.org/countries/DE"
+    },
+    {
+      "name": "South Korea",
+      "count": 1391,
+      "key": "https://openalex.org/countries/KR"
+    },
+    {
+      "name": "Australia",
+      "count": 1345,
+      "key": "https://openalex.org/countries/AU"
+    }
+  ],
+  "works_by_doi": {
+    "10.1109/mcom.001.1900107": {
+      "title": "Towards Smart and Reconfigurable Environment: Intelligent Reflecting Surface Aided Wireless Network",
+      "citations": 4448,
+      "source_url": "https://doi.org/10.1109/mcom.001.1900107",
+      "institutions": [
+        "National University of Singapore",
+        "National University of Singapore"
+      ],
+      "countries": [
+        "SG",
+        "SG"
+      ],
+      "year": 2019
+    },
+    "10.1109/jsac.2022.3156632": {
+      "title": "Integrated Sensing and Communications: Toward Dual-Functional Wireless Networks for 6G and Beyond",
+      "citations": 3503,
+      "source_url": "https://doi.org/10.1109/jsac.2022.3156632",
+      "institutions": [
+        "Southern University of Science and Technology",
+        "Beijing University of Posts and Telecommunications",
+        "University College London",
+        "Chinese University of Hong Kong, Shenzhen",
+        "Huawei Technologies (China)",
+        "Weizmann Institute of Science",
+        "Università degli studi di Cassino e del Lazio Meridionale",
+        "Consorzio Nazionale Interuniversitario per le Telecomunicazioni"
+      ],
+      "countries": [
+        "CN",
+        "CN",
+        "GB",
+        "CN",
+        "CN",
+        "IL",
+        "IT",
+        "IT"
+      ],
+      "year": 2022
+    },
+    "10.1109/mcom.001.2001076": {
+      "title": "Reconfigurable Intelligent Surfaces for 6G Systems: Principles, Applications, and Research Directions",
+      "citations": 1012,
+      "source_url": "https://doi.org/10.1109/mcom.001.2001076",
+      "institutions": [
+        "Queen Mary University of London",
+        "Southeast University",
+        "Southeast University",
+        "Northumbria University",
+        "Queen Mary University of London",
+        "Queen Mary University of London",
+        "Southeast University",
+        "Southeast University",
+        "Centre National de la Recherche Scientifique",
+        "Université Paris-Saclay",
+        "Laboratoire des signaux et systèmes",
+        "Queen Mary University of London",
+        "University of Kent",
+        "University of California, Irvine",
+        "Irvine University",
+        "Southeast University",
+        "Southeast University",
+        "University of Southampton"
+      ],
+      "countries": [
+        "GB",
+        "BD",
+        "CN",
+        "GB",
+        "GB",
+        "GB",
+        "BD",
+        "CN",
+        "FR",
+        "FR",
+        "FR",
+        "GB",
+        "GB",
+        "US",
+        "US",
+        "BD",
+        "CN",
+        "GB"
+      ],
+      "year": 2021
+    },
+    "10.1109/tcomm.2022.3171800": {
+      "title": "Terahertz Band Communication: An Old Problem Revisited and Research Directions for the Next Decade",
+      "citations": 673,
+      "source_url": "https://doi.org/10.1109/tcomm.2022.3171800",
+      "institutions": [
+        "Shanghai Jiao Tong University",
+        "Shanghai Research Center for Wireless Communications",
+        "Shanghai Jiao Tong University",
+        "Shanghai Research Center for Wireless Communications",
+        "University of Nebraska–Lincoln",
+        "Northeastern University"
+      ],
+      "countries": [
+        "CN",
+        "CN",
+        "CN",
+        "CN",
+        "US",
+        "US"
+      ],
+      "year": 2022
+    },
+    "10.1109/mnet.011.2000493": {
+      "title": "Non-Terrestrial Networks in the 6G Era: Challenges and Opportunities",
+      "citations": 667,
+      "source_url": "https://doi.org/10.1109/mnet.011.2000493",
+      "institutions": [
+        "University of Padua",
+        "University of Padua"
+      ],
+      "countries": [
+        "IT",
+        "IT"
+      ],
+      "year": 2020
+    },
+    "10.1109/comst.2021.3123267": {
+      "title": "Cell-Free Massive MIMO: A Survey",
+      "citations": 443,
+      "source_url": "https://doi.org/10.1109/comst.2021.3123267",
+      "institutions": [
+        "Concordia University",
+        "Concordia University",
+        "Concordia University"
+      ],
+      "countries": [
+        "CA",
+        "CA",
+        "CA"
+      ],
+      "year": 2021
+    },
+    "10.1016/j.eng.2025.05.013": {
+      "title": "Non-Terrestrial Networking for 6G: Evolution, Opportunities, and Future Directions",
+      "citations": 37,
+      "source_url": "https://doi.org/10.1016/j.eng.2025.05.013",
+      "institutions": [
+        "Singapore University of Technology and Design",
+        "Singapore University of Technology and Design",
+        "Singapore University of Technology and Design",
+        "Singapore University of Technology and Design"
+      ],
+      "countries": [
+        "SG",
+        "SG",
+        "SG",
+        "SG"
+      ],
+      "year": 2025
+    },
+    "10.1007/s11235-025-01374-z": {
+      "title": "DRL-Based Joint Beamforming and Reflection Design for Secure RIS-Aided ISAC Systems",
+      "citations": 2,
+      "source_url": "https://doi.org/10.1007/s11235-025-01374-z",
+      "institutions": [
+        "Shandong University",
+        "Shandong University",
+        "Shandong University",
+        "Shandong University",
+        "Shandong University",
+        "Shandong University"
+      ],
+      "countries": [
+        "CN",
+        "CN",
+        "CN",
+        "CN",
+        "CN",
+        "CN"
+      ],
+      "year": 2025
+    }
+  }
+}

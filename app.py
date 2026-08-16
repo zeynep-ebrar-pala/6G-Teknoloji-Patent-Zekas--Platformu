@@ -103,6 +103,31 @@ st.markdown(
 
 
 if navigation == NAV_HOME:
+    if "Temel Seviye" in view_mode:
+        st.markdown(
+            """<div class="dual-card-beginner">
+<h4 style="margin-top:0;">6G nedir? (sıfır teknik bilgi)</h4>
+<p style="color:#E2E8F0; font-size:1rem; line-height:1.65; margin:0;">
+Bugün telefonunuz <strong>5G</strong> ile internete bağlanır. <strong>6G</strong> bunun bir sonraki neslidir:
+daha hızlı bağlantı, daha az kopma ve kulelerin yeni işler yapması (çevreyi görme, uyduya bağlanma, pilsiz etiket).
+Aşağıdaki yedi kart, her yapı taşını bir ev eşyası gibi anlatır. Olgunluk notu (TRL) 1–9 arasındadır;
+9 sahada hazır, 3 henüz laboratuvardır.
+</p>
+</div>""",
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            """<div class="dual-card-expert">
+<h4 style="margin-top:0;">6G yapı taşları (uzman özeti)</h4>
+<p style="color:#E2E8F0; font-size:0.95rem; line-height:1.6; margin:0;">
+Radar haritası 3GPP / saha olgunluğuna göre TRL 1–9 gösterir. Detay, formül ve mimari için
+soldan <strong>Uzman Seviyesi</strong> açıkken 6G Teknolojileri sayfasına geçin.
+</p>
+</div>""",
+            unsafe_allow_html=True,
+        )
+
     st.markdown("### 6G Teknolojileri Olgunluk Seviyesi (TRL Radar Haritası)")
 
     col_radar, col_info = st.columns([1.2, 1])
@@ -116,14 +141,14 @@ if navigation == NAV_HOME:
             """<div class="glass-card">
 <h4 style="color: #00E5FF; margin-top:0;">6G Teknoloji Olgunluk Değerlendirmesi</h4>
 <p style="font-size: 0.92rem; color: #C8D1DC;">
-Bu radar haritası, 6G'yi şekillendirecek 7 temel öncü teknolojinin günümüzdeki
-<strong style="color: #FFFFFF;">TRL (Teknoloji Hazırlık Seviyesi)</strong> durumunu göstermektedir.
+TRL, bir teknolojinin <strong style="color:#FFFFFF;">ne kadar hazır</strong> olduğunu 1’den 9’a notlar.
+9 = sahada satışa yakın, 3 = henüz laboratuvar fikri.
 </p>
 <ul style="font-size: 0.88rem; color: #CBD5E1; padding-left: 20px; line-height: 1.6;">
-<li><strong style="color: #00C853;">TRL 6:</strong> NTN</li>
-<li><strong style="color: #FFB020;">TRL 5:</strong> RIS &amp; AI-Native RAN</li>
-<li><strong style="color: #FF5252;">TRL 4:</strong> ISAC, Cell-Free MIMO, Ambient IoT</li>
-<li><strong style="color: #FF7043;">TRL 3:</strong> THz</li>
+<li><strong style="color: #00C853;">TRL 6 — sahaya en yakın:</strong> NTN (uydu kapsama)</li>
+<li><strong style="color: #FFB020;">TRL 5 — pilot:</strong> RIS (akıllı ayna) ve AI-Native RAN</li>
+<li><strong style="color: #FF5252;">TRL 4 — erken deneme:</strong> ISAC, Cell-Free, Ambient IoT</li>
+<li><strong style="color: #FF7043;">TRL 3 — laboratuvar:</strong> THz (çok hızlı ama zor)</li>
 </ul>
 </div>""",
             unsafe_allow_html=True,
@@ -136,14 +161,21 @@ Bu radar haritası, 6G'yi şekillendirecek 7 temel öncü teknolojinin günümü
         col = cols[idx % 3]
         with col:
             trl_class = "trl-low" if tech["trl"] <= 4 else ("trl-mid" if tech["trl"] == 5 else "trl-high")
-            highlights_html = " ".join(
-                [
-                    f"<span style='background: rgba(0, 153, 255, 0.12); color: #00C2FF; border: 1px solid rgba(0, 153, 255, 0.3); font-size: 0.73rem; padding: 2px 8px; border-radius: 6px; font-weight: 600; display: inline-block; margin: 2px 2px 2px 0;'>{h}</span>"
-                    for h in tech.get("highlights", [])
-                ]
+            blurb = (
+                tech.get("beginner_one_liner")
+                if "Temel Seviye" in view_mode
+                else tech.get("card_summary", "")
             )
+            highlights_html = ""
+            if "Uzman" in view_mode:
+                highlights_html = " ".join(
+                    [
+                        f"<span style='background: rgba(0, 153, 255, 0.12); color: #00C2FF; border: 1px solid rgba(0, 153, 255, 0.3); font-size: 0.73rem; padding: 2px 8px; border-radius: 6px; font-weight: 600; display: inline-block; margin: 2px 2px 2px 0;'>{h}</span>"
+                        for h in tech.get("highlights", [])
+                    ]
+                )
             st.markdown(
-                f"""<div class="glass-card" style="min-height: 290px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 16px;">
+                f"""<div class="glass-card" style="min-height: 260px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 16px;">
 <div>
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
 <span style="font-size: 2.2rem;">{tech['icon']}</span>
@@ -151,14 +183,14 @@ Bu radar haritası, 6G'yi şekillendirecek 7 temel öncü teknolojinin günümü
 </div>
 <h4 style="color: #FFFFFF; margin: 4px 0 2px 0; font-size: 1.15rem;">{tech['acronym']}</h4>
 <div style="color: #00C2FF; font-size: 0.8rem; font-weight: 600; margin-bottom: 10px;">{tech['title']}</div>
-<p style="color: #E2E8F0; font-size: 0.86rem; line-height: 1.5; margin: 0 0 12px 0;">
-{tech.get('card_summary', tech['executive_summary'][:120])}
+<p style="color: #E2E8F0; font-size: 0.9rem; line-height: 1.55; margin: 0 0 12px 0;">
+{blurb}
 </p>
 </div>
 <div>
 <div style="margin-bottom: 10px;">{highlights_html}</div>
 <div style="padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.76rem; color: #94A3B8;">
-<strong>TT Senaryosu:</strong> {tech['tt_scenarios'][0][:45]}...
+Detay: 6G Teknolojileri menüsü
 </div>
 </div>
 </div>""",
@@ -227,11 +259,16 @@ elif navigation == NAV_TECH:
     with tab_principle:
         col_p_text, col_p_diag = st.columns([1, 1.1])
         with col_p_text:
-            st.markdown("### Çalışma Prensibi Detayı")
+            principle = (
+                tech.get("beginner_principle")
+                if "Temel Seviye" in view_mode and tech.get("beginner_principle")
+                else tech["working_principle"]
+            )
+            st.markdown("### Çalışma Prensibi")
             st.markdown(
                 f"""<div class="glass-card">
-<div style="color: #E2E8F0; font-size: 0.92rem; line-height: 1.6;">
-{tech['working_principle']}
+<div style="color: #E2E8F0; font-size: 0.95rem; line-height: 1.65;">
+{principle}
 </div>
 </div>""",
                 unsafe_allow_html=True,

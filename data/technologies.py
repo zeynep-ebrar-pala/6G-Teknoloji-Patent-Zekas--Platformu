@@ -12,13 +12,19 @@ TECHNOLOGIES = {
         "icon": "📡",
         "trl": 4,
         "trl_desc": "Laboratuvar Doğrulaması & Saha Testleri Başlangıcı (TRL 4 - 3GPP Rel-19/20 Hedefi)",
-        "card_summary": "Baz istasyonlarını akıllı birer radara dönüştürerek hem yüksek hızlı haberleşme hem de santimetre hassasiyetinde 3D nesne/araç algılama sağlar.",
+        "card_summary": "Baz istasyonu hem internet verir hem radar gibi çevreyi görür.",
+        "beginner_one_liner": "Telefon kulesi artık sadece konuşmaz; sisin arkasındaki arabayı da 'duyarak' görür.",
         "highlights": ["🎯 1cm Radar Hassasiyeti", "📡 100+ Gbps Hız", "🛰️ V2X / Dron Takibi"],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
             "ISAC, baz istasyonlarının sadece cihazlara veri taşımasını değil, aynı zamanda tıpkı bir <strong style='color: #FFFFFF;'>görünmez radar</strong> gibi çevredeki araçları, insanları, dronları ve engelleri santimetre hassasiyetinde tespit etmesini sağlayan 6G teknolojisidir.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
             "Sıradan bir baz istasyonu sadece 'konuşan' bir radyo kulesidir. ISAC özellikli 6G baz istasyonu ise hem konuşan hem de gözleriyle çevreyi tarayıp 3 boyutlu haritalandıran <strong style='color: #FFFFFF;'>akıllı bir gözcü kulesine</strong> dönüşür."
+        ),
+        "beginner_principle": (
+            "1. Kule hem internet sinyali gönderir hem de bu sinyalin arabadan/duvardan geri sekmesini dinler.<br>"
+            "2. Yankı ne kadar geç dönerse nesne o kadar uzaktır; sesi nasıl kayıyorsa o kadar hızlıdır.<br>"
+            "3. Aynı anten hem konuşur hem bakar. Ekstra radar kamyonu gerekmez."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Ortak Dalga Şekli ve Donanım Paylaşımı (Joint Communication and Sensing - JCR):</strong><br>"
@@ -111,13 +117,19 @@ TECHNOLOGIES = {
         "icon": "🪞",
         "trl": 5,
         "trl_desc": "Saha Denemeleri & Prototip Doğrulaması (TRL 5 - Düşük Güç Tüketimli Akıllı Yüzeyler)",
-        "card_summary": "Binalara ve camlara yerleştirilen pasif metamalzeme yüzeylerle radyo dalgalarını akıllı bir ayna gibi bükerek kör noktaları kapsar.",
+        "card_summary": "Binaya asılan akıllı ayna, sinyali köşe başına yönlendirir.",
+        "beginner_one_liner": "Sinyal duvara çarpıp kaybolmasın diye binaya elektronik bir ayna asılır; ışığı istediğiniz odaya çevirir.",
         "highlights": ["🪞 Akıllı Yansıtıcı Yüzey", "🌱 %90 Enerji Tasarrufu", "🏙️ Kör Nokta Kapsama"],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
             "RIS, binaların dış cephelerine, camlara veya duvarlara kaplanan ve gelen radyo sinyallerini istenen yöne bir <strong style='color: #FFFFFF;'>akıllı ayna</strong> gibi yansıtarak sinyal ulaşmayan kör noktaları kapsayan teknolojidir.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
             "Karanlık bir odadasınız ve el feneri (baz istasyonu) duvarın arkasını aydınlatamıyor. Duvara yerleştirdiğiniz açıları ayarlanabilir bir ayna (RIS), fener ışığını bükerek görünmeyen odaya <strong style='color: #FFFFFF;'>odaklanmış ışık demeti</strong> olarak yönlendirir."
+        ),
+        "beginner_principle": (
+            "1. Bina cephesine ince bir elektronik ayna asılır.<br>"
+            "2. Aynanın her küçük parçası sinyali biraz döndürür; hepsi birlikte ışığı sizin telefona çevirir.<br>"
+            "3. Neredeyse elektrik harcamaz; yeni kule dikmeden kör noktayı kapsar."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Faz Kontrolü ve Metamalzeme Yansıma Prensibi:</strong><br>"
@@ -210,13 +222,19 @@ TECHNOLOGIES = {
         "icon": "📶",
         "trl": 4,
         "trl_desc": "Deneysel Prototip ve Simülasyon Testleri (TRL 4 - Hücresiz Ağ Mimarisi)",
-        "card_summary": "Geleneksel hücre sınırlarını ortadan kaldırarak kullanıcının etrafındaki yüzlerce erişim noktasını tek bir devasa anten gibi birleştirir.",
+        "card_summary": "Tek kule yerine etrafınızdaki birçok küçük anten sizi birlikte taşır.",
+        "beginner_one_liner": "Şehirde kule değiştirirken sinyal düşmez; yanınızdaki küçük antenler sizi el ele tutar.",
         "highlights": ["🔄 Kesintisiz Sinyal Bulutu", "⚡ Sıfır Hücre Sınırı", "📶 Eşit 1 Gbps+ Deneyim"],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
             "Hücresiz Masif MIMO, bilinen klasik 'hücre' (cell) sınırlarını ortadan kaldırarak yüzlerce küçük erişim noktasının (AP) tek bir devasa sistem gibi çalışıp her kullanıcıyı kesintisiz kuşatmasıdır.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
             "Klasik hücresel sistemde kullanıcı bir baz istasyonundan diğerine geçerken sinyal düşer ve kopma riski oluşur. Hücresiz sistemde ise nerede olursanız olun etrafınızdaki onlarca mini anten sizi ortak bir <strong style='color: #FFFFFF;'>sinyal bulutu</strong> gibi takip eder."
+        ),
+        "beginner_principle": (
+            "1. Sokak lambası gibi sık yerleştirilmiş küçük antenler vardır, tek dev kule yoktur.<br>"
+            "2. Telefonunuz bunlardan birkaçına aynı anda bağlanır.<br>"
+            "3. Yürürken antenler sizi sessizce devreder; 'hücre kenarı' hissi kalmaz."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Dağıtık Koordinasyon ve Hücresiz Mimari:</strong><br>"
@@ -296,13 +314,19 @@ TECHNOLOGIES = {
         "icon": "⚡",
         "trl": 3,
         "trl_desc": "Konsept Kanıtlama & Laboratuvar Deneyleri (TRL 3 - 0.1 THz - 10 THz Spektrumu)",
-        "card_summary": "0.1 THz - 10 THz frekans bantlarında Terabit/saniye seviyesinde ultra hızlı kablosuz bant genişliği ve mikro-saniye gecikme sunar.",
+        "card_summary": "Bugünkü 5G’den çok daha kalın bir kablosuz veri borusu; henüz laboratuvarda.",
+        "beginner_one_liner": "Radyo ile ışık arasındaki çok yüksek tonda konuşulur; film indirmek saniyeler değil, kırpışma kadar sürer.",
         "highlights": ["⚡ 1 Tbps Rekor Hız", "⏱️ Sub-Milisaniye Gecikme", "🖥️ Kablosuz Veri Merkezi"],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
             "THz İletişimi, radyo dalgaları ile kızılötesi ışık arasındaki ultra yüksek frekans bandını (100 GHz - 10 THz) kullanarak <strong style='color: #FFFFFF;'>saniyede 1 Terabit (1000 Gbps)</strong> hızında ışık hızında veri aktarımı sağlayan teknolojidir.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
             "4G bir köy yolu, 5G geniş bir otoban ise, Terahertz iletişimi adeta bir <strong style='color: #FFFFFF;'>ışınlanma tüpüdür</strong>. Çok büyük veri hacimlerini (örneğin tüm bir 8K filmi saniyenin yüzde birinde) iletebilir."
+        ),
+        "beginner_principle": (
+            "1. Daha tiz bir radyo sesi kullanılır; boru daha geniştir, daha çok veri sığar.<br>"
+            "2. Bu ses duvarı ve yağmuru zor geçer; kısa mesafe ve görüş hattı ister.<br>"
+            "3. Bu yüzden TRL düşüktür: laboratuvar güçlü, saha henüz sınırlı."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Sub-THz ve THz Spektrum Fiziği:</strong><br>"
@@ -391,13 +415,19 @@ TECHNOLOGIES = {
         "icon": "🧠",
         "trl": 5,
         "trl_desc": "O-RAN RIC Denemeleri & Yapay Zeka Protokol Testleri (TRL 5 - AI-Native 6G)",
-        "card_summary": "Fiziksel katmandan kaynak yönetimine kadar tüm telsiz erişim ağını yapay zeka ve derin öğrenme modelleriyle yerel olarak optimize eder.",
+        "card_summary": "Şebeke, tıkanınca kendi kendine ayar değiştiren bir trafik polisi gibi çalışır.",
+        "beginner_one_liner": "Baz istasyonu ezber kural okumak yerine canlı trafiği izleyip milisaniyede karar verir.",
         "highlights": ["🧠 Yapay Zeka Tabanlı PHY", "📊 Dinamik Spektrum Tahsisi", "🌿 Yeşil Şebeke Hedefi"],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
             "AI-Native RAN, 6G telsiz erişim ağının (baz istasyonları ve radyo donanımları) sonradan eklenen bir yazılımla değil, en alt temel seviyeden itibaren <strong style='color: #FFFFFF;'>yapay zeka tarafından yönetilecek şekilde</strong> tasarlanmasıdır.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
             "Klasik şebeke, sadece insan mühendislerin yazdığı katı kuralları uygulayan bir robot gibidir. AI-Native RAN ise trafiği ve kullanıcı davranışlarını izleyip kendi parametrelerini milisaniyeler içinde optimize eden <strong style='color: #FFFFFF;'>öğrenen otonom bir pilot</strong> gibidir."
+        ),
+        "beginner_principle": (
+            "1. Kule, kimlerin nerede sıkıştığını sürekli ölçer.<br>"
+            "2. Yazılım 'bu mahallede kapasiteyi artır' diye kendi kararını verir.<br>"
+            "3. İnsan her saniye kural yazmaz; ağ öğrenerek yeşil ve hızlı kalır."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Uçtan Uca Derin Öğrenmeli Radyo Mimarisi:</strong><br>"
@@ -478,13 +508,19 @@ TECHNOLOGIES = {
         "icon": "🛰️",
         "trl": 6,
         "trl_desc": "3GPP Rel-17/18 Standartlaşması & Ticari Uydu Denemeleri (TRL 6 - Uydu Entegrasyonu)",
-        "card_summary": "LEO/GEO uydularını ve HAPS platformlarını karasal 6G şebekesiyle entegre ederek doğrudan akıllı telefonlara küresel kesintisiz kapsama sağlar.",
+        "card_summary": "Uydu, dağdaki ve denizdeki telefona da kapsama götürür.",
+        "beginner_one_liner": "Şehirdeki kule yetmezse gökteki uydu devreye girer; telefon aynı kalır.",
         "highlights": ["🛰️ Direct-to-Cell Uydular", "🌍 %100 Küresel Kapsama", "🆘 Afet Dayanıklılığı"],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
             "NTN (Karasal Olmayan Ağlar), alçak irtifa uyduları (LEO), zeplinler ve insansız hava araçlarını (HAPS) karasal baz istasyonlarıyla tek bir ağda birleştirerek <strong style='color: #FFFFFF;'>dünyanın her noktasında kesintisiz 6G kapsama</strong> sağlayan teknolojidir.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
             "Karasal şebeke sadece şehirlerde ve yollarda olan sokak lambaları gibidir. NTN ise tüm dünyayı yukarıdan aydınlatan <strong style='color: #FFFFFF;'>uzaydaki devasa bir projektördür</strong>; okyanusun ortasında da olsanız dağın başında da olsanız sinyal kopmaz."
+        ),
+        "beginner_principle": (
+            "1. Yer kuleleri şehir ve yolu kapsar.<br>"
+            "2. Boş kalan yerde alçak yörünge uydusu veya yüksek irtifa platformu konuşur.<br>"
+            "3. Telefonunuz özel bir uydu telefonu olmak zorunda değildir; şebeke gökle yeri birleştirir."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Uzay-Hava-Kara Entegre Mimari:</strong><br>"
@@ -573,13 +609,19 @@ TECHNOLOGIES = {
         "icon": "🔋",
         "trl": 4,
         "trl_desc": "3GPP Rel-19 Study Item & Pilsiz Etiket PoC (TRL 4 - Pilsiz Nesnelerin İnterneti)",
-        "card_summary": "Çevredeki radyo frekanslarından (RF) enerji devşirerek pil gerektirmeden çalışan trilyonlarca ultra ucuz sensörü 6G ağına bağlar.",
+        "card_summary": "Pilsiz etiketler, havadaki radyo enerjisiyle çalışır.",
+        "beginner_one_liner": "Koli bandı kadar ucuz bir etiket, Wi-Fi veya 6G dalgasından elektrik alıp 'buradayım' der.",
         "highlights": ["🔋 Pilsiz Çalışma", "📦 RF Enerji Hasadı", "🌐 Trilyon Sensör Ölçeği"],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
             "Ambient IoT, içerisinde <strong style='color: #FFFFFF;'>hiçbir pil veya batarya bulunmayan</strong>, ihtiyaç duyduğu elektriği havadaki radyo dalgalarından (RF Energy Harvesting) elde ederek çalışan ultra ucuz akıllı etiketler teknolojisidir.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
             "Eski radyo etiketleri pasiftir. Ambient IoT etiketleri ise küçük bir güneş paneli gibi havadaki Wi-Fi ve 6G sinyallerini emerek <strong style='color: #FFFFFF;'>kendi enerjisini üreten pilsiz minik akıllı sensörler</strong> gibidir."
+        ),
+        "beginner_principle": (
+            "1. Etiketin pili yoktur; havadaki radyo dalgasından kırıntı enerji toplar.<br>"
+            "2. Bu enerjiyle kısa bir 'buradayım' mesajı yollar.<br>"
+            "3. Depo, tarım ve lojistikte milyarlarca nesne pilsiz izlenebilir."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Enerji Hasadı ve Geri Saçılım İletişimi:</strong><br>"

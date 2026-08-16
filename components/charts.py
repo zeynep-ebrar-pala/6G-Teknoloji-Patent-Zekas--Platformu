@@ -29,6 +29,34 @@ DARK_LAYOUT_TEMPLATE = dict(
     )
 )
 
+
+def _year_labels(years) -> List[str]:
+    """Takvim yılını 2024.2 gibi ondalığa çevirmeden etiketler."""
+    return [str(int(y)) for y in years]
+
+
+def _year_axis(labels: List[str]) -> dict:
+    return dict(
+        title="Takvim yılı",
+        type="category",
+        categoryorder="array",
+        categoryarray=labels,
+        tickmode="array",
+        tickvals=labels,
+        ticktext=labels,
+        gridcolor="rgba(200, 209, 220, 0.1)",
+    )
+
+
+def _count_axis(title: str) -> dict:
+    return dict(
+        title=title,
+        gridcolor="rgba(200, 209, 220, 0.1)",
+        rangemode="tozero",
+        tickformat="d",
+        separatethousands=False,
+    )
+
 def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
     """Renders TRL Radar Chart for 6G technologies."""
     categories = [tech["acronym"] for tech in technologies_data.values()]
@@ -76,10 +104,11 @@ def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
 
 def render_technology_record_counts_chart(df_counts: pd.DataFrame, tech_label: str) -> go.Figure:
     """Doğrulanmış patent kayıtlarının yıla göre sayısı — temsili hedef metriği yok."""
-    fig = go.Figure()
     y_col = [c for c in df_counts.columns if c != "Years"][0]
+    labels = _year_labels(df_counts["Years"])
+    fig = go.Figure()
     fig.add_trace(go.Bar(
-        x=df_counts["Years"],
+        x=labels,
         y=df_counts[y_col],
         marker=dict(color="#00E5FF"),
         name=tech_label,
@@ -90,35 +119,37 @@ def render_technology_record_counts_chart(df_counts: pd.DataFrame, tech_label: s
             text=f"<b>Doğrulanmış {tech_label} Patent Kayıt Sayısı / Yıl</b>",
             x=0.02, y=0.95, font=dict(size=14, color="#FFFFFF"),
         ),
-        xaxis=dict(title="Yıl", gridcolor="rgba(200, 209, 220, 0.1)", dtick=1),
-        yaxis=dict(title="Kayıt sayısı", gridcolor="rgba(200, 209, 220, 0.1)", rangemode="tozero"),
+        xaxis=_year_axis(labels),
+        yaxis=_count_axis("Kayıt sayısı"),
         height=320,
+        bargap=0.35,
     )
     return fig
 
 def render_patent_trends_chart(df_trends: pd.DataFrame) -> go.Figure:
-    """Renders annual patent trends across major telecom companies."""
+    """Yıllık patent kayıtları — kategorik takvim yılı (2024.2 üretilmez)."""
     fig = go.Figure()
     colors = ['#0099FF', '#00E5FF', '#00C853', '#FFB020', '#FF5252', '#9333EA', '#EC4899', '#64748B']
-    
-    years = df_trends["Years"]
+    labels = _year_labels(df_trends["Years"])
+
     for idx, col in enumerate(df_trends.columns):
-        if col != "Years":
-            fig.add_trace(go.Scatter(
-                x=years,
-                y=df_trends[col],
-                mode='lines+markers',
-                name=col,
-                line=dict(width=2.5, color=colors[idx % len(colors)]),
-                marker=dict(size=6)
-            ))
+        if col == "Years":
+            continue
+        fig.add_trace(go.Bar(
+            x=labels,
+            y=df_trends[col],
+            name=col,
+            marker=dict(color=colors[idx % len(colors)]),
+        ))
 
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
+        barmode="group",
         title=dict(text="<b>Yıllara Göre 6G Patent Kayıt Sayısı (doğrulanmış küme)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
-        xaxis=dict(title="Yıl", gridcolor='rgba(200, 209, 220, 0.1)'),
-        yaxis=dict(title="Patent kayıt sayısı", gridcolor='rgba(200, 209, 220, 0.1)'),
-        height=420
+        xaxis=_year_axis(labels),
+        yaxis=_count_axis("Patent kayıt sayısı"),
+        height=420,
+        bargap=0.25,
     )
     return fig
 
@@ -184,11 +215,11 @@ def render_academic_trends_chart(df_academic: pd.DataFrame) -> go.Figure:
     fig = go.Figure()
     colors = ['#0099FF', '#00E5FF', '#00C853', '#FFB020', '#FF5252', '#9333EA']
     
-    years = df_academic["Years"]
+    labels = _year_labels(df_academic["Years"])
     for idx, col in enumerate(df_academic.columns):
         if col != "Years":
             fig.add_trace(go.Scatter(
-                x=years,
+                x=labels,
                 y=df_academic[col],
                 mode='lines+markers',
                 name=col,
@@ -198,24 +229,30 @@ def render_academic_trends_chart(df_academic: pd.DataFrame) -> go.Figure:
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
         title=dict(text="<b>Akademik Yayın Sayıları Trendi (OpenAlex, konu bazlı)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
-        xaxis=dict(title="Yıl", gridcolor='rgba(200, 209, 220, 0.1)'),
-        yaxis=dict(title="Yayın Sayısı", gridcolor='rgba(200, 209, 220, 0.1)'),
+        xaxis=_year_axis(labels),
+        yaxis=dict(title="Yayın Sayısı", gridcolor='rgba(200, 209, 220, 0.1)', rangemode='tozero', tickformat='d'),
         height=400
     )
     return fig
 
-def render_academic_database_chart(db_dict: Dict[str, int]) -> go.Figure:
+def render_academic_database_chart(
+    db_dict: Dict[str, int],
+    title: str = "Doğrulanmış Örnek Set — Yayıncı Sayısı",
+    xlabel: str = "Yayıncı",
+) -> go.Figure:
     """Renders bar chart of verified sample paper publisher counts."""
+    labels = list(db_dict.keys())
     fig = go.Figure(data=[go.Bar(
-        x=list(db_dict.keys()),
+        x=labels,
         y=list(db_dict.values()),
         marker=dict(color=['#0099FF', '#00C2FF', '#00E5FF', '#00C853'][:len(db_dict)])
     )])
     
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Doğrulanmış Örnek Set — Yayıncı Sayısı</b>", x=0.02, y=0.95, font=dict(size=15, color='#FFFFFF')),
-        yaxis=dict(title="Makale sayısı", gridcolor='rgba(200, 209, 220, 0.1)'),
+        title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color='#FFFFFF')),
+        xaxis=dict(title=xlabel, type="category", gridcolor='rgba(200, 209, 220, 0.1)'),
+        yaxis=_count_axis("Makale sayısı"),
         height=360
     )
     return fig
