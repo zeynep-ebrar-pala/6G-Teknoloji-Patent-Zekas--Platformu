@@ -16,18 +16,94 @@ try:
 except ImportError:
     HAS_NETWORKX = False
 
+# Koyu temada yan yana durunca karışmayan nitel palet (ardışık iki renk aynı aileden değil)
+QUALITATIVE_COLORS = [
+    "#FFB020",  # amber
+    "#3B82F6",  # royal blue — tek mavi
+    "#22C55E",  # green
+    "#EF4444",  # red
+    "#A855F7",  # purple
+    "#F97316",  # orange
+    "#EC4899",  # magenta
+    "#14B8A6",  # teal
+    "#EAB308",  # yellow
+    "#FB7185",  # rose
+    "#818CF8",  # indigo
+    "#84CC16",  # lime
+]
+
+# Firma rengi grafikler arasında sabit kalsın
+COMPANY_COLORS = {
+    "Ericsson": "#FFB020",
+    "Huawei": "#EF4444",
+    "Nokia": "#A855F7",
+    "Samsung": "#14B8A6",
+    "Qualcomm": "#22C55E",
+    "AT&T": "#F97316",
+    "Deutsche Telekom": "#EC4899",
+    "InterDigital": "#3B82F6",
+    "LG Electronics": "#EAB308",
+    "Northeastern Univ.": "#FB7185",
+}
+
+DOMAIN_COLORS = {
+    "ISAC": "#FFB020",
+    "RIS": "#A855F7",
+    "Cell-Free": "#3B82F6",
+    "THz": "#EF4444",
+    "AI-RAN": "#22C55E",
+    "NTN": "#F97316",
+    "Ambient IoT": "#EC4899",
+}
+
 # Corporate Dark Layout Template
 DARK_LAYOUT_TEMPLATE = dict(
     paper_bgcolor='#1A1F2B',
     plot_bgcolor='#1A1F2B',
     font=dict(family='Inter, sans-serif', color='#C8D1DC', size=12),
-    margin=dict(l=40, r=40, t=50, b=40),
+    margin=dict(l=40, r=40, t=50, b=80),
     legend=dict(
-        bgcolor='rgba(18, 22, 32, 0.8)',
-        bordercolor='rgba(200, 209, 220, 0.1)',
-        font=dict(color='#FFFFFF')
+        orientation="h",
+        yanchor="top",
+        y=-0.18,
+        x=0.0,
+        bgcolor='rgba(18, 22, 32, 0.92)',
+        bordercolor='rgba(200, 209, 220, 0.15)',
+        font=dict(color='#FFFFFF', size=11),
+        itemsizing="constant",
+        traceorder="normal",
     )
 )
+
+
+def _hex_rgba(hex_color: str, alpha: float) -> str:
+    h = hex_color.lstrip("#")
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    return f"rgba({r},{g},{b},{alpha})"
+
+
+def _series_color(name: str, index: int = 0) -> str:
+    if name in COMPANY_COLORS:
+        return COMPANY_COLORS[name]
+    if name in DOMAIN_COLORS:
+        return DOMAIN_COLORS[name]
+    return QUALITATIVE_COLORS[index % len(QUALITATIVE_COLORS)]
+
+
+def _color_list(names: List[str]) -> List[str]:
+    used = set()
+    out: List[str] = []
+    fallback_i = 0
+    for name in names:
+        color = _series_color(name, fallback_i)
+        if color in used:
+            while QUALITATIVE_COLORS[fallback_i % len(QUALITATIVE_COLORS)] in used:
+                fallback_i += 1
+            color = QUALITATIVE_COLORS[fallback_i % len(QUALITATIVE_COLORS)]
+        used.add(color)
+        out.append(color)
+        fallback_i += 1
+    return out
 
 
 def _year_labels(years) -> List[str]:
@@ -129,17 +205,16 @@ def render_technology_record_counts_chart(df_counts: pd.DataFrame, tech_label: s
 def render_patent_trends_chart(df_trends: pd.DataFrame) -> go.Figure:
     """Yıllık patent kayıtları — kategorik takvim yılı (2024.2 üretilmez)."""
     fig = go.Figure()
-    colors = ['#0099FF', '#00E5FF', '#00C853', '#FFB020', '#FF5252', '#9333EA', '#EC4899', '#64748B']
     labels = _year_labels(df_trends["Years"])
+    companies = [c for c in df_trends.columns if c != "Years"]
+    colors = _color_list(companies)
 
-    for idx, col in enumerate(df_trends.columns):
-        if col == "Years":
-            continue
+    for col, color in zip(companies, colors):
         fig.add_trace(go.Bar(
             x=labels,
             y=df_trends[col],
             name=col,
-            marker=dict(color=colors[idx % len(colors)]),
+            marker=dict(color=color, line=dict(width=0)),
         ))
 
     fig.update_layout(
@@ -148,8 +223,9 @@ def render_patent_trends_chart(df_trends: pd.DataFrame) -> go.Figure:
         title=dict(text="<b>Yıllara Göre 6G Patent Kayıt Sayısı (doğrulanmış küme)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=_year_axis(labels),
         yaxis=_count_axis("Patent kayıt sayısı"),
-        height=420,
-        bargap=0.25,
+        height=480,
+        bargap=0.22,
+        bargroupgap=0.08,
     )
     return fig
 
@@ -157,22 +233,27 @@ def render_company_patent_domain_chart(df_domains: pd.DataFrame) -> go.Figure:
     """Renders radar comparison of patent portfolios across companies."""
     fig = go.Figure()
     domains = [c for c in df_domains.columns if c != 'Company']
-    
-    colors = ['#0099FF', '#00E5FF', '#00C853', '#FFB020', '#FF5252']
-    
-    for idx, (_, row) in enumerate(df_domains.head(5).iterrows()):
+    shown = df_domains.copy()
+    value_cols = [c for c in shown.columns if c != "Company"]
+    shown["_tot"] = shown[value_cols].sum(axis=1)
+    shown = shown.sort_values("_tot", ascending=False).head(5).drop(columns=["_tot"])
+    companies = shown["Company"].tolist()
+    colors = _color_list(companies)
+
+    for idx, (_, row) in enumerate(shown.iterrows()):
         company = row['Company']
+        color = colors[idx]
         values = [row[d] for d in domains]
         values_closed = values + [values[0]]
         domains_closed = domains + [domains[0]]
-        
+
         fig.add_trace(go.Scatterpolar(
             r=values_closed,
             theta=domains_closed,
             fill='toself',
             name=company,
-            fillcolor=f"rgba({int(colors[idx][1:3],16)}, {int(colors[idx][3:5],16)}, {int(colors[idx][5:7],16)}, 0.15)",
-            line=dict(color=colors[idx], width=2)
+            fillcolor=_hex_rgba(color, 0.14),
+            line=dict(color=color, width=2.5),
         ))
 
     fig.update_layout(
@@ -195,10 +276,7 @@ def render_patent_keywords_chart(keywords_dict: Dict[str, int]) -> go.Figure:
         x=list(sorted_kw.values()),
         y=list(sorted_kw.keys()),
         orientation='h',
-        marker=dict(
-            color=list(sorted_kw.values()),
-            colorscale=[[0, '#0066B3'], [1, '#00E5FF']]
-        )
+        marker=dict(color=_color_list(list(sorted_kw.keys())))
     ))
 
     fig.update_layout(
@@ -213,25 +291,27 @@ def render_patent_keywords_chart(keywords_dict: Dict[str, int]) -> go.Figure:
 def render_academic_trends_chart(df_academic: pd.DataFrame) -> go.Figure:
     """Renders academic publication volume trends by 6G topic."""
     fig = go.Figure()
-    colors = ['#0099FF', '#00E5FF', '#00C853', '#FFB020', '#FF5252', '#9333EA']
-    
     labels = _year_labels(df_academic["Years"])
-    for idx, col in enumerate(df_academic.columns):
-        if col != "Years":
-            fig.add_trace(go.Scatter(
-                x=labels,
-                y=df_academic[col],
-                mode='lines+markers',
-                name=col,
-                line=dict(width=2.5, color=colors[idx % len(colors)])
-            ))
+    topics = [c for c in df_academic.columns if c != "Years"]
+    colors = _color_list(topics)
+    markers = ["circle", "square", "diamond", "triangle-up", "star", "x", "cross", "hexagon"]
+
+    for idx, (col, color) in enumerate(zip(topics, colors)):
+        fig.add_trace(go.Scatter(
+            x=labels,
+            y=df_academic[col],
+            mode="lines+markers",
+            name=col,
+            line=dict(width=3, color=color),
+            marker=dict(size=9, color=color, symbol=markers[idx % len(markers)], line=dict(width=1, color="#FFFFFF")),
+        ))
 
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
         title=dict(text="<b>Akademik Yayın Sayıları Trendi (OpenAlex, konu bazlı)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=_year_axis(labels),
         yaxis=dict(title="Yayın Sayısı", gridcolor='rgba(200, 209, 220, 0.1)', rangemode='tozero', tickformat='d'),
-        height=400
+        height=480
     )
     return fig
 
@@ -245,7 +325,7 @@ def render_academic_database_chart(
     fig = go.Figure(data=[go.Bar(
         x=labels,
         y=list(db_dict.values()),
-        marker=dict(color=['#0099FF', '#00C2FF', '#00E5FF', '#00C853'][:len(db_dict)])
+        marker=dict(color=_color_list(labels))
     )])
     
     fig.update_layout(
@@ -270,11 +350,11 @@ def render_patent_network_graph(edges: Optional[List[tuple]] = None) -> go.Figur
         assignee_nodes = sorted({e[0] for e in edges})
 
         for domain in domain_nodes:
-            G.add_node(domain, size=18, color="#0099FF")
+            G.add_node(domain, size=18, color=_series_color(domain))
             G.add_edge("6G Core", domain)
 
         for assignee in assignee_nodes:
-            G.add_node(assignee, size=15, color="#00C853")
+            G.add_node(assignee, size=15, color=_series_color(assignee))
 
         G.add_edges_from(edges)
         
@@ -346,10 +426,11 @@ def render_patent_network_graph(edges: Optional[List[tuple]] = None) -> go.Figur
 def render_company_counts_chart(counts: Dict[str, int]) -> go.Figure:
     """En çok kayıtlı firmalar — doğrulanmış küme sayımı."""
     sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+    names = [c for c, _ in sorted_items]
     fig = go.Figure(go.Bar(
-        x=[c for c, _ in sorted_items],
+        x=names,
         y=[n for _, n in sorted_items],
-        marker=dict(color="#0099FF"),
+        marker=dict(color=_color_list(names)),
     ))
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
@@ -387,7 +468,8 @@ def render_patent_sunburst(df_tree: pd.DataFrame) -> go.Figure:
         df_tree,
         path=["company", "domain", "patent"],
         color="domain",
-        color_discrete_sequence=["#0099FF", "#00E5FF", "#00C853", "#FFB020", "#FF5252", "#9333EA", "#EC4899"],
+        color_discrete_map=DOMAIN_COLORS,
+        color_discrete_sequence=QUALITATIVE_COLORS,
     )
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
@@ -407,7 +489,8 @@ def render_patent_tfidf_map(df_map: pd.DataFrame) -> go.Figure:
         color="domain",
         hover_name="title",
         hover_data={"company": True, "id": True, "year": True, "x": False, "y": False},
-        color_discrete_sequence=["#0099FF", "#00E5FF", "#00C853", "#FFB020", "#FF5252", "#9333EA", "#EC4899"],
+        color_discrete_map=DOMAIN_COLORS,
+        color_discrete_sequence=QUALITATIVE_COLORS,
     )
     fig.update_traces(marker=dict(size=12, line=dict(width=1, color="#FFFFFF")))
     fig.update_layout(
@@ -435,7 +518,7 @@ def render_patent_wordcloud(keywords_dict: Dict[str, int]):
         width=900,
         height=380,
         background_color="#1A1F2B",
-        colormap="Blues",
+        colormap="tab10",
         prefer_horizontal=0.9,
         min_font_size=10,
     ).generate_from_frequencies(keywords_dict)
@@ -456,7 +539,7 @@ def render_academic_bar_chart(items: List[Dict[str, Any]], title: str, name_key:
         x=counts,
         y=names,
         orientation="h",
-        marker=dict(color="#00C2FF"),
+        marker=dict(color=_color_list(names)),
     ))
     fig.update_layout(
         **DARK_LAYOUT_TEMPLATE,
