@@ -22,9 +22,9 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
     with c1:
         st.markdown(
             """
-- **Ana Sayfa** — 7 teknolojinin TRL radar haritası
-- **6G Teknolojileri** — tanım, prensip, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL, blok diyagram
-- **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm; yıl, konu, kelime bulutu, ağaç, yoğunluk, harita
+- **Ana Sayfa** — 7 teknolojinin TRL radar haritası; Dual-Depth (Temel/Uzman) giriş metnini değiştirir
+- **6G Teknolojileri** — kavramsal temel + uzman katman (formül, varsayım, karşılaştırma); tüm sekmeler anlatım derinliğini dinler
+- **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm; yıl, konu, kelime bulutu, ağaç, yoğunluk, harita; patent özetleri kaynakta kilitli
 - **Yayın Trendleri** — OpenAlex yıl / kurum / ülke; DOI doğrulamalı makaleler
             """
         )
@@ -42,6 +42,13 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
         "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. "
         "Opsiyonel: Groq API, Google Gemini API. Patent kaynağı: Google Patents. "
         "Akademik: OpenAlex + DOI (IEEE Xplore, Springer, Elsevier)."
+    )
+
+    st.markdown("#### Anlatım standardı")
+    st.markdown(
+        "Teknik içerik iki kademelidir: **Temel** (nedir / neden / nasıl / ne zaman) ve **Uzman** "
+        "(denklem, varsayım, 3GPP). Uzman mod temel katmanı atlamaz. Kısaltmalar ilk geçişte açılır. "
+        "Patent özeti, DOI ve sayı uydurulmaz."
     )
 
     st.markdown("#### 15 dakikalık sunum iskeleti")

@@ -40,7 +40,7 @@
 
 | Özellik | Açıklama |
 |---------|----------|
-| Dual-Depth görünüm | Temel / Uzman seviye teknoloji anlatımı |
+| Dual-Depth görünüm | Temel (nedir/neden/nasıl) + Uzman (denklem, varsayım); uzman temel katmanı atlamaz |
 | Source-locked veri | Patent ve makale kayıtları gerçek source_url ile bağlı |
 | Canlı OpenAlex trendleri | Statik uydurma sayı yok |
 | Kaynakta Aç ↗ | Patent ve makaleler tarayıcıda gerçek kaynağa açılır |
@@ -71,7 +71,7 @@ Streamlit Frontend (components/*, app.py)
 | Modül | İçerik |
 |-------|--------|
 | Ana Sayfa | TRL radar, 7 teknoloji KPI kartları |
-| 6G Teknolojileri | Tanım, prensip, diyagram, mimari, kullanım, TT senaryoları, kayıt sayımı |
+| 6G Teknolojileri | Kavramsal temel, formül kartları, karşılaştırma, TT senaryoları, kayıt sayımı |
 | Patent Zekası | Yıl, konu, kelime bulutu, ağaç, yoğunluk, TF-IDF harita, Google Patents listesi |
 | Yayın Trendleri | OpenAlex yıl / kurum / ülke; DOI-doğrulamalı makaleler |
 | Türk Telekom Görünümü | Bölge/yoğunluk/önceliğe göre mimari önerisi |
@@ -225,11 +225,15 @@ MODUL1/
 │   ├── academic_views.py
 │   ├── tt_scenarios.py
 │   ├── about_view.py
+│   ├── content_views.py
 │   ├── ui_helpers.py
 │   ├── charts.py
 │   └── diagrams.py
 ├── data/
 │   ├── technologies.py
+│   ├── beginner_copy.py
+│   ├── expert_depth.py
+│   ├── glossary.py
 │   ├── patents.py
 │   └── academic.py
 └── scripts/

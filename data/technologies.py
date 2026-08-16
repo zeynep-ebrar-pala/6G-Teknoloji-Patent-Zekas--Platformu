@@ -1,7 +1,8 @@
 """
 Türk Telekom 6G Technology & Patent Intelligence Platform
 Module 1: 6G Technologies Comprehensive Knowledge Base
-Dual-Depth Architecture (Beginner / Executive + Deep Technical / Academic)
+Dual-Depth: Temel (kavramsal) beginner_copy.py + Uzman (denklem/karşılaştırma) expert_depth.py
+Pazarlama sayıları hedef/literatürdür; saha ölçümü değildir.
 """
 
 TECHNOLOGIES = {

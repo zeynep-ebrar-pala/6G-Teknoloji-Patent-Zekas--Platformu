@@ -40,6 +40,29 @@ def render_patent_intelligence_module():
         f"yalnızca doğrulanmış örnek kayıtlardır. Kaynak: {summary['source']}",
     )
 
+    st.markdown(
+        """<div class="glass-card">
+<div class="teach-label">Bu sayfa ne işe yarar?</div>
+<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
+<strong>Patent</strong>, bir buluşun kamuya açıklanması karşılığında sınırlı süre tekel hakkıdır.
+Burada baktığımız şey hukuki tavsiye değil; hangi firmanın hangi 6G konusunda koruma talebinde
+bulunduğunun <em>örnek</em> haritasıdır. <strong>Assignee</strong> (hak sahibi) kaydı kimin
+başvurduğunu söyler; o firmanın sahada ürünü olduğu anlamına gelmez.
+</p>
+<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
+<strong>TF-IDF (Term Frequency–Inverse Document Frequency — terim sıklığı–ters belge sıklığı):</strong>
+özet metindeki sözcükleri, derlemede ne kadar ayırt edici olduklarına göre puanlar.
+Harita anlam çıkarmaz; hangi kaydın hangi sözcüklere yakın durduğunu gösterir.
+Özetler kaynakta kilitlidir — yeniden yazılmaz, uydurulmaz.
+</p>
+<p style="color:#94A3B8;font-size:0.84rem;margin:10px 0 0 0;">
+Ne zaman yorumlanmaz: tek patent = pazar liderliği değildir. Yıl çubuğu başvuru/yayın yılıdır,
+ticarileşme tarihi değildir.
+</p>
+</div>""",
+        unsafe_allow_html=True,
+    )
+
     if not patents:
         show_empty(
             f"«{company}» için doğrulanmış patent kaydı yok. "

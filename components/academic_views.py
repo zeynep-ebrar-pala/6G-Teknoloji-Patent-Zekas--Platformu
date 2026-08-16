@@ -26,6 +26,25 @@ def render_academic_publication_module():
         accent="#00C2FF",
     )
 
+    st.markdown(
+        """<div class="glass-card">
+<div class="teach-label">DOI, OpenAlex ve atıf ne anlama gelir?</div>
+<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
+<strong>DOI (Digital Object Identifier — dijital nesne tanımlayıcı):</strong>
+makaleye kalıcı kimlik verir; karttaki «Kaynakta Aç» bu kimliği çözümler.
+Uydurma DOI üretmek bu platformda yasaktır.
+</p>
+<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
+<strong>OpenAlex:</strong> açık akademik graf API’sidir. Yıl/kurum/ülke sayıları bu API’den gelir;
+erişilemezse grafik gizlenir, statik tablo uydurulmaz.
+<strong>Atıf sayısı</strong> (<em>cited_by_count</em>) bir makalenin kaç kez referans verildiğidir —
+kalite notu değildir; yeni makale düşük, tarama makalesi yüksek olabilir.
+Google Scholar ayrı bir API sunmaz; sayılar OpenAlex’tendir.
+</p>
+</div>""",
+        unsafe_allow_html=True,
+    )
+
     if not papers:
         show_empty("Doğrulanmış makale kaydı bulunamadı.")
         return

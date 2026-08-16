@@ -11,8 +11,19 @@ def render_tt_scenario_calculator():
     
     st.markdown("""<div class="glass-card" style="border-left: 5px solid #0099FF; margin-bottom: 20px;">
 <h2 style="color: #FFFFFF; margin: 0 0 6px 0; font-size: 1.45rem;">Türk Telekom 6G Saha Dağıtım ve Senaryo Çözümleyici</h2>
-<p style="color: #CBD5E1; font-size: 0.92rem; margin: 0;">
+<p style="color: #CBD5E1; font-size: 0.92rem; margin: 0 0 10px 0;">
 Türkiye coğrafyası, Türk Telekom altyapısı ve stratejik Ar-Ge hedeflerine göre 6G teknoloji eşleştirme motoru.
+</p>
+<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:0;">
+<strong>KPI (Key Performance Indicator — anahtar performans göstergesi):</strong>
+hız, gecikme, enerji gibi izleme sayılarıdır. Buradaki değerler saha ping’i değil;
+kural tabanlı senaryo motorunun çıktısıdır.
+<strong>CAPEX (Capital Expenditure — sermaye gideri):</strong> kule, fiber, uydu kapasitesi gibi
+yatırım ölçeğinin kaba etiketidir; ihale fiyatı değildir.
+</p>
+<p style="color:#94A3B8;font-size:0.84rem;line-height:1.55;margin:8px 0 0 0;">
+Varsayım: bölge + yoğunluk + öncelik üçlüsü bir teknoloji setini seçer. Sınır: yağmur, izin, spektrum
+ve gerçek fiber topolojisi modele girmez. Sayıyı «ölçülmüş 6G performansı» diye okumayın.
 </p>
 </div>""", unsafe_allow_html=True)
 
@@ -64,7 +75,7 @@ Türkiye coğrafyası, Türk Telekom altyapısı ve stratejik Ar-Ge hedeflerine 
         st.write("")
         with st.expander("📊 Detaylı Performans & Metrik Özeti", expanded=True):
             st.markdown(eval_res['impact_summary'])
-            st.caption(f"💰 Tahmini CAPEX Ölçeği: **{eval_res['capex_estimate']}**")
+            st.caption(f"CAPEX (sermaye gideri) ölçeği — ihale fiyatı değil: **{eval_res['capex_estimate']}**")
 
     with col_results:
         st.caption("KPI değerleri kural tabanlı senaryo motoru çıktısıdır; saha ölçümü değildir.")

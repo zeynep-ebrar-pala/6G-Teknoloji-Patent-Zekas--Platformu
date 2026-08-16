@@ -12,6 +12,16 @@ from typing import Any, Dict, List, Optional
 from backend.academic_service import AcademicService
 from backend.data_service import DataService
 from backend.patent_service import PatentService
+from data.glossary import glossary_plain_corpus
+
+_PEDAGOGY = (
+    "Anlatım kuralı: önemli kavramda Nedir, Neden gerekli, Ne işe yarar, Nasıl çalışır, "
+    "Ne zaman kullanılır, Ne zaman kullanılmaz, Neyle karıştırılmamalı, Gerçekte nerede çıkar. "
+    "Kısaltmayı ilk geçişte «KISALTMA (English — Türkçe):» diye aç; sonra kısaltma kullan. "
+    "Formül varsa sembol ve varsayımı söyle; ezberletme. "
+    "Bağlamda olmayan sayı, patent ID, DOI, atıf uydurma. Emin değilsen "
+    "«Platform verisinde bu bilgi yok» de."
+)
 
 
 def _strip_html(text: str) -> str:
@@ -19,22 +29,48 @@ def _strip_html(text: str) -> str:
 
 
 def _corpus() -> List[Dict[str, str]]:
-    """Modül 1–3 doğrulanmış metin parçaları."""
+    """Modül 1–3 doğrulanmış metin parçaları + sözlük + formül açıklaması."""
     chunks: List[Dict[str, str]] = []
+    chunks.append(
+        {
+            "id": "glossary",
+            "title": "Teknik sözlük (ilk kullanım açılımı)",
+            "text": glossary_plain_corpus(),
+        }
+    )
     for tech in DataService.get_all_technologies().values():
+        fnd = tech.get("foundation") or {}
+        formula_bits = []
+        for frm in tech.get("formulas") or []:
+            formula_bits.append(
+                f"{frm.get('name','')} {frm.get('tells_us','')} {frm.get('why_this_form','')} "
+                f"{frm.get('when_valid','')} {frm.get('assumptions','')}"
+            )
+        cmp_ = tech.get("comparison") or {}
         body = " ".join(
             [
                 tech.get("title", ""),
                 tech.get("acronym", ""),
                 _strip_html(tech.get("executive_summary", "")),
                 _strip_html(tech.get("beginner_card", "")),
-                _strip_html(tech.get("beginner_teach", "")),
+                str(fnd.get("what", "")),
+                str(fnd.get("why_needed", "")),
+                str(fnd.get("problem", "")),
+                str(fnd.get("mental_model", "")),
+                str(fnd.get("analogy_technical_map", "")),
+                str(fnd.get("when_used", "")),
+                str(fnd.get("when_not", "")),
+                str(fnd.get("not_to_confuse", "")),
+                str(fnd.get("real_world", "")),
+                str(fnd.get("tt_impact", "")),
                 _strip_html(tech.get("beginner_principle", "")),
                 _strip_html(tech.get("beginner_arch", "")),
                 _strip_html(tech.get("working_principle", "")),
                 _strip_html(tech.get("system_architecture", "")),
                 " ".join(tech.get("advantages", [])),
                 " ".join(tech.get("disadvantages", [])),
+                " ".join(formula_bits),
+                str(cmp_.get("title", "")),
             ]
         )
         chunks.append(
@@ -97,18 +133,34 @@ def _retrieve(question: str, k: int = 6) -> List[Dict[str, str]]:
     return selected or chunks[: min(k, len(chunks))]
 
 
-def _format_context(chunks: List[Dict[str, str]]) -> str:
+def _format_context(chunks: List[Dict[str, str]], view_mode: str = "") -> str:
+    beginner = "Temel Seviye" in (view_mode or "")
+    depth = (
+        "Seviye: TEMEL. Zihinsel model, analoji→teknik karşılık ve ne zaman/kullanılmaz ağırlıklı yaz. "
+        "Denklem istersen sembolleri açıkla; varsayımı atlama."
+        if beginner
+        else "Seviye: UZMAN. Kavramsal temeli atlama; ardından denklem, varsayım, sınır ve alternatif ekle."
+    )
     lines = [
         "=== DOĞRULANMIŞ 6G VERİ BAĞLAMI (TF-IDF ile seçilmiş parçalar) ===",
+        _PEDAGOGY,
+        depth,
         "KURAL: Bu bağlamda olmayan sayı, patent ID veya makale uydurma.",
         "Emin değilsen 'Platform verisinde bu bilgi yok' de.",
         "",
     ]
     for ch in chunks:
         lines.append(f"[{ch['id']}] {ch['title']}")
-        lines.append(ch["text"][:900])
+        lines.append(ch["text"][:1400])
         lines.append("")
     return "\n".join(lines)
+
+
+def _system_preamble() -> str:
+    return (
+        "Türk Telekom 6G Ar-Ge asistanısın. Yalnızca verilen bağlamı kullan. "
+        "Tahmin veya uydurma yapma. " + _PEDAGOGY
+    )
 
 
 def _answer_with_groq(question: str, api_key: str, context: str) -> str:
@@ -120,15 +172,12 @@ def _answer_with_groq(question: str, api_key: str, context: str) -> str:
         messages=[
             {
                 "role": "system",
-                "content": (
-                    "Türk Telekom 6G Ar-Ge asistanısın. Yalnızca verilen bağlamı kullan. "
-                    "Tahmin veya uydurma yapma.\n\n" + context
-                ),
+                "content": _system_preamble() + "\n\n" + context,
             },
             {"role": "user", "content": question},
         ],
         temperature=0.2,
-        max_tokens=900,
+        max_tokens=1800,
     )
     return response.choices[0].message.content or ""
 
@@ -138,9 +187,7 @@ def _answer_with_gemini(question: str, api_key: str, context: str) -> str:
 
     client = genai.Client(api_key=api_key)
     prompt = (
-        "Türk Telekom 6G Ar-Ge asistanısın. Yalnızca aşağıdaki doğrulanmış bağlamı kullan; "
-        "bilgi yoksa uydurma.\n\n"
-        f"{context}\n\nKullanıcı sorusu: {question}"
+        f"{_system_preamble()}\n\n{context}\n\nKullanıcı sorusu: {question}"
     )
     response = client.models.generate_content(
         model="gemini-2.0-flash",
@@ -174,12 +221,13 @@ class AIAssistantService:
         question: str,
         provider: Optional[str] = None,
         api_key: Optional[str] = None,
+        view_mode: Optional[str] = None,
     ) -> Dict[str, Any]:
         if not (question or "").strip():
             return {"response": "Lütfen bir soru yazın.", "type": "error"}
 
         chunks = _retrieve(question)
-        context = _format_context(chunks)
+        context = _format_context(chunks, view_mode or "")
         provider = (provider or "groq").lower()
         key = (api_key or "").strip()
 

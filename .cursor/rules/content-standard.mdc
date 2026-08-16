@@ -1,0 +1,34 @@
+---
+description: Akademik/teknik içerikte iki kademeli eğitim standardı — tanım değil, neden-sonuç.
+globs: data/**/*.py, components/**/*.py, app.py, backend/ai_assistant_service.py, styles.py
+alwaysApply: true
+---
+
+# İki kademeli içerik (Temel + Uzman)
+
+Yeni veya değişen akademik/bilimsel/teknik metinde bu kuralları uygula. Amaç ezber değil, zihinde model kurmak.
+
+## Seviyeler
+
+- **Temel:** Nedir, neden var, hangi problemi çözer, nasıl çalışır, ne zaman kullanılır/kullanılmaz, neyle karıştırılmamalı, gerçekte nerede çıkar. Jargon yasak değil; ilk kullanımda aç.
+- **Uzman:** Temel katmanı atlama. Terim (EN — TR), denklem, varsayım, geçerlilik, alternatif, sınırlama ekle. Terminoloji açıklamanın yerine geçmesin.
+
+## Kısaltma
+
+İlk geçiş: **TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi):** ne işe yarar + neden önemli. Sonra yalnızca TRL. Sözlük: `data/glossary.py`.
+
+## Formül
+
+Yalnızca LaTeX yapıştırma. Her önemli denklemde: sembol, birim, ne anlattığı, neden bu biçim, ne zaman geçerli, değişken artınca/azalınca ne olur, varsayım. UI: `st.latex`, HTML içinde `$$` değil.
+
+## Dil ve doğruluk
+
+Teknik olarak doğru + pedagojik + profesyonel. Çocuklaştırma. Patent özeti, DOI, 3GPP no, sayı uydurma. Belirsiz iddia: “hedef / literatür / bu platformda ölçülmedi”.
+
+## Akış
+
+Problem → ihtiyaç → yöntem → mekanizma → sonuç → uygulama. “Bu yöntem kullanılır” değil: hangi problem, hangi prensip, nasıl çözer.
+
+## Dual-Depth
+
+Kenar çubuğu Temel/Uzman kalsın. Uzman mod temel anlatımı gizlemesin. Sekme 4–7 ve AI `view_mode` dinlesin.

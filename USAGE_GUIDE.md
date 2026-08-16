@@ -30,7 +30,9 @@ Tarayıcıda `http://localhost:8501` açılır.
 | AI Asistan | «RIS nedir?» ve «NTN ile ISAC arasındaki fark» dahil sorular; TF-IDF + isteğe bağlı LLM |
 | Hakkında | Amaç, yığın, 15 dakikalık sunum iskeleti |
 
-Sol kenarda **Temel / Uzman** anlatım derinliği yalnızca 6G Teknolojileri sayfasını etkiler.
+Sol kenarda **Temel / Uzman** anlatım derinliği Ana Sayfa girişini ve **6G Teknolojileri**nin tüm sekmelerini etkiler.
+Uzman mod kavramsal temeli gizlemez; üstüne formül kartı, varsayım ve karşılaştırma ekler.
+Patent özetleri ve DOI kayıtları kaynakta kilitlidir (yeniden yazılmaz).
 
 ## 3. Patent Zekası
 

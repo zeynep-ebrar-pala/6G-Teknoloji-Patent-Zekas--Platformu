@@ -9,7 +9,7 @@ from backend.ai_assistant_service import AIAssistantService
 from components.auth_view import render_auth_gate
 
 
-def render_ai_assistant_module():
+def render_ai_assistant_module(view_mode: str = ""):
     if not st.session_state.get("ai_ready") and not st.session_state.get("api_key"):
         render_auth_gate()
         if not st.session_state.get("ai_ready"):
@@ -24,7 +24,8 @@ def render_ai_assistant_module():
         <div class="glass-card" style="border-left: 6px solid #00E5FF;">
             <h2 style="margin: 0; color: #FFF;">AI Asistan</h2>
             <p style="color: #C8D1DC; font-size: 0.95rem; margin-top: 6px;">
-                Yanıtlar sklearn TF-IDF ile seçilen teknoloji, patent ve makale kayıtlarındandır.
+                Yanıtlar sklearn TF-IDF ile seçilen teknoloji, patent, makale ve sözlük kayıtlarındandır.
+                Dual-Depth kenar çubuğu anlatım kademesini belirler (Temel: zihinsel model; Uzman: denklem + varsayım).
                 Mod: <strong style="color:#00E5FF;">{mode}</strong>
                 · Sağlayıcı: <strong style="color:#00E5FF;">{provider.upper()}</strong>
             </p>
@@ -78,6 +79,7 @@ def render_ai_assistant_module():
                 query,
                 provider=provider,
                 api_key=api_key,
+                view_mode=view_mode,
             )
 
         st.session_state["chat_messages"].append(

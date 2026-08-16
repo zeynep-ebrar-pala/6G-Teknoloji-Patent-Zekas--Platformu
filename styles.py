@@ -227,6 +227,61 @@ def inject_custom_styles():
             overflow-x: auto;
         }
 
+        .formula-card {
+            background: rgba(0, 229, 255, 0.06);
+            border: 1px solid rgba(0, 229, 255, 0.22);
+            border-left: 4px solid #00E5FF;
+            border-radius: 12px;
+            padding: 16px 18px 8px 18px;
+            margin: 16px 0 8px 0;
+        }
+
+        .term-chip {
+            display: inline-block;
+            background: rgba(0, 153, 255, 0.16);
+            color: #7DD3FC !important;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin: 0 4px 4px 0;
+        }
+
+        .symbol-table, .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0 18px 0;
+            font-size: 0.86rem;
+            background: #121620;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .symbol-table th, .compare-table th {
+            background: #1A2438;
+            color: #00E5FF !important;
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+        }
+        .symbol-table td, .compare-table td {
+            color: #E2E8F0 !important;
+            padding: 9px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            vertical-align: top;
+            line-height: 1.45;
+        }
+        .symbol-table td.sym {
+            font-family: 'JetBrains Mono', monospace;
+            color: #00E5FF !important;
+            white-space: nowrap;
+        }
+        .compare-table td:first-child {
+            color: #FFFFFF !important;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
         /* Sidebar Styling */
         [data-testid="stSidebar"] {
             background-color: #121620;

@@ -1,305 +1,602 @@
 """
-Temel seviye anlatım — sıfır teknik bilgi.
-Her teknoloji: sorun → çözüm → analoji → Türk Telekom'da ne işe yarar.
-Uzman jargonu (OFDM, CRB, gNB, Rel-19) burada yok; o metinler technologies.py'de kalır.
+Temel seviye — kavramsal temel.
+Jargon yasak değil: ilk kullanımda açılır. Uzman denklemler technologies + expert_depth'te.
+Her teknoloji: nedir, neden, problem, nasıl, zihinsel model, analoji→teknik karşılık,
+ne zaman / ne zaman değil, neyle karıştırılmamalı, gerçek dünya, TT etkisi.
 """
 
 BEGINNER_COPY = {
     "isac": {
         "card": (
-            "Bugün telefon kulesi yalnızca internet taşır. Sis, gece veya kameranın "
-            "göremediği yerde bir aracı fark etmek için ayrı radar veya kamera gerekir. "
-            "ISAC aynı kuleyi hem internet hem radar yapar: gönderilen sinyalin yankısından "
-            "mesafe ve hız okunur. Türk Telekom için ek radar aracı dikmeden çevre farkındalığı demektir."
+            "Bugün baz istasyonu yalnızca veri taşır. Sis, gece veya kameranın kör olduğu yerde "
+            "araç veya dron görmek için ayrı radar gerekir. "
+            "ISAC (Integrated Sensing and Communication — Entegre Algılama ve İletişim) "
+            "aynı radyo sinyalini hem internet hem yankı ölçümü için kullanır: gecikme mesafe, "
+            "Doppler kayması hızdır. Türk Telekom için ek radar kamyonu dikmeden çevre farkındalığı "
+            "adaylığıdır; olgunluk TRL 4 — laboratuvar doğrulandı, mahalle şebekesi değil."
         ),
         "kicker": "Sorun: kule konuşur, bakmaz",
-        "teach_html": (
-            "<div class='teach-item'><div class='teach-label'>Bugünün sorunu</div>"
-            "<p>Baz istasyonu veri taşır; çevreyi görmez. Sis, yağmur ve karanlıkta kamera körleşir. "
-            "Ayrı radar kurmak pahalıdır ve şehirde yer kaplar.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>6G bunu nasıl çözer</div>"
-            "<p>Aynı radyo sinyali hem telefonunuza internet götürür hem de duvardan, arabadan, "
-            "dronlardan geri seken yankıyı dinler. Yankı ne kadar geç dönerse nesne o kadar uzaktır; "
-            "sesi nasıl kayıyorsa o kadar hızlıdır.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Analoji</div>"
-            "<p>Yarasa karanlıkta gözle değil, sesin geri dönüşüyle 'görür'. ISAC kulesi de bağırır "
-            "ve yankıyı dinler — ama aynı anda sizinle konuşmayı da sürdürür.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Türk Telekom abonesi için ne değişir</div>"
-            "<p>Boğaz'da sis, şehir içi dron koridoru, enkaz altı hareket: mevcut kule altyapısı "
-            "radar kamyonu dikilmeden bu işlere aday olur. Olgunluk notu TRL 4'tür — laboratuvar "
-            "doğrulandı, her mahallede henüz yok.</p></div>"
+        "what": (
+            "ISAC (Integrated Sensing and Communication — Entegre Algılama ve İletişim), "
+            "aynı frekans kaynağı, aynı anten ve çoğu zaman aynı dalga şekli üzerinde hem "
+            "kullanıcıya bit taşımayı hem çevreden mesafe/hız/açı çıkarmayı birlikte tasarlayan "
+            "radyo mimarisidir. Ayrı bir 'radar kutusu' eklemek değil; haberleşme dalgasının "
+            "yansımasını da bilgi saymaktır."
         ),
-        "arch_html": (
-            "<p><strong>Katman 1 — Kule ve anten:</strong> Mevcut baz istasyonu hem internet yollar hem yankı dinler. "
-            "Ayrı radar kamyonu yoktur.</p>"
-            "<p><strong>Katman 2 — Ayırıcı yazılım:</strong> Konuşma verisi ile yankı birbirine karışmasın diye "
-            "zaman ve frekans paylaşılır.</p>"
-            "<p><strong>Katman 3 — Kenar sunucu:</strong> Mesafe/hız haritası Türk Telekom kenar bulutuna gider "
-            "(trafik, dron, enkaz senaryoları).</p>"
-            "<p>Donanım kısaltmaları, 3GPP ve formül için soldan <strong>Uzman Seviyesi</strong> açın.</p>"
+        "why_needed": (
+            "Spektrum ve kent arazisi pahalıdır. Trafik güvenliği, alçak irtifa dron koridoru ve "
+            "kamerasız farkındalık ayrı radar ağı isterse hem maliyet hem girişim (EMI) büyür. "
+            "Şebeke zaten her yere RF (Radio Frequency — radyo frekansı) basıyorsa, aynı enerjiyi "
+            "ikinci bir duyu olarak kullanmak operatör için rasyonel bir ihtiyaçtır."
+        ),
+        "problem": (
+            "Klasik baz istasyonu veri taşır; çevreyi 'görmez'. Kamera sis, yağmur ve karanlıkta "
+            "körleşir; gizlilik de pahalıdır. Ayrı otomotiv/askeri radar spektrumu şebeke spektrumuna "
+            "komşu girişim üretir. Sonuç: ya kör nokta kalır ya da çift altyapı ödenir."
+        ),
+        "how_steps": [
+            "Gönder: gNB (next-generation Node B — 5G/6G baz istasyonu) kullanıcıya giden OFDM veya OTFS dalga şeklini yayınlar; ekstra kamyon yoktur.",
+            "Dinle: Araç, duvar veya drondan dönen eko gecikme (mesafe), Doppler (hız) ve dizi faz farkı AoA (Angle of Arrival — geliş açısı) verir.",
+            "Ayır: Zaman, frekans veya kodda dik (orthogonal) paylaşım, konuşma bitleri ile yankının birbirini bozmamasını hedefler.",
+            "Aktar: Nokta bulutu veya iz özeti kenar sunucuya gider (trafik, UTM, enkaz senaryoları).",
+        ],
+        "mental_model": (
+            "Bunu zihninde şöyle kur: kule el feneri değil, yarasa gibi hem bağırır hem dinler. "
+            "Aynı 'ses' hem sizin kulağınıza (veri) gider hem duvardan dönüp kuleye mesafe söyler. "
+            "İki ayrı ağız değil, tek ağız, iki kulak işidir."
+        ),
+        "analogy": (
+            "Yarasa karanlıkta gözle değil, sesin geri dönüşüyle 'görür'. ISAC kulesi de yayınlar "
+            "ve yankıyı dinler — ama aynı anda sizinle konuşmayı da sürdürür."
+        ),
+        "analogy_technical_map": (
+            "Bu analojinin teknik karşılığı: ultrason yerine RF taşıyıcı; 'gecikme = 2R/c' radar "
+            "menzili; 'sesin kayması' Doppler kayması; 'kulak çifti' ise çok antenli AoA kestirimidir. "
+            "Yarasa tek görevlidir; ISAC'de iletişim kapasitesi ile algılama CRB'si aynı güç bütçesini paylaşır."
+        ),
+        "when_used": (
+            "Görüşün bozulduğu (sis, gece) ve kamera istemediğiniz (gizlilik) senaryolarda; "
+            "mevcut kule geometrisinin zaten yolu, boğazı veya hava koridorunu gördüğü yerde; "
+            "ayrı radar spektrumunun pahalı veya siyasi olarak zor olduğu operatör şebekelerinde."
+        ),
+        "when_not": (
+            "Santimetre altı 'her zaman, her mahallede' vaadi için değil — bu literatür hedefidir, "
+            "bu platformda saha ölçümü yoktur. Yoğun çoklu yansıma (clutter) ve gizlilik düzenlemesi "
+            "çözülmeden kamusal izleme ürünü gibi sunulmamalıdır. THz kadar geniş bant yoksa "
+            "menzil çözünürlüğü fiziken sınırlı kalır."
+        ),
+        "not_to_confuse": (
+            "Klasik radar + yanına konmuş 5G kulesi ISAC değildir; o iki sistemdir. "
+            "Kamerayla bilgisayarla görme de değildir: RF yankısı görüntü pikseli üretmez. "
+            "Ambient IoT geri saçılımı da farklıdır: orada pilsiz etiket kasıtlı konuşur; "
+            "ISAC'de hedef çoğu zaman işbirlikçi olmayan bir yansıtıcıdır."
+        ),
+        "real_world": (
+            "Otomotiv V2X araştırma test yatakları, alçak irtifa dron yönetimi çalışmaları, "
+            "3GPP Rel-19 ISAC çalışma kalemi ve Avrupa Hexa-X-II mimari raporlarında karşınıza çıkar. "
+            "Ticari 'her kule radar' ürünü değildir."
+        ),
+        "tt_impact": (
+            "Boğaz sisinde deniz trafiği, şehir içi dron koridoru, enkaz altı hareket: mevcut "
+            "kule adaylığıdır. TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) 4: "
+            "laboratuvar ve erken saha; her abone mahallesinde yok."
         ),
         "principle_html": (
-            "<p><strong>1. Gönder:</strong> Kule, her zamanki gibi internet sinyalini yayınlar. "
-            "Yeni bir 'radar kamyonu' yoktur.</p>"
-            "<p><strong>2. Dinle:</strong> Sinyal araba, duvar veya drondan seker. Kule bu yankıyı "
-            "alır. Gecikme = mesafe, kayma = hız.</p>"
-            "<p><strong>3. Ayır:</strong> Yazılım, sizin konuşma verinizle yankıyı birbirine karıştırmaz. "
-            "Biri internet, diğeri haritadır.</p>"
-            "<p><strong>Sonuç:</strong> Tek anten, iki iş. Operatör için maliyet ve spektrum tasarrufu; "
-            "şehir için kamera koymadan farkındalık.</p>"
+            "<p><strong>1. Gönder:</strong> "
+            "<strong>gNB</strong> (next-generation Node B — 5G/6G baz istasyonu) kullanıcıya giden "
+            "radyo çerçevesini yayınlar. Yeni bir radar kamyonu yoktur.</p>"
+            "<p><strong>2. Dinle:</strong> Sinyal araç, duvar veya drondan seker. Gecikme mesafe, "
+            "<strong>Doppler</strong> kayması hız, dizi faz farkı <strong>AoA</strong> "
+            "(Angle of Arrival — geliş açısı) verir.</p>"
+            "<p><strong>3. Ayır:</strong> Yazılım, sizin bitlerinizle yankıyı zaman/frekans/kodda "
+            "ayırmaya çalışır. Biri internet, diğeri haritadır.</p>"
+            "<p><strong>Sonuç:</strong> Tek RF zinciri, iki iş. Operatör için spektrum ve anten tasarrufu "
+            "adaylığı; şehir için kamera koymadan farkındalık. Ödünleşme: aynı güç hem bit hem eko içindir.</p>"
+        ),
+        "arch_html": (
+            "<p><strong>Katman 1 — Radyo ve anten (PHY):</strong> Mevcut baz istasyonu hem veri yollar "
+            "hem eko dinler. Masif MIMO dizi, açı kestirimi için faz farkı sağlar.</p>"
+            "<p><strong>Katman 2 — Kaynak paylaşımı (MAC):</strong> Konuşma ile yankı birbirini bozmasın "
+            "diye zaman, frekans veya kod paylaştırılır. Bu 'sihir' değil, ödünleşmedir.</p>"
+            "<p><strong>Katman 3 — Kenar işleme:</strong> Mesafe/hız/açı özeti Türk Telekom kenar bulutuna "
+            "gider (trafik, dron, enkaz). Ham I/Q her zaman merkeze taşınmaz; bant pahalıdır.</p>"
+            "<p>Dalga şekli (OFDM/OTFS), CRB ve 3GPP Rel-19 için uzman katmanı bu sayfada, "
+            "formül kartlarında durur.</p>"
         ),
     },
     "ris": {
         "card": (
-            "Yüksek hızlı sinyal düz gider; köşe başı, asansör ve kalın duvar kör nokta kalır. "
-            "Klasik çözüm yeni kule dikmektir — pahalı ve çirkin. RIS, bina cephesine asılan "
-            "elektronik bir ayna gibidir: gelen sinyali sizin bulunduğunuz odaya çevirir, "
-            "neredeyse elektrik harcamaz. Türk Telekom kör noktayı kule dikmeden kapatır."
+            "Yüksek frekanslı sinyal düz gitmeye eğilimlidir; köşe, asansör ve kalın duvar kör nokta kalır. "
+            "Klasik cevap yeni kule dikmektir. "
+            "RIS (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey) "
+            "cepheye asılan elektronik bir yansıtıcıdır: her küçük eleman fazı kaydırır, hüzme size döner. "
+            "Aktif verici olmadığı için enerji kırıntısı kadardır. TRL 5 — prototip/saha denemesi, ticari kule değil."
         ),
         "kicker": "Sorun: sinyal köşeyi dönemez",
-        "teach_html": (
-            "<div class='teach-item'><div class='teach-label'>Bugünün sorunu</div>"
-            "<p>Radyo dalgası ışık gibi davranır: duvarın arkasına ve keskin köşeye zor ulaşır. "
-            "Plaza camı, asansör boşluğu ve avlu 'çekmiyor' şikâyetinin kaynağı budur. "
-            "Her kör noktaya kule dikmek hem pahalıdır hem kent estetiğini bozar.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>6G bunu nasıl çözer</div>"
-            "<p>Cepheye ince bir elektronik yüzey asılır. Yüzeyin her küçük parçası sinyali "
-            "biraz döndürür; hepsi birlikte ışığı sizin telefona odaklar. Aktif verici yoktur, "
-            "bu yüzden enerji tüketimi çok düşüktür.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Analoji</div>"
-            "<p>Karanlık odada el feneri duvarın arkasını aydınlatamaz. Açısı ayarlanan bir ayna "
-            "ışığı büküp görünmeyen odaya taşır. RIS, radyo için o ayarlanabilir aynadır.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Türk Telekom abonesi için ne değişir</div>"
-            "<p>Plaza camı, stadyum tribünü, metro girişi: kapsama 'çekmiyor' yerine yönlendirilmiş "
-            "sinyal olur. TRL 5 — prototip ve saha denemesi aşamasında, ticari kule kadar olgun değil.</p></div>"
+        "what": (
+            "RIS, yüzlerce veya binlerce ayarlanabilir yansıtıcı elemandan oluşan bir yüzeydir. "
+            "Elemanlar PIN diyot, varaktör veya benzeri anahtarla gelen dalganın fazını 0–2π aralığında "
+            "kaydırır. Kendi başına internet üretmez; mevcut gNB'nin yayınını istenen UE'ye (User Equipment — "
+            "kullanıcı cihazı) yönlendirir."
         ),
-        "arch_html": (
-            "<p><strong>Katman 1 — Yüzey:</strong> Cam veya cepheye ince elektronik ayna asılır. "
-            "Kendi başına internet üretmez.</p>"
-            "<p><strong>Katman 2 — Küçük denetleyici:</strong> Her hücre sinyali biraz döndürür; "
-            "hepsi birlikte hüzmeyi size çevirir.</p>"
-            "<p><strong>Katman 3 — Kule emri:</strong> Baz istasyonu aynaya 'şu kullanıcıya bak' der. "
-            "Kontrol hattı ince ve düşük güçlüdür.</p>"
-            "<p>Metamalzeme, faz kaydırma ve 3GPP RIS için soldan <strong>Uzman Seviyesi</strong> açın.</p>"
+        "why_needed": (
+            "mmWave ve daha yüksek bantlarda duvar ve köşe kaybı şiddetlidir. Her kör noktaya kule "
+            "hem CAPEX hem kent estetiği hem EMC yüküdür. Pasif veya yarı-pasif bir yüzey, "
+            "yolu 'akıllı ortam' haline getirerek kapsama deliğini ucuza kapatma vaadidir."
+        ),
+        "problem": (
+            "Radyo dalgası yüksek frekansta ışığa benzer: görüş hattı (LoS) yoksa hız düşer veya bağ kopar. "
+            "Plaza camı, avlu, tünel kıvrımı 'çekmiyor' şikâyetinin fiziğidir. Röle (aktif tekrarlayıcı) "
+            "ise kendi RF zinciri, güç ve girişimini taşır."
+        ),
+        "how_steps": [
+            "Yüzeyi yerleştir: cephe, cam veya tünel duvarı — yüzey kendi başına baz istasyonu değildir.",
+            "Fazı ayarla: her eleman küçük bir faz kayması uygular; hepsi birlikte hüzme şekillendirir (Snell'in ötesinde yönlendirme).",
+            "Kule komut verir: gNB, RIS denetleyicisine 'şu kullanıcıya bak' der; kontrol hattı ince ve düşük güçlüdür.",
+            "Sonuç: engellenen doğrudan yol yerine kontrollü yansıma yolu oluşur.",
+        ],
+        "mental_model": (
+            "Bunu zihninde şöyle kur: karanlık koridorda el feneri köşeyi dönemez. Ayarlanabilir bir ayna "
+            "ışığı odaya taşır. Ayna lamba değildir; lambanın ışığını yönlendirir. RIS de verici değil, "
+            "programlanabilir yansıtıcıdır."
+        ),
+        "analogy": (
+            "Karanlık odada el feneri duvarın arkasını aydınlatamaz. Açısı ayarlanan ayna ışığı büküp "
+            "görünmeyen odaya taşır. RIS, radyo için o ayarlanabilir aynadır."
+        ),
+        "analogy_technical_map": (
+            "Bu analojinin teknik karşılığı: 'ayna açısı' her elemanın fazı θ_n; 'odaklanmış demet' "
+            "dizi faktörü; 'lamba' Tx–RIS kanalı G; 'oda' RIS–Rx kanalı h_r. Ayna ışığı zayıflatır: "
+            "çift yol kaybı (Tx→RIS→Rx) aktiftir. N eleman birlikte, ideal koşullarda güç ~N² ölçeklenir."
+        ),
+        "when_used": (
+            "N-LoS sokak, tünel kıvrımı, stadyum tribünü, plaza içi mmWave, tarihi dokuya kule dikilemeyen "
+            "alan. Enerji ve CAPEX'in aktif röleden düşük kalmasının istendiği yerler."
+        ),
+        "when_not": (
+            "Yüzeyin kanalı kestiremediği (pasif eleman alıcı değildir) ve denetleyici gecikmesinin "
+            "kullanıcı hızına yetmediği yerde beklenen kazanç düşer. Çift yol kaybı yüzünden 'kule yerine "
+            "her yere RIS yapıştır' çözümü menzili sihirle uzatmaz. %90 enerji tasarrufu literatür/hedef "
+            "karşılaştırmasıdır; bu platformda saha faturası ölçülmemiştir."
+        ),
+        "not_to_confuse": (
+            "Aktif röle veya küçük hücre değildir — kendi yüksek güçlü vericisi yoktur. "
+            "Metamalzeme 'görünmez pelerin' pazarlaması da değildir; Maxwell yasaları geçerlidir, "
+            "yalnızca sınır koşulu programlanır. ISAC ile birlikte kullanılabilir ama RIS tek başına radar değildir."
+        ),
+        "real_world": (
+            "ETSI RIS ISG, 3GPP Rel-19/20 çalışma kalemleri, operatör PoC'leri (cephe ve iç mekân panelleri). "
+            "Tak-çalıştır ticari emtia henüz her binada yoktur."
+        ),
+        "tt_impact": (
+            "Tarihi yarımada, tünel, plaza camı: kule dikmeden kapsama adayı. TRL 5 — ilgili ortamda "
+            "prototip; abone şebekesinin varsayılan parçası değil."
         ),
         "principle_html": (
-            "<p><strong>1. Yüzeyi as:</strong> Bina, cam veya duvara ince elektronik ayna kaplanır.</p>"
-            "<p><strong>2. Açıyı ayarla:</strong> Her küçük hücre sinyali biraz döndürür. "
-            "Hepsi birlikte hüzmeyi sizin cihaza çevirir.</p>"
-            "<p><strong>3. Kuleye bağla:</strong> Baz istasyonu aynaya 'şu kullanıcıya bak' der. "
-            "Ayna kendi başına internet üretmez; yalnızca yönlendirir.</p>"
-            "<p><strong>Sonuç:</strong> Yeni kule yerine ucuz yüzey. Kör nokta kapanır, enerji faturası "
-            "neredeyse artmaz.</p>"
+            "<p><strong>1. Yüzeyi as:</strong> Bina, cam veya duvara ince elektronik yansıtıcı kaplanır. "
+            "Bu bir baz istasyonu değildir.</p>"
+            "<p><strong>2. Fazı kaydır:</strong> Her küçük eleman gelen dalganın fazını değiştirir. "
+            "Hepsi birlikte hüzmeyi sizin <strong>UE</strong> cihazınıza çevirir.</p>"
+            "<p><strong>3. Kuleye bağla:</strong> <strong>gNB</strong> denetleyiciye 'şu kullanıcıya bak' der. "
+            "Kontrol hattı ince ve düşük güçlüdür.</p>"
+            "<p><strong>Sonuç:</strong> Yeni kule yerine yönlendirilmiş yansıma. Kör nokta kapanır; "
+            "bedeli kanal kestirimi ve çift yol kaybıdır.</p>"
+        ),
+        "arch_html": (
+            "<p><strong>Katman 1 — Yüzey:</strong> PCB veya esnek film üzerinde PIN/varaktör elemanlar. "
+            "Aktif RF zinciri yoktur veya çok azdır.</p>"
+            "<p><strong>Katman 2 — Denetleyici:</strong> FPGA/mikrodenetleyici, eleman voltajlarını "
+            "gNB emrine göre değiştirir.</p>"
+            "<p><strong>Katman 3 — Kontrol hattı:</strong> Kule ile yüzey arasında düşük bit hızlı C-düzlemi. "
+            "Yüzey 'kendi başına internet' üretmez.</p>"
+            "<p>Metamalzeme, N² ölçeği ve kanal kestirim zorluğu uzman formül kartlarındadır.</p>"
         ),
     },
     "cell_free": {
         "card": (
-            "Bugünkü şebekede her mahallenin bir 'hücresi' vardır. Hücre kenarında sinyal düşer, "
-            "kule değişirken arama kopabilir. Hücresiz MIMO'da sokak lambası gibi sık küçük antenler "
-            "sizi birlikte taşır; kenar diye bir yer kalmaz. Stadyum, havalimanı ve kalabalık caddede "
-            "herkesin hızı daha adil olur."
+            "Klasik şebekede her mahallenin bir hücresi vardır. Kenarda sinyal düşer, kule değişince "
+            "(handover) kopma riski doğar. Hücresiz Massive MIMO'da sokak lambası gibi sık "
+            "erişim noktaları sizi birlikte taşır; kenar diye bir yer kalmaz. Bedeli: antenleri merkeze "
+            "bağlayan fronthaul (ön bağlantı) fiberidir. TRL 4 — deneysel; önce stadyum ve havalimanı adaydır."
         ),
         "kicker": "Sorun: hücre kenarında kopma",
-        "teach_html": (
-            "<div class='teach-item'><div class='teach-label'>Bugünün sorunu</div>"
-            "<p>Şebeke, pastayı dilimlere ayırır: her dilim bir kule. Dilimin kenarında hem sizin "
-            "sinyaliniz zayıftır hem komşu kule karışır. Yürürken kule değiştirmek (handover) kopma riskidir. "
-            "Stadyumda herkes aynı kuleye yığılır, tribünün bir yanı aç kalır.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>6G bunu nasıl çözer</div>"
-            "<p>Tek dev kule yerine onlarca küçük erişim noktası sizi aynı anda taşır. "
-            "'Bu anten senin, şu anten komşunun' ayrımı kalkar. Yazılım hepsini tek sistem gibi yönetir.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Analoji</div>"
-            "<p>Tek projektörle sahneyi aydınlatırsanız kenar karanlık kalır. Birçok küçük lamba "
-            "oyuncuyu her adımında birlikte takip ederse gölge oluşmaz. Hücresiz MIMO o lamba ağıdır.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Türk Telekom abonesi için ne değişir</div>"
-            "<p>Havalimanı yürüyüşü, stadyum maçı, yoğun bulvar: 'kenarda çekmiyor' şikâyeti hedeflenir. "
-            "TRL 4 — deneysel; fiberle antenleri merkeze bağlamak pahalıdır, bu yüzden önce yoğun mekânlar adaydır.</p></div>"
+        "what": (
+            "Hücresiz Massive MIMO (Multiple-Input Multiple-Output — çoklu giriş çoklu çıkış), "
+            "kullanıcıyı tek bir hücreye bağlamak yerine coğrafyaya yayılmış birçok erişim noktasının "
+            "(AP) aynı anda, aynı frekansta, merkezi veya yarı-dağıtık işlemle hizmet verdiği mimaridir. "
+            "Hücre sınırı tasarım hedefi olarak ortadan kalkar."
         ),
-        "arch_html": (
-            "<p><strong>Katman 1 — Küçük antenler:</strong> Sokak, tavan, tribün: birçok erişim noktası sizi birlikte taşır.</p>"
-            "<p><strong>Katman 2 — Fiber omurga:</strong> Antenler merkeze bağlanır; 'hangi anten ne söylesin' orada kararlaşır.</p>"
-            "<p><strong>Katman 3 — Ortak beyin:</strong> Kenar bulut, kenar parazitini faydalı sinyale çevirir. "
-            "Hücre kenarı kavramı kalkar.</p>"
-            "<p>Fronthaul, MMSE ve ön kodlama için soldan <strong>Uzman Seviyesi</strong> açın.</p>"
+        "why_needed": (
+            "Kapasite ve adalet hücre kenarında çöker: sizin sinyaliniz zayıf, komşu kule parazittir. "
+            "Stadyum ve terminalde herkes aynı makro kuleye yığılır. Dağıtık antenler hem yolu kısaltır "
+            "hem paraziti işbirliğiyle faydalı sinyale çevirme imkânı verir."
+        ),
+        "problem": (
+            "Hücresel pasta dilimleridir. Dilim kenarında SINR (Signal-to-Interference-plus-Noise Ratio — "
+            "sinyal-parazit-artı-gürültü oranı) düşer. Yürüyen abone handover yapar; başarısızlık kopmadır. "
+            "Tek kule + çok kullanıcı = tribünün bir yanı aç, diğer yanı tok."
+        ),
+        "how_steps": [
+            "Dağıt: düşük karmaşıklıklı AP'ler tavan, tribün, cadde — makro kule tek başına taşımaz.",
+            "Bağla: AP'ler yüksek hızlı fronthaul ile CPU/kenar buluta gider; senkronizasyon şarttır.",
+            "Ortak taşı: birkaç AP sizin için aynı anda ön kodlama (precoding) yapar.",
+            "Paraziti işle: komşu kullanıcıya giden enerji, işbirliğiyle bastırılır veya faydaya çevrilir.",
+        ],
+        "mental_model": (
+            "Bunu zihninde şöyle kur: tek projektörle sahne kenarı karanlık kalır. Birçok küçük lamba "
+            "oyuncuyu her adımında birlikte takip ederse gölge oluşmaz. Lambalar ayrı 'hücre' değildir; "
+            "tek aydınlatma sistemidir."
+        ),
+        "analogy": (
+            "Tek projektör kenarı karanlık bırakır. Birçok küçük lamba oyuncuyu birlikte takip ederse "
+            "gölge oluşmaz. Hücresiz MIMO o lamba ağıdır."
+        ),
+        "analogy_technical_map": (
+            "Bu analojinin teknik karşılığı: lamba = AP; kablo = fronthaul; ortak takip = ortak ön kodlama "
+            "w_mk; gölge = hücre kenarı paraziti; 'tek sistem' = CPU'da MMSE veya sıfır zorlamalı (ZF) "
+            "matris. Fiber yoksa lamba ağı kördür — hesap merkeze veya dağıtık kümeye gitmek zorundadır."
+        ),
+        "when_used": (
+            "Yüksek kullanıcı yoğunluğu, hareket, adalet ihtiyacı: stadyum, havalimanı, dizi üretim hattı, "
+            "yoğun bulvar. Makro kule estetiğinin istenmediği iç mekânlar."
+        ),
+        "when_not": (
+            "Seyrek kırsalda her direğe fiber çekmek CAPEX olarak anlamsızdır; NTN veya makro 4G/5G "
+            "daha rasyoneldir. Fronthaul gecikmesi ve senkron bozulursa 'hücresiz' kazanç tersine döner. "
+            "5x–10x spektral kazanç literatür aralığıdır; bu platformda saha ölçümü yoktur."
+        ),
+        "not_to_confuse": (
+            "Küçük hücre (small cell) ormanından farklıdır: small cell hâlâ hücredir, kenarı vardır. "
+            "Klasik CoMP (koordineli çok nokta) hücresiz MIMO'nun atasıdır ama 'hücre yok' varsayımına "
+            "kadar gitmez. Wi-Fi roaming de değildir: burada aynı anda çok AP sizin sembolünüzü taşır."
+        ),
+        "real_world": (
+            "Akademik çekirdek (dağıtık MIMO literatürü), 3GPP dağıtık MIMO çalışma grupları, "
+            "satıcı laboratuvar gösterimleri. Operatör stadyum PoC adayı; şehir geneli ürün değil."
+        ),
+        "tt_impact": (
+            "Havalimanı yürüyüşü, stadyum, sanayi deposu: kenar şikâyeti hedeflenir. TRL 4. "
+            "Önce yoğun mekân, çünkü fiber pahalıdır."
         ),
         "principle_html": (
-            "<p><strong>1. Dağıt:</strong> Küçük antenler sokağa, tavana, tribüne sık yerleştirilir. "
+            "<p><strong>1. Dağıt:</strong> Küçük erişim noktaları sokağa, tavana, tribüne sık yerleştirilir. "
             "Tek dev kuleye bel bağlanmaz.</p>"
-            "<p><strong>2. Ortak taşı:</strong> Telefonunuz birkaç antene aynı anda bağlanır. "
+            "<p><strong>2. Ortak taşı:</strong> Telefonunuz birkaç AP'ye aynı anda bağlanır. "
             "Hepsi sizin için konuşur.</p>"
-            "<p><strong>3. Merkezde birleştir:</strong> Fiberle bağlı bir beyin, hangisinin ne söyleyeceğini "
-            "ayarlar. Kenar paraziti faydalı sinyale dönüşür.</p>"
-            "<p><strong>Sonuç:</strong> Yürürken 'kule değişti' hissi kaybolur. Herkes daha adil hız alır.</p>"
+            "<p><strong>3. Merkezde birleştir:</strong> Fiber fronthaul ile bağlı işlemci, "
+            "<strong>MMSE</strong> (Minimum Mean Square Error — minimum ortalama kare hata) "
+            "tipi ön kodlama ile hangisinin ne söyleyeceğini ayarlar.</p>"
+            "<p><strong>Sonuç:</strong> Yürürken 'kule değişti' hissi kaybolur. Adalet artar; "
+            "fatura fronthaul ve hesap yüküdür.</p>"
+        ),
+        "arch_html": (
+            "<p><strong>Katman 1 — Dağıtık AP:</strong> Düşük karmaşıklıklı radyo; yerel Tx/Rx, ağır hesap yok.</p>"
+            "<p><strong>Katman 2 — Fronthaul:</strong> Fiber (eCPRI / RoF). Senkron yoksa ortak hüzme bozulur.</p>"
+            "<p><strong>Katman 3 — CPU / kenar bulut:</strong> Ortak kestirim ve ön kodlama. "
+            "Hücre kenarı kavramı tasarım olarak kalkar.</p>"
+            "<p>SINR formülü ve MMSE varsayımları uzman kartlarındadır.</p>"
         ),
     },
     "thz": {
         "card": (
-            "5G hızlıdır ama kablosuz 'boru' hâlâ dardır: hologram, kablosuz veri merkezi, "
-            "saniyede film indirme bu boruya sığmaz. Terahertz, radyo ile ışık arasındaki "
-            "çok yüksek tonda konuşur; boru çok genişler. Bedeli vardır: duvar, yağmur ve "
-            "mesafe sinyali keser. Bu yüzden TRL 3'tür — laboratuvar güçlü, sokak henüz değil."
+            "5G hızlıdır ama kablosuz boru hâlâ dardır: raf arası terabit, gerçek zamanlı hologram "
+            "bu boruya sığmaz. Terahertz, milimetre dalga ile kızılötesi arasındaki spektrumdur; "
+            "bant genişliği patlar. Bedeli fiziktir: su buharı emilimi, duvar ve mesafe. "
+            "TRL 3 — laboratuvar güçlü, sokak şebekesi değil. 6G'nin tamamı THz değildir."
         ),
         "kicker": "Sorun: kablosuz boru hâlâ dar",
-        "teach_html": (
-            "<div class='teach-item'><div class='teach-label'>Bugünün sorunu</div>"
-            "<p>4G köy yolu, 5G otobandır. Yine de bir veri merkezinin rafları arası trafik veya "
-            "gerçek zamanlı hologram, bugünkü kablosuz banta sığmaz. Fiber her yere çekilemez.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>6G bunu nasıl çözer</div>"
-            "<p>Çok daha tiz bir radyo kullanılır. Frekans yükseldikçe aynı anda taşınabilen veri "
-            "miktarı patlar. Hedef: saniyede yüzlerce gigabit, hatta terabit mertebesi.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Analoji</div>"
-            "<p>İnce bir bahçe hortumuyla havuz dolduramazsınız. THz, yangın hortumu gibidir — "
-            "ama hortum kısadır ve bir yaprak bile ağzını kapatabilir. Bu yüzden kısa mesafe ve "
-            "görüş hattı ister.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Türk Telekom abonesi için ne değişir</div>"
-            "<p>Kısa vadede cebinizdeki hız değil; veri merkezi rafları arası kablosuz köprü ve "
-            "fiber çekilemeyen kuleler arası yedek hattır. Abone deneyimine inmesi yıllar sürer. "
-            "Dürüst olgunluk: TRL 3, laboratuvar.</p></div>"
+        "what": (
+            "THz iletişimi, kabaca 0,1–10 THz (yüzlerce GHz üstü) diliminde, milimetre dalga ile "
+            "optik arasında kalan spektrumu kullanarak onlarca GHz bant genişliği açma girişimidir. "
+            "Shannon: kapasite önce bant genişliği B ile büyür; SNR ikinci terimdir."
         ),
-        "arch_html": (
-            "<p><strong>Katman 1 — Çok yüksek tonlu radyo:</strong> Boru genişler; hedef saniyede yüzlerce gigabit / terabittir.</p>"
-            "<p><strong>Katman 2 — Dar ışın:</strong> Sinyal el feneri gibi tutulur. Duvar, yağmur, el kesebilir.</p>"
-            "<p><strong>Katman 3 — Kısa mesafe işi:</strong> Raf arası, salon, kule köprüsü. Şehir sokağı için değildir.</p>"
-            "<p>GaN/InP, emilim denklemi ve Sub-THz spektrum için soldan <strong>Uzman Seviyesi</strong> açın.</p>"
+        "why_needed": (
+            "Sub-6 GHz ve hatta mmWave, veri merkezi içi mesh, kuleler arası ultra backhaul ve "
+            "ileride holografik/AR-VR bit hızı için dar kalabilir. Fiber her raf arasına ve her "
+            "tepeye çekilemez. THz, 'kablosuz fiber' adayıdır — doğru mesafede."
+        ),
+        "problem": (
+            "Frekans yükseldikçe FSPL (Free-Space Path Loss — serbest uzay yol kaybı) ve moleküler "
+            "emilim büyür. Bir el, yaprak, yağmur linki kesebilir. Donanım (InP, GaN, ADC hızı) pahalı "
+            "ve olgundur değil. Bu yüzden TRL düşüktür."
+        ),
+        "how_steps": [
+            "Spektrumu aç: 100 GHz üzeri pencereler; hedef onlarca GHz B.",
+            "Kaybı kabul et: L(f,d) = FSPL × e^{K(f)d}; K(f) su buharı çizgilerinde sıçrar.",
+            "Dar hüzme: dizi kazancı kaybı telafi eder; hizalama hassaslaşır.",
+            "Kısa menzil işi seç: raf, salon, kule köprüsü — şehir sokağı değil.",
+        ],
+        "mental_model": (
+            "Bunu zihninde şöyle kur: ince bahçe hortumuyla havuz dolduramazsınız. THz yangın hortumudur — "
+            "ama hortum kısadır ve bir yaprak ağzını kapatabilir. Bu yazılım hatası değil, elektromanyetiktir."
+        ),
+        "analogy": (
+            "İnce hortum / yangın hortumu: THz çok veri taşır, kısa ve kırılgandır. "
+            "Görüş hattı ve kuru hava ister."
+        ),
+        "analogy_technical_map": (
+            "Bu analojinin teknik karşılığı: hortum kesiti = bant genişliği B; hortum uzunluğu = d; "
+            "yaprak = tıkanma (blockage); su buharı = K(f) emilim; basınç = EIRP ve dizi kazancı. "
+            "Shannon C = B log2(1+SNR) der ki B'yi 50 GHz yapmak logaritmik SNR'den çok daha etkilidir — "
+            "SNR'yi emilim yerse B tek başına yetmez."
+        ),
+        "when_used": (
+            "Kablosuz veri merkezi, kısa menzil backhaul/fronthaul, laboratuvar spektroskopi, "
+            "kontrollü iç mekân. Görüş hattı sağlanabilen, mesafenin onlarca–yüzlerce metre olduğu yer."
+        ),
+        "when_not": (
+            "Açık şehir makrosu, yağmurlu uzun hop, cepten-cepte kilometre. '1 Tbps her aboneye' "
+            "pazarlama cümlesidir; bu platformda ölçülmedi, fizik menzili sınırlar. Tıbbi nanosensör "
+            "vaadi araştırma ufkudur, Rel-19 ticari özellik değildir."
+        ),
+        "not_to_confuse": (
+            "5G mmWave (28–39 GHz bandı) THz değildir; alt komşudur. Serbest uzay optiği (lazer) "
+            "de farklıdır: THz hâlâ elektronik/RF tarafına yakındır. ISAC THz dalga şekli kullanabilir "
+            "ama THz tek başına algılama standardı değildir."
+        ),
+        "real_world": (
+            "IEEE 802.15.3d, ITU-R spektrum çalışmaları, 3GPP 'NR beyond 52.6 GHz' raporları, "
+            "satıcı Sub-THz (ör. 140 GHz) gösterimleri. Abone telefonunda varsayılan bant değil."
+        ),
+        "tt_impact": (
+            "Kısa vadede cep hızı değil; veri merkezi rafları ve fiber çekilemeyen kule köprüsü. "
+            "TRL 3. Dürüst konum: laboratuvar."
         ),
         "principle_html": (
-            "<p><strong>1. Daha tiz konuş:</strong> Radyo ile kızılötesi ışık arasındaki bant açılır. "
-            "Boru genişler, daha çok veri sığar.</p>"
-            "<p><strong>2. Engeli kabul et:</strong> Su buharı, duvar, hatta bir el sinyali kesebilir. "
-            "Bu fizik kuralıdır, yazılımla sihirlenmez.</p>"
-            "<p><strong>3. Dar ışın kullan:</strong> Kaybı telafi için sinyal el feneri gibi dar tutulur. "
+            "<p><strong>1. Daha tiz konuş:</strong> mmWave ile kızılötesi arasındaki bant açılır. "
+            "Bant genişliği büyür, daha çok bit sığar.</p>"
+            "<p><strong>2. Engeli kabul et:</strong> Su buharı, duvar, el sinyali kesebilir. "
+            "Bu fizik kuralıdır.</p>"
+            "<p><strong>3. Dar ışın kullan:</strong> Kaybı telafi için hüzme el feneri gibi dar tutulur. "
             "Menzil kısa kalır.</p>"
-            "<p><strong>Sonuç:</strong> Doğru yerde (raf arası, salon, kule köprüsü) rekor hız; "
-            "yanlış yerde (açık şehir, yağmur) işe yaramaz. Bu yüzden 6G'nin tamamı THz değildir.</p>"
+            "<p><strong>Sonuç:</strong> Doğru yerde (raf, salon, kule köprüsü) rekor hız adayı; "
+            "yanlış yerde işe yaramaz. 6G = yalnızca THz değildir.</p>"
+        ),
+        "arch_html": (
+            "<p><strong>Katman 1 — RF ön uç:</strong> GaN/InP/grafen adayları, çip üstü anten. Olgun CMOS değil.</p>"
+            "<p><strong>Katman 2 — Dönüştürücü:</strong> Çok yüksek hızlı ADC/DAC; güç ve ısı sorunu.</p>"
+            "<p><strong>Katman 3 — Kullanım geometrisi:</strong> Kısa hop, hizalı hüzme, yedek görüş hattı.</p>"
+            "<p>L(f,d) ve Shannon kartları uzman katmanındadır.</p>"
         ),
     },
     "ai_ran": {
         "card": (
-            "Bugünkü şebeke, mühendislerin önceden yazdığı kuralları uygular: gece-gündüz, "
-            "maç saati-sakin saat aynı ezber. AI-RAN, kuleyi öğrenen bir trafik polisi yapar: "
-            "kim nerede sıkıştıysa kaynağı oraya kaydırır, boş kuleyi uyutur. Sonuç: daha az "
-            "kesinti, daha düşük elektrik faturası. Karar hâlâ ölçüme dayanır, sihir değildir."
+            "Klasik şebeke, mühendis tarifesini uygular: gece-gündüz aynı ezber. "
+            "AI-RAN (Artificial Intelligence — yapay zekâ ile yönetilen telsiz erişim ağı), "
+            "kuleyi ölçen ve milisaniye–saniye döngüsünde kaynak kaydıran bir karar katmanıdır. "
+            "Sohbet botu değildir. TRL 5 — O-RAN RIC denemeleri var; 'hiç insan yok' sahada kanıtlanmış değildir."
         ),
         "kicker": "Sorun: şebeke ezber kural okur",
-        "teach_html": (
-            "<div class='teach-item'><div class='teach-label'>Bugünün sorunu</div>"
-            "<p>Klasik şebeke 'saat 02:00 ise kapasiteyi düşür' gibi sabit tarifelerle yürür. "
-            "Maç uzarsa, konser biterse, deprem olursa tarife geç kalır. Boş kuleler gece de "
-            "elektrik yer. Arıza çoğu zaman olduktan sonra fark edilir.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>6G bunu nasıl çözer</div>"
-            "<p>Yazılım canlı trafiği izler ve milisaniyede ayar değiştirir: sıkışan mahalleye "
-            "kaynak, boş kuleye uyku, arızaya erken uyarı. Yapay zekâ burada 'sohbet botu' değil; "
-            "kule ayarlarını yöneten bir karar motorudur.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Analoji</div>"
-            "<p>Sabit zamanlı trafik ışığı vs. kavşağı kamerayla gören akıllı ışık. AI-RAN ikincisidir: "
-            "kuyruk uzayınca yeşili uzatır, gece kimse yoksa kırmızıda bekletmez.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Türk Telekom abonesi için ne değişir</div>"
-            "<p>Maç çıkışı çekmeme, gece elektrik israfı, arızanın aboneyi vurması: bunların hedefidir. "
-            "TRL 5 — Open RAN denemeleri var, 'hiç insan yok' iddiası henüz sahada kanıtlanmış değildir.</p></div>"
+        "what": (
+            "AI-native RAN, PHY/MAC ve kaynak yönetiminin bir kısmının sabit formül yerine "
+            "öğrenilmiş modellerle (otokodlayıcı, pekiştirmeli öğrenme, kestirim) çalışacak şekilde "
+            "tasarlanmasıdır. Pratikte bugün çoğu iş O-RAN RIC üzerindeki xApp/rApp ile başlar; "
+            "hava arayüzünün tamamını sinir ağı yapmak araştırma ucudur."
         ),
-        "arch_html": (
-            "<p><strong>Katman 1 — Ölçüm:</strong> Kule canlı trafiği, ısınmayı ve kopmayı okur.</p>"
-            "<p><strong>Katman 2 — Karar yazılımı:</strong> Sıkışan mahalleye kaynak, boş kuleye uyku, "
-            "arıza belirtisine erken uyarı.</p>"
-            "<p><strong>Katman 3 — Uygulama:</strong> Ayar milisaniyede kuleye yazılır. "
-            "İnsan her saniye tarife yazmaz; denetim kalkmaz.</p>"
-            "<p>O-RAN RIC, xApp/rApp ve otokodlayıcı PHY için soldan <strong>Uzman Seviyesi</strong> açın.</p>"
+        "why_needed": (
+            "Trafik, kanal ve enerji zamanla değişir. Sabit tarife maç uzamasına, konser bitişine, "
+            "depreme geç kalır. Boş kule elektrik yer. Arıza çoğu zaman olduktan sonra görünür. "
+            "Öğrenen döngü, ölçüme dayalı uyarlama ihtiyacını karşılar."
+        ),
+        "problem": (
+            "İnsan her saniye RRM yazamaz. Klasik eşik kuralları yerel optimumda sıkışır. "
+            "Enerji, kapasite ve hareket aynı anda çekişir. Veri yoksa model uydurur; kara kutu "
+            "düzenleyiciye açıklanamaz."
+        ),
+        "how_steps": [
+            "Ölç: yük, SINR, PRB kullanımı, enerji, arıza öncüleri.",
+            "Karar: Near-RT RIC xApp (onlarca ms) hüzme/handover; Non-RT rApp (saniye+) enerji ve tahmin.",
+            "Uygula: politika gNB'ye yazılır. Denetim kalkmaz; geri alma yolu gerekir.",
+            "Öğren: ödül (kapasite, enerji, kesinti) kötüyse politika güncellenir.",
+        ],
+        "mental_model": (
+            "Bunu zihninde şöyle kur: sabit zamanlı trafik ışığı vs. kuyruğu gören ışık. "
+            "AI-RAN ikincisidir. Işık 'düşünmez'; ölçer, kural veya modeli uygular, sonucu izler. "
+            "Yanlış öğrenen ışık kavşağı kilitleyebilir — bu yüzden mühendis denetimi tasarım parçasıdır."
+        ),
+        "analogy": (
+            "Sabit trafik ışığı / kavşağı gören ışık. AI-RAN, kuyruk uzayınca yeşili uzatır, "
+            "gece kimse yoksa boş fazı kısar."
+        ),
+        "analogy_technical_map": (
+            "Bu analojinin teknik karşılığı: kamera = RAN ölçümleri; ışık programı = RRM politikası; "
+            "Near-RT = kavşak anlık döngüsü (~10 ms mertebesi, O-RAN tanımı); Non-RT = şehrin gece "
+            "planı. Q-learning'de 'yeşili uzat' bir eylemdir (a), kuyruk durumu s, ödül r kapasite veya "
+            "enerjidir. Otokodlayıcı PHY ise kavşak değil, 'nasıl korna çalınır'ın (modülasyonun) öğrenilmesidir."
+        ),
+        "when_used": (
+            "Değişken yük (stadyum, iş çıkışı), enerji hedefi, kestirimci bakım, çok tedarikçili "
+            "O-RAN denemeleri. Ölçüm kalitesi yüksek, geri alma prosedürü tanımlı ise."
+        ),
+        "when_not": (
+            "Eğitilmemiş modelle canlı şebekeye 'otonom pilot' denmez. Kara kutu karar düzenleyici "
+            "denetiminde risklidir. '%50–70 enerji' ve 'sıfır insan' iddiaları hedef/pazarlamadır; "
+            "bu platformda saha faturası yoktur. GPU'nun kendisi enerji yer — net kazanç ölçülmelidir."
+        ),
+        "not_to_confuse": (
+            "Bu sayfadaki sohbet asistanı AI-RAN değildir. Self-organizing network (SON) atasıdır "
+            "ama AI-native, öğrenmeyi hava arayüzüne kadar indirme iddiasını taşır. "
+            "O-RAN açık arayüzdür; AI onun üstünde çalışan uygulamadır — ikisi özdeş değildir."
+        ),
+        "real_world": (
+            "O-RAN WG2/WG10, 3GPP TR 38.843 (AI/ML for NR), AI-RAN Alliance. "
+            "Operatör RIC PoC'leri. Tam nöral hava arayüzü laboratuvar."
+        ),
+        "tt_impact": (
+            "Maç çıkışı kaynak kaydırma, gece uyku, arıza öncülü. TRL 5. "
+            "İnsan denetimi kapanmaz."
         ),
         "principle_html": (
-            "<p><strong>1. Ölç:</strong> Kule kimlerin nerede sıkıştığını, hangi antenin ısındığını "
-            "sürekli okur.</p>"
-            "<p><strong>2. Karar ver:</strong> Yazılım 'bu mahalleye kapasite', 'şu kuleyi uyut', "
-            "'şu donanım bozulmak üzere' der. İnsan her saniye kural yazmaz.</p>"
-            "<p><strong>3. Uygula ve öğren:</strong> Sonuç iyiyse politika kalır, kötüyse düzeltilir. "
-            "Enerji ve hız birlikte hedeflenir.</p>"
-            "<p><strong>Sonuç:</strong> Şebeke otonom trafik polisi olur. Yine de model yanlış öğrenmesin "
-            "diye mühendis denetimi kalkmaz — kara kutu riski dezavantajlar sekmesinde durur.</p>"
+            "<p><strong>1. Ölç:</strong> Kule yük, ısınma, kopma ve kanalı okur.</p>"
+            "<p><strong>2. Karar ver:</strong> <strong>RIC</strong> (RAN Intelligent Controller — RAN akıllı denetleyici) "
+            "üzerinde xApp/rApp 'kapasite kaydır / uyu / uyar' der.</p>"
+            "<p><strong>3. Uygula ve öğren:</strong> Sonuç iyiyse politika kalır. "
+            "Kara kutu riski için insan geri alma yolu tasarımın parçasıdır.</p>"
+            "<p><strong>Sonuç:</strong> Şebeke uyarlanır. Sihir değil; ölçüm + model + denetimdir.</p>"
+        ),
+        "arch_html": (
+            "<p><strong>Katman 1 — Ölçüm ve PHY:</strong> Klasik sinyal işleme veya araştırma ucunda nöral PHY.</p>"
+            "<p><strong>Katman 2 — RIC:</strong> Near-RT xApp (hızlı), Non-RT rApp (yavaş/enerji/tahmin). "
+            "<strong>O-RAN</strong> açık arayüz bu katmanı taşır.</p>"
+            "<p><strong>Katman 3 — Hızlandırıcı:</strong> gNB yanında NPU/GPU olabilir. Enerji kazancı net hesaplanmalıdır.</p>"
+            "<p>Kayıp fonksiyonu ve Q-öğrenme uzman kartlarındadır.</p>"
         ),
     },
     "ntn": {
         "card": (
-            "Karasal kule şehir ve yolu kapsar; dağ, açık deniz ve enkaz bölgesi boş kalır. "
-            "NTN, alçak yörünge uydusunu aynı telefon şebekesine bağlar: özel uydu telefonu "
-            "şart değildir. Depremde kule yıkılsa bile arama yolu gökten açık kalabilir. "
-            "Bedeli: yer kulesine göre biraz daha gecikme. TRL 6 — yedi teknolojinin en olgunu."
+            "Karasal kule şehir ve yolu kapsar; dağ, açık deniz ve enkaz boş kalır. "
+            "NTN (Non-Terrestrial Network — karasal olmayan ağ), LEO uydu ve HAPS'ı 3GPP şebekesiyle "
+            "birleştirir. Hedef: standart telefonun kule yokken göğe düşmesi. "
+            "Bedeli gecikme ve Doppler. TRL 6 — yedi teknolojinin en olgunu; şehir 6G'sinin rakibi değil."
         ),
         "kicker": "Sorun: kule her yere yetişmez",
-        "teach_html": (
-            "<div class='teach-item'><div class='teach-label'>Bugünün sorunu</div>"
-            "<p>Kapsama, kule ve fiberin ulaştığı yer kadardır. Mezra, gemi, uçak ve afet sahası "
-            "bu haritanın dışında kalır. Klasik uydu telefonu ayrı cihaz, ayrı abonelik ister.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>6G bunu nasıl çözer</div>"
-            "<p>Alçak yörünge uyduları (ve yüksek irtifa platformları) karasal şebekeyle tek sistem "
-            "gibi çalışır. Hedef: standart telefonun, kule yokken göğe bağlanması. Şehirde kule "
-            "önceliklidir; boşlukta uydu devreye girer.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Analoji</div>"
-            "<p>Karasal şebeke sokak lambasıdır — yolu aydınlatır, ormanı değil. NTN yukarıdan "
-            "tutan bir projektördür. Lambanın olduğu yerde lamba kullanılır; lamba yoksa projektör.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Türk Telekom abonesi için ne değişir</div>"
-            "<p>Afet hattı, balıkçı filosu, Doğu Anadolu kırsalı: kapsama vaadi buradadır. "
-            "TRL 6 — standartlaşma ve ticari deneme en ileride olan teknolojidir. Yine de uydu "
-            "gecikmesi yer kulesinden fazladır; şehir içi 6G'nin yerini almaz.</p></div>"
+        "what": (
+            "NTN, LEO (Low Earth Orbit — alçak dünya yörüngesi), GEO ve HAPS düğümlerini "
+            "karasal çekirdeğe 3GPP Rel-17+ prosedürleriyle bağlayan mimaridir. "
+            "Direct-to-cell: özel uydu telefonu yerine standart UE'nin uydu hücrelerini görmesi."
         ),
-        "arch_html": (
-            "<p><strong>Katman 1 — Gök:</strong> Alçak yörünge uydusu veya yüksek irtifa platformu boş coğrafyayı tutar.</p>"
-            "<p><strong>Katman 2 — Yer kapısı:</strong> Uydu sinyali Türk Telekom yer istasyonuna iner, karasal çekirdeğe bağlanır.</p>"
-            "<p><strong>Katman 3 — Sizin telefon:</strong> Hedef özel çanak değil, mevcut SIM ile göğe düşebilmektir. "
-            "Şehirde kule önceliklidir.</p>"
-            "<p>Doppler, feeder link ve Rel-17 NTN için soldan <strong>Uzman Seviyesi</strong> açın.</p>"
+        "why_needed": (
+            "Kapsama kule ve fiberin ulaştığı yer kadardır. Kırsal CAPEX, deniz, havacılık ve "
+            "afet (kule yıkılınca) karasal modeli kırar. Uydu, aynı kimlik ve numara ile boşluğu kapatma "
+            "ihtiyacına cevap verir."
+        ),
+        "problem": (
+            "Mesafe FSPL'yi büyütür; LEO ~7,5 km/s hareket Doppler ve sık handover üretir. "
+            "GEO gecikmesi konuşmayı zorlar. Spektrum, yer kapısı (gateway) ve düzenleme operatör "
+            "işidir, 'uzay sihri' değil."
+        ),
+        "how_steps": [
+            "Karasal öncelik: şehirde gNB. Boşlukta uydu/HAPS hücresi.",
+            "Yer kapısı: feeder link uydudan TT yer istasyonuna, oradan çekirdeğe.",
+            "Doppler/gecikme telafisi: PHY zaman-frekans ön düzeltmesi; aksi halde PRACH bile tutmaz.",
+            "Servis sınıfı: acil SMS/ses önce; terabit şehir deneyimi vaadi değil.",
+        ],
+        "mental_model": (
+            "Bunu zihninde şöyle kur: karasal şebeke sokak lambasıdır — yolu aydınlatır, ormanı değil. "
+            "NTN yukarıdan tutan projektördür. Lambanın olduğu yerde lamba; yoksa projektör. "
+            "Projektör daha uzaktır, gölge ve gecikme farklıdır."
+        ),
+        "analogy": (
+            "Sokak lambası / havadan projektör. NTN ormanı ve denizi tutar; cadde lambasının yerini almaz."
+        ),
+        "analogy_technical_map": (
+            "Bu analojinin teknik karşılığı: lamba = gNB; projektör = LEO hüzmesi; kablo = feeder link "
+            "+ çekirdek; gölge gecikmesi = yayılma ~ d/c (LEO'da onlarca ms mertebesi, GEO'da ~250 ms "
+            "gidiş-dönüş); rüzgârda sallanma = Doppler f_d = f_c (v/c) cosθ. Direct-to-cell, çanak değil "
+            "telefon anteninin link bütçesine sığması demektir."
+        ),
+        "when_used": (
+            "Kırsal ve dağ, deniz, havacılık, afet yedek hattı, IoT'nin kulesiz sahası. "
+            "Karasalın ekonomik olmadığı yer."
+        ),
+        "when_not": (
+            "Şehir içi kapasite ve milisaniye altı URLLC için birincil yol değildir. "
+            "'%100 küresel, sıfır boşluk' pazarlama cümlesidir; kutup, iç mekân ve düzenleme boşluğu kalır. "
+            "Bu platformda uydu gecikmesi saha ölçülmedi; kural tabanlı aralık literatürdendir."
+        ),
+        "not_to_confuse": (
+            "Klasik VSAT çanak ≠ direct-to-cell. Starlink tüketici genişbantı NTN 3GPP hücresi ile "
+            "aynı ürün değildir (farklı protokol ve iş modeli olabilir). HAPS uydu değildir; "
+            "stratosfer katmanıdır. ISAC 'gökyüzünü radar yapmak' NTN değildir."
+        ),
+        "real_world": (
+            "3GPP TR 38.811 ve Rel-17/18 NTN iş kalemleri, direct-to-cell operatör denemeleri, "
+            "ESA uzay bileşeni çalışmaları. Türkiye'de afet yedek hattı senaryosu operatör stratejisidir."
+        ),
+        "tt_impact": (
+            "Afet hattı, balıkçı filosu, Doğu Anadolu kırsalı. TRL 6. "
+            "Şehir 5G/6G kulesinin tamamlayıcısı."
         ),
         "principle_html": (
             "<p><strong>1. Yeri doldur:</strong> Şehir ve yol kulelerle kalır. Boş coğrafyada "
-            "uydu veya yüksek irtifa platformu konuşur.</p>"
-            "<p><strong>2. Aynı numarayı koru:</strong> Hedef, özel çanak antenli uydu telefonu değil; "
-            "mevcut SIM ve telefonla göğe düşebilmektir.</p>"
-            "<p><strong>3. Gecikmeyi yönet:</strong> Uydu uzaktadır ve hızlı hareket eder. "
-            "Şebeke bu kaymayı telafi eder; yine de yer kulesi kadar 'anında' olmaz.</p>"
-            "<p><strong>Sonuç:</strong> Kapsama deliği kapanır, afet hattı yedeklenir. "
-            "Bu, şehirdeki 5G/6G kulesinin rakibi değil tamamlayıcısıdır.</p>"
+            "<strong>LEO</strong> veya <strong>HAPS</strong> konuşur.</p>"
+            "<p><strong>2. Aynı kimliği koru:</strong> Hedef özel çanak değil; 3GPP UE'nin uydu hücresini görmesidir.</p>"
+            "<p><strong>3. Kaymayı yönet:</strong> Uydu hızlıdır. PHY Doppler ve gecikmeyi telafi eder; "
+            "yine de yer kulesi kadar 'anında' olmaz.</p>"
+            "<p><strong>Sonuç:</strong> Kapsama deliği kapanır. Rakip değil, tamamlayıcıdır.</p>"
+        ),
+        "arch_html": (
+            "<p><strong>Katman 1 — Uzay/hava:</strong> LEO takımı, isteğe HAPS, nadiren GEO ses/IoT.</p>"
+            "<p><strong>Katman 2 — Yer kapısı:</strong> Feeder link → Türk Telekom gateway → çekirdek şebeke.</p>"
+            "<p><strong>Katman 3 — UE:</strong> Rel-17+ NTN yetenekli modem; her eski telefon garanti değildir.</p>"
+            "<p>Doppler ve FSPL kartları uzman katmanındadır.</p>"
         ),
     },
     "ambient_iot": {
         "card": (
-            "Depodaki her koli, tarladaki her nem ölçer, sayaçtaki her düğme bugün pil ister. "
-            "Pil bitince cihaz ölür; milyonlarca pili değiştirmek imkânsızdır. Pilsiz IoT, "
-            "havadaki radyo dalgasından kırıntı enerji toplayıp 'buradayım' der. Türk Telekom "
-            "için lojistik, tarım ve sayaç: bakım ekibi göndermeden izleme."
+            "Depodaki her koli, tarladaki her nem ölçer bugün pil ister. Pil bitince cihaz ölür; "
+            "milyonlarca pili değiştirmek işlemez. Ambient IoT, ortamdaki RF kırıntısını toplayıp "
+            "geri saçılımla 'buradayım' der. Video taşımaz. TRL 4 — 3GPP çalışma kalemi; her rafa yapışmış değildir."
         ),
         "kicker": "Sorun: her nesneye pil takılmaz",
-        "teach_html": (
-            "<div class='teach-item'><div class='teach-label'>Bugünün sorunu</div>"
-            "<p>Nesnelerin interneti pille yürür. Milyon koli, sera ve sayaçta pili değiştirmek "
-            "işçilik ve atık demektir. Pahalı sensör de her ürüne yapıştırılmaz.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>6G bunu nasıl çözer</div>"
-            "<p>Etiketin kendi pili yoktur. Havadaki kule veya Wi-Fi dalgasından kırıntı elektrik "
-            "toplar; bu enerjiyle kısa bir 'buradayım / sıcaklık normal' mesajı yollar. "
-            "Kendi vericisini tam güç çalıştırmaz, gelen dalgayı hafifçe yansıtarak konuşur.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Analoji</div>"
-            "<p>Eski hesap makinelerindeki güneş paneli: pilsiz, ışıktan yaşar. Ambient IoT aynı "
-            "fikirdir; ışık yerine radyo dalgasını 'güneş' kabul eder. Film izlemez, yalnızca "
-            "kısa durum bildirir.</p></div>"
-            "<div class='teach-item'><div class='teach-label'>Türk Telekom abonesi için ne değişir</div>"
-            "<p>Depo paleti, sera nemi, su sayacı: yıllarca bakım ekibi gitmeden izlenebilir. "
-            "TRL 4 — menzil kısa, veri yavaştır; telefonunuzun yerini almaz. Trilyon nesne vaadi "
-            "standartlaşma (çalışma kalemi) aşamasındadır, sahada her rafa yapışmış değildir.</p></div>"
+        "what": (
+            "Ambient IoT, pili olmayan veya pili çok küçük olan etiketlerin, ortam RF'sinden "
+            "(kule, Wi-Fi, özel aydınlatıcı) enerji toplayıp çoğunlukla backscatter (geri saçılım) "
+            "ile kısa durum mesajı verdiği IoT sınıfıdır. Amaç trilyon ölçekte ucuz izlemedir."
         ),
-        "arch_html": (
-            "<p><strong>Katman 1 — Pilsiz etiket:</strong> Koli, sera, sayaç: ucuz etiket pil yuvası taşımaz.</p>"
-            "<p><strong>Katman 2 — Enerji kırıntısı:</strong> Kule veya Wi-Fi dalgası elektriğe çevrilir; "
-            "etiket gelen dalgayı hafifçe yansıtarak konuşur.</p>"
-            "<p><strong>Katman 3 — Okuyucu ve bulut:</strong> Yakın kule zayıf yankıyı duyar; "
-            "Türk Telekom IoT platformuna 'nerede / kaç derece' yazar.</p>"
-            "<p>Rectenna, backscatter ve Rel-19 Ambient IoT için soldan <strong>Uzman Seviyesi</strong> açın.</p>"
+        "why_needed": (
+            "Pil lojistiği ve kimyasal atık, koli/sera/sayaç ölçeğinde ekonomik değildir. "
+            "Klasik hücresel IoT (NB-IoT, RedCap) hâlâ bir enerji kaynağı ister. "
+            "Pilsiz etiket, 'nerede / kaç derece' işini bakım ekibi olmadan çözme ihtiyacıdır."
+        ),
+        "problem": (
+            "Menzil kısa, bit hızı düşüktür çünkü yansıyan güç zayıftır ve ortam enerjisi "
+            "garanti değildir. Okuyucu hassas, protokol ultra dardır. 'Telefonunuzun yerini alır' değil."
+        ),
+        "how_steps": [
+            "Topla: rectenna RF'yi DC'ye çevirir; kapasitörde kırıntı birikir.",
+            "Yansıt: anten empedansı değiştirilerek gelen taşıyıcı modüle edilir (kendi PA'sı yok).",
+            "Oku: yakındaki gNB/okuyucu zayıf eko + biti ayırır.",
+            "Buluta yaz: 'koli 14, 4 °C' — video yok.",
+        ],
+        "mental_model": (
+            "Bunu zihninde şöyle kur: eski hesap makinesinin güneş paneli. Işık yerine radyo dalgası "
+            "'güneş'tir. Cihaz film izlemez; yalnızca kısa durum bildirir. Güneş yoksa (RF zayıfsa) susar."
+        ),
+        "analogy": (
+            "Güneş panelli hesap makinesi: pilsiz, ışıktan yaşar. Ambient IoT ışık yerine RF kırıntısı kullanır."
+        ),
+        "analogy_technical_map": (
+            "Bu analojinin teknik karşılığı: panel = rectenna verimi η; ışık şiddeti = P_tx G_tx (λ/4πd)²; "
+            "hesap makinesinin 'eşittir' tuşu = backscatter biti b(t); gölge = RF zayıf bölge. "
+            "RFID atasıdır; fark 3GPP hücresel okuyucu ve adresleme hedefidir."
+        ),
+        "when_used": (
+            "Lojistik palet, soğuk zincir, sera nemi, sayaç, yapı sağlığı — kısa menzil, seyrek, "
+            "düşük bit, uzun ömür istenen yer."
+        ),
+        "when_not": (
+            "Ses, görüntü, kilometre menzil, hareketli araç telemetrisi. '1 sent altı, sınırsız ömür, "
+            "trilyon nesne' hedef/pazarlamadır; Rel-19 çalışma kalemi ürün rafı değildir. "
+            "RF'siz depo köşesinde etiket ölür."
+        ),
+        "not_to_confuse": (
+            "Klasik pasif RFID mağaza kapısı Ambient IoT'nin atasıdır ama hücresel standart ve "
+            "çoklu okuyucu senaryosu farklıdır. Enerji hasatlı sensor (güneş+pil) da ayrı sınıftır. "
+            "ISAC eko ölçümü işbirlikçi olmayan hedeftir; Ambient IoT kasıtlı etikettir."
+        ),
+        "real_world": (
+            "3GPP TR 38.848, akademik backscatter, ticari pilsiz etiket denemeleri. "
+            "Operatör IoT platformuna akış senaryo olarak yazılır, sahada her rafta değildir."
+        ),
+        "tt_impact": (
+            "Depo paleti, sera, sayaç: bakım ekibi olmadan izleme adayı. TRL 4. "
+            "Telefonunuzun yerini almaz."
         ),
         "principle_html": (
-            "<p><strong>1. Topla:</strong> Etiket havadaki radyo kırıntısını elektriğe çevirir. "
-            "Pil yuvası yoktur.</p>"
-            "<p><strong>2. Yansıt:</strong> Kendi vericisini yakmaz. Gelen dalgayı 'evet/hayır' "
-            "diye hafifçe değiştirerek konuşur. Bu yüzden menzil kısadır.</p>"
-            "<p><strong>3. Oku:</strong> Yakındaki kule veya okuyucu bu zayıf yankıyı duyar ve "
-            "buluta 'koli 14, 4 °C' diye yazar.</p>"
-            "<p><strong>Sonuç:</strong> Ucuz, pilsiz, uzun ömürlü iz. Video veya ses taşımaz; "
-            "doğru işi (nerede / kaç derece) çözer.</p>"
+            "<p><strong>1. Topla:</strong> Etiket havadaki RF kırıntısını elektriğe çevirir (rectenna). "
+            "Pil yuvası yoktur veya yedektir.</p>"
+            "<p><strong>2. Yansıt:</strong> Kendi vericisini yakmaz. Gelen dalgayı evet/hayır diye "
+            "değiştirir. Bu yüzden menzil kısadır.</p>"
+            "<p><strong>3. Oku:</strong> Yakındaki kule veya okuyucu zayıf yankıyı duyar ve buluta yazar.</p>"
+            "<p><strong>Sonuç:</strong> Ucuz, pilsiz, seyrek iz. Video taşımaz; doğru işi çözer.</p>"
+        ),
+        "arch_html": (
+            "<p><strong>Katman 1 — Etiket:</strong> ASIC + mikro kapasitör + rectenna. Batarya yok.</p>"
+            "<p><strong>Katman 2 — Enerji ve okuyucu:</strong> 6G kulesi veya yardımcı aydınlatıcı; "
+            "yüksek hassasiyetli alıcı.</p>"
+            "<p><strong>Katman 3 — 3GPP Rel-19 ve IoT bulutu:</strong> Dar adresleme, TT IoT platformu.</p>"
+            "<p>Friis hasadı ve backscatter modeli uzman kartlarındadır.</p>"
         ),
     },
 }
