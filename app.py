@@ -33,6 +33,17 @@ inject_custom_styles()
 
 TECHNOLOGIES = DataService.get_all_technologies()
 
+
+def _first_text(*vals) -> str:
+    """Kart/HTML alanlarında None veya boş string basılmasını önler."""
+    for val in vals:
+        if val is None:
+            continue
+        text = str(val).strip()
+        if text and text.lower() != "none":
+            return text
+    return ""
+
 NAV_HOME = "Ana Sayfa"
 NAV_TECH = "6G Teknolojileri"
 NAV_PATENT = "Patent Zekası"
@@ -103,15 +114,21 @@ st.markdown(
 
 
 if navigation == NAV_HOME:
-    if "Temel Seviye" in view_mode:
+    beginner = "Temel Seviye" in view_mode
+    if beginner:
         st.markdown(
             """<div class="dual-card-beginner">
-<h4 style="margin-top:0;">6G nedir? (sıfır teknik bilgi)</h4>
-<p style="color:#E2E8F0; font-size:1rem; line-height:1.65; margin:0;">
-Bugün telefonunuz <strong>5G</strong> ile internete bağlanır. <strong>6G</strong> bunun bir sonraki neslidir:
-daha hızlı bağlantı, daha az kopma ve kulelerin yeni işler yapması (çevreyi görme, uyduya bağlanma, pilsiz etiket).
-Aşağıdaki yedi kart, her yapı taşını bir ev eşyası gibi anlatır. Olgunluk notu (TRL) 1–9 arasındadır;
-9 sahada hazır, 3 henüz laboratuvardır.
+<h4 style="margin-top:0;">6G nedir? — sıfır teknik bilgiyle</h4>
+<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 10px 0;">
+Telefonunuz bugün <strong>5G</strong> ile bağlanır. <strong>6G</strong> bir sonraki nesildir: daha hızlı internet
+değil yalnızca; kulelerin yeni işler yapmasıdır. Yedi yapı taşı şunu çözer:
+<strong>kör noktayı kapatmak</strong>, <strong>kopmayı bitirmek</strong>, <strong>dağı ve denizi kapsamak</strong>,
+<strong>kuleyi radar yapmak</strong>, <strong>şebekeyi kendi kendine ayarlamak</strong>,
+<strong>pilsiz nesne izlemek</strong> ve (ileride) <strong>çok kalın kablosuz boru</strong> açmak.
+</p>
+<p style="color:#CBD5E1; font-size:0.92rem; line-height:1.6; margin:0;">
+Her kartta sıra aynıdır: <em>bugünün sorunu → 6G çözümü → günlük analoji → Türk Telekom’da ne işe yarar</em>.
+Soldan <strong>Uzman Seviyesi</strong> açılırsa formül, 3GPP ve mimari gelir; temel seviyede jargon yok.
 </p>
 </div>""",
             unsafe_allow_html=True,
@@ -119,10 +136,12 @@ Aşağıdaki yedi kart, her yapı taşını bir ev eşyası gibi anlatır. Olgun
     else:
         st.markdown(
             """<div class="dual-card-expert">
-<h4 style="margin-top:0;">6G yapı taşları (uzman özeti)</h4>
-<p style="color:#E2E8F0; font-size:0.95rem; line-height:1.6; margin:0;">
-Radar haritası 3GPP / saha olgunluğuna göre TRL 1–9 gösterir. Detay, formül ve mimari için
-soldan <strong>Uzman Seviyesi</strong> açıkken 6G Teknolojileri sayfasına geçin.
+<h4 style="margin-top:0;">6G yapı taşları — uzman okuma</h4>
+<p style="color:#E2E8F0; font-size:0.95rem; line-height:1.65; margin:0;">
+Yedi enabler: ISAC (ortak dalga şekli), RIS (pasif faz yüzeyi), Cell-Free Massive MIMO,
+Sub-THz/THz, AI-native RAN (O-RAN RIC), NTN (3GPP Rel-17+ Direct-to-Cell), Ambient IoT.
+TRL 1–9 radar haritası saha olgunluğunu özetler. Mimari, CRB/Shannon ve protokol için
+<strong>6G Teknolojileri</strong> sekmelerine geçin — uydurma metrik yok, referans DOI/3GPP’dir.
 </p>
 </div>""",
             unsafe_allow_html=True,
@@ -139,58 +158,65 @@ soldan <strong>Uzman Seviyesi</strong> açıkken 6G Teknolojileri sayfasına ge�
     with col_info:
         st.markdown(
             """<div class="glass-card">
-<h4 style="color: #00E5FF; margin-top:0;">6G Teknoloji Olgunluk Değerlendirmesi</h4>
-<p style="font-size: 0.92rem; color: #C8D1DC;">
-TRL, bir teknolojinin <strong style="color:#FFFFFF;">ne kadar hazır</strong> olduğunu 1’den 9’a notlar.
-9 = sahada satışa yakın, 3 = henüz laboratuvar fikri.
+<h4 style="color: #00E5FF; margin-top:0;">TRL nedir? (olgunluk notu)</h4>
+<p style="font-size: 0.92rem; color: #C8D1DC; line-height:1.65;">
+TRL, “bu teknoloji ne kadar hazır?” sorusunun 1’den 9’a notudur.
+<strong style="color:#FFFFFF;">1 = fikir</strong>, <strong style="color:#FFFFFF;">9 = sahada satışa yakın</strong>.
+6G’nin hepsi aynı anda gelmez: uydu kapsama (NTN) diğerlerinden öndedir; THz hâlâ laboratuvardır.
+Bu notlar pazarlama vaadi değil, saha/standart olgunluğuna göre okunmalıdır.
 </p>
-<ul style="font-size: 0.88rem; color: #CBD5E1; padding-left: 20px; line-height: 1.6;">
-<li><strong style="color: #00C853;">TRL 6 — sahaya en yakın:</strong> NTN (uydu kapsama)</li>
-<li><strong style="color: #FFB020;">TRL 5 — pilot:</strong> RIS (akıllı ayna) ve AI-Native RAN</li>
-<li><strong style="color: #FF5252;">TRL 4 — erken deneme:</strong> ISAC, Cell-Free, Ambient IoT</li>
-<li><strong style="color: #FF7043;">TRL 3 — laboratuvar:</strong> THz (çok hızlı ama zor)</li>
+<ul style="font-size: 0.88rem; color: #CBD5E1; padding-left: 20px; line-height: 1.7;">
+<li><strong style="color: #00C853;">TRL 6 — sahaya en yakın:</strong> NTN — dağ, deniz, afet yedek hattı</li>
+<li><strong style="color: #FFB020;">TRL 5 — pilot:</strong> RIS (akıllı ayna) ve AI-RAN (öğrenen şebeke)</li>
+<li><strong style="color: #FF5252;">TRL 4 — erken deneme:</strong> ISAC, Hücresiz MIMO, Pilsiz IoT</li>
+<li><strong style="color: #FF7043;">TRL 3 — laboratuvar:</strong> THz — rekor hız, kısa menzil, sokakta değil</li>
 </ul>
 </div>""",
             unsafe_allow_html=True,
         )
 
-    st.markdown("### 7 Temel 6G Teknolojisi Genel Bakış")
+    st.markdown("### Yedi yapı taşı — her biri bir sorunu çözer")
+    st.caption(
+        "Kartta önce sorun, sonra çözüm vardır. Ayrıntı, analoji ve Türk Telekom senaryosu için "
+        "soldan «6G Teknolojileri» menüsüne geçin."
+    )
 
     cols = st.columns(3)
     for idx, (t_id, tech) in enumerate(TECHNOLOGIES.items()):
         col = cols[idx % 3]
         with col:
             trl_class = "trl-low" if tech["trl"] <= 4 else ("trl-mid" if tech["trl"] == 5 else "trl-high")
-            blurb = (
-                tech.get("beginner_one_liner")
-                if "Temel Seviye" in view_mode
-                else tech.get("card_summary", "")
+            blurb = _first_text(
+                tech.get("beginner_card"),
+                tech.get("card_summary"),
+                tech.get("beginner_one_liner"),
             )
-            highlights_html = ""
-            if "Uzman" in view_mode:
-                highlights_html = " ".join(
-                    [
-                        f"<span style='background: rgba(0, 153, 255, 0.12); color: #00C2FF; border: 1px solid rgba(0, 153, 255, 0.3); font-size: 0.73rem; padding: 2px 8px; border-radius: 6px; font-weight: 600; display: inline-block; margin: 2px 2px 2px 0;'>{h}</span>"
-                        for h in tech.get("highlights", [])
-                    ]
-                )
+            kicker = _first_text(tech.get("beginner_kicker"))
+            kicker_html = f"<div class='card-kicker'>{kicker}</div>" if kicker else ""
+            highlights_html = " ".join(
+                [
+                    f"<span style='background: rgba(0, 153, 255, 0.12); color: #00C2FF; border: 1px solid rgba(0, 153, 255, 0.3); font-size: 0.73rem; padding: 2px 8px; border-radius: 6px; font-weight: 600; display: inline-block; margin: 2px 2px 2px 0;'>{h}</span>"
+                    for h in tech.get("highlights", [])
+                ]
+            )
             st.markdown(
-                f"""<div class="glass-card" style="min-height: 260px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 16px;">
+                f"""<div class="glass-card" style="min-height: 340px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 16px;">
 <div>
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
 <span style="font-size: 2.2rem;">{tech['icon']}</span>
 <span class="trl-pill {trl_class}">TRL {tech['trl']}</span>
 </div>
 <h4 style="color: #FFFFFF; margin: 4px 0 2px 0; font-size: 1.15rem;">{tech['acronym']}</h4>
-<div style="color: #00C2FF; font-size: 0.8rem; font-weight: 600; margin-bottom: 10px;">{tech['title']}</div>
-<p style="color: #E2E8F0; font-size: 0.9rem; line-height: 1.55; margin: 0 0 12px 0;">
+<div style="color: #00C2FF; font-size: 0.8rem; font-weight: 600; margin-bottom: 8px;">{tech['title']}</div>
+{kicker_html}
+<p style="color: #E2E8F0; font-size: 0.9rem; line-height: 1.6; margin: 0 0 12px 0;">
 {blurb}
 </p>
 </div>
 <div>
 <div style="margin-bottom: 10px;">{highlights_html}</div>
 <div style="padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.76rem; color: #94A3B8;">
-Detay: 6G Teknolojileri menüsü
+Adım adım anlatım: 6G Teknolojileri → bu kartı seçin
 </div>
 </div>
 </div>""",
@@ -236,10 +262,19 @@ elif navigation == NAV_TECH:
     with tab_overview:
         st.markdown("### Teknoloji Tanımı & Temel Kavramlar")
         if "Temel Seviye" in view_mode:
+            teach = _first_text(tech.get("beginner_teach"))
+            if teach:
+                st.markdown(
+                    f"""<div class="dual-card-beginner">
+<h4 style="color: #00C853; margin-top:0; margin-bottom: 14px;">Sıfırdan anlatım — sorun, çözüm, analoji</h4>
+<div class="teach-grid">{teach}</div>
+</div>""",
+                    unsafe_allow_html=True,
+                )
             st.markdown(
-                f"""<div class="dual-card-beginner">
-<h4 style="color: #00C853; margin-top:0; margin-bottom: 12px;">Temel Seviye (Yönetici Özeti + Analojiler)</h4>
-<div style="color: #E2E8F0; font-size: 0.98rem; line-height: 1.6;">
+                f"""<div class="glass-card">
+<h4 style="color: #00E5FF; margin-top:0; margin-bottom: 12px;">Yönetici özeti (1 cümle + analoji)</h4>
+<div style="color: #E2E8F0; font-size: 0.98rem; line-height: 1.65;">
 {tech['executive_summary']}
 </div>
 </div>""",
@@ -259,12 +294,16 @@ elif navigation == NAV_TECH:
     with tab_principle:
         col_p_text, col_p_diag = st.columns([1, 1.1])
         with col_p_text:
-            principle = (
-                tech.get("beginner_principle")
-                if "Temel Seviye" in view_mode and tech.get("beginner_principle")
-                else tech["working_principle"]
+            principle = _first_text(
+                tech.get("beginner_principle") if "Temel Seviye" in view_mode else None,
+                tech.get("working_principle"),
             )
-            st.markdown("### Çalışma Prensibi")
+            heading = (
+                "Çalışma prensibi — üç adımda"
+                if "Temel Seviye" in view_mode
+                else "Çalışma Prensibi (teknik)"
+            )
+            st.markdown(f"### {heading}")
             st.markdown(
                 f"""<div class="glass-card">
 <div style="color: #E2E8F0; font-size: 0.95rem; line-height: 1.65;">
@@ -279,20 +318,32 @@ elif navigation == NAV_TECH:
 
     with tab_arch:
         st.markdown("### Sistem Mimarisi & Donanım Katmanları")
-        formula_html = (
-            f"<div class='formula-box'><strong>Matematiksel/Fiziksel Formül Modeli (Uzman Modu):</strong><br><br>{tech.get('mathematical_foundation', '')}</div>"
-            if "Uzman" in view_mode and tech.get("mathematical_foundation")
-            else ""
-        )
-        st.markdown(
-            f"""<div class="glass-card">
+        if "Temel Seviye" in view_mode:
+            arch = _first_text(tech.get("beginner_arch"))
+            st.markdown(
+                f"""<div class="dual-card-beginner">
+<h4 style="color:#00C853; margin-top:0;">Üç katman — jargon yok</h4>
+<div style="color: #E2E8F0; font-size: 0.95rem; line-height: 1.65;">
+{arch}
+</div>
+</div>""",
+                unsafe_allow_html=True,
+            )
+        else:
+            formula_html = (
+                f"<div class='formula-box'><strong>Matematiksel/Fiziksel Formül Modeli (Uzman Modu):</strong><br><br>{tech.get('mathematical_foundation', '')}</div>"
+                if tech.get("mathematical_foundation")
+                else ""
+            )
+            st.markdown(
+                f"""<div class="glass-card">
 <div style="color: #E2E8F0; font-size: 0.92rem; line-height: 1.6;">
 {tech['system_architecture']}
 </div>
 {formula_html}
 </div>""",
-            unsafe_allow_html=True,
-        )
+                unsafe_allow_html=True,
+            )
 
     with tab_usecase:
         st.markdown("### Kullanım Alanları & Uygulama Senaryoları")

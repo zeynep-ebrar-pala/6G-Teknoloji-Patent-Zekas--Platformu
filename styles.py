@@ -111,6 +111,47 @@ def inject_custom_styles():
             font-size: 1.1rem;
         }
 
+        .teach-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 8px 0 18px 0;
+        }
+        .teach-item {
+            background: rgba(0, 229, 255, 0.06);
+            border: 1px solid rgba(0, 229, 255, 0.18);
+            border-left: 3px solid #00E5FF;
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        .teach-item p {
+            color: #E2E8F0 !important;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin: 6px 0 0 0;
+        }
+        .teach-label {
+            color: #00E5FF;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .card-kicker {
+            display: inline-block;
+            background: rgba(0, 229, 255, 0.12);
+            color: #7DD3FC !important;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+        @media (max-width: 900px) {
+            .teach-grid { grid-template-columns: 1fr; }
+        }
+
         .dual-card-expert {
             background: rgba(0, 153, 255, 0.08);
             border: 1px solid rgba(0, 153, 255, 0.35);
