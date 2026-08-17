@@ -17,7 +17,7 @@ from components.charts import (
     render_patent_trends_chart,
     render_patent_wordcloud,
 )
-from components.ui_helpers import render_module_header, render_patent_card, render_source_button, show_empty
+from components.ui_helpers import render_module_header, render_patent_card, render_source_button, show_empty, select_section, show_plotly
 
 
 def render_patent_intelligence_module():
@@ -83,15 +83,16 @@ ticarileşme tarihi değildir.
 
     st.divider()
 
-    tab_trends, tab_topics, tab_tree, tab_map, tab_feed = st.tabs([
+    patent_sections = [
         "Patent Sayısı / Yıl",
         "Konu Dağılımı & Kelime Bulutu",
         "Patent Ağacı & Yoğunluk",
         "Teknoloji Haritası & Ağ",
         "Patent Başlıkları",
-    ])
+    ]
+    section = select_section("Patent görünümü", patent_sections, key="patent_section")
 
-    with tab_trends:
+    if section == "Patent Sayısı / Yıl":
         st.markdown("### Yıllara Göre Dağılım")
         st.caption(
             "Her çubuk bir takvim yılıdır (ör. 2024, 2025). "
@@ -101,33 +102,30 @@ ticarileşme tarihi değildir.
         if df_trends.empty:
             show_empty("Trend grafiği için yeterli patent verisi yok.")
         else:
-            fig_trends = render_patent_trends_chart(df_trends)
-            st.plotly_chart(fig_trends, use_container_width=True)
+            show_plotly(render_patent_trends_chart(df_trends))
 
         st.markdown("### En Çok Kayıtlı Firmalar")
         counts = PatentService.get_company_counts(company_arg)
         if not counts:
             show_empty("Firma sayımı için veri yok.")
         else:
-            st.plotly_chart(render_company_counts_chart(counts), use_container_width=True)
+            show_plotly(render_company_counts_chart(counts))
 
-    with tab_topics:
+    elif section == "Konu Dağılımı & Kelime Bulutu":
         col_radar, col_kw = st.columns([1.2, 1])
         with col_radar:
             df_domains = PatentService.get_all_companies_domain_df(company_arg)
             if df_domains.empty:
                 show_empty("Domain dağılımı hesaplanamadı.")
             else:
-                fig_domains = render_company_patent_domain_chart(df_domains)
-                st.plotly_chart(fig_domains, use_container_width=True)
+                show_plotly(render_company_patent_domain_chart(df_domains))
 
         with col_kw:
             kw_dict = PatentService.get_patent_keywords(company_arg)
             if not kw_dict:
                 show_empty("Anahtar kelime analizi için veri yok.")
             else:
-                fig_kw = render_patent_keywords_chart(kw_dict)
-                st.plotly_chart(fig_kw, use_container_width=True)
+                show_plotly(render_patent_keywords_chart(kw_dict))
 
         st.markdown("### Kelime Bulutu")
         st.caption("Yalnızca doğrulanmış patent başlıklarındaki kelime sıklığı.")
@@ -138,39 +136,38 @@ ticarileşme tarihi değildir.
         else:
             st.pyplot(wc_fig, clear_figure=True)
 
-    with tab_tree:
+    elif section == "Patent Ağacı & Yoğunluk":
         st.markdown("### Patent Yoğunluk Grafiği")
         df_density = PatentService.get_density_df(company_arg)
         if df_density.empty:
             show_empty("Yoğunluk haritası için veri yok.")
         else:
-            st.plotly_chart(render_patent_density_heatmap(df_density), use_container_width=True)
+            show_plotly(render_patent_density_heatmap(df_density))
 
         st.markdown("### Patent Ağacı")
         df_tree = PatentService.get_sunburst_df(company_arg)
         if df_tree.empty:
             show_empty("Ağaç grafiği için veri yok.")
         else:
-            st.plotly_chart(render_patent_sunburst(df_tree), use_container_width=True)
+            show_plotly(render_patent_sunburst(df_tree))
 
-    with tab_map:
+    elif section == "Teknoloji Haritası & Ağ":
         st.markdown("### Patent Teknoloji Haritası")
         st.caption("Koordinatlar patent başlıklarının TF-IDF vektörlerinin PCA ile 2 boyuta indirgenmesidir; uydurma konum yoktur.")
         df_map = PatentService.get_tfidf_map_df(company_arg)
         if df_map.empty:
             show_empty("Harita için en az 2 patent ve scikit-learn gerekir.")
         else:
-            st.plotly_chart(render_patent_tfidf_map(df_map), use_container_width=True)
+            show_plotly(render_patent_tfidf_map(df_map))
 
         st.markdown("### Assignee ↔ Alan Ağ Analizi")
         edges = PatentService.get_network_edges(company_arg)
         if not edges:
             show_empty("Ağ grafiği için bağlantı verisi yok.")
         else:
-            fig_net = render_patent_network_graph(edges)
-            st.plotly_chart(fig_net, use_container_width=True)
+            show_plotly(render_patent_network_graph(edges))
 
-    with tab_feed:
+    else:
         st.markdown("### Doğrulanmış 6G Patent Listesi")
         st.caption("Her kartta publication number, başlık, assignee, yıl ve Google Patents kaynak bağlantısı bulunur.")
         for pat in patents:

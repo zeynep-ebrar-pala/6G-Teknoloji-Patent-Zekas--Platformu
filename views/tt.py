@@ -1,0 +1,3 @@
+from components.tt_scenarios import render_tt_scenario_calculator
+
+render_tt_scenario_calculator()

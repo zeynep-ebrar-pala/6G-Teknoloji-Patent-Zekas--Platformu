@@ -11,7 +11,7 @@ from components.charts import (
     render_academic_database_chart,
     render_academic_trends_chart,
 )
-from components.ui_helpers import render_module_header, render_paper_card, render_source_button, show_empty
+from components.ui_helpers import render_module_header, render_paper_card, render_source_button, show_empty, select_section, show_plotly
 
 
 def render_academic_publication_module():
@@ -69,15 +69,16 @@ Google Scholar ayrı bir API sunmaz; sayılar OpenAlex’tendir.
 
     st.divider()
 
-    tab_verified, tab_openalex, tab_inst, tab_country, tab_cited = st.tabs([
+    pub_sections = [
         "Doğrulanmış set (DOI)",
         "OpenAlex yıl trendi",
         "Kurumlar",
         "Ülkeler",
         "Makaleler",
-    ])
+    ]
+    section = select_section("Yayın görünümü", pub_sections, key="academic_section")
 
-    with tab_verified:
+    if section == "Doğrulanmış set (DOI)":
         st.markdown("### DOI ile doğrulanmış 6G makaleleri")
         st.caption(
             "Çubuklar yalnızca platformda listelenen makalelerin yayın yılı ve konusudur. "
@@ -89,25 +90,23 @@ Google Scholar ayrı bir API sunmaz; sayılar OpenAlex’tendir.
         col_y, col_t = st.columns(2)
         with col_y:
             if year_counts:
-                st.plotly_chart(
-                    render_academic_database_chart(year_counts, "Doğrulanmış set — yayın yılı", "Takvim yılı"),
-                    use_container_width=True,
+                show_plotly(
+                    render_academic_database_chart(year_counts, "Doğrulanmış set — yayın yılı", "Takvim yılı")
                 )
             else:
                 show_empty("Yıl dağılımı yok.")
         with col_t:
             if topic_counts:
-                st.plotly_chart(
+                show_plotly(
                     render_academic_bar_chart(
                         [{"name": k, "count": v} for k, v in topic_counts.items()],
                         "Doğrulanmış set — konu",
-                    ),
-                    use_container_width=True,
+                    )
                 )
         if db_dist:
-            st.plotly_chart(render_academic_database_chart(db_dist, "Doğrulanmış set — yayıncı"), use_container_width=True)
+            show_plotly(render_academic_database_chart(db_dist, "Doğrulanmış set — yayıncı"))
 
-    with tab_openalex:
+    elif section == "OpenAlex yıl trendi":
         st.markdown("### 6G konularına göre yayın sayıları (OpenAlex)")
         st.caption(
             "Sayılar OpenAlex aramasındandır. API veya önbellek yoksa grafik çizilmez; "
@@ -122,52 +121,40 @@ Google Scholar ayrı bir API sunmaz; sayılar OpenAlex’tendir.
             )
             render_source_button("https://openalex.org/works", "OpenAlex’i tarayıcıda dene ↗")
         else:
-            st.plotly_chart(render_academic_trends_chart(df_acad), use_container_width=True)
+            show_plotly(render_academic_trends_chart(df_acad))
             render_source_button("https://openalex.org/works", "Bu sayıları OpenAlex’te aç ↗")
 
-    with tab_inst:
+    elif section == "Kurumlar":
         st.markdown("### En çok yayın yapan kurumlar")
         institutions = AcademicService.get_top_institutions()
         if institutions:
             st.caption("OpenAlex group_by — 2020–2025, 6G konu araması.")
-            st.plotly_chart(
-                render_academic_bar_chart(institutions, "Kurumlara göre yayın (OpenAlex)"),
-                use_container_width=True,
-            )
+            show_plotly(render_academic_bar_chart(institutions, "Kurumlara göre yayın (OpenAlex)"))
             render_source_button("https://openalex.org/works", "OpenAlex kurum filtresini aç ↗")
         else:
             verified_inst = AcademicService.get_verified_institutions()
             if verified_inst:
                 st.caption("Canlı küresel sayım yok. Aşağıdaki liste yalnızca DOI setindeki OpenAlex yazar kurumlarıdır.")
-                st.plotly_chart(
-                    render_academic_bar_chart(verified_inst, "Doğrulanmış 8 makale — yazar kurumları"),
-                    use_container_width=True,
-                )
+                show_plotly(render_academic_bar_chart(verified_inst, "Doğrulanmış 8 makale — yazar kurumları"))
             else:
                 show_empty("Kurum listesi için OpenAlex yanıtı yok. Makale kartlarındaki DOI butonunu kullanın.")
 
-    with tab_country:
+    elif section == "Ülkeler":
         st.markdown("### En çok yayın yapan ülkeler")
         countries = AcademicService.get_top_countries()
         if countries:
             st.caption("OpenAlex group_by — 2020–2025, 6G konu araması.")
-            st.plotly_chart(
-                render_academic_bar_chart(countries, "Ülkelere göre yayın (OpenAlex)"),
-                use_container_width=True,
-            )
+            show_plotly(render_academic_bar_chart(countries, "Ülkelere göre yayın (OpenAlex)"))
             render_source_button("https://openalex.org/works", "OpenAlex ülke filtresini aç ↗")
         else:
             verified_cc = AcademicService.get_verified_countries()
             if verified_cc:
                 st.caption("Canlı küresel sayım yok. Aşağıdaki liste yalnızca DOI setindeki OpenAlex ülke kodlarıdır.")
-                st.plotly_chart(
-                    render_academic_bar_chart(verified_cc, "Doğrulanmış 8 makale — ülke kodları"),
-                    use_container_width=True,
-                )
+                show_plotly(render_academic_bar_chart(verified_cc, "Doğrulanmış 8 makale — ülke kodları"))
             else:
                 show_empty("Ülke listesi için OpenAlex yanıtı yok. Makale kartlarındaki DOI butonunu kullanın.")
 
-    with tab_cited:
+    else:
         st.markdown("### Doğrulanmış 6G makaleleri")
         st.caption("Atıf sayısı OpenAlex’ten gelirse gösterilir; gelmezse «—». Her kayıt DOI ile açılır.")
         for paper in papers:

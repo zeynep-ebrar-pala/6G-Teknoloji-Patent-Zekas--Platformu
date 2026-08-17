@@ -1,0 +1,3 @@
+from components.patent_views import render_patent_intelligence_module
+
+render_patent_intelligence_module()

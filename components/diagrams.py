@@ -8,7 +8,7 @@ import streamlit as st
 def render_technology_diagram(tech_id: str):
     """Renders animated interactive SVG block diagram based on tech_id."""
     
-    css_style = "<style>html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; box-sizing: border-box; font-family: sans-serif; }</style>"
+    css_style = "<style>.tt-diagram { margin: 0; padding: 0; overflow: hidden; box-sizing: border-box; font-family: sans-serif; }</style>"
     
     diagrams = {
         "isac": f"""
@@ -270,4 +270,4 @@ def render_technology_diagram(tech_id: str):
     }
 
     diagram_code = diagrams.get(tech_id, "<p style='color: white;'>Diyagram bulunamadı.</p>")
-    st.components.v1.html(diagram_code, height=380)
+    st.html(f'<div class="tt-diagram">{diagram_code}</div>')

@@ -49,7 +49,7 @@ Anahtar yalnızca bu oturumda tutulur. Modül 1–3 ve Türk Telekom görünüm�
                 f"`.env` dosyasında `{provider.upper()}_API_KEY` tanımlı. "
                 "Aşağıdaki butonla ortam anahtarını kullanabilirsiniz."
             )
-            if st.button("`.env` anahtarı ile AI'yı aç", use_container_width=True):
+            if st.button("`.env` anahtarı ile AI'yı aç", width="stretch"):
                 ok, msg = validate_api_key(provider, env_key)
                 if ok:
                     _set_session(provider, env_key)
@@ -57,7 +57,7 @@ Anahtar yalnızca bu oturumda tutulur. Modül 1–3 ve Türk Telekom görünüm�
                 else:
                     st.error(msg)
 
-        if st.button("AI Asistanı aç", use_container_width=True, type="primary"):
+        if st.button("AI Asistanı aç", width="stretch", type="primary"):
             key = api_key_input.strip()
             if not key:
                 st.error("Lütfen geçerli bir API anahtarı girin.")
@@ -72,7 +72,7 @@ Anahtar yalnızca bu oturumda tutulur. Modül 1–3 ve Türk Telekom görünüm�
                 st.error(msg)
 
         st.caption("Anahtar yoksa asistan yine de TF-IDF ile doğrulanmış kayıtlardan kısa yanıt üretir.")
-        if st.button("Anahtarsız devam et (yalnızca yerel geri getirme)", use_container_width=True):
+        if st.button("Anahtarsız devam et (yalnızca yerel geri getirme)", width="stretch"):
             st.session_state["ai_ready"] = True
             st.session_state["ai_provider"] = provider
             st.session_state["api_key"] = ""

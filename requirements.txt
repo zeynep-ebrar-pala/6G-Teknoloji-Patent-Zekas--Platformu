@@ -1,5 +1,6 @@
-streamlit>=1.48.0,<2.0.0
-starlette>=0.46.0,<1.0.0  # Streamlit 1.60+ ile uyumlu; >=1.0 kurmayın
+streamlit==1.61.1
+starlette>=0.46.0,<0.50.0
+uvicorn>=0.32.0,<0.44.0
 pandas>=2.0.0,<3.0.0
 plotly>=5.18.0
 networkx>=3.0

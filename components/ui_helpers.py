@@ -22,7 +22,7 @@ def render_source_button(url: str, label: str = "Kaynakta Aç ↗") -> None:
     if not url:
         st.caption("Kaynak bağlantısı yok.")
         return
-    st.link_button(label, url, use_container_width=True, type="primary")
+    st.link_button(label, url, width="stretch", type="primary")
 
 
 def render_patent_card(patent: dict) -> None:
@@ -83,3 +83,32 @@ def show_empty(message: str) -> None:
 
 def show_error(message: str) -> None:
     st.error(message)
+
+
+VIEW_BEGINNER = "Temel Seviye (Kavramsal temel + analoji → teknik karşılık)"
+VIEW_EXPERT = "Uzman Seviyesi (Temel katman + denklem / 3GPP / varsayım)"
+
+
+def current_view_mode() -> str:
+    return st.session_state.get("view_mode", VIEW_BEGINNER)
+
+
+def first_text(*vals) -> str:
+    """Kart/HTML alanlarında None veya boş string basılmasını önler."""
+    for val in vals:
+        if val is None:
+            continue
+        text = str(val).strip()
+        if text and text.lower() != "none":
+            return text
+    return ""
+
+
+def select_section(label: str, options: list[str], key: str) -> str:
+    """Tek bölüm seçer; st.tabs gibi görünmeyen sekmelerin hepsini çalıştırmaz."""
+    choice = st.pills(label, options, default=options[0], key=key)
+    return choice or options[0]
+
+
+def show_plotly(fig) -> None:
+    st.plotly_chart(fig, width="stretch")

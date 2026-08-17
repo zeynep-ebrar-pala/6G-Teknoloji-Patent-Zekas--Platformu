@@ -1,0 +1,4 @@
+from components.ai_chat_view import render_ai_assistant_module
+from components.ui_helpers import current_view_mode
+
+render_ai_assistant_module(view_mode=current_view_mode())

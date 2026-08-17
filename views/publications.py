@@ -1,0 +1,3 @@
+from components.academic_views import render_academic_publication_module
+
+render_academic_publication_module()

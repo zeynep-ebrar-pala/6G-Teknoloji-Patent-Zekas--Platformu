@@ -39,13 +39,13 @@ def render_ai_assistant_module(view_mode: str = ""):
     c1, c2, c3 = st.columns(3)
     prompt_clicked = None
     with c1:
-        if st.button("RIS nedir?", use_container_width=True):
+        if st.button("RIS nedir?", width="stretch"):
             prompt_clicked = "RIS nedir?"
     with c2:
-        if st.button("NTN ile ISAC arasındaki fark", use_container_width=True):
+        if st.button("NTN ile ISAC arasındaki fark", width="stretch"):
             prompt_clicked = "NTN ile ISAC arasındaki fark"
     with c3:
-        if st.button("Patent veri özeti", use_container_width=True):
+        if st.button("Patent veri özeti", width="stretch"):
             prompt_clicked = "Platformdaki doğrulanmış patent verilerini özetle."
 
     st.divider()

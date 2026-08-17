@@ -44,7 +44,8 @@ def _with_mailto(url: str) -> str:
     return f"{url}{sep}mailto={urllib.parse.quote(MAILTO)}"
 
 
-def _fetch_json(url: str, timeout: int = 25, retries: int = 4) -> Optional[Dict[str, Any]]:
+def _fetch_json(url: str, timeout: int = 6, retries: int = 1) -> Optional[Dict[str, Any]]:
+    """Kısa zaman aşımı: Cloud'da 25s×4 deneme sayfa geçişini kilitler."""
     req = urllib.request.Request(_with_mailto(url), headers={"User-Agent": USER_AGENT})
     for attempt in range(retries):
         try:
@@ -52,12 +53,12 @@ def _fetch_json(url: str, timeout: int = 25, retries: int = 4) -> Optional[Dict[
                 return json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
-                time.sleep(min(8, 2 ** attempt + 1))
+                time.sleep(min(4, 2 ** attempt + 1))
                 continue
             return None
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
             if attempt < retries - 1:
-                time.sleep(1)
+                time.sleep(0.4)
                 continue
             return None
     return None
@@ -98,13 +99,17 @@ def fetch_works_by_dois(dois: Tuple[str, ...]) -> Dict[str, Dict[str, Any]]:
         for d in dois
         if d
     ]
+    wanted = [c.lower() for c in clean]
+    disk_map = _load_disk_cache().get("works_by_doi") or {}
+    if wanted and all(k in disk_map for k in wanted):
+        return {k: disk_map[k] for k in wanted}
+
     joined = "|".join(urllib.parse.quote(d, safe="") for d in clean)
     url = f"{OPENALEX_BASE}/works?filter=doi:{joined}&per-page=50"
     data = _fetch_json(url)
     out: Dict[str, Dict[str, Any]] = {}
     if not data or "results" not in data:
-        cache = _load_disk_cache().get("works_by_doi") or {}
-        return {k: v for k, v in cache.items() if k in [c.lower() for c in clean]}
+        return {k: v for k, v in disk_map.items() if k in wanted}
     for item in data["results"]:
         doi = (item.get("doi") or "").replace("https://doi.org/", "").replace("http://doi.org/", "")
         if not doi:
@@ -192,7 +197,10 @@ def _parse_group_by(data: Optional[Dict[str, Any]], limit: int) -> Optional[List
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def fetch_publication_trends() -> Optional[Dict[str, List[int]]]:
-    """Konu bazlı yıllık sayım. Tek konu düşerse diğerleri korunur; hepsi düşerse disk önbelleği."""
+    """Konu bazlı yıllık sayım. Disk önbelleği varsa ağ beklenmez; sayfa geçişi kilitlenmez."""
+    cached = _load_disk_cache().get("trends")
+    if cached and "Years" in cached:
+        return cached
     result: Dict[str, List[int]] = {"Years": TREND_YEARS}
     any_ok = False
     for topic, query in TOPIC_SEARCH_QUERIES.items():
@@ -201,7 +209,7 @@ def fetch_publication_trends() -> Optional[Dict[str, List[int]]]:
             continue
         result[topic] = [yearly.get(year, 0) for year in TREND_YEARS]
         any_ok = True
-        time.sleep(0.2)
+        time.sleep(0.15)
     if any_ok:
         cache = _load_disk_cache()
         cache["trends"] = result
@@ -209,8 +217,7 @@ def fetch_publication_trends() -> Optional[Dict[str, List[int]]]:
         cache["source_url"] = "https://openalex.org/works"
         _save_disk_cache(cache)
         return result
-    cached = _load_disk_cache().get("trends")
-    return cached if cached and "Years" in cached else None
+    return None
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
@@ -218,18 +225,22 @@ def fetch_topic_yearly_series(topic: str) -> Optional[Dict[str, List[int]]]:
     query = TOPIC_SEARCH_QUERIES.get(topic)
     if not query:
         return None
+    cached_trends = _load_disk_cache().get("trends") or {}
+    cached = cached_trends.get(topic)
+    years = cached_trends.get("Years") or TREND_YEARS
+    if cached:
+        return {"Years": years, topic: cached}
     yearly = _fetch_topic_yearly_counts(query)
     if yearly is None:
-        cached = (_load_disk_cache().get("trends") or {}).get(topic)
-        years = (_load_disk_cache().get("trends") or {}).get("Years") or TREND_YEARS
-        if cached:
-            return {"Years": years, topic: cached}
         return None
     return {"Years": TREND_YEARS, topic: [yearly.get(year, 0) for year in TREND_YEARS]}
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def fetch_top_institutions(limit: int = 10) -> Optional[List[Dict[str, Any]]]:
+    cached = _load_disk_cache().get("institutions")
+    if cached:
+        return cached[:limit]
     year_filter = "|".join(str(y) for y in TREND_YEARS)
     q = urllib.parse.quote(COMBINED_SEARCH)
     url = (
@@ -245,11 +256,14 @@ def fetch_top_institutions(limit: int = 10) -> Optional[List[Dict[str, Any]]]:
         cache["source_url"] = "https://openalex.org/works"
         _save_disk_cache(cache)
         return rows
-    return _load_disk_cache().get("institutions")
+    return None
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def fetch_top_countries(limit: int = 10) -> Optional[List[Dict[str, Any]]]:
+    cached = _load_disk_cache().get("countries")
+    if cached:
+        return cached[:limit]
     year_filter = "|".join(str(y) for y in TREND_YEARS)
     q = urllib.parse.quote(COMBINED_SEARCH)
     url = (
@@ -265,4 +279,4 @@ def fetch_top_countries(limit: int = 10) -> Optional[List[Dict[str, Any]]]:
         cache["source_url"] = "https://openalex.org/works"
         _save_disk_cache(cache)
         return rows
-    return _load_disk_cache().get("countries")
+    return None
