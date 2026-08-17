@@ -1,6 +1,6 @@
 """
 Türk Telekom 6G Technology & Patent Intelligence Platform
-İnce giriş: ağır backend import'u yok. Cloud WebSocket ilk çizimi hemen alsın.
+Giriş yalnızca streamlit import eder — Cloud KeyError/ImportError olmasın.
 """
 
 import streamlit as st
@@ -12,10 +12,15 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-from styles import inject_custom_styles
-from components.ui_helpers import VIEW_BEGINNER, VIEW_EXPERT
+VIEW_BEGINNER = "Temel Seviye (Kavramsal temel + analoji → teknik karşılık)"
+VIEW_EXPERT = "Uzman Seviyesi (Temel katman + denklem / 3GPP / varsayım)"
 
-inject_custom_styles()
+try:
+    from styles import inject_custom_styles
+
+    inject_custom_styles()
+except Exception:
+    pass
 
 with st.sidebar:
     st.markdown(
