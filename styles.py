@@ -288,17 +288,21 @@ def inject_custom_styles():
             border-right: 1px solid rgba(200, 209, 220, 0.08);
         }
 
-        /* Dil + anlatım derinliği, sayfa listesinin üstünde kalsın */
-        [data-testid="stSidebarContent"] {
+        /* Marka + TR/EN + derinlik, sayfa listesinin ÜSTÜNDE kalsın (Streamlit nav'ı DOM'da üste koyar) */
+        [data-testid="stSidebarContent"],
+        section[data-testid="stSidebar"] > div {
             display: flex !important;
-            flex-direction: column;
+            flex-direction: column !important;
+        }
+        [data-testid="stSidebarUserContent"] {
+            order: 1 !important;
+        }
+        [data-testid="stSidebarNav"],
+        [data-testid="stSidebarNavItems"] {
+            order: 2 !important;
         }
         [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
             gap: 0.4rem !important;
-        }
-        section[data-testid="stSidebar"] > div {
-            display: flex;
-            flex-direction: column;
         }
         [data-testid="stSidebarNav"] a,
         [data-testid="stSidebarNav"] span {

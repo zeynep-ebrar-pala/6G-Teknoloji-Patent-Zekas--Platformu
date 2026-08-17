@@ -1,4 +1,4 @@
-"""Dil seçici — app.py kenar çubuğunda, ağır backend import etmez."""
+"""Dil seçici ve dil-sabit bölüm hapları — app.py kenar çubuğunda, ağır backend import etmez."""
 
 from __future__ import annotations
 
@@ -9,27 +9,49 @@ VIEW_EXPERT_LEGACY = "Uzman Seviyesi (Temel katman + denklem / 3GPP / varsayım)
 def render_language_selector() -> str:
     import streamlit as st
 
-    from i18n.core import SESSION_KEY, SUPPORTED_LANGS, bootstrap_lang, t
+    from i18n.core import SESSION_KEY, bootstrap_lang, t
 
     lang = bootstrap_lang()
     st.markdown(
         f"<p class='tt-sidebar-label'>{t('settings.language')}</p>",
         unsafe_allow_html=True,
     )
-    picked = st.segmented_control(
-        t("settings.language"),
-        options=list(SUPPORTED_LANGS),
-        format_func=lambda x: t(f"lang.{x}"),
-        key=SESSION_KEY,
-        help=t("settings.language_help"),
-        label_visibility="collapsed",
-        width="stretch",
-    )
-    if picked in SUPPORTED_LANGS:
-        lang = picked
-        if st.query_params.get("lang") != lang:
-            st.query_params["lang"] = lang
+    clicked = None
+    col_tr, col_en = st.columns(2)
+    with col_tr:
+        if st.button(
+            "TR",
+            key="lang_btn_tr",
+            type="primary" if lang == "tr" else "secondary",
+            width="stretch",
+        ):
+            clicked = "tr"
+    with col_en:
+        if st.button(
+            "EN",
+            key="lang_btn_en",
+            type="primary" if lang == "en" else "secondary",
+            width="stretch",
+        ):
+            clicked = "en"
+    if clicked and clicked != lang:
+        st.session_state[SESSION_KEY] = clicked
+        st.query_params["lang"] = clicked
+        st.rerun()
     return lang
+
+
+def select_keyed_section(label: str, keys: list[str], key: str, prefix: str) -> str:
+    """Sabit anahtarlarla bölüm seçer; dil değişince etiketler yenilenir."""
+    import streamlit as st
+
+    from i18n.core import get_lang, t
+
+    labels = [t(f"{prefix}.{k}") for k in keys]
+    mapping = dict(zip(labels, keys))
+    widget_key = f"{key}_{get_lang()}"
+    choice = st.pills(label, labels, default=labels[0], key=widget_key)
+    return mapping.get(choice or labels[0], keys[0])
 
 
 def migrate_view_mode() -> None:

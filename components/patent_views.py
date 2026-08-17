@@ -21,11 +21,11 @@ from components.ui_helpers import (
     render_module_header,
     render_patent_card,
     render_source_button,
-    select_keyed_section,
     show_empty,
     show_plotly,
 )
 from i18n.core import format_int, t
+from i18n.widgets import select_keyed_section
 
 PATENT_SECTION_KEYS = ["year", "topics", "tree", "map", "list"]
 

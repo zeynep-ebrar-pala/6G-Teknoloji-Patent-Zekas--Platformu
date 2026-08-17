@@ -5,7 +5,7 @@ Merkezi UI katalogları — TR ve EN anahtar ağacı birebir aynıdır.
 
 UI = {
     "tr": {
-        "lang": {"tr": "TR Türkçe", "en": "EN English"},
+        "lang": {"tr": "TR", "en": "EN"},
         "app": {
             "page_title": "Türk Telekom | 6G Teknoloji & Patent Zekası",
             "brand": "Türk Telekom",
@@ -542,7 +542,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
         },
     },
     "en": {
-        "lang": {"tr": "TR Türkçe", "en": "EN English"},
+        "lang": {"tr": "TR", "en": "EN"},
         "app": {
             "page_title": "Türk Telekom | 6G Technology & Patent Intelligence",
             "brand": "Türk Telekom",

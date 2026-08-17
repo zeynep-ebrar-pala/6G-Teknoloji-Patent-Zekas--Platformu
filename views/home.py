@@ -5,15 +5,63 @@ import streamlit as st
 from backend.data_service import DataService
 from components.content_views import is_beginner, render_trl_explainer
 from components.ui_helpers import current_view_mode, first_text, show_plotly
-from i18n.core import t
+from i18n.core import get_lang, t
 
 TECHNOLOGIES = DataService.get_all_technologies()
 beginner = is_beginner(current_view_mode())
 
-st.markdown(
-    t("home.intro_beginner") if beginner else t("home.intro_expert"),
-    unsafe_allow_html=True,
-)
+if get_lang() == "en":
+    st.markdown(
+        t("home.intro_beginner") if beginner else t("home.intro_expert"),
+        unsafe_allow_html=True,
+    )
+elif beginner:
+    st.markdown(
+        """<div class="dual-card-beginner">
+<h4 style="margin-top:0;">6G nedir</h4>
+<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
+Telefonunuz bugün bir <strong>5G</strong> kulesine tutunur: kule konuşur, cihaz dinler, bitler akar.
+<strong>6G</strong> bu boruyu biraz daha kalınlaştırmak değildir. Aynı kuleye — ve kule olmayan yerlere —
+yeni işler vermektir; çünkü bugünkü şebeke birkaç sahada kör kalır.
+</p>
+<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
+Şehirde yüksek frekanslı dalga köşeyi dönemez, asansör boşluğunda ölür. Hücre kenarına yaklaşınca
+sinyal düşer; kule değişince kopma riski doğar. Dağ, açık deniz ve enkaz karasal kuleye yetişmez.
+Sis ve gecede kule konuşur ama bakmaz. Şebeke gece-gündüz aynı ezber tarife ile kaynak ayırır.
+Depodaki her etikete pil takmak ölçeklenmez. İleride kablosuz boru da dar gelir.
+</p>
+<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
+Aşağıdaki yedi kart bu yedi boşluğa birer cevap verir.
+<strong>RIS</strong> kör noktayı yansıtır; <strong>hücresiz MIMO</strong> kenarı kaldırır;
+<strong>NTN</strong> telefonu göğe düşürür; <strong>ISAC</strong> aynı dalgayı yankı gibi dinler;
+<strong>AI-RAN</strong> kuleyi ölçüme göre ayarlar; <strong>Ambient IoT</strong> pilsiz «buradayım» der;
+<strong>THz</strong> ileride daha geniş bant açar. Hepsi birden «hazır 6G» diye satılmaz;
+her biri kendi <strong>TRL</strong> (Technology Readiness Level — Teknoloji Hazırlık Seviyesi)
+basamağında durur.
+</p>
+<p style="color:#CBD5E1; font-size:0.92rem; line-height:1.65; margin:0;">
+<strong>Temel</strong> kademe şunu öğretir: nedir, neden var, nasıl çalışır, ne zaman kullanılır
+ve ne zaman kullanılmaz. Kısaltmalar ilk geçişte açılır. <strong>Uzman</strong> kademe aynı sahneyi
+atlamaz; üstüne denklem, varsayım ve 3GPP bağlamını ekler. Uydurma tepe hız yoktur.
+</p>
+</div>""",
+        unsafe_allow_html=True,
+    )
+else:
+    st.markdown(
+        """<div class="dual-card-expert">
+<h4 style="margin-top:0;">6G yapı taşları — uzman okuma (temel katman atlanmaz)</h4>
+<p style="color:#E2E8F0; font-size:0.95rem; line-height:1.65; margin:0;">
+Yedi enabler: <strong>ISAC</strong> (Integrated Sensing and Communication — ortak dalga şekli),
+<strong>RIS</strong> (pasif faz yüzeyi), hücresiz Massive MIMO, Sub-THz/THz,
+AI-native RAN (<strong>O-RAN RIC</strong>), <strong>NTN</strong> (3GPP Rel-17+ Direct-to-Cell),
+Ambient IoT. TRL 1–9 radar haritası saha olgunluğunu özetler.
+Mimari, CRB/Shannon ve protokol için <strong>6G Teknolojileri</strong> sekmelerine geçin —
+referans DOI/3GPP’dir; tepe hız pazarlama cümlesi saha ölçümü sayılmaz.
+</p>
+</div>""",
+        unsafe_allow_html=True,
+    )
 
 st.markdown(t("home.cards_heading"))
 st.caption(t("home.cards_caption"))

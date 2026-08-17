@@ -15,11 +15,11 @@ from components.ui_helpers import (
     render_module_header,
     render_paper_card,
     render_source_button,
-    select_keyed_section,
     show_empty,
     show_plotly,
 )
 from i18n.core import format_int, t
+from i18n.widgets import select_keyed_section
 
 PUB_SECTION_KEYS = ["doi", "trend", "inst", "country", "papers"]
 

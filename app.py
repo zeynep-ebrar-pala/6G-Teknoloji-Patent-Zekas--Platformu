@@ -54,10 +54,8 @@ with st.sidebar:
                 st.session_state.pop(key, None)
             st.rerun()
 
-    provider_label = st.session_state.get("ai_provider") or t("app.provider_off")
     st.markdown(
         f"""<div class="tt-sidebar-foot">
-{t("app.ai_provider", provider=provider_label)}<br>
 {t("app.footer")}
 </div>""",
         unsafe_allow_html=True,

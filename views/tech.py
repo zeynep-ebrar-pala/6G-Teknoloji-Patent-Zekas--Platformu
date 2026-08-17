@@ -16,12 +16,12 @@ from components.content_views import (
 from components.ui_helpers import (
     current_view_mode,
     first_text,
-    select_keyed_section,
     show_empty,
     show_error,
     show_plotly,
 )
 from i18n.core import t
+from i18n.widgets import select_keyed_section
 
 TECH_SECTION_KEYS = [
     "definition",
