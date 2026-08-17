@@ -290,6 +290,8 @@ def inject_custom_styles():
         [data-testid="stSidebarContent"] {
             display: flex !important;
             flex-direction: column !important;
+            height: 100% !important;
+            min-height: 100% !important;
         }
         [data-testid="stSidebarUserContent"] {
             order: 1 !important;
@@ -300,7 +302,7 @@ def inject_custom_styles():
             order: 2 !important;
         }
         [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
-            gap: 0.2rem !important;
+            gap: 0.55rem !important;
         }
 
         .tt-sidebar-brand {
@@ -343,8 +345,12 @@ def inject_custom_styles():
             font-weight: 600 !important;
             letter-spacing: 0.07em;
             text-transform: uppercase;
-            margin: 10px 2px 0 2px !important;
-            line-height: 1.2 !important;
+            display: block !important;
+            margin: 12px 2px 10px 2px !important;
+            padding: 0 0 2px 0 !important;
+            line-height: 1.3 !important;
+            position: relative;
+            z-index: 2;
         }
 
         [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] {
@@ -353,20 +359,23 @@ def inject_custom_styles():
             border: 1px solid rgba(255,255,255,0.06);
             border-radius: 11px;
             padding: 4px;
-            margin: 2px 0 2px 0;
+            margin-top: 0.45rem !important;
+            margin-bottom: 2px !important;
+            position: relative;
+            z-index: 1;
         }
         [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] .stButton button {
-            min-height: 1.95rem !important;
-            height: 1.95rem !important;
-            font-size: 0.78rem !important;
-            font-weight: 700 !important;
-            letter-spacing: 0.04em;
+            min-height: 1.7rem !important;
+            height: 1.7rem !important;
+            font-size: 0.7rem !important;
+            font-weight: 650 !important;
+            letter-spacing: 0.03em;
             border-radius: 8px !important;
-            padding: 0 6px !important;
+            padding: 0 4px !important;
         }
         [data-testid="stSidebar"] .stButton button {
             min-height: 2rem !important;
-            font-size: 0.8rem !important;
+            font-size: 0.78rem !important;
             font-weight: 600 !important;
             letter-spacing: 0;
             border-radius: 8px !important;
@@ -376,7 +385,23 @@ def inject_custom_styles():
         [data-testid="stSidebarNav"] {
             border-top: 1px solid rgba(255,255,255,0.07);
             margin-top: 10px !important;
-            padding: 8px 6px 12px 6px !important;
+            padding: 8px 6px 8px 6px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1 1 auto !important;
+        }
+        [data-testid="stSidebarNav"]::after {
+            content: var(--tt-sidebar-footer, "© 2026 Türk Telekom Ar-Ge");
+            display: block;
+            margin-top: auto;
+            padding: 14px 8px 16px;
+            text-align: center;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            color: #64748B;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            line-height: 1.35;
         }
         [data-testid="stSidebarNav"] li {
             margin: 0 !important;
@@ -402,7 +427,10 @@ def inject_custom_styles():
         }
 
         [data-testid="stSidebar"] .stMarkdown {
-            margin-bottom: 0 !important;
+            margin-bottom: 0.15rem !important;
+        }
+        [data-testid="stSidebar"] [data-testid="stElementContainer"]:has(.tt-sidebar-label) {
+            margin-bottom: 0.15rem !important;
         }
 
         /* Custom Tabs Styling */
@@ -465,6 +493,16 @@ def inject_custom_styles():
             height: auto !important;
             min-height: 2.4rem;
             line-height: 1.3;
+        }
+        [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] .stButton button,
+        [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] [data-testid="stBaseButton-secondary"],
+        [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] [data-testid="stBaseButton-primary"] {
+            min-height: 1.7rem !important;
+            height: 1.7rem !important;
+            font-size: 0.7rem !important;
+            line-height: 1.2 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
         }
         [data-testid="stMetricLabel"], [data-testid="stMetricValue"], [data-testid="stMetricDelta"] {
             overflow-wrap: anywhere;

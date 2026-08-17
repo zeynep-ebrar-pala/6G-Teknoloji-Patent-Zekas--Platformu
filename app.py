@@ -23,6 +23,10 @@ except Exception:
     pass
 
 bootstrap_lang()
+st.markdown(
+    f"<style>:root {{ --tt-sidebar-footer: \"{t('app.footer')}\"; }}</style>",
+    unsafe_allow_html=True,
+)
 
 _mode = st.session_state.get("view_mode", "beginner")
 if _mode not in ("beginner", "expert"):
