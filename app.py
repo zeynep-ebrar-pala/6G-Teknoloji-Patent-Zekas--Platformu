@@ -68,35 +68,41 @@ with st.sidebar:
                 st.session_state[SESSION_KEY] = "en"
                 st.query_params["lang"] = "en"
                 st.rerun()
+
+    depth = st.session_state.get("view_mode", "beginner")
     st.markdown(
         f"<p class='tt-sidebar-label'>{t('depth.label')}</p>",
         unsafe_allow_html=True,
     )
-    st.radio(
-        t("depth.radio"),
-        ["beginner", "expert"],
-        index=0,
-        key="view_mode",
-        format_func=lambda x: t(f"depth.{x}"),
-        label_visibility="collapsed",
-    )
-    st.markdown(
-        f"<p class='tt-sidebar-hint'>{t('depth.caption')}</p>",
-        unsafe_allow_html=True,
-    )
+    col_b, col_e = st.columns(2)
+    with col_b:
+        if st.button(
+            t("depth.beginner"),
+            key="depth_btn_beginner",
+            type="primary" if depth == "beginner" else "secondary",
+            width="stretch",
+            help=t("depth.caption"),
+        ):
+            if depth != "beginner":
+                st.session_state["view_mode"] = "beginner"
+                st.rerun()
+    with col_e:
+        if st.button(
+            t("depth.expert"),
+            key="depth_btn_expert",
+            type="primary" if depth == "expert" else "secondary",
+            width="stretch",
+            help=t("depth.caption"),
+        ):
+            if depth != "expert":
+                st.session_state["view_mode"] = "expert"
+                st.rerun()
 
     if st.session_state.get("api_key") or st.session_state.get("ai_ready"):
-        if st.button(t("app.ai_logout"), width="stretch"):
+        if st.button(t("app.ai_logout"), key="ai_logout_btn", width="stretch"):
             for key in ("authenticated", "api_key", "ai_provider", "ai_ready", "chat_messages", "chat_lang"):
                 st.session_state.pop(key, None)
             st.rerun()
-
-    st.markdown(
-        f"""<div class="tt-sidebar-foot">
-{t("app.footer")}
-</div>""",
-        unsafe_allow_html=True,
-    )
 
 st.markdown(
     f"""<div class="tt-header-container">

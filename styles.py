@@ -282,152 +282,116 @@ def inject_custom_styles():
             white-space: nowrap;
         }
 
-        /* Sidebar — müşteri yüzü: marka, ayarlar, menü, telif en altta */
+        /* Sidebar — marka, TR/EN, Temel/Uzman, menü. Telif yok (üst üste binmesin). */
         [data-testid="stSidebar"] {
             background: linear-gradient(180deg, #10151E 0%, #121620 42%, #0E1117 100%);
             border-right: 1px solid rgba(0, 153, 255, 0.14);
-            position: relative !important;
-        }
-        [data-testid="stSidebar"] > div {
-            position: relative;
-            min-height: 100%;
         }
         [data-testid="stSidebarContent"] {
             display: flex !important;
             flex-direction: column !important;
-            padding-bottom: 4px !important;
         }
         [data-testid="stSidebarUserContent"] {
             order: 1 !important;
-            padding: 6px 4px 4px 4px !important;
+            padding: 4px 8px 8px 8px !important;
         }
         [data-testid="stSidebarNav"],
         [data-testid="stSidebarNavItems"] {
             order: 2 !important;
         }
         [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
-            gap: 0.28rem !important;
+            gap: 0.2rem !important;
         }
 
         .tt-sidebar-brand {
             text-align: center;
-            padding: 10px 8px 14px 8px;
-            margin-bottom: 4px;
+            padding: 8px 4px 12px 4px;
+            margin-bottom: 2px;
             border-bottom: 1px solid rgba(255,255,255,0.06);
         }
         .tt-sidebar-logo {
             background: linear-gradient(135deg, #0099FF 0%, #00C2FF 100%);
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 11px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 0 18px rgba(0, 153, 255, 0.35);
+            font-size: 18px;
+            box-shadow: 0 0 16px rgba(0, 153, 255, 0.32);
         }
         .tt-sidebar-brand h3 {
             color: #FFFFFF !important;
-            margin: 10px 0 0 0 !important;
-            font-size: 0.95rem !important;
+            margin: 8px 0 0 0 !important;
+            font-size: 0.92rem !important;
             font-weight: 700 !important;
-            letter-spacing: 0.01em;
-            line-height: 1.25 !important;
+            line-height: 1.2 !important;
         }
         .tt-sidebar-brand p {
             color: #7DD8FF !important;
-            font-size: 0.68rem !important;
+            font-size: 0.66rem !important;
             font-weight: 600 !important;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.07em;
             text-transform: uppercase;
-            margin: 4px 0 0 0 !important;
-            line-height: 1.3 !important;
+            margin: 3px 0 0 0 !important;
+            line-height: 1.25 !important;
         }
         .tt-sidebar-label {
             color: #94A3B8 !important;
-            font-size: 0.68rem !important;
+            font-size: 0.66rem !important;
             font-weight: 600 !important;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.07em;
             text-transform: uppercase;
-            margin: 12px 4px 2px 4px !important;
-            line-height: 1.3 !important;
-        }
-        .tt-sidebar-hint {
-            color: #64748B !important;
-            font-size: 0.68rem !important;
-            font-weight: 500 !important;
-            line-height: 1.45 !important;
-            margin: 2px 4px 8px 4px !important;
-        }
-        .tt-sidebar-foot {
-            position: absolute !important;
-            bottom: 10px;
-            left: 14px;
-            right: 14px;
-            z-index: 30;
-            margin: 0 !important;
-            padding: 8px 10px !important;
-            text-align: center;
-            background: rgba(16, 21, 30, 0.94);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 10px;
-            font-size: 0.65rem !important;
-            letter-spacing: 0.02em;
-            color: #64748B !important;
-            line-height: 1.35 !important;
+            margin: 10px 2px 0 2px !important;
+            line-height: 1.2 !important;
         }
 
         [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] {
             gap: 6px !important;
             background: rgba(255,255,255,0.035);
             border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 12px;
+            border-radius: 11px;
             padding: 4px;
-            margin: 0 2px 4px 2px;
+            margin: 2px 0 2px 0;
         }
-        [data-testid="stSidebar"] .stButton button {
-            min-height: 2.05rem !important;
-            height: 2.05rem !important;
+        [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] .stButton button {
+            min-height: 1.95rem !important;
+            height: 1.95rem !important;
             font-size: 0.78rem !important;
             font-weight: 700 !important;
-            letter-spacing: 0.1em;
-            border-radius: 9px !important;
-            padding: 0 8px !important;
+            letter-spacing: 0.04em;
+            border-radius: 8px !important;
+            padding: 0 6px !important;
         }
-        [data-testid="stSidebar"] [data-testid="stRadio"] label {
-            white-space: nowrap !important;
-            font-size: 0.86rem !important;
+        [data-testid="stSidebar"] .stButton button {
+            min-height: 2rem !important;
+            font-size: 0.8rem !important;
             font-weight: 600 !important;
-            line-height: 1.3 !important;
-            color: #E2E8F0 !important;
-        }
-        [data-testid="stSidebar"] [data-testid="stRadio"] p,
-        [data-testid="stSidebar"] [data-testid="stRadio"] span {
-            font-size: 0.86rem !important;
-            line-height: 1.3 !important;
+            letter-spacing: 0;
+            border-radius: 8px !important;
+            white-space: normal !important;
         }
 
         [data-testid="stSidebarNav"] {
             border-top: 1px solid rgba(255,255,255,0.07);
-            margin-top: 8px !important;
-            padding: 10px 6px 72px 6px !important;
+            margin-top: 10px !important;
+            padding: 8px 6px 12px 6px !important;
         }
         [data-testid="stSidebarNav"] li {
-            margin: 1px 0 !important;
+            margin: 0 !important;
         }
         [data-testid="stSidebarNav"] a {
-            padding: 0.48rem 0.7rem !important;
-            border-radius: 10px !important;
-            font-size: 0.86rem !important;
+            padding: 0.42rem 0.65rem !important;
+            border-radius: 9px !important;
+            font-size: 0.84rem !important;
             font-weight: 500 !important;
-            line-height: 1.3 !important;
+            line-height: 1.25 !important;
         }
         [data-testid="stSidebarNav"] a,
         [data-testid="stSidebarNav"] span {
             white-space: normal !important;
-            overflow-wrap: anywhere;
-            line-height: 1.3 !important;
+            line-height: 1.25 !important;
         }
         [data-testid="stSidebarNav"] a:hover {
             background: rgba(0, 153, 255, 0.12) !important;
@@ -437,14 +401,8 @@ def inject_custom_styles():
             font-weight: 650 !important;
         }
 
-        [data-testid="stSidebar"] hr {
-            margin: 8px 0 !important;
-        }
-        [data-testid="stSidebar"] .stHeading, [data-testid="stSidebar"] .stMarkdown {
+        [data-testid="stSidebar"] .stMarkdown {
             margin-bottom: 0 !important;
-        }
-        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
-            overflow-wrap: anywhere;
         }
 
         /* Custom Tabs Styling */
