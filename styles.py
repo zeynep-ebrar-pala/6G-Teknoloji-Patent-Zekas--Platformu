@@ -297,8 +297,7 @@ def inject_custom_styles():
             order: 1 !important;
             padding: 4px 8px 8px 8px !important;
         }
-        [data-testid="stSidebarNav"],
-        [data-testid="stSidebarNavItems"] {
+        [data-testid="stSidebarNav"] {
             order: 2 !important;
         }
         [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
@@ -393,8 +392,9 @@ def inject_custom_styles():
         [data-testid="stSidebarNav"]::after {
             content: var(--tt-sidebar-footer, "© 2026 Türk Telekom Ar-Ge");
             display: block;
-            margin-top: auto;
-            padding: 14px 8px 16px;
+            order: 99;
+            margin-top: 10px;
+            padding: 12px 8px 14px;
             text-align: center;
             font-size: 0.65rem;
             font-weight: 500;

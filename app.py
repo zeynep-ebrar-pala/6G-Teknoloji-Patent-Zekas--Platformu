@@ -85,7 +85,6 @@ with st.sidebar:
             key="depth_btn_beginner",
             type="primary" if depth == "beginner" else "secondary",
             width="stretch",
-            help=t("depth.caption"),
         ):
             if depth != "beginner":
                 st.session_state["view_mode"] = "beginner"
@@ -96,7 +95,6 @@ with st.sidebar:
             key="depth_btn_expert",
             type="primary" if depth == "expert" else "secondary",
             width="stretch",
-            help=t("depth.caption"),
         ):
             if depth != "expert":
                 st.session_state["view_mode"] = "expert"

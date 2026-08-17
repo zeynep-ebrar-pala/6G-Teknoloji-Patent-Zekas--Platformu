@@ -49,39 +49,64 @@ atlamaz; üstüne denklem, varsayım ve 3GPP bağlamını ekler. Uydurma tepe h�
     )
 else:
     st.markdown(
-        """<div class="dual-card-expert">
-<h4 style="margin-top:0;">6G yapı taşları — uzman okuma (temel katman atlanmaz)</h4>
-<p style="color:#E2E8F0; font-size:0.95rem; line-height:1.65; margin:0;">
-Yedi enabler: <strong>ISAC</strong> (Integrated Sensing and Communication — ortak dalga şekli),
-<strong>RIS</strong> (pasif faz yüzeyi), hücresiz Massive MIMO, Sub-THz/THz,
-AI-native RAN (<strong>O-RAN RIC</strong>), <strong>NTN</strong> (3GPP Rel-17+ Direct-to-Cell),
-Ambient IoT. TRL 1–9 radar haritası saha olgunluğunu özetler.
-Mimari, CRB/Shannon ve protokol için <strong>6G Teknolojileri</strong> sekmelerine geçin —
-referans DOI/3GPP’dir; tepe hız pazarlama cümlesi saha ölçümü sayılmaz.
+        """<div class="dual-card-beginner" style="background:rgba(0,200,83,0.10);border:1px solid rgba(0,200,83,0.45);border-radius:14px;padding:22px;margin-bottom:20px;">
+<h4 style="margin-top:0;color:#00C853;">6G yapı taşları — uzman okuma (temel katman atlanmaz)</h4>
+<p style="color:#E2E8F0; font-size:0.98rem; line-height:1.7; margin:0 0 12px 0;">
+<strong>Temel katman:</strong> 6G, 5G kulesine daha kalın bir boru takmak değildir. Kör kalan sahaya —
+köşe, hücre kenarı, dağ/deniz, sis, ezber tarife, pilsiz etiket, dar spektrum — yeni işlev vermektir.
+Aşağıdaki yedi kart hâlâ bu yedi boşluğa karşılık gelir; sahne atlanmaz.
+</p>
+<p style="color:#E2E8F0; font-size:0.98rem; line-height:1.7; margin:0 0 12px 0;">
+<strong>Uzman katman</strong> aynı sahneye standart, bound ve varsayım ekler.
+<strong>ISAC</strong> (Integrated Sensing and Communication — Entegre Algılama ve İletişim): ortak dalga şekli;
+menzil/hızda <strong>CRB</strong> (Cramér–Rao Bound), bitlerde Shannon. Varsayım: yüksek SNR, düzenli model — şehir çokyollusu bunu gevşetir.
+<strong>RIS</strong> (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey): pasif faz;
+ideal diyagonal kanal 1–2 bit fazda bozulur.
+<strong>Hücresiz Massive MIMO</strong>: hücre kenarı kalkar; bedel fronthaul ve faz hizasıdır.
+<strong>Sub-THz/THz</strong>: bant açılır, Friis + atmosfer soğurması menzili keser — TRL 3, sokak şebekesi değil.
+<strong>AI-native RAN</strong> (<strong>O-RAN RIC</strong>): ölçüm → politika; etiketsiz izde model uydurur.
+<strong>NTN</strong> (Non-Terrestrial Network — Karasal Olmayan Ağ): 3GPP Rel-17+ Direct-to-Cell, TRL 6 saha adayı.
+<strong>Ambient IoT</strong>: backscatter, pil yok; hasat Friis ile sınırlıdır.
+</p>
+<p style="color:#CBD5E1; font-size:0.9rem; line-height:1.65; margin:0;">
+TRL 1–9 radar saha/standart olgunluğudur, basın takvimi değildir. Denklem, protokol ve DOI için
+<strong>6G Teknolojileri</strong>. Tepe hız sloganı saha ölçümü sayılmaz.
 </p>
 </div>""",
         unsafe_allow_html=True,
     )
 
-st.markdown(t("home.cards_heading"))
-st.caption(t("home.cards_caption"))
+st.markdown(t("home.cards_heading") if beginner else t("home.cards_heading_expert"))
+st.caption(t("home.cards_caption") if beginner else t("home.cards_caption_expert"))
 
 cols = st.columns(3)
 for idx, (_t_id, tech) in enumerate(TECHNOLOGIES.items()):
     col = cols[idx % 3]
     with col:
         trl_class = "trl-low" if tech["trl"] <= 4 else ("trl-mid" if tech["trl"] == 5 else "trl-high")
-        blurb = first_text(
-            tech.get("beginner_card"),
-            tech.get("card_summary"),
-            tech.get("beginner_one_liner"),
-        )
-        kicker = first_text(tech.get("beginner_kicker"))
+        fnd = tech.get("foundation") or {}
+        if beginner:
+            blurb = first_text(
+                tech.get("beginner_card"),
+                tech.get("card_summary"),
+                tech.get("beginner_one_liner"),
+            )
+            kicker = first_text(tech.get("beginner_kicker"))
+            chips = tech.get("highlights", [])
+            cta = t("home.card_cta")
+        else:
+            raw = first_text(fnd.get("what"), tech.get("card_summary"))
+            blurb = raw if len(raw) <= 420 else raw[:420].rsplit(" ", 1)[0] + "…"
+            kicker = first_text(fnd.get("problem"), tech.get("beginner_kicker"))
+            if len(kicker) > 140:
+                kicker = kicker[:140].rsplit(" ", 1)[0] + "…"
+            chips = [frm.get("name") for frm in (tech.get("formulas") or [])[:3] if frm.get("name")]
+            cta = t("home.card_cta_expert")
         kicker_html = f"<div class='card-kicker'>{kicker}</div>" if kicker else ""
         highlights_html = " ".join(
             [
                 f"<span style='background: rgba(0, 153, 255, 0.12); color: #00C2FF; border: 1px solid rgba(0, 153, 255, 0.3); font-size: 0.73rem; padding: 2px 8px; border-radius: 6px; font-weight: 600; display: inline-block; margin: 2px 2px 2px 0; overflow-wrap: anywhere;'>{h}</span>"
-                for h in tech.get("highlights", [])
+                for h in chips
             ]
         )
         st.markdown(
@@ -101,7 +126,7 @@ for idx, (_t_id, tech) in enumerate(TECHNOLOGIES.items()):
 <div>
 <div style="margin-bottom: 10px;">{highlights_html}</div>
 <div style="padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.76rem; color: #94A3B8; overflow-wrap: anywhere;">
-{t("home.card_cta")}
+{cta}
 </div>
 </div>
 </div>""",
