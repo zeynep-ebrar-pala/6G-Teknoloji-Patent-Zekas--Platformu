@@ -80,8 +80,12 @@ def _localize_diagram(html: str) -> str:
 
 def render_technology_diagram(tech_id: str):
     """Renders animated interactive SVG block diagram based on tech_id."""
-    
-    css_style = "<style>.tt-diagram { margin: 0; padding: 0; overflow: hidden; box-sizing: border-box; font-family: sans-serif; }</style>"
+    import streamlit.components.v1 as components
+
+    css_style = (
+        "<style>.tt-diagram{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}"
+        "svg{display:block;width:100%;height:200px;}</style>"
+    )
     
     diagrams = {
         "isac": f"""
@@ -343,4 +347,15 @@ def render_technology_diagram(tech_id: str):
     }
 
     diagram_code = diagrams.get(tech_id, f"<p style='color: white;'>{t('diagram.missing')}</p>")
-    st.html(f'<div class="tt-diagram">{_localize_diagram(diagram_code)}</div>')
+    body = _localize_diagram(diagram_code)
+    components.html(
+        f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8"/>
+<style>
+html,body{{margin:0;padding:0;background:transparent;}}
+svg{{display:block;width:100%;height:200px;}}
+</style></head>
+<body>{body}</body></html>""",
+        height=280,
+        scrolling=False,
+    )
