@@ -17,8 +17,8 @@ if get_lang() == "en":
     )
 elif beginner:
     st.markdown(
-        """<div class="dual-card-beginner">
-<h4 style="margin-top:0;">6G nedir</h4>
+        """<div class="dual-card-beginner" style="background:rgba(0,200,83,0.10);border:1px solid rgba(0,200,83,0.45);border-radius:14px;padding:22px;margin-bottom:20px;">
+<h4 style="margin-top:0;color:#00C853;">6G nedir</h4>
 <p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
 Telefonunuz bugün bir <strong>5G</strong> kulesine tutunur: kule konuşur, cihaz dinler, bitler akar.
 <strong>6G</strong> bu boruyu biraz daha kalınlaştırmak değildir. Aynı kuleye — ve kule olmayan yerlere —

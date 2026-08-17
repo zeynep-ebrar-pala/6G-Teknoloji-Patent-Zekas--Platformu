@@ -16,9 +16,12 @@ from data.glossary import glossary_plain_corpus
 from i18n.core import format_int, t
 
 def _is_beginner(view_mode: str) -> bool:
-    if view_mode in ("beginner", "expert"):
-        return view_mode == "beginner"
-    return "Temel" in str(view_mode or "")
+    text = str(view_mode or "beginner")
+    if text in ("beginner", "expert"):
+        return text == "beginner"
+    if "Uzman" in text or "Expert" in text:
+        return False
+    return True
 
 
 def _strip_html(text: str) -> str:
@@ -120,14 +123,25 @@ def _retrieve(question: str, k: int = 6) -> List[Dict[str, str]]:
     matrix = vectorizer.fit_transform(docs + [question])
     sims = cosine_similarity(matrix[-1], matrix[:-1]).flatten()
     ranked = sorted(enumerate(sims), key=lambda x: x[1], reverse=True)
+    q_upper = question.upper()
     selected = []
-    for idx, score in ranked[:k]:
+    for idx, score in ranked:
+        cid = str(chunks[idx].get("id", ""))
+        title = str(chunks[idx].get("title", "")).upper()
+        if cid.startswith("tech:") or cid == "glossary":
+            score += 0.18
+        if any(tok in q_upper and tok in title for tok in ("RIS", "ISAC", "NTN", "THZ", "MIMO", "IOT", "AI-RAN", "AIRAN")):
+            score += 0.22
+        selected.append((score, chunks[idx]))
+    selected.sort(key=lambda x: x[0], reverse=True)
+    out = []
+    for score, ch in selected[:k]:
         if score <= 0:
             continue
-        item = dict(chunks[idx])
+        item = dict(ch)
         item["score"] = f"{score:.3f}"
-        selected.append(item)
-    return selected or chunks[: min(k, len(chunks))]
+        out.append(item)
+    return out or chunks[: min(k, len(chunks))]
 
 
 def _format_context(chunks: List[Dict[str, str]], view_mode: str = "") -> str:
@@ -150,23 +164,51 @@ def _system_preamble() -> str:
     return t("ai.system")
 
 
+GROQ_CHAT_MODELS = (
+    "openai/gpt-oss-120b",
+    "qwen/qwen3.6-27b",
+    "openai/gpt-oss-20b",
+)
+GEMINI_CHAT_MODELS = (
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+    "gemini-flash-latest",
+)
+
+
+def _message_text(response) -> str:
+    msg = response.choices[0].message
+    text = getattr(msg, "content", None) or ""
+    if not text:
+        text = getattr(msg, "reasoning", None) or ""
+    return str(text)
+
+
 def _answer_with_groq(question: str, api_key: str, context: str) -> str:
     from groq import Groq
 
     client = Groq(api_key=api_key)
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[
-            {
-                "role": "system",
-                "content": _system_preamble() + "\n\n" + context,
-            },
-            {"role": "user", "content": question},
-        ],
-        temperature=0.2,
-        max_tokens=1800,
-    )
-    return response.choices[0].message.content or ""
+    messages = [
+        {"role": "system", "content": _system_preamble() + "\n\n" + context},
+        {"role": "user", "content": question},
+    ]
+    last_exc: Exception | None = None
+    for model in GROQ_CHAT_MODELS:
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=messages,
+                temperature=0.2,
+                max_tokens=1800,
+            )
+            text = _message_text(response)
+            if text.strip():
+                return text
+        except Exception as exc:
+            last_exc = exc
+    if last_exc:
+        raise last_exc
+    return ""
 
 
 def _answer_with_gemini(question: str, api_key: str, context: str) -> str:
@@ -176,20 +218,29 @@ def _answer_with_gemini(question: str, api_key: str, context: str) -> str:
     prompt = (
         f"{_system_preamble()}\n\n{context}\n\n{t('ai.user_wrap', question=question)}"
     )
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt,
-    )
-    return response.text or ""
+    last_exc: Exception | None = None
+    for model in GEMINI_CHAT_MODELS:
+        try:
+            response = client.models.generate_content(model=model, contents=prompt)
+            text = getattr(response, "text", None) or ""
+            if str(text).strip():
+                return str(text)
+        except Exception as exc:
+            last_exc = exc
+    if last_exc:
+        raise last_exc
+    return ""
 
 
 def _fallback_from_chunks(question: str, chunks: List[Dict[str, str]]) -> str:
     if not chunks:
         return t("ai.fallback_none")
-    parts = [f"### {chunks[0]['title']}\n\n{chunks[0]['text'][:700]}"]
-    if len(chunks) > 1:
-        extras = "\n".join(f"- {c['title']}" for c in chunks[1:4])
-        parts.append(f"\n\n{t('ai.related')}\n{extras}")
+    preferred = [c for c in chunks if str(c.get("id", "")).startswith("tech:") or c.get("id") == "glossary"]
+    ordered = preferred + [c for c in chunks if c not in preferred]
+    parts = [f"### {ordered[0]['title']}\n\n{ordered[0]['text'][:900]}"]
+    extras = [c for c in ordered[1:] if not str(c.get("id", "")).startswith("patent:")][:3]
+    if extras:
+        parts.append(f"\n\n{t('ai.related')}\n" + "\n".join(f"- {c['title']}" for c in extras))
     parts.append(f"\n\n{t('ai.tfidf_note')}")
     return "".join(parts)
 
@@ -221,11 +272,7 @@ class AIAssistantService:
                     text = _answer_with_groq(question, key, context)
                 if text.strip():
                     return {"response": text, "type": "llm"}
-            except Exception as exc:
-                fallback = _fallback_from_chunks(question, chunks)
-                return {
-                    "response": f"{fallback}\n\n---\n{t('ai.llm_fail', exc=exc)}",
-                    "type": "fallback",
-                }
+            except Exception:
+                return {"response": _fallback_from_chunks(question, chunks), "type": "fallback"}
 
         return {"response": _fallback_from_chunks(question, chunks), "type": "fallback"}

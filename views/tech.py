@@ -13,15 +13,8 @@ from components.content_views import (
     render_global_tt_trl,
     render_use_cases,
 )
-from components.ui_helpers import (
-    current_view_mode,
-    first_text,
-    show_empty,
-    show_error,
-    show_plotly,
-)
-from i18n.core import t
-from i18n.widgets import select_keyed_section
+from components.ui_helpers import current_view_mode, first_text, select_section, show_empty, show_error, show_plotly
+from i18n.core import get_lang, t
 
 TECH_SECTION_KEYS = [
     "definition",
@@ -62,11 +55,15 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-section = select_keyed_section(
-    t("tech.section_label"),
-    TECH_SECTION_KEYS,
-    key=f"tech_section_{selected_tech_id}",
-    prefix="tech.section",
+_section_labels = [t(f"tech.section.{k}") for k in TECH_SECTION_KEYS]
+_section_map = dict(zip(_section_labels, TECH_SECTION_KEYS))
+section = _section_map.get(
+    select_section(
+        t("tech.section_label"),
+        _section_labels,
+        key=f"tech_section_{selected_tech_id}_{get_lang()}",
+    ),
+    TECH_SECTION_KEYS[0],
 )
 
 if section == "definition":

@@ -1,6 +1,7 @@
 """
 Türk Telekom 6G Technology & Patent Intelligence Platform
-Giriş yalnızca streamlit + i18n/styles import eder — Cloud KeyError/ImportError olmasın.
+Giriş yalnızca streamlit + i18n.core/styles — Cloud ImportError olmasın.
+Dil seçici burada sabit TR / EN. Cloud eski paket önbelleği bu dosyayı etkilemesin.
 """
 
 import streamlit as st
@@ -12,8 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-from i18n.core import bootstrap_lang, t  # noqa: E402
-from i18n.widgets import migrate_view_mode, render_language_selector  # noqa: E402
+from i18n.core import SESSION_KEY, bootstrap_lang, t  # noqa: E402
 
 try:
     from styles import inject_custom_styles
@@ -23,7 +23,13 @@ except Exception:
     pass
 
 bootstrap_lang()
-migrate_view_mode()
+
+_mode = st.session_state.get("view_mode", "beginner")
+if _mode not in ("beginner", "expert"):
+    _text = str(_mode)
+    st.session_state["view_mode"] = (
+        "expert" if ("Uzman" in _text or "Expert" in _text) else "beginner"
+    )
 
 with st.sidebar:
     st.markdown(
@@ -34,7 +40,34 @@ with st.sidebar:
 </div>""",
         unsafe_allow_html=True,
     )
-    render_language_selector()
+    lang = st.session_state.get(SESSION_KEY, "tr")
+    st.markdown(
+        f"<p class='tt-sidebar-label'>{t('settings.language')}</p>",
+        unsafe_allow_html=True,
+    )
+    col_tr, col_en = st.columns(2)
+    with col_tr:
+        if st.button(
+            "TR",
+            key="lang_btn_tr",
+            type="primary" if lang == "tr" else "secondary",
+            width="stretch",
+        ):
+            if lang != "tr":
+                st.session_state[SESSION_KEY] = "tr"
+                st.query_params["lang"] = "tr"
+                st.rerun()
+    with col_en:
+        if st.button(
+            "EN",
+            key="lang_btn_en",
+            type="primary" if lang == "en" else "secondary",
+            width="stretch",
+        ):
+            if lang != "en":
+                st.session_state[SESSION_KEY] = "en"
+                st.query_params["lang"] = "en"
+                st.rerun()
     st.markdown(
         f"<p class='tt-sidebar-label'>{t('depth.label')}</p>",
         unsafe_allow_html=True,

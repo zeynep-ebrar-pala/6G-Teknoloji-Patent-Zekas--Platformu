@@ -41,19 +41,6 @@ def render_language_selector() -> str:
     return lang
 
 
-def select_keyed_section(label: str, keys: list[str], key: str, prefix: str) -> str:
-    """Sabit anahtarlarla bölüm seçer; dil değişince etiketler yenilenir."""
-    import streamlit as st
-
-    from i18n.core import get_lang, t
-
-    labels = [t(f"{prefix}.{k}") for k in keys]
-    mapping = dict(zip(labels, keys))
-    widget_key = f"{key}_{get_lang()}"
-    choice = st.pills(label, labels, default=labels[0], key=widget_key)
-    return mapping.get(choice or labels[0], keys[0])
-
-
 def migrate_view_mode() -> None:
     import streamlit as st
 

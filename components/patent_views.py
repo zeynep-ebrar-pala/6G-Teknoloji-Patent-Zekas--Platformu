@@ -21,11 +21,11 @@ from components.ui_helpers import (
     render_module_header,
     render_patent_card,
     render_source_button,
+    select_section,
     show_empty,
     show_plotly,
 )
-from i18n.core import format_int, t
-from i18n.widgets import select_keyed_section
+from i18n.core import format_int, get_lang, t
 
 PATENT_SECTION_KEYS = ["year", "topics", "tree", "map", "list"]
 
@@ -82,7 +82,12 @@ def render_patent_intelligence_module():
 
     st.divider()
 
-    section = select_keyed_section(t("patent.view"), PATENT_SECTION_KEYS, key="patent_section", prefix="patent.section")
+    _labels = [t(f"patent.section.{k}") for k in PATENT_SECTION_KEYS]
+    _map = dict(zip(_labels, PATENT_SECTION_KEYS))
+    section = _map.get(
+        select_section(t("patent.view"), _labels, key=f"patent_section_{get_lang()}"),
+        PATENT_SECTION_KEYS[0],
+    )
 
     if section == "year":
         st.markdown(t("patent.year_heading"))

@@ -22,9 +22,12 @@ _TEACH_KEYS = (
 def is_beginner(view_mode: str | None = None) -> bool:
     if view_mode is None:
         view_mode = st.session_state.get("view_mode", "beginner")
-    if view_mode in ("beginner", "expert"):
-        return view_mode == "beginner"
-    return "Temel" in str(view_mode or "")
+    text = str(view_mode or "beginner")
+    if text in ("beginner", "expert"):
+        return text == "beginner"
+    if "Uzman" in text or "Expert" in text:
+        return False
+    return True
 
 
 def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:

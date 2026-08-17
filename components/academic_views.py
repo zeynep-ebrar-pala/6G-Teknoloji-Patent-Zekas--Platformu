@@ -15,11 +15,11 @@ from components.ui_helpers import (
     render_module_header,
     render_paper_card,
     render_source_button,
+    select_section,
     show_empty,
     show_plotly,
 )
-from i18n.core import format_int, t
-from i18n.widgets import select_keyed_section
+from i18n.core import format_int, get_lang, t
 
 PUB_SECTION_KEYS = ["doi", "trend", "inst", "country", "papers"]
 
@@ -66,7 +66,12 @@ def render_academic_publication_module():
 
     st.divider()
 
-    section = select_keyed_section(t("pub.view"), PUB_SECTION_KEYS, key="academic_section", prefix="pub.section")
+    _labels = [t(f"pub.section.{k}") for k in PUB_SECTION_KEYS]
+    _map = dict(zip(_labels, PUB_SECTION_KEYS))
+    section = _map.get(
+        select_section(t("pub.view"), _labels, key=f"academic_section_{get_lang()}"),
+        PUB_SECTION_KEYS[0],
+    )
 
     if section == "doi":
         st.markdown(t("pub.doi_heading"))
