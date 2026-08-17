@@ -13,7 +13,7 @@ def render_language_selector() -> str:
 
     lang = bootstrap_lang()
     st.markdown(
-        f"<p style='color:#94A3B8;font-size:0.8rem;font-weight:600;margin-bottom:6px;'>{t('settings.language')}</p>",
+        f"<p class='tt-sidebar-label'>{t('settings.language')}</p>",
         unsafe_allow_html=True,
     )
     picked = st.segmented_control(

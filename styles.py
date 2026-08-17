@@ -288,6 +288,87 @@ def inject_custom_styles():
             border-right: 1px solid rgba(200, 209, 220, 0.08);
         }
 
+        /* Dil + anlatım derinliği, sayfa listesinin üstünde kalsın */
+        [data-testid="stSidebarContent"] {
+            display: flex !important;
+            flex-direction: column;
+        }
+        [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+            gap: 0.4rem !important;
+        }
+        section[data-testid="stSidebar"] > div {
+            display: flex;
+            flex-direction: column;
+        }
+        [data-testid="stSidebarNav"] a,
+        [data-testid="stSidebarNav"] span {
+            white-space: normal !important;
+            line-height: 1.25 !important;
+            overflow-wrap: anywhere;
+        }
+        [data-testid="stSidebarNav"] li {
+            margin: 0 !important;
+        }
+        [data-testid="stSidebarNav"] a {
+            padding-top: 0.32rem !important;
+            padding-bottom: 0.32rem !important;
+        }
+
+        .tt-sidebar-brand {
+            text-align: center;
+            padding: 2px 0 6px 0;
+        }
+        .tt-sidebar-logo {
+            background: linear-gradient(135deg, #0099FF 0%, #00C2FF 100%);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 0 16px rgba(0, 153, 255, 0.4);
+        }
+        .tt-sidebar-brand h3 {
+            color: #FFFFFF !important;
+            margin: 8px 0 0 0 !important;
+            font-size: 1.05rem !important;
+        }
+        .tt-sidebar-brand p {
+            color: #00E5FF !important;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            margin: 2px 0 0 0 !important;
+        }
+        .tt-sidebar-label {
+            color: #94A3B8 !important;
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin: 8px 0 4px 0 !important;
+        }
+        .tt-sidebar-foot {
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            font-size: 0.72rem;
+            color: #64748B;
+            overflow-wrap: anywhere;
+        }
+        [data-testid="stSidebar"] [data-testid="stRadio"] label {
+            white-space: normal !important;
+            line-height: 1.35 !important;
+            overflow-wrap: anywhere;
+        }
+        [data-testid="stSidebar"] hr {
+            margin: 8px 0 !important;
+        }
+        [data-testid="stSidebar"] .stHeading, [data-testid="stSidebar"] .stMarkdown {
+            margin-bottom: 0 !important;
+        }
+
         /* Custom Tabs Styling */
         .stTabs [data-baseweb="tab-list"] {
             gap: 6px;

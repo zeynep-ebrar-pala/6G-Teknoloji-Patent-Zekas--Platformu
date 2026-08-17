@@ -6,7 +6,7 @@ Giriş yalnızca streamlit + i18n/styles import eder — Cloud KeyError/ImportEr
 import streamlit as st
 
 st.set_page_config(
-    page_title="Türk Telekom | 6G",
+    page_title="Türk Telekom | 6G Teknoloji & Patent Zekası",
     page_icon="📡",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -27,22 +27,16 @@ migrate_view_mode()
 
 with st.sidebar:
     st.markdown(
-        f"""<div style="text-align: center; padding: 12px 0;">
-<div style="background: linear-gradient(135deg, #0099FF 0%, #00C2FF 100%); width: 52px; height: 52px; border-radius: 14px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 0 20px rgba(0, 153, 255, 0.4);">
-📡
-</div>
-<h3 style="color: #FFFFFF; margin-top: 10px; margin-bottom: 2px; overflow-wrap: anywhere;">{t("app.brand")}</h3>
-<p style="color: #00E5FF; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px; overflow-wrap: anywhere;">{t("app.product")}</p>
+        f"""<div class="tt-sidebar-brand">
+<div class="tt-sidebar-logo">📡</div>
+<h3>{t("app.brand")}</h3>
+<p>{t("app.product")}</p>
 </div>""",
         unsafe_allow_html=True,
     )
-
-    st.divider()
     render_language_selector()
-    st.divider()
-
     st.markdown(
-        f"<p style='color: #94A3B8; font-size: 0.8rem; font-weight: 600;'>{t('depth.label')}</p>",
+        f"<p class='tt-sidebar-label'>{t('depth.label')}</p>",
         unsafe_allow_html=True,
     )
     st.radio(
@@ -51,18 +45,18 @@ with st.sidebar:
         index=0,
         key="view_mode",
         format_func=lambda x: t(f"depth.{x}"),
+        label_visibility="collapsed",
     )
 
-    st.divider()
     if st.session_state.get("api_key") or st.session_state.get("ai_ready"):
         if st.button(t("app.ai_logout"), width="stretch"):
             for key in ("authenticated", "api_key", "ai_provider", "ai_ready", "chat_messages", "chat_lang"):
                 st.session_state.pop(key, None)
             st.rerun()
 
-    provider_label = st.session_state.get("ai_provider") or t("ai.mode_local")
+    provider_label = st.session_state.get("ai_provider") or t("app.provider_off")
     st.markdown(
-        f"""<div style="margin-top: 20px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 0.75rem; color: #64748B; overflow-wrap: anywhere;">
+        f"""<div class="tt-sidebar-foot">
 {t("app.ai_provider", provider=provider_label)}<br>
 {t("app.footer")}
 </div>""",

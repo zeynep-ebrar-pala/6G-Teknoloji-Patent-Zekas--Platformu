@@ -5,7 +5,7 @@ Merkezi UI katalogları — TR ve EN anahtar ağacı birebir aynıdır.
 
 UI = {
     "tr": {
-        "lang": {"tr": "🇹🇷 Türkçe", "en": "🇬🇧 English"},
+        "lang": {"tr": "TR Türkçe", "en": "EN English"},
         "app": {
             "page_title": "Türk Telekom | 6G Teknoloji & Patent Zekası",
             "brand": "Türk Telekom",
@@ -16,6 +16,7 @@ UI = {
             "footer": "© 2026 Türk Telekom Ar-Ge",
             "ai_provider": "AI sağlayıcı: {provider}",
             "ai_logout": "AI oturumunu kapat",
+            "provider_off": "kapalı",
         },
         "nav": {
             "home": "Ana Sayfa",
@@ -28,10 +29,10 @@ UI = {
         },
         "settings": {"language": "Dil", "language_help": "Arayüz ve yeni AI yanıtları seçilen dile geçer."},
         "depth": {
-            "label": "Anlatım derinliği (Dual-Depth)",
-            "radio": "Derinlik seviyesi",
-            "beginner": "Temel seviye (kavramsal temel + analoji → teknik karşılık)",
-            "expert": "Uzman seviye (temel katman + denklem / 3GPP / varsayım)",
+            "label": "Anlatım Derinliği (Dual-Depth):",
+            "radio": "Derinlik Seviyesi:",
+            "beginner": "Temel Seviye (Kavramsal temel + analoji → teknik karşılık)",
+            "expert": "Uzman Seviyesi (Temel katman + denklem / 3GPP / varsayım)",
         },
         "home": {
             "intro_beginner": """<div class="dual-card-beginner">
@@ -80,7 +81,7 @@ referans DOI/3GPP’dir; tepe hız pazarlama cümlesi saha ölçümü sayılmaz.
         },
         "trl": {
             "pill": "TRL {n}",
-            "maturity": "TRL {n} olgunluk seviyesi",
+            "maturity": "TRL {n} Olgunluk Seviyesi",
             "explainer_title": "TRL nedir?",
             "explainer_lead": "{abbr} ({en} — {tr}): {definition} {why}",
             "explainer_body": "1 = temel ilke, 9 = gerçek görevde kanıtlanmış ürün. 6G yapı taşları aynı anda gelmez: NTN diğerlerinden öndedir; THz hâlâ laboratuvardır. Notlar pazarlama vaadi değil, saha/standart olgunluğudur.",
@@ -134,18 +135,18 @@ referans DOI/3GPP’dir; tepe hız pazarlama cümlesi saha ölçümü sayılmaz.
             "diagram_terms": "Diyagram terimleri",
         },
         "tech": {
-            "select": "İncelemek istediğiniz 6G teknolojisini seçin:",
+            "select": "İncelemek İstediğiniz 6G Teknolojisini Seçin:",
             "select_fmt": "{icon} {title} (TRL {trl})",
             "badge": "6G TEKNOLOJİLERİ",
             "section_label": "Teknoloji bölümü",
             "section": {
-                "definition": "1. Teknoloji tanımı",
-                "principle": "2. Çalışma prensibi ve blok diyagram",
-                "architecture": "3. Sistem mimarisi",
-                "use_cases": "4. Kullanım alanları",
-                "adv_dis": "5. Avantajlar ve dezavantajlar",
-                "global_tt": "6. Dünyadaki çalışmalar ve TT senaryoları",
-                "performance": "7. Performans grafikleri ve referanslar",
+                "definition": "1. Teknoloji Tanımı",
+                "principle": "2. Çalışma Prensibi & Blok Diyagram",
+                "architecture": "3. Sistem Mimarisi",
+                "use_cases": "4. Kullanım Alanları",
+                "adv_dis": "5. Avantajlar & Dezavantajlar",
+                "global_tt": "6. Dünyadaki Çalışmalar & TT Senaryoları",
+                "performance": "7. Performans Grafikleri & Referanslar",
             },
             "def_heading": "### Teknoloji tanımı — katmanlı anlatım",
             "expert_def": "Uzman katmanı: teknik tanım ve mimari bağlam",
@@ -159,8 +160,8 @@ referans DOI/3GPP’dir; tepe hız pazarlama cümlesi saha ölçümü sayılmaz.
             "perf_caption": "Temsili 5G/6G hedef barı yok. Aşağıdaki grafikler bu teknolojinin doğrulanmış patent kayıt sayısı ve (varsa) OpenAlex yayın trendidir.",
             "empty_patents": "«{domain}» için doğrulanmış patent kaydı yok.",
             "openalex_fail": "OpenAlex bu konu için yanıt vermedi; yayın trendi gizlendi.",
-            "cell_free_oa": "Hücresiz MIMO, şartnamedeki akademik konu listesinde yoktur; OpenAlex serisi gösterilmez.",
-            "refs": "### Referans makaleler ve yayınlar",
+            "cell_free_oa": "Cell-Free, şartnamedeki akademik konu listesinde yoktur; OpenAlex serisi gösterilmez.",
+            "refs": "### Referans Makaleler & Yayınlar",
             "refs_caption": "Bağlantılar DOI veya resmi 3GPP / proje sayfalarına gider.",
         },
         "patent": {
@@ -186,45 +187,45 @@ Ne zaman yorumlanmaz: tek patent = pazar liderliği değildir. Yıl çubuğu ba�
 ticarileşme tarihi değildir.
 </p>""",
             "empty_company": "«{company}» için doğrulanmış patent kaydı yok. Sayı uydurulmaz; Google Patents’te teyitli kayıt eklenene kadar grafik gizlenir.",
-            "metric_total": "Doğrulanmış patent kaydı",
-            "metric_leader": "En fazla kayıt (assignee)",
+            "metric_total": "Doğrulanmış Patent Kaydı",
+            "metric_leader": "En Fazla Kayıt (Assignee)",
             "metric_leader_delta": "{n} patent",
-            "metric_domain": "Öne çıkan teknoloji alanı",
+            "metric_domain": "Öne Çıkan Teknoloji Alanı",
             "metric_domain_delta": "{n} kayıt",
             "metric_source": "Kaynak",
             "open_gp": "Google Patents ana sayfasını aç ↗",
             "view": "Patent görünümü",
             "section": {
-                "year": "Patent sayısı / yıl",
-                "topics": "Konu dağılımı ve kelime bulutu",
-                "tree": "Patent ağacı ve yoğunluk",
-                "map": "Teknoloji haritası ve ağ",
-                "list": "Patent başlıkları",
+                "year": "Patent Sayısı / Yıl",
+                "topics": "Konu Dağılımı & Kelime Bulutu",
+                "tree": "Patent Ağacı & Yoğunluk",
+                "map": "Teknoloji Haritası & Ağ",
+                "list": "Patent Başlıkları",
             },
-            "year_heading": "### Yıllara göre dağılım",
+            "year_heading": "### Yıllara Göre Dağılım",
             "year_caption": "Her çubuk bir takvim yılıdır (ör. 2024, 2025). Kayıtlarda ay bilgisi olmadığı için 2024.2 gibi ara değer veya uydurma «2. Ay» dilimi yok.",
             "empty_trend": "Trend grafiği için yeterli patent verisi yok.",
-            "companies_heading": "### En çok kayıtlı firmalar",
+            "companies_heading": "### En Çok Kayıtlı Firmalar",
             "empty_counts": "Firma sayımı için veri yok.",
-            "empty_domain": "Alan dağılımı hesaplanamadı.",
+            "empty_domain": "Domain dağılımı hesaplanamadı.",
             "empty_kw": "Anahtar kelime analizi için veri yok.",
-            "wordcloud": "### Kelime bulutu",
+            "wordcloud": "### Kelime Bulutu",
             "wordcloud_caption": "Yalnızca doğrulanmış patent başlıklarındaki kelime sıklığı.",
             "empty_wc": "Kelime bulutu için wordcloud/matplotlib yüklü değil veya kelime yok.",
-            "density": "### Patent yoğunluk grafiği",
+            "density": "### Patent Yoğunluk Grafiği",
             "empty_density": "Yoğunluk haritası için veri yok.",
-            "tree_heading": "### Patent ağacı",
+            "tree_heading": "### Patent Ağacı",
             "empty_tree": "Ağaç grafiği için veri yok.",
-            "map_heading": "### Patent teknoloji haritası",
+            "map_heading": "### Patent Teknoloji Haritası",
             "map_caption": "Koordinatlar patent başlıklarının TF-IDF vektörlerinin PCA ile 2 boyuta indirgenmesidir; uydurma konum yoktur.",
             "empty_map": "Harita için en az 2 patent ve scikit-learn gerekir.",
-            "network": "### Assignee ↔ alan ağ analizi",
+            "network": "### Assignee ↔ Alan Ağ Analizi",
             "empty_net": "Ağ grafiği için bağlantı verisi yok.",
-            "list_heading": "### Doğrulanmış 6G patent listesi",
+            "list_heading": "### Doğrulanmış 6G Patent Listesi",
             "list_caption": "Her kartta publication number, başlık, assignee, yıl ve Google Patents kaynak bağlantısı bulunur.",
-            "assignee": "Hak sahibi (assignee)",
+            "assignee": "Assignee",
             "year": "Yıl",
-            "open_record": "{pub} — Google Patents’te aç ↗",
+            "open_record": "{pub} — Google Patents'te Aç ↗",
         },
         "pub": {
             "title": "Yayın Trendleri",
@@ -232,7 +233,7 @@ ticarileşme tarihi değildir.
             "what_title": "DOI, OpenAlex ve atıf ne anlama gelir?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
 <strong>DOI (Digital Object Identifier — dijital nesne tanımlayıcı):</strong>
-makaleye kalıcı kimlik verir; karttaki «Kaynakta aç» bu kimliği çözümler.
+makaleye kalıcı kimlik verir; karttaki «Kaynakta Aç» bu kimliği çözümler.
 Uydurma DOI üretmek bu platformda yasaktır.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
@@ -287,10 +288,10 @@ Google Scholar ayrı bir API sunmaz; sayılar OpenAlex’tendir.
             "citations_n": "{n} atıf",
             "citations_na": "Atıf: —",
             "authors": "Yazarlar",
-            "open_doi": "Makaleyi DOI ile aç ↗",
+            "open_doi": "Makaleyi DOI ile Aç ↗",
         },
         "ui": {
-            "source": "Kaynakta aç ↗",
+            "source": "Kaynakta Aç ↗",
             "no_source": "Kaynak bağlantısı yok.",
         },
         "scenario": {
@@ -541,7 +542,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
         },
     },
     "en": {
-        "lang": {"tr": "🇹🇷 Türkçe", "en": "🇬🇧 English"},
+        "lang": {"tr": "TR Türkçe", "en": "EN English"},
         "app": {
             "page_title": "Türk Telekom | 6G Technology & Patent Intelligence",
             "brand": "Türk Telekom",
@@ -552,6 +553,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "footer": "© 2026 Türk Telekom R&D",
             "ai_provider": "AI provider: {provider}",
             "ai_logout": "End AI session",
+            "provider_off": "off",
         },
         "nav": {
             "home": "Home",
@@ -564,14 +566,14 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
         },
         "settings": {"language": "Language", "language_help": "The interface and new AI answers switch to the selected language."},
         "depth": {
-            "label": "Explanation depth (dual-depth)",
-            "radio": "Depth level",
-            "beginner": "Foundational (concept + analogy mapped to the technical counterpart)",
-            "expert": "Expert (foundation plus equations / 3GPP / assumptions)",
+            "label": "Explanation Depth (Dual-Depth):",
+            "radio": "Depth Level:",
+            "beginner": "Beginner Level (conceptual foundation + analogy → technical counterpart)",
+            "expert": "Expert Level (foundation layer + equation / 3GPP / assumption)",
         },
         "home": {
             "intro_beginner": """<div class="dual-card-beginner">
-<h4 style="margin-top:0;">What 6G actually changes</h4>
+<h4 style="margin-top:0;">What is 6G</h4>
 <p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
 Your phone today hangs off a <strong>5G</strong> tower: the tower talks, the device listens, bits flow.
 <strong>6G</strong> is not simply a fatter pipe on the same mast. It gives that mast — and nodes that are not masts —
@@ -615,7 +617,7 @@ references are DOI/3GPP; a peak-rate slogan is not a field measurement.
         },
         "trl": {
             "pill": "TRL {n}",
-            "maturity": "TRL {n} maturity",
+            "maturity": "TRL {n} Maturity Level",
             "explainer_title": "What TRL means",
             "explainer_lead": "{abbr} ({en}): {definition} {why}",
             "explainer_body": "1 is a basic principle; 9 is a product proven in an operational mission. 6G building blocks do not arrive together: NTN is ahead of the pack; THz is still a laboratory class. These notes are field/standards maturity, not marketing promises.",
@@ -669,18 +671,18 @@ references are DOI/3GPP; a peak-rate slogan is not a field measurement.
             "diagram_terms": "Diagram terms",
         },
         "tech": {
-            "select": "Select a 6G technology to inspect:",
+            "select": "Select the 6G Technology You Want to Inspect:",
             "select_fmt": "{icon} {title} (TRL {trl})",
             "badge": "6G TECHNOLOGIES",
             "section_label": "Technology section",
             "section": {
-                "definition": "1. Technology definition",
-                "principle": "2. Operating principle and block diagram",
-                "architecture": "3. System architecture",
-                "use_cases": "4. Use cases",
-                "adv_dis": "5. Advantages and disadvantages",
-                "global_tt": "6. Global work and TT scenarios",
-                "performance": "7. Performance charts and references",
+                "definition": "1. Technology Definition",
+                "principle": "2. Operating Principle & Block Diagram",
+                "architecture": "3. System Architecture",
+                "use_cases": "4. Use Cases",
+                "adv_dis": "5. Advantages & Disadvantages",
+                "global_tt": "6. Global Work & TT Scenarios",
+                "performance": "7. Performance Charts & References",
             },
             "def_heading": "### Technology definition — layered explanation",
             "expert_def": "Expert layer: technical definition and architectural context",
@@ -695,7 +697,7 @@ references are DOI/3GPP; a peak-rate slogan is not a field measurement.
             "empty_patents": "No verified patent records for “{domain}”.",
             "openalex_fail": "OpenAlex did not return this topic; the publication trend is hidden.",
             "cell_free_oa": "Cell-free MIMO is not on the specification’s academic topic list; no OpenAlex series is shown.",
-            "refs": "### Reference papers and publications",
+            "refs": "### Reference Papers & Publications",
             "refs_caption": "Links go to a DOI or an official 3GPP / project page.",
         },
         "patent": {
@@ -729,11 +731,11 @@ not commercialisation date.
             "open_gp": "Open the Google Patents homepage ↗",
             "view": "Patent view",
             "section": {
-                "year": "Patent count / year",
-                "topics": "Topic mix and word cloud",
-                "tree": "Patent tree and density",
-                "map": "Technology map and network",
-                "list": "Patent titles",
+                "year": "Patent Count / Year",
+                "topics": "Topic Distribution & Word Cloud",
+                "tree": "Patent Tree & Density",
+                "map": "Technology Map & Network",
+                "list": "Patent Titles",
             },
             "year_heading": "### Distribution by year",
             "year_caption": "Each bar is a calendar year (e.g. 2024, 2025). Records have no month field, so there is no 2024.2 tick and no invented “Month 2” slice.",
@@ -824,7 +826,7 @@ Google Scholar does not expose a public API; the numbers here are from OpenAlex.
             "open_doi": "Open the paper via DOI ↗",
         },
         "ui": {
-            "source": "Open source ↗",
+            "source": "Open Source ↗",
             "no_source": "No source link.",
         },
         "scenario": {
