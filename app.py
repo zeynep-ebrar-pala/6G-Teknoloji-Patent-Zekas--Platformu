@@ -80,6 +80,10 @@ with st.sidebar:
         format_func=lambda x: t(f"depth.{x}"),
         label_visibility="collapsed",
     )
+    st.markdown(
+        f"<p class='tt-sidebar-hint'>{t('depth.caption')}</p>",
+        unsafe_allow_html=True,
+    )
 
     if st.session_state.get("api_key") or st.session_state.get("ai_ready"):
         if st.button(t("app.ai_logout"), width="stretch"):

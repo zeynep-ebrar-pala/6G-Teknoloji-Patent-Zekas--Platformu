@@ -282,95 +282,169 @@ def inject_custom_styles():
             white-space: nowrap;
         }
 
-        /* Sidebar Styling */
+        /* Sidebar — müşteri yüzü: marka, ayarlar, menü, telif en altta */
         [data-testid="stSidebar"] {
-            background-color: #121620;
-            border-right: 1px solid rgba(200, 209, 220, 0.08);
+            background: linear-gradient(180deg, #10151E 0%, #121620 42%, #0E1117 100%);
+            border-right: 1px solid rgba(0, 153, 255, 0.14);
+            position: relative !important;
         }
-
-        /* Marka + TR/EN + derinlik, sayfa listesinin ÜSTÜNDE kalsın (Streamlit nav'ı DOM'da üste koyar) */
-        [data-testid="stSidebarContent"],
-        section[data-testid="stSidebar"] > div {
+        [data-testid="stSidebar"] > div {
+            position: relative;
+            min-height: 100%;
+        }
+        [data-testid="stSidebarContent"] {
             display: flex !important;
             flex-direction: column !important;
+            padding-bottom: 4px !important;
         }
         [data-testid="stSidebarUserContent"] {
             order: 1 !important;
+            padding: 6px 4px 4px 4px !important;
         }
         [data-testid="stSidebarNav"],
         [data-testid="stSidebarNavItems"] {
             order: 2 !important;
         }
         [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
-            gap: 0.4rem !important;
-        }
-        [data-testid="stSidebarNav"] a,
-        [data-testid="stSidebarNav"] span {
-            white-space: normal !important;
-            line-height: 1.25 !important;
-            overflow-wrap: anywhere;
-        }
-        [data-testid="stSidebarNav"] li {
-            margin: 0 !important;
-        }
-        [data-testid="stSidebarNav"] a {
-            padding-top: 0.32rem !important;
-            padding-bottom: 0.32rem !important;
+            gap: 0.28rem !important;
         }
 
         .tt-sidebar-brand {
             text-align: center;
-            padding: 2px 0 6px 0;
+            padding: 10px 8px 14px 8px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
         .tt-sidebar-logo {
             background: linear-gradient(135deg, #0099FF 0%, #00C2FF 100%);
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 12px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            box-shadow: 0 0 16px rgba(0, 153, 255, 0.4);
+            box-shadow: 0 0 18px rgba(0, 153, 255, 0.35);
         }
         .tt-sidebar-brand h3 {
             color: #FFFFFF !important;
-            margin: 8px 0 0 0 !important;
-            font-size: 1.05rem !important;
+            margin: 10px 0 0 0 !important;
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.01em;
+            line-height: 1.25 !important;
         }
         .tt-sidebar-brand p {
-            color: #00E5FF !important;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.4px;
-            margin: 2px 0 0 0 !important;
+            color: #7DD8FF !important;
+            font-size: 0.68rem !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin: 4px 0 0 0 !important;
+            line-height: 1.3 !important;
         }
         .tt-sidebar-label {
             color: #94A3B8 !important;
-            font-size: 0.78rem;
-            font-weight: 600;
-            margin: 8px 0 4px 0 !important;
+            font-size: 0.68rem !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin: 12px 4px 2px 4px !important;
+            line-height: 1.3 !important;
+        }
+        .tt-sidebar-hint {
+            color: #64748B !important;
+            font-size: 0.68rem !important;
+            font-weight: 500 !important;
+            line-height: 1.45 !important;
+            margin: 2px 4px 8px 4px !important;
         }
         .tt-sidebar-foot {
-            margin-top: 8px;
-            padding: 8px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            font-size: 0.72rem;
-            color: #64748B;
-            overflow-wrap: anywhere;
+            position: absolute !important;
+            bottom: 10px;
+            left: 14px;
+            right: 14px;
+            z-index: 30;
+            margin: 0 !important;
+            padding: 8px 10px !important;
+            text-align: center;
+            background: rgba(16, 21, 30, 0.94);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 10px;
+            font-size: 0.65rem !important;
+            letter-spacing: 0.02em;
+            color: #64748B !important;
+            line-height: 1.35 !important;
+        }
+
+        [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] {
+            gap: 6px !important;
+            background: rgba(255,255,255,0.035);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 4px;
+            margin: 0 2px 4px 2px;
+        }
+        [data-testid="stSidebar"] .stButton button {
+            min-height: 2.05rem !important;
+            height: 2.05rem !important;
+            font-size: 0.78rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.1em;
+            border-radius: 9px !important;
+            padding: 0 8px !important;
         }
         [data-testid="stSidebar"] [data-testid="stRadio"] label {
-            white-space: normal !important;
-            line-height: 1.35 !important;
-            overflow-wrap: anywhere;
+            white-space: nowrap !important;
+            font-size: 0.86rem !important;
+            font-weight: 600 !important;
+            line-height: 1.3 !important;
+            color: #E2E8F0 !important;
         }
+        [data-testid="stSidebar"] [data-testid="stRadio"] p,
+        [data-testid="stSidebar"] [data-testid="stRadio"] span {
+            font-size: 0.86rem !important;
+            line-height: 1.3 !important;
+        }
+
+        [data-testid="stSidebarNav"] {
+            border-top: 1px solid rgba(255,255,255,0.07);
+            margin-top: 8px !important;
+            padding: 10px 6px 72px 6px !important;
+        }
+        [data-testid="stSidebarNav"] li {
+            margin: 1px 0 !important;
+        }
+        [data-testid="stSidebarNav"] a {
+            padding: 0.48rem 0.7rem !important;
+            border-radius: 10px !important;
+            font-size: 0.86rem !important;
+            font-weight: 500 !important;
+            line-height: 1.3 !important;
+        }
+        [data-testid="stSidebarNav"] a,
+        [data-testid="stSidebarNav"] span {
+            white-space: normal !important;
+            overflow-wrap: anywhere;
+            line-height: 1.3 !important;
+        }
+        [data-testid="stSidebarNav"] a:hover {
+            background: rgba(0, 153, 255, 0.12) !important;
+        }
+        [data-testid="stSidebarNav"] a[aria-current="page"] {
+            background: rgba(0, 153, 255, 0.16) !important;
+            font-weight: 650 !important;
+        }
+
         [data-testid="stSidebar"] hr {
             margin: 8px 0 !important;
         }
         [data-testid="stSidebar"] .stHeading, [data-testid="stSidebar"] .stMarkdown {
             margin-bottom: 0 !important;
+        }
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {
+            overflow-wrap: anywhere;
         }
 
         /* Custom Tabs Styling */

@@ -29,10 +29,11 @@ UI = {
         },
         "settings": {"language": "Dil", "language_help": "Arayüz ve yeni AI yanıtları seçilen dile geçer."},
         "depth": {
-            "label": "Anlatım Derinliği (Dual-Depth):",
-            "radio": "Derinlik Seviyesi:",
-            "beginner": "Temel Seviye (Kavramsal temel + analoji → teknik karşılık)",
-            "expert": "Uzman Seviyesi (Temel katman + denklem / 3GPP / varsayım)",
+            "label": "Anlatım derinliği",
+            "radio": "Derinlik",
+            "beginner": "Temel",
+            "expert": "Uzman",
+            "caption": "Temel: kavram + analoji → teknik karşılık. Uzman: temel katman + denklem / 3GPP / varsayım.",
         },
         "home": {
             "intro_beginner": """<div class="dual-card-beginner">
@@ -566,10 +567,11 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
         },
         "settings": {"language": "Language", "language_help": "The interface and new AI answers switch to the selected language."},
         "depth": {
-            "label": "Explanation Depth (Dual-Depth):",
-            "radio": "Depth Level:",
-            "beginner": "Beginner Level (conceptual foundation + analogy → technical counterpart)",
-            "expert": "Expert Level (foundation layer + equation / 3GPP / assumption)",
+            "label": "Explanation depth",
+            "radio": "Depth",
+            "beginner": "Beginner",
+            "expert": "Expert",
+            "caption": "Beginner: concept + analogy → technical map. Expert: foundation + equation / 3GPP / assumption.",
         },
         "home": {
             "intro_beginner": """<div class="dual-card-beginner">
