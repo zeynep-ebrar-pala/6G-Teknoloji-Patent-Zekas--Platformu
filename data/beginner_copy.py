@@ -8,12 +8,11 @@ ne zaman / ne zaman değil, neyle karıştırılmamalı, gerçek dünya, TT etki
 BEGINNER_COPY = {
     "isac": {
         "card": (
-            "Bugün baz istasyonu yalnızca veri taşır. Sis, gece veya kameranın kör olduğu yerde "
-            "araç veya dron görmek için ayrı radar gerekir. "
+            "Sisli bir boğazda kule internet verir ama «orada bir gemi var mı» diye bakamaz; "
+            "kamera körleşir, ayrı radar kamyonu hem pahalıdır hem spektrumu kirletir. "
             "ISAC (Integrated Sensing and Communication — Entegre Algılama ve İletişim) "
-            "aynı radyo sinyalini hem internet hem yankı ölçümü için kullanır: gecikme mesafe, "
-            "Doppler kayması hızdır. Türk Telekom için ek radar kamyonu dikmeden çevre farkındalığı "
-            "adaylığıdır; olgunluk TRL 4 — laboratuvar doğrulandı, mahalle şebekesi değil."
+            "aynı radyo dalgasını hem konuşma hem yankı sayar: gecikme mesafe, Doppler kayması hızdır. "
+            "Türk Telekom için adaylık budur; mahalle ürünü değil. TRL 4 — laboratuvar doğrulandı, saha şebekesi değil."
         ),
         "kicker": "Sorun: kule konuşur, bakmaz",
         "what": (
@@ -106,11 +105,11 @@ BEGINNER_COPY = {
     },
     "ris": {
         "card": (
-            "Yüksek frekanslı sinyal düz gitmeye eğilimlidir; köşe, asansör ve kalın duvar kör nokta kalır. "
-            "Klasik cevap yeni kule dikmektir. "
+            "Yüksek frekanslı dalga düz gitmeye eğilimlidir; köşeyi dönmez, asansör boşluğunda ölür. "
+            "Her kör nokta için yeni kule dikmek işlemez. "
             "RIS (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey) "
-            "cepheye asılan elektronik bir yansıtıcıdır: her küçük eleman fazı kaydırır, hüzme size döner. "
-            "Aktif verici olmadığı için enerji kırıntısı kadardır. TRL 5 — prototip/saha denemesi, ticari kule değil."
+            "cepheye asılan elektronik bir aynadır: her küçük eleman fazı kaydırır, hüzme size döner. "
+            "Kendi başına verici olmadığı için enerji kırıntısı kadardır. TRL 5 — prototip/saha denemesi, ticari kule değil."
         ),
         "kicker": "Sorun: sinyal köşeyi dönemez",
         "what": (
@@ -194,10 +193,11 @@ BEGINNER_COPY = {
     },
     "cell_free": {
         "card": (
-            "Klasik şebekede her mahallenin bir hücresi vardır. Kenarda sinyal düşer, kule değişince "
-            "(handover) kopma riski doğar. Hücresiz Massive MIMO'da sokak lambası gibi sık "
-            "erişim noktaları sizi birlikte taşır; kenar diye bir yer kalmaz. Bedeli: antenleri merkeze "
-            "bağlayan fronthaul (ön bağlantı) fiberidir. TRL 4 — deneysel; önce stadyum ve havalimanı adaydır."
+            "Klasik şebekede her mahallenin bir hücresi vardır; kenara yaklaşınca sinyal düşer, "
+            "kule değişince (handover) kopma riski doğar. Hücresiz Massive MIMO bu sınırı kaldırır: "
+            "sokak lambası sıklığında erişim noktaları sizi birlikte taşır, kenar diye bir yer kalmaz. "
+            "Bedeli, antenleri merkeze bağlayan fronthaul (ön bağlantı) fiberidir. "
+            "TRL 4 — deneysel; önce stadyum ve havalimanı adaydır."
         ),
         "kicker": "Sorun: hücre kenarında kopma",
         "what": (
@@ -279,9 +279,9 @@ BEGINNER_COPY = {
     },
     "thz": {
         "card": (
-            "5G hızlıdır ama kablosuz boru hâlâ dardır: raf arası terabit, gerçek zamanlı hologram "
-            "bu boruya sığmaz. Terahertz, milimetre dalga ile kızılötesi arasındaki spektrumdur; "
-            "bant genişliği patlar. Bedeli fiziktir: su buharı emilimi, duvar ve mesafe. "
+            "5G hızlıdır ama kablosuz boru hâlâ dardır; raf arası terabit veya gerçek zamanlı hologram "
+            "bu boruya sığmaz. THz (terahertz) milimetre dalga ile kızılötesi arasındaki spektrumdur; "
+            "bant genişliği patlar. Bedeli fiziktir: su buharı emer, duvar keser, mesafe kısalır. "
             "TRL 3 — laboratuvar güçlü, sokak şebekesi değil. 6G'nin tamamı THz değildir."
         ),
         "kicker": "Sorun: kablosuz boru hâlâ dar",
@@ -361,10 +361,11 @@ BEGINNER_COPY = {
     },
     "ai_ran": {
         "card": (
-            "Klasik şebeke, mühendis tarifesini uygular: gece-gündüz aynı ezber. "
-            "AI-RAN (Artificial Intelligence — yapay zekâ ile yönetilen telsiz erişim ağı), "
-            "kuleyi ölçen ve milisaniye–saniye döngüsünde kaynak kaydıran bir karar katmanıdır. "
-            "Sohbet botu değildir. TRL 5 — O-RAN RIC denemeleri var; 'hiç insan yok' sahada kanıtlanmış değildir."
+            "Klasik şebeke mühendis tarifesini ezberden okur: yoğun stadyum ile ıssız gece aynı kurala bakınca "
+            "ya kaynak israf olur ya kalite düşer. "
+            "AI-RAN (Artificial Intelligence — yapay zekâ ile yönetilen telsiz erişim ağı) "
+            "kuleyi ölçer ve milisaniye–saniye döngüsünde kaynak kaydırır. Sohbet botu değildir. "
+            "TRL 5 — O-RAN RIC denemeleri var; «hiç insan yok» sahada kanıtlanmış değildir."
         ),
         "kicker": "Sorun: şebeke ezber kural okur",
         "what": (
@@ -444,10 +445,10 @@ BEGINNER_COPY = {
     },
     "ntn": {
         "card": (
-            "Karasal kule şehir ve yolu kapsar; dağ, açık deniz ve enkaz boş kalır. "
-            "NTN (Non-Terrestrial Network — karasal olmayan ağ), LEO uydu ve HAPS'ı 3GPP şebekesiyle "
-            "birleştirir. Hedef: standart telefonun kule yokken göğe düşmesi. "
-            "Bedeli gecikme ve Doppler. TRL 6 — yedi teknolojinin en olgunu; şehir 6G'sinin rakibi değil."
+            "Karasal kule şehir ve asfaltı kapsar; dağ, açık deniz ve enkaz boş kalır. "
+            "NTN (Non-Terrestrial Network — karasal olmayan ağ) LEO uydu ve HAPS'ı 3GPP şebekesiyle "
+            "birleştirir: standart telefon kule yokken göğe düşer. Bedeli gecikme ve Doppler'dir. "
+            "TRL 6 — yedinin en olgunu; şehir 6G'sinin rakibi değil, tamamlayıcısıdır."
         ),
         "kicker": "Sorun: kule her yere yetişmez",
         "what": (
@@ -525,8 +526,8 @@ BEGINNER_COPY = {
     "ambient_iot": {
         "card": (
             "Depodaki her koli, tarladaki her nem ölçer bugün pil ister. Pil bitince cihaz ölür; "
-            "milyonlarca pili değiştirmek işlemez. Ambient IoT, ortamdaki RF kırıntısını toplayıp "
-            "geri saçılımla 'buradayım' der. Video taşımaz. TRL 4 — 3GPP çalışma kalemi; her rafa yapışmış değildir."
+            "milyonlarca pili değiştirmek işlemez. Ambient IoT ortamdaki RF kırıntısını toplayıp "
+            "geri saçılımla «buradayım» der. Video taşımaz. TRL 4 — 3GPP çalışma kalemi; her rafa yapışmış değildir."
         ),
         "kicker": "Sorun: her nesneye pil takılmaz",
         "what": (

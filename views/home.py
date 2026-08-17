@@ -12,18 +12,31 @@ beginner = is_beginner(current_view_mode())
 if beginner:
     st.markdown(
         """<div class="dual-card-beginner">
-<h4 style="margin-top:0;">6G nedir — kavramsal temel</h4>
-<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 10px 0;">
-Telefonunuz bugün <strong>5G</strong> ile bağlanır. <strong>6G</strong> yalnızca daha kalın bir boru değil;
-kulelerin yeni işler yapmasıdır. Yedi yapı taşı yedi problemi hedefler:
-kör noktayı kapatmak (RIS), hücre kenarı kopmasını bitirmek (hücresiz MIMO),
-dağı ve denizi kapsamak (NTN), kuleyi radar yapmak (ISAC), şebekeyi ölçüme göre ayarlamak (AI-RAN),
-pilsiz nesne izlemek (Ambient IoT) ve ileride çok geniş kablosuz bant açmak (THz).
+<h4 style="margin-top:0;">6G nedir</h4>
+<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
+Telefonunuz bugün bir <strong>5G</strong> kulesine tutunur: kule konuşur, cihaz dinler, bitler akar.
+<strong>6G</strong> bu boruyu biraz daha kalınlaştırmak değildir. Aynı kuleye — ve kule olmayan yerlere —
+yeni işler vermektir; çünkü bugünkü şebeke birkaç sahada kör kalır.
 </p>
-<p style="color:#CBD5E1; font-size:0.92rem; line-height:1.6; margin:0;">
-Anlatım iki kademelidir. <strong>Temel</strong>: nedir, neden var, nasıl çalışır, ne zaman kullanılır/kullanılmaz.
-Kısaltmalar ilk geçişte açılır; jargonsuzlaştırılmaz. <strong>Uzman</strong> aynı temeli atlamaz;
-üstüne denklem, varsayım ve 3GPP bağlamı ekler. Uydurma metrik yoktur.
+<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
+Şehirde yüksek frekanslı dalga köşeyi dönemez, asansör boşluğunda ölür. Hücre kenarına yaklaşınca
+sinyal düşer; kule değişince kopma riski doğar. Dağ, açık deniz ve enkaz karasal kuleye yetişmez.
+Sis ve gecede kule konuşur ama bakmaz. Şebeke gece-gündüz aynı ezber tarife ile kaynak ayırır.
+Depodaki her etikete pil takmak ölçeklenmez. İleride kablosuz boru da dar gelir.
+</p>
+<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
+Aşağıdaki yedi kart bu yedi boşluğa birer cevap verir.
+<strong>RIS</strong> kör noktayı yansıtır; <strong>hücresiz MIMO</strong> kenarı kaldırır;
+<strong>NTN</strong> telefonu göğe düşürür; <strong>ISAC</strong> aynı dalgayı yankı gibi dinler;
+<strong>AI-RAN</strong> kuleyi ölçüme göre ayarlar; <strong>Ambient IoT</strong> pilsiz «buradayım» der;
+<strong>THz</strong> ileride daha geniş bant açar. Hepsi birden «hazır 6G» diye satılmaz;
+her biri kendi <strong>TRL</strong> (Technology Readiness Level — Teknoloji Hazırlık Seviyesi)
+basamağında durur.
+</p>
+<p style="color:#CBD5E1; font-size:0.92rem; line-height:1.65; margin:0;">
+<strong>Temel</strong> kademe şunu öğretir: nedir, neden var, nasıl çalışır, ne zaman kullanılır
+ve ne zaman kullanılmaz. Kısaltmalar ilk geçişte açılır. <strong>Uzman</strong> kademe aynı sahneyi
+atlamaz; üstüne denklem, varsayım ve 3GPP bağlamını ekler. Uydurma tepe hız yoktur.
 </p>
 </div>""",
         unsafe_allow_html=True,
@@ -46,7 +59,7 @@ referans DOI/3GPP’dir; tepe hız pazarlama cümlesi saha ölçümü sayılmaz.
 
 st.markdown("### Yedi yapı taşı — her biri bir sorunu çözer")
 st.caption(
-    "Kartta önce sorun, sonra çözüm vardır. Kavramsal temel, formül ve Türk Telekom senaryosu için "
+    "Kartta önce sahadaki sorun, sonra çözüm vardır. Adım adım anlatım, formül ve Türk Telekom senaryosu için "
     "soldan «6G Teknolojileri» menüsüne geçin."
 )
 
