@@ -13,15 +13,12 @@ from backend.academic_service import AcademicService
 from backend.data_service import DataService
 from backend.patent_service import PatentService
 from data.glossary import glossary_plain_corpus
+from i18n.core import format_int, t
 
-_PEDAGOGY = (
-    "Anlatım kuralı: önemli kavramda Nedir, Neden gerekli, Ne işe yarar, Nasıl çalışır, "
-    "Ne zaman kullanılır, Ne zaman kullanılmaz, Neyle karıştırılmamalı, Gerçekte nerede çıkar. "
-    "Kısaltmayı ilk geçişte «KISALTMA (English — Türkçe):» diye aç; sonra kısaltma kullan. "
-    "Formül varsa sembol ve varsayımı söyle; ezberletme. "
-    "Bağlamda olmayan sayı, patent ID, DOI, atıf uydurma. Emin değilsen "
-    "«Platform verisinde bu bilgi yok» de."
-)
+def _is_beginner(view_mode: str) -> bool:
+    if view_mode in ("beginner", "expert"):
+        return view_mode == "beginner"
+    return "Temel" in str(view_mode or "")
 
 
 def _strip_html(text: str) -> str:
@@ -34,7 +31,7 @@ def _corpus() -> List[Dict[str, str]]:
     chunks.append(
         {
             "id": "glossary",
-            "title": "Teknik sözlük (ilk kullanım açılımı)",
+            "title": t("ai.glossary_title"),
             "text": glossary_plain_corpus(),
         }
     )
@@ -90,7 +87,7 @@ def _corpus() -> List[Dict[str, str]]:
         )
     for paper in AcademicService.get_most_cited_papers():
         cite = paper.get("citations")
-        cite_txt = f"{cite} atıf" if isinstance(cite, int) else "atıf sayısı OpenAlex'ten alınamadı"
+        cite_txt = t("ai.cite_n", n=format_int(cite)) if isinstance(cite, int) else t("ai.cite_na")
         chunks.append(
             {
                 "id": f"paper:{paper.get('doi','')}",
@@ -134,19 +131,12 @@ def _retrieve(question: str, k: int = 6) -> List[Dict[str, str]]:
 
 
 def _format_context(chunks: List[Dict[str, str]], view_mode: str = "") -> str:
-    beginner = "Temel Seviye" in (view_mode or "")
-    depth = (
-        "Seviye: TEMEL. Zihinsel model, analoji→teknik karşılık ve ne zaman/kullanılmaz ağırlıklı yaz. "
-        "Denklem istersen sembolleri açıkla; varsayımı atlama."
-        if beginner
-        else "Seviye: UZMAN. Kavramsal temeli atlama; ardından denklem, varsayım, sınır ve alternatif ekle."
-    )
+    depth = t("ai.depth_beginner") if _is_beginner(view_mode) else t("ai.depth_expert")
     lines = [
-        "=== DOĞRULANMIŞ 6G VERİ BAĞLAMI (TF-IDF ile seçilmiş parçalar) ===",
-        _PEDAGOGY,
+        t("ai.ctx_header"),
+        t("ai.pedagogy"),
         depth,
-        "KURAL: Bu bağlamda olmayan sayı, patent ID veya makale uydurma.",
-        "Emin değilsen 'Platform verisinde bu bilgi yok' de.",
+        t("ai.ctx_rule"),
         "",
     ]
     for ch in chunks:
@@ -157,10 +147,7 @@ def _format_context(chunks: List[Dict[str, str]], view_mode: str = "") -> str:
 
 
 def _system_preamble() -> str:
-    return (
-        "Türk Telekom 6G Ar-Ge asistanısın. Yalnızca verilen bağlamı kullan. "
-        "Tahmin veya uydurma yapma. " + _PEDAGOGY
-    )
+    return t("ai.system")
 
 
 def _answer_with_groq(question: str, api_key: str, context: str) -> str:
@@ -187,7 +174,7 @@ def _answer_with_gemini(question: str, api_key: str, context: str) -> str:
 
     client = genai.Client(api_key=api_key)
     prompt = (
-        f"{_system_preamble()}\n\n{context}\n\nKullanıcı sorusu: {question}"
+        f"{_system_preamble()}\n\n{context}\n\n{t('ai.user_wrap', question=question)}"
     )
     response = client.models.generate_content(
         model="gemini-2.0-flash",
@@ -198,17 +185,12 @@ def _answer_with_gemini(question: str, api_key: str, context: str) -> str:
 
 def _fallback_from_chunks(question: str, chunks: List[Dict[str, str]]) -> str:
     if not chunks:
-        return (
-            "### 6G Asistan (veri tabanlı mod)\n\n"
-            "Sorunuz platform veri kümesinde eşleşmedi. "
-            "6G Teknolojileri, Patent Zekası veya Yayın Trendleri sayfalarındaki "
-            "doğrulanmış kaynakları inceleyin."
-        )
+        return t("ai.fallback_none")
     parts = [f"### {chunks[0]['title']}\n\n{chunks[0]['text'][:700]}"]
     if len(chunks) > 1:
         extras = "\n".join(f"- {c['title']}" for c in chunks[1:4])
-        parts.append(f"\n\n**İlgili doğrulanmış kayıtlar:**\n{extras}")
-    parts.append("\n\n*Yanıt TF-IDF ile seçilen platform kayıtlarındandır; sayı uydurulmaz.*")
+        parts.append(f"\n\n{t('ai.related')}\n{extras}")
+    parts.append(f"\n\n{t('ai.tfidf_note')}")
     return "".join(parts)
 
 
@@ -224,7 +206,7 @@ class AIAssistantService:
         view_mode: Optional[str] = None,
     ) -> Dict[str, Any]:
         if not (question or "").strip():
-            return {"response": "Lütfen bir soru yazın.", "type": "error"}
+            return {"response": t("ai.empty_q"), "type": "error"}
 
         chunks = _retrieve(question)
         context = _format_context(chunks, view_mode or "")
@@ -242,7 +224,7 @@ class AIAssistantService:
             except Exception as exc:
                 fallback = _fallback_from_chunks(question, chunks)
                 return {
-                    "response": f"{fallback}\n\n---\n*LLM yanıtı alınamadı: {exc}*",
+                    "response": f"{fallback}\n\n---\n{t('ai.llm_fail', exc=exc)}",
                     "type": "fallback",
                 }
 

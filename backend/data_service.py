@@ -3,8 +3,6 @@ Türk Telekom 6G Platform - Backend Data Service Layer
 Statik sözlük önbelleğe alınmaz: beginner ve uzman derinlik metinleri anında birleşir.
 """
 
-from data.beginner_copy import BEGINNER_COPY
-from data.expert_depth import EXPERT_DEPTH
 from data.technologies import TECHNOLOGIES
 
 FOUNDATION_KEYS = (
@@ -23,12 +21,45 @@ FOUNDATION_KEYS = (
 )
 
 
+def _lang() -> str:
+    try:
+        from i18n.core import get_lang
+
+        return get_lang()
+    except Exception:
+        return "tr"
+
+
+def _beginner_copy() -> dict:
+    if _lang() == "en":
+        from data.beginner_copy_en import BEGINNER_COPY
+
+        return BEGINNER_COPY
+    from data.beginner_copy import BEGINNER_COPY
+
+    return BEGINNER_COPY
+
+
+def _expert_depth() -> dict:
+    if _lang() == "en":
+        from data.expert_depth_en import EXPERT_DEPTH
+
+        return EXPERT_DEPTH
+    from data.expert_depth import EXPERT_DEPTH
+
+    return EXPERT_DEPTH
+
+
 def _with_layers(tech: dict | None) -> dict | None:
     if not tech:
         return tech
-    extra = BEGINNER_COPY.get(tech.get("id"), {})
-    depth = EXPERT_DEPTH.get(tech.get("id"), {})
+    extra = _beginner_copy().get(tech.get("id"), {})
+    depth = _expert_depth().get(tech.get("id"), {})
     out = dict(tech)
+    if _lang() == "en":
+        from data.tech_overlay_en import TECH_OVERLAY_EN
+
+        out.update(TECH_OVERLAY_EN.get(tech.get("id"), {}))
     card = extra.get("card")
     if card:
         out["beginner_card"] = card
@@ -58,7 +89,7 @@ def _with_layers(tech: dict | None) -> dict | None:
     if extras:
         merged_uc = []
         for idx, uc in enumerate(out.get("use_cases") or []):
-            item = dict(uc) if isinstance(uc, dict) else {"title": f"Senaryo #{idx+1}", "description": str(uc)}
+            item = dict(uc) if isinstance(uc, dict) else {"title": f"#{idx+1}", "description": str(uc)}
             if idx < len(extras) and isinstance(extras[idx], dict):
                 item["how"] = extras[idx].get("how", "")
                 item["when_not"] = extras[idx].get("when_not", "")
@@ -100,8 +131,8 @@ class DataService:
                 if isinstance(uc, dict) else str(uc)
                 for uc in data.get("use_cases", [])
             )
-            extra = BEGINNER_COPY.get(t_id, {})
-            depth = EXPERT_DEPTH.get(t_id, {})
+            extra = _beginner_copy().get(t_id, {})
+            depth = _expert_depth().get(t_id, {})
             content_str = (
                 f"{data['title']} {data['acronym']} {data['executive_summary']} "
                 f"{use_case_text} {extra.get('card', '')} {extra.get('what', '')} "

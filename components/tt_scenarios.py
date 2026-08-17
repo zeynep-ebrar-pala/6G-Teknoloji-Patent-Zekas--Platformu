@@ -1,118 +1,108 @@
 """
- Türk Telekom 6G Platform - Türk Telekom Specific Scenarios Frontend Component
- Renders interactive Turkish telecom deployment scenario UI using Backend ScenarioEngine.
+Türk Telekom 6G Platform - Türk Telekom Specific Scenarios Frontend Component
+Renders interactive Turkish telecom deployment scenario UI using Backend ScenarioEngine.
 """
 
 import streamlit as st
-from backend.scenario_engine import ScenarioEngine
+
+from backend.scenario_engine import DENSITY_KEYS, PRIORITY_KEYS, REGION_KEYS, ScenarioEngine
+from i18n.core import format_decimal, format_int, get_lang, t
+
 
 def render_tt_scenario_calculator():
     """Interactive deployment scenario UI component for Türk Telekom Ar-Ge."""
-    
-    st.markdown("""<div class="glass-card" style="border-left: 5px solid #0099FF; margin-bottom: 20px;">
-<h2 style="color: #FFFFFF; margin: 0 0 6px 0; font-size: 1.45rem;">Türk Telekom 6G Saha Dağıtım ve Senaryo Çözümleyici</h2>
+
+    st.markdown(
+        f"""<div class="glass-card" style="border-left: 5px solid #0099FF; margin-bottom: 20px;">
+<h2 style="color: #FFFFFF; margin: 0 0 6px 0; font-size: 1.45rem; overflow-wrap: anywhere;">{t("scenario.title")}</h2>
 <p style="color: #CBD5E1; font-size: 0.92rem; margin: 0 0 10px 0;">
-Türkiye coğrafyası, Türk Telekom altyapısı ve stratejik Ar-Ge hedeflerine göre 6G teknoloji eşleştirme motoru.
+{t("scenario.lead")}
 </p>
-<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:0;">
-<strong>KPI (Key Performance Indicator — anahtar performans göstergesi):</strong>
-hız, gecikme, enerji gibi izleme sayılarıdır. Buradaki değerler saha ping’i değil;
-kural tabanlı senaryo motorunun çıktısıdır.
-<strong>CAPEX (Capital Expenditure — sermaye gideri):</strong> kule, fiber, uydu kapasitesi gibi
-yatırım ölçeğinin kaba etiketidir; ihale fiyatı değildir.
-</p>
-<p style="color:#94A3B8;font-size:0.84rem;line-height:1.55;margin:8px 0 0 0;">
-Varsayım: bölge + yoğunluk + öncelik üçlüsü bir teknoloji setini seçer. Sınır: yağmur, izin, spektrum
-ve gerçek fiber topolojisi modele girmez. Sayıyı «ölçülmüş 6G performansı» diye okumayın.
-</p>
-</div>""", unsafe_allow_html=True)
+{t("scenario.kpi_body")}
+</div>""",
+        unsafe_allow_html=True,
+    )
 
     col_inputs, col_results = st.columns([1, 1.15])
 
     with col_inputs:
         with st.container(border=True):
-            st.markdown("### ⚙️ Senaryo Parametreleri")
-            
+            st.markdown(t("scenario.params"))
+
             region = st.selectbox(
-                "📍 1. Uygulama Bölgesi / Senaryo Alanı:",
-                [
-                    "İstanbul Boğazı & Marmara Deniz Sahili (ISAC + THz)",
-                    "RAMS Park / Stadyum & Yoğun Etkinlik Alanları (Cell-Free MIMO)",
-                    "Marmara Sanayi Bölgesi / Otonom Fabrikalar (Ambient IoT + AI-RAN)",
-                    "AFAD Entegre Deprem & Afet Bölgesi (NTN + ISAC)",
-                    "Tarihi Yarımada / Dar Sokak Kentsel Alan (RIS + Sub-THz)",
-                    "Türk Telekom Ankara & İstanbul Data Center (THz Mesh)"
-                ],
-                help="Eşleştirilecek Türk Telekom saha veya altyapı bölgesi"
+                t("scenario.region"),
+                list(REGION_KEYS),
+                format_func=lambda k: t(f"scenario.region_{k}"),
+                help=t("scenario.region_help"),
+                key="tt_region",
             )
 
             user_density = st.select_slider(
-                "👥 2. Hedef Kullanıcı / Sensör Yoğunluğu:",
-                options=[
-                    "Düşük (Kırsal/Açık)",
-                    "Orta (Şehir İçi)",
-                    "Yüksek (Stadyum/Meydan)",
-                    "Aşırı Yoğun (Trilyon Sensör)"
-                ],
-                help="Bölgedeki kilometrekare başına düşen cihaz ve sensör yoğunluğu"
+                t("scenario.density"),
+                options=list(DENSITY_KEYS),
+                format_func=lambda k: t(f"scenario.density_{k}"),
+                help=t("scenario.density_help"),
+                key="tt_density",
             )
 
             priority = st.radio(
-                "🎯 3. Öncelikli Stratejik Hedef:",
-                [
-                    "Kesintisiz Kapsama (Zero Gap)",
-                    "Ultra Yüksek Hız (Terabit/s)",
-                    "Düşük Enerji / Yeşil Şebeke",
-                    "Afet Dayanıklılığı"
-                ],
-                help="Bu dağıtımda hedeflenen birincil performans veya iş hedefi"
+                t("scenario.priority"),
+                list(PRIORITY_KEYS),
+                format_func=lambda k: t(f"scenario.priority_{k}"),
+                help=t("scenario.priority_help"),
+                key="tt_priority",
             )
 
-        # Compute Backend Evaluation
         eval_res = ScenarioEngine.evaluate_scenario(region, user_density, priority)
 
-        # 📊 Detaylı Performans & Metrik Özeti in left column
         st.write("")
-        with st.expander("📊 Detaylı Performans & Metrik Özeti", expanded=True):
-            st.markdown(eval_res['impact_summary'])
-            st.caption(f"CAPEX (sermaye gideri) ölçeği — ihale fiyatı değil: **{eval_res['capex_estimate']}**")
+        with st.expander(t("scenario.metrics_exp"), expanded=True):
+            st.markdown(eval_res["impact_summary"])
+            st.caption(t("scenario.capex_caption", value=eval_res["capex_estimate"]))
 
     with col_results:
-        st.caption("KPI değerleri kural tabanlı senaryo motoru çıktısıdır; saha ölçümü değildir.")
+        st.caption(t("scenario.kpi_note"))
         with st.container(border=True):
-            st.markdown("### 🎯 Önerilen Türk Telekom Mimarisi ve KPI Analizi")
-            
+            st.markdown(t("scenario.result_heading"))
+
             c_header_1, c_header_2 = st.columns([2.2, 1])
             with c_header_1:
-                st.markdown(f"#### 📍 {eval_res['region_title']}")
+                st.markdown(f"#### {eval_res['region_title']}")
             with c_header_2:
-                st.info(f"🗓️ {eval_res['target_year']}")
+                st.info(eval_res["target_year"])
 
-            # Tech badges formatted in clean native Markdown pills
-            tech_str = "  ".join([f"`{t}`" for t in eval_res['recommended_tech']])
-            st.markdown(f"**Önerilen 6G Teknolojileri:** {tech_str}")
-            
+            tech_str = "  ".join([f"`{tech}`" for tech in eval_res["recommended_tech"]])
+            st.markdown(t("scenario.techs", techs=tech_str))
+
             st.divider()
-            
-            st.markdown(f"📡 **Saha Çözüm Mimarisi:**\n{eval_res['solution']}")
+
+            st.markdown(f"{t('scenario.solution')}\n{eval_res['solution']}")
             st.write("")
-            
+
             st.success(
-                f"📌 **Stratejik Hedef Etkisi:**\n{eval_res['priority_kpi']}\n\n"
-                f"📊 **Yoğunluk Profili:** {eval_res['density_kpi']}"
+                f"{t('scenario.priority_impact')}\n{eval_res['priority_kpi']}\n\n"
+                f"{t('scenario.density_profile', value=eval_res['density_kpi'])}"
             )
 
             st.divider()
 
-            # Dynamic KPI Gauges / Metrics
             kpi_col1, kpi_col2, kpi_col3 = st.columns(3)
             with kpi_col1:
-                st.metric(label="⚡ Hız Kapasitesi", value=f"{eval_res['capacity_gbps']} Gbps")
+                st.metric(label=t("scenario.metric_speed"), value=f"{format_int(eval_res['capacity_gbps'])} Gbps")
             with kpi_col2:
-                st.metric(label="⏱️ Gecikme (Latency)", value=f"{eval_res['latency_ms']} ms")
+                st.metric(
+                    label=t("scenario.metric_latency"),
+                    value=f"{format_decimal(eval_res['latency_ms'], 1)} ms",
+                )
             with kpi_col3:
-                st.metric(label="🌿 Enerji Skoru", value=f"%{eval_res['energy_score']}")
+                energy = format_int(eval_res["energy_score"])
+                st.metric(
+                    label=t("scenario.metric_energy"),
+                    value=f"%{energy}" if get_lang() == "tr" else f"{energy}%",
+                )
 
             st.write("")
-            st.markdown(f"**Uygulanabilirlik & Saha Uyumluluk Skoru:** `%{eval_res['feasibility_score']}`")
-            st.progress(eval_res['feasibility_score'] / 100.0)
+            score = format_int(eval_res["feasibility_score"])
+            score_disp = f"%{score}" if get_lang() == "tr" else f"{score}%"
+            st.markdown(t("scenario.feasibility", score=score_disp))
+            st.progress(eval_res["feasibility_score"] / 100.0)

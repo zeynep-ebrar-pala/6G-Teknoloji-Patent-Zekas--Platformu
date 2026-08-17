@@ -17,158 +17,147 @@ from components.charts import (
     render_patent_trends_chart,
     render_patent_wordcloud,
 )
-from components.ui_helpers import render_module_header, render_patent_card, render_source_button, show_empty, select_section, show_plotly
+from components.ui_helpers import (
+    render_module_header,
+    render_patent_card,
+    render_source_button,
+    select_keyed_section,
+    show_empty,
+    show_plotly,
+)
+from i18n.core import format_int, t
+
+PATENT_SECTION_KEYS = ["year", "topics", "tree", "map", "list"]
 
 
 def render_patent_intelligence_module():
     spec = PatentService.get_spec_companies()
-    filter_options = ["Tümü"] + spec
+    filter_options = ["all"] + spec
     company = st.selectbox(
-        "Firma (şartname listesi: Nokia, Ericsson, Huawei, Samsung, Qualcomm):",
+        t("patent.filter"),
         options=filter_options,
         index=0,
+        format_func=lambda x: t("patent.all") if x == "all" else x,
     )
-    company_arg = None if company == "Tümü" else company
+    company_arg = None if company == "all" else company
 
     summary = PatentService.get_summary(company_arg)
     patents = PatentService.get_top_patents(company_arg)
 
     render_module_header(
-        "Patent Zekası",
-        "Küresel telekom firmalarının 6G patent kayıtları — tüm kayıtlar "
-        "Google Patents üzerinden doğrulanabilir. Bu küme tam portföy değildir; "
-        f"yalnızca doğrulanmış örnek kayıtlardır. Kaynak: {summary['source']}",
+        t("patent.title"),
+        t("patent.subtitle", source=summary["source"]),
     )
 
     st.markdown(
-        """<div class="glass-card">
-<div class="teach-label">Bu sayfa ne işe yarar?</div>
-<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Patent</strong>, bir buluşun kamuya açıklanması karşılığında sınırlı süre tekel hakkıdır.
-Burada baktığımız şey hukuki tavsiye değil; hangi firmanın hangi 6G konusunda koruma talebinde
-bulunduğunun <em>örnek</em> haritasıdır. <strong>Assignee</strong> (hak sahibi) kaydı kimin
-başvurduğunu söyler; o firmanın sahada ürünü olduğu anlamına gelmez.
-</p>
-<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-<strong>TF-IDF (Term Frequency–Inverse Document Frequency — terim sıklığı–ters belge sıklığı):</strong>
-özet metindeki sözcükleri, derlemede ne kadar ayırt edici olduklarına göre puanlar.
-Harita anlam çıkarmaz; hangi kaydın hangi sözcüklere yakın durduğunu gösterir.
-Özetler kaynakta kilitlidir — yeniden yazılmaz, uydurulmaz.
-</p>
-<p style="color:#94A3B8;font-size:0.84rem;margin:10px 0 0 0;">
-Ne zaman yorumlanmaz: tek patent = pazar liderliği değildir. Yıl çubuğu başvuru/yayın yılıdır,
-ticarileşme tarihi değildir.
-</p>
+        f"""<div class="glass-card">
+<div class="teach-label">{t("patent.what_title")}</div>
+{t("patent.what_body")}
 </div>""",
         unsafe_allow_html=True,
     )
 
     if not patents:
-        show_empty(
-            f"«{company}» için doğrulanmış patent kaydı yok. "
-            "Sayı uydurulmaz; Google Patents’te teyitli kayıt eklenene kadar grafik gizlenir."
-        )
+        show_empty(t("patent.empty_company", company=company if company != "all" else t("patent.all")))
         return
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Doğrulanmış Patent Kaydı", str(summary["total"]))
+        st.metric(t("patent.metric_total"), format_int(summary["total"]))
     with col2:
-        st.metric("En Fazla Kayıt (Assignee)", summary["leader_company"], f"{summary['leader_count']} patent")
+        st.metric(
+            t("patent.metric_leader"),
+            summary["leader_company"],
+            t("patent.metric_leader_delta", n=format_int(summary["leader_count"])),
+        )
     with col3:
-        st.metric("Öne Çıkan Teknoloji Alanı", summary["top_domain"], f"{summary['top_domain_count']} kayıt")
+        st.metric(
+            t("patent.metric_domain"),
+            summary["top_domain"],
+            t("patent.metric_domain_delta", n=format_int(summary["top_domain_count"])),
+        )
     with col4:
-        st.metric("Kaynak", "Google Patents")
-    render_source_button("https://patents.google.com", "Google Patents ana sayfasını aç ↗")
+        st.metric(t("patent.metric_source"), "Google Patents")
+    render_source_button("https://patents.google.com", t("patent.open_gp"))
 
     st.divider()
 
-    patent_sections = [
-        "Patent Sayısı / Yıl",
-        "Konu Dağılımı & Kelime Bulutu",
-        "Patent Ağacı & Yoğunluk",
-        "Teknoloji Haritası & Ağ",
-        "Patent Başlıkları",
-    ]
-    section = select_section("Patent görünümü", patent_sections, key="patent_section")
+    section = select_keyed_section(t("patent.view"), PATENT_SECTION_KEYS, key="patent_section", prefix="patent.section")
 
-    if section == "Patent Sayısı / Yıl":
-        st.markdown("### Yıllara Göre Dağılım")
-        st.caption(
-            "Her çubuk bir takvim yılıdır (ör. 2024, 2025). "
-            "Kayıtlarda ay bilgisi olmadığı için 2024.2 gibi ara değer veya uydurma «2. Ay» dilimi yok."
-        )
+    if section == "year":
+        st.markdown(t("patent.year_heading"))
+        st.caption(t("patent.year_caption"))
         df_trends = PatentService.get_patent_trends_df(company_arg)
         if df_trends.empty:
-            show_empty("Trend grafiği için yeterli patent verisi yok.")
+            show_empty(t("patent.empty_trend"))
         else:
             show_plotly(render_patent_trends_chart(df_trends))
 
-        st.markdown("### En Çok Kayıtlı Firmalar")
+        st.markdown(t("patent.companies_heading"))
         counts = PatentService.get_company_counts(company_arg)
         if not counts:
-            show_empty("Firma sayımı için veri yok.")
+            show_empty(t("patent.empty_counts"))
         else:
             show_plotly(render_company_counts_chart(counts))
 
-    elif section == "Konu Dağılımı & Kelime Bulutu":
+    elif section == "topics":
         col_radar, col_kw = st.columns([1.2, 1])
         with col_radar:
             df_domains = PatentService.get_all_companies_domain_df(company_arg)
             if df_domains.empty:
-                show_empty("Domain dağılımı hesaplanamadı.")
+                show_empty(t("patent.empty_domain"))
             else:
                 show_plotly(render_company_patent_domain_chart(df_domains))
 
         with col_kw:
             kw_dict = PatentService.get_patent_keywords(company_arg)
             if not kw_dict:
-                show_empty("Anahtar kelime analizi için veri yok.")
+                show_empty(t("patent.empty_kw"))
             else:
                 show_plotly(render_patent_keywords_chart(kw_dict))
 
-        st.markdown("### Kelime Bulutu")
-        st.caption("Yalnızca doğrulanmış patent başlıklarındaki kelime sıklığı.")
+        st.markdown(t("patent.wordcloud"))
+        st.caption(t("patent.wordcloud_caption"))
         kw_dict = PatentService.get_patent_keywords(company_arg)
         wc_fig = render_patent_wordcloud(kw_dict) if kw_dict else None
         if wc_fig is None:
-            show_empty("Kelime bulutu için wordcloud/matplotlib yüklü değil veya kelime yok.")
+            show_empty(t("patent.empty_wc"))
         else:
             st.pyplot(wc_fig, clear_figure=True)
 
-    elif section == "Patent Ağacı & Yoğunluk":
-        st.markdown("### Patent Yoğunluk Grafiği")
+    elif section == "tree":
+        st.markdown(t("patent.density"))
         df_density = PatentService.get_density_df(company_arg)
         if df_density.empty:
-            show_empty("Yoğunluk haritası için veri yok.")
+            show_empty(t("patent.empty_density"))
         else:
             show_plotly(render_patent_density_heatmap(df_density))
 
-        st.markdown("### Patent Ağacı")
+        st.markdown(t("patent.tree_heading"))
         df_tree = PatentService.get_sunburst_df(company_arg)
         if df_tree.empty:
-            show_empty("Ağaç grafiği için veri yok.")
+            show_empty(t("patent.empty_tree"))
         else:
             show_plotly(render_patent_sunburst(df_tree))
 
-    elif section == "Teknoloji Haritası & Ağ":
-        st.markdown("### Patent Teknoloji Haritası")
-        st.caption("Koordinatlar patent başlıklarının TF-IDF vektörlerinin PCA ile 2 boyuta indirgenmesidir; uydurma konum yoktur.")
+    elif section == "map":
+        st.markdown(t("patent.map_heading"))
+        st.caption(t("patent.map_caption"))
         df_map = PatentService.get_tfidf_map_df(company_arg)
         if df_map.empty:
-            show_empty("Harita için en az 2 patent ve scikit-learn gerekir.")
+            show_empty(t("patent.empty_map"))
         else:
             show_plotly(render_patent_tfidf_map(df_map))
 
-        st.markdown("### Assignee ↔ Alan Ağ Analizi")
+        st.markdown(t("patent.network"))
         edges = PatentService.get_network_edges(company_arg)
         if not edges:
-            show_empty("Ağ grafiği için bağlantı verisi yok.")
+            show_empty(t("patent.empty_net"))
         else:
             show_plotly(render_patent_network_graph(edges))
 
     else:
-        st.markdown("### Doğrulanmış 6G Patent Listesi")
-        st.caption("Her kartta publication number, başlık, assignee, yıl ve Google Patents kaynak bağlantısı bulunur.")
+        st.markdown(t("patent.list_heading"))
+        st.caption(t("patent.list_caption"))
         for pat in patents:
             render_patent_card(pat)

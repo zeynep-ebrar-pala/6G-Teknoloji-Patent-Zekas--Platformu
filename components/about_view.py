@@ -2,66 +2,27 @@
 
 import streamlit as st
 
+from i18n.core import t
+
 
 def render_about_page() -> None:
-    st.markdown("### Hakkında")
-    st.markdown(
-        """<div class="glass-card" style="border-left: 5px solid #00E5FF;">
-<h4 style="color:#00E5FF; margin-top:0;">6G Technology &amp; Patent Intelligence Platform</h4>
-<p style="color:#E2E8F0; font-size:0.95rem; line-height:1.6; margin-bottom:0;">
-Türk Telekom 6G Ar-Ge ekibinde kullanılmak üzere 6G teknolojileri, akademik yayınlar
-ve patent trendlerini tek portalda sunan Streamlit uygulaması.
-Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
-</p>
-</div>""",
-        unsafe_allow_html=True,
-    )
+    st.markdown(t("about.heading"))
+    st.markdown(t("about.card"), unsafe_allow_html=True)
 
-    st.markdown("#### Modüller")
+    st.markdown(t("about.modules"))
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown(
-            """
-- **Ana Sayfa** — 7 teknolojinin TRL radar haritası; Dual-Depth (Temel/Uzman) giriş metnini değiştirir
-- **6G Teknolojileri** — kavramsal temel + uzman katman (formül, varsayım, karşılaştırma); tüm sekmeler anlatım derinliğini dinler
-- **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm; yıl, konu, kelime bulutu, ağaç, yoğunluk, harita; patent özetleri kaynakta kilitli
-- **Yayın Trendleri** — OpenAlex yıl / kurum / ülke; DOI doğrulamalı makaleler
-            """
-        )
+        st.markdown(t("about.mod_left"))
     with c2:
-        st.markdown(
-            """
-- **Türk Telekom Görünümü** — saha senaryo çözümleyici
-- **AI Asistan** — TF-IDF yerel geri getirme; isteğe bağlı Groq / Gemini
-- **Hakkında** — bu sayfa (teslim / 15 dk sunum iskeleti)
-            """
-        )
+        st.markdown(t("about.mod_right"))
 
-    st.markdown("#### Kullanılan teknolojiler")
-    st.markdown(
-        "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. "
-        "Opsiyonel: Groq API, Google Gemini API. Patent kaynağı: Google Patents. "
-        "Akademik: OpenAlex + DOI (IEEE Xplore, Springer, Elsevier)."
-    )
+    st.markdown(t("about.stack"))
+    st.markdown(t("about.stack_body"))
 
-    st.markdown("#### Anlatım standardı")
-    st.markdown(
-        "Teknik içerik iki kademelidir: **Temel** (nedir / neden / nasıl / ne zaman) ve **Uzman** "
-        "(denklem, varsayım, 3GPP). Uzman mod temel katmanı atlamaz. Kısaltmalar ilk geçişte açılır. "
-        "Patent özeti, DOI ve sayı uydurulmaz."
-    )
+    st.markdown(t("about.standard"))
+    st.markdown(t("about.standard_body"))
 
-    st.markdown("#### 15 dakikalık sunum iskeleti")
-    st.markdown(
-        """
-1. Amaç ve kapsam (1 dk)
-2. Ana Sayfa TRL radar (2 dk)
-3. Bir teknoloji (ör. RIS) — prensip + diyagram + TT senaryosu (3 dk)
-4. Patent Zekası — firma filtresi, yıl grafiği, kelime bulutu (3 dk)
-5. Yayın Trendleri — OpenAlex yıl + kurum/ülke + DOI kartı (3 dk)
-6. AI Asistan — «RIS nedir?» ve «NTN ile ISAC arasındaki fark» (2 dk)
-7. Kaynak doğrulama kuralı: uydurma ID/sayı yok (1 dk)
-        """
-    )
+    st.markdown(t("about.talk"))
+    st.markdown(t("about.talk_body"))
 
-    st.caption("Kullanım adımları için depodaki USAGE_GUIDE.md dosyasına bakın.")
+    st.caption(t("about.usage"))

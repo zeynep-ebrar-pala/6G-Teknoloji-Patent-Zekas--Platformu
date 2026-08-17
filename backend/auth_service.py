@@ -4,6 +4,8 @@ API key authentication for Groq and Google Gemini providers.
 
 from typing import Literal, Optional, Tuple
 
+from i18n.core import t
+
 Provider = Literal["groq", "gemini"]
 
 
@@ -11,13 +13,13 @@ def validate_api_key(provider: Provider, api_key: str) -> Tuple[bool, str]:
     """Validate provider API key with a minimal live request."""
     key = (api_key or "").strip()
     if not key:
-        return False, "API anahtarı boş olamaz."
+        return False, t("auth.empty")
 
     if provider == "groq":
         return _validate_groq(key)
     if provider == "gemini":
         return _validate_gemini(key)
-    return False, "Geçersiz sağlayıcı seçimi."
+    return False, t("auth.bad_provider")
 
 
 def _validate_groq(api_key: str) -> Tuple[bool, str]:
@@ -26,11 +28,11 @@ def _validate_groq(api_key: str) -> Tuple[bool, str]:
 
         client = Groq(api_key=api_key)
         client.models.list()
-        return True, "Groq API anahtarı doğrulandı."
+        return True, t("auth.groq_ok")
     except ImportError:
-        return False, "Groq kütüphanesi yüklü değil. pip install groq"
+        return False, t("auth.groq_missing")
     except Exception as exc:
-        return False, f"Groq anahtarı geçersiz: {exc}"
+        return False, t("auth.groq_bad", exc=exc)
 
 
 def _validate_gemini(api_key: str) -> Tuple[bool, str]:
@@ -39,11 +41,11 @@ def _validate_gemini(api_key: str) -> Tuple[bool, str]:
 
         client = genai.Client(api_key=api_key)
         list(client.models.list())
-        return True, "Gemini API anahtarı doğrulandı."
+        return True, t("auth.gemini_ok")
     except ImportError:
-        return False, "Gemini kütüphanesi yüklü değil. pip install google-genai"
+        return False, t("auth.gemini_missing")
     except Exception as exc:
-        return False, f"Gemini anahtarı geçersiz: {exc}"
+        return False, t("auth.gemini_bad", exc=exc)
 
 
 def resolve_stored_key(provider: Provider) -> Optional[str]:

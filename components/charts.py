@@ -9,6 +9,8 @@ import plotly.express as px
 import pandas as pd
 from typing import Dict, Any, List, Optional
 
+from i18n.core import get_lang, t
+
 # Defensive import for networkx
 try:
     import networkx as nx
@@ -76,6 +78,11 @@ DARK_LAYOUT_TEMPLATE = dict(
 )
 
 
+def _layout() -> dict:
+    sep = ".," if get_lang() == "tr" else ",."
+    return {**DARK_LAYOUT_TEMPLATE, "separators": sep}
+
+
 def _hex_rgba(hex_color: str, alpha: float) -> str:
     h = hex_color.lstrip("#")
     r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
@@ -113,7 +120,7 @@ def _year_labels(years) -> List[str]:
 
 def _year_axis(labels: List[str]) -> dict:
     return dict(
-        title="Takvim yılı",
+        title=t("charts.year"),
         type="category",
         categoryorder="array",
         categoryarray=labels,
@@ -148,15 +155,15 @@ def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
         r=trl_values_closed,
         theta=categories_closed,
         fill='toself',
-        name='TRL Seviyesi',
+        name=t("charts.trl_series"),
         fillcolor='rgba(0, 153, 255, 0.25)',
         line=dict(color='#00E5FF', width=3),
         marker=dict(size=8, color='#0099FF', symbol='circle')
     ))
 
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>6G Teknoloji Hazırlık Seviyeleri (TRL 1-9 Radar)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.trl_title')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         polar=dict(
             radialaxis=dict(
                 visible=True,
@@ -190,13 +197,13 @@ def render_technology_record_counts_chart(df_counts: pd.DataFrame, tech_label: s
         name=tech_label,
     ))
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
+        **_layout(),
         title=dict(
-            text=f"<b>Doğrulanmış {tech_label} Patent Kayıt Sayısı / Yıl</b>",
+            text=f"<b>{t('charts.tech_counts', label=tech_label)}</b>",
             x=0.02, y=0.95, font=dict(size=14, color="#FFFFFF"),
         ),
         xaxis=_year_axis(labels),
-        yaxis=_count_axis("Kayıt sayısı"),
+        yaxis=_count_axis(t("charts.count")),
         height=320,
         bargap=0.35,
     )
@@ -218,11 +225,11 @@ def render_patent_trends_chart(df_trends: pd.DataFrame) -> go.Figure:
         ))
 
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
+        **_layout(),
         barmode="group",
-        title=dict(text="<b>Yıllara Göre 6G Patent Kayıt Sayısı (doğrulanmış küme)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        title=dict(text=f"<b>{t('charts.patent_year')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=_year_axis(labels),
-        yaxis=_count_axis("Patent kayıt sayısı"),
+        yaxis=_count_axis(t("charts.patent_count")),
         height=480,
         bargap=0.22,
         bargroupgap=0.08,
@@ -257,8 +264,8 @@ def render_company_patent_domain_chart(df_domains: pd.DataFrame) -> go.Figure:
         ))
 
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Firma Bazlı 6G Teknoloji Yetkinlik Dağılımı (%)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.domain_radar')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         polar=dict(
             radialaxis=dict(visible=True, range=[0, 100], gridcolor='rgba(200, 209, 220, 0.15)'),
             angularaxis=dict(gridcolor='rgba(200, 209, 220, 0.15)', tickfont=dict(color='#FFFFFF')),
@@ -280,9 +287,9 @@ def render_patent_keywords_chart(keywords_dict: Dict[str, int]) -> go.Figure:
     ))
 
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Patent İstemlerinde En Sık Geçen Anahtar Kelimeler</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
-        xaxis=dict(title="Geçtiği İstem Sayısı", gridcolor='rgba(200, 209, 220, 0.1)'),
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.keywords')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        xaxis=dict(title=t("charts.kw_x"), gridcolor='rgba(200, 209, 220, 0.1)'),
         yaxis=dict(autorange="reversed", gridcolor='rgba(200, 209, 220, 0.1)'),
         height=380
     )
@@ -307,20 +314,22 @@ def render_academic_trends_chart(df_academic: pd.DataFrame) -> go.Figure:
         ))
 
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Akademik Yayın Sayıları Trendi (OpenAlex, konu bazlı)</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.academic_trend')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=_year_axis(labels),
-        yaxis=dict(title="Yayın Sayısı", gridcolor='rgba(200, 209, 220, 0.1)', rangemode='tozero', tickformat='d'),
+        yaxis=dict(title=t("charts.pub_count"), gridcolor='rgba(200, 209, 220, 0.1)', rangemode='tozero', tickformat='d'),
         height=480
     )
     return fig
 
 def render_academic_database_chart(
     db_dict: Dict[str, int],
-    title: str = "Doğrulanmış Örnek Set — Yayıncı Sayısı",
-    xlabel: str = "Yayıncı",
+    title: str | None = None,
+    xlabel: str | None = None,
 ) -> go.Figure:
     """Renders bar chart of verified sample paper publisher counts."""
+    title = title or t("charts.db_default")
+    xlabel = xlabel or t("charts.publisher")
     labels = list(db_dict.keys())
     fig = go.Figure(data=[go.Bar(
         x=labels,
@@ -329,10 +338,10 @@ def render_academic_database_chart(
     )])
     
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
+        **_layout(),
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color='#FFFFFF')),
         xaxis=dict(title=xlabel, type="category", gridcolor='rgba(200, 209, 220, 0.1)'),
-        yaxis=_count_axis("Makale sayısı"),
+        yaxis=_count_axis(t("charts.paper_count")),
         height=360
     )
     return fig
@@ -407,14 +416,14 @@ def render_patent_network_graph(edges: Optional[List[tuple]] = None) -> go.Figur
     else:
         fig = go.Figure()
         fig.add_annotation(
-            text="NetworkX yüklü değil; ağ grafiği gösterilemiyor.",
+            text=t("charts.nx_missing"),
             showarrow=False,
             font=dict(color="#94A3B8"),
         )
 
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Assignee ↔ Teknoloji Alanı Ağ Grafiği</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.network')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         showlegend=False,
         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
@@ -433,10 +442,10 @@ def render_company_counts_chart(counts: Dict[str, int]) -> go.Figure:
         marker=dict(color=_color_list(names)),
     ))
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>En Çok Kayıtlı Firmalar (doğrulanmış küme)</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
-        xaxis=dict(title="Firma", gridcolor="rgba(200, 209, 220, 0.1)"),
-        yaxis=dict(title="Patent kayıt sayısı", gridcolor="rgba(200, 209, 220, 0.1)"),
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.company_counts')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
+        xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)"),
+        yaxis=dict(title=t("charts.patent_count"), gridcolor="rgba(200, 209, 220, 0.1)"),
         height=360,
     )
     return fig
@@ -455,8 +464,8 @@ def render_patent_density_heatmap(df_density: pd.DataFrame) -> go.Figure:
         hoverongaps=False,
     ))
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Patent Yoğunluğu (firma × alan, kayıt sayısı)</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.density')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         height=max(360, 40 * len(companies) + 120),
     )
     return fig
@@ -472,8 +481,8 @@ def render_patent_sunburst(df_tree: pd.DataFrame) -> go.Figure:
         color_discrete_sequence=QUALITATIVE_COLORS,
     )
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Patent Ağacı (firma → alan → kayıt)</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.sunburst')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         height=480,
     )
     fig.update_traces(insidetextorientation="radial")
@@ -494,8 +503,8 @@ def render_patent_tfidf_map(df_map: pd.DataFrame) -> go.Figure:
     )
     fig.update_traces(marker=dict(size=12, line=dict(width=1, color="#FFFFFF")))
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
-        title=dict(text="<b>Patent Teknoloji Haritası (TF-IDF + PCA, başlık vektörleri)</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.tfidf')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         xaxis=dict(title="PCA-1", gridcolor="rgba(200, 209, 220, 0.1)", zeroline=False),
         yaxis=dict(title="PCA-2", gridcolor="rgba(200, 209, 220, 0.1)", zeroline=False),
         height=440,
@@ -542,9 +551,9 @@ def render_academic_bar_chart(items: List[Dict[str, Any]], title: str, name_key:
         marker=dict(color=_color_list(names)),
     ))
     fig.update_layout(
-        **DARK_LAYOUT_TEMPLATE,
+        **_layout(),
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
-        xaxis=dict(title="Yayın sayısı (OpenAlex)", gridcolor="rgba(200, 209, 220, 0.1)"),
+        xaxis=dict(title=t("charts.oa_bar_x"), gridcolor="rgba(200, 209, 220, 0.1)"),
         yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
         height=max(360, 28 * len(items) + 80),
     )

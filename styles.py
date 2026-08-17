@@ -327,6 +327,35 @@ def inject_custom_styles():
             font-weight: 700 !important;
             border: none !important;
             box-shadow: 0 4px 14px rgba(0, 153, 255, 0.35);
+            white-space: normal !important;
+            overflow-wrap: anywhere;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        /* i18n: EN/TR length mismatch must not clip or overflow */
+        .tt-title, .tt-subtitle, .tt-badge, .glass-card, .glass-card h2, .glass-card h4,
+        .dual-card-beginner, .dual-card-expert, .card-kicker, .teach-item p {
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        [data-testid="stSidebar"] p, [data-testid="stSidebar"] label,
+        [data-testid="stMarkdownContainer"] p, [data-testid="stMarkdownContainer"] li {
+            overflow-wrap: anywhere;
+        }
+        .stButton button, [data-testid="stBaseButton-secondary"], [data-testid="stBaseButton-primary"] {
+            white-space: normal !important;
+            height: auto !important;
+            min-height: 2.4rem;
+            line-height: 1.3;
+        }
+        [data-testid="stMetricLabel"], [data-testid="stMetricValue"], [data-testid="stMetricDelta"] {
+            overflow-wrap: anywhere;
+            white-space: normal !important;
+        }
+        [data-baseweb="tab"], [data-testid="stPills"] button {
+            white-space: normal !important;
+            height: auto !important;
         }
         </style>
     """, unsafe_allow_html=True)

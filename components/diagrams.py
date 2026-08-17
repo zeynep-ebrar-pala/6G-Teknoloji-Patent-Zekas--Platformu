@@ -5,6 +5,79 @@
 
 import streamlit as st
 
+from i18n.core import get_lang, t
+
+
+_SVG_TR_TO_KEY = (
+    ("Uçtan Uca Geri Besleme & Kayıp Fonksiyonu (End-to-End Loss)", "diagram.ai_loss"),
+    ("Gelen Taşıyıcı RF Sinyali (Enerji Kaynağı)", "diagram.iot_in"),
+    ("Yansıyan Modüle Veri (Geri Saçılım)", "diagram.iot_out"),
+    ("İletişim Dalgası (Veri Transferi)", "diagram.wave_comm"),
+    ("Radar Yankısı (AoA / Doppler / Mesafe)", "diagram.wave_radar"),
+    ("0.1 - 10 THz Ultra Geniş Bant Genişliği", "diagram.thz_bw"),
+    ("1 Terabit / saniye Veri Hızı", "diagram.thz_rate"),
+    ("(Derin Öğrenmeli Verici)", "diagram.ai_enc_sub"),
+    ("(Derin Öğrenmeli Alıcı)", "diagram.ai_dec_sub"),
+    ("+ Gürültü & Sönümlenme", "diagram.ai_ch_sub"),
+    ("Akıllı Yüzey (RIS Ayna)", "diagram.ris_surface"),
+    ("Merkezi İşlemci (CPU)", "diagram.cf_cpu"),
+    ("LEO Uydu Takımı (600 km)", "diagram.ntn_leo"),
+    ("HAPS Zeplin (20 km)", "diagram.ntn_haps"),
+    ("TT Uydu Gateway", "diagram.ntn_gw"),
+    ("Kullanıcı (UE)", "diagram.isac_ue"),
+    ("6G Verici (Tx)", "diagram.ris_tx"),
+    ("Bina (Engelleme)", "diagram.ris_bldg"),
+    ("Kullanıcı (Rx)", "diagram.ris_rx"),
+    ("Nöral Kodlayıcı", "diagram.ai_enc"),
+    ("Fiziksel Kanal", "diagram.ai_ch"),
+    ("Nöral Alıcı", "diagram.ai_dec"),
+    ("(Sinyal Üreteci)", "diagram.iot_reader_sub"),
+    ("🔋 Pilsiz IoT Etiketi", "diagram.iot_tag"),
+    ("(RF Enerji Hasadı)", "diagram.iot_tag_sub"),
+    ("6G Okuyucu", "diagram.iot_reader"),
+    ("Akıllı Tel", "diagram.ntn_phone"),
+    ("Kullanıcı", "diagram.cf_user"),
+)
+
+_CAP_TR_TO_KEY = (
+    (
+        "<strong>İnteraktif Sinyal Akışı:</strong> Mavi çizgi haberleşme verisini, yeşil-turuncu çizgi ise hedef algılama radar yankısını gösterir.",
+        "diagram.cap_isac",
+    ),
+    (
+        "<strong>RIS Yansıma Prensipleri:</strong> Doğrudan yol bina ile engellenmişken, RIS gelen radyo dalgasının fazını kaydırarak sinyali kullanıcıya odaklar.",
+        "diagram.cap_ris",
+    ),
+    (
+        "<strong>Hücresiz Yapı:</strong> Hücre sınırı yok. Tüm dağıtık AP'ler fiber ön bağlantı ile tek bir kullanıcıyı aynı anda besler.",
+        "diagram.cap_cf",
+    ),
+    (
+        "<strong>Terahertz Spektrumu:</strong> Kızılötesi ile mmWave arasındaki ultra geniş bant alanını temsil eder.",
+        "diagram.cap_thz",
+    ),
+    (
+        "<strong>Oto-Kodlayıcı Mimari:</strong> İnsan tasarımlı modülasyon yerine derin öğrenme ile öğrenilen katmanlar.",
+        "diagram.cap_ai",
+    ),
+    (
+        "<strong>Çok Katmanlı Ulaşım:</strong> Uydu -> HAPS -> Karasal Ağ entegrasyonu ile kesintisiz kapsama.",
+        "diagram.cap_ntn",
+    ),
+    (
+        "<strong>Geri Saçılım Prensibi:</strong> Cihaz pil içermez; gelen RF dalgasını modüle edip yansıtarak veri iletir.",
+        "diagram.cap_iot",
+    ),
+)
+
+
+def _localize_diagram(html: str) -> str:
+    if get_lang() != "en":
+        return html
+    for src, key in _SVG_TR_TO_KEY + _CAP_TR_TO_KEY:
+        html = html.replace(src, t(key))
+    return html
+
 def render_technology_diagram(tech_id: str):
     """Renders animated interactive SVG block diagram based on tech_id."""
     
@@ -269,5 +342,5 @@ def render_technology_diagram(tech_id: str):
         """
     }
 
-    diagram_code = diagrams.get(tech_id, "<p style='color: white;'>Diyagram bulunamadı.</p>")
-    st.html(f'<div class="tt-diagram">{diagram_code}</div>')
+    diagram_code = diagrams.get(tech_id, f"<p style='color: white;'>{t('diagram.missing')}</p>")
+    st.html(f'<div class="tt-diagram">{_localize_diagram(diagram_code)}</div>')

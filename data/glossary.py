@@ -379,13 +379,46 @@ TRL_SCALE: list[dict[str, str]] = [
 ]
 
 
+def _ui_lang() -> str:
+    try:
+        from i18n.core import get_lang
+
+        return get_lang()
+    except Exception:
+        return "tr"
+
+
+def localized_entry(key: str) -> dict[str, Any] | None:
+    item = GLOSSARY.get(key)
+    if not item:
+        return None
+    out = dict(item)
+    if _ui_lang() == "en":
+        from data.glossary_en import GLOSSARY_EN
+
+        extra = GLOSSARY_EN.get(key, {})
+        out["definition"] = extra.get("definition", item["definition"])
+        out["why"] = extra.get("why", item["why"])
+    return out
+
+
+def trl_scale() -> list[dict[str, str]]:
+    if _ui_lang() == "en":
+        from data.glossary_en import TRL_SCALE_EN
+
+        return TRL_SCALE_EN
+    return TRL_SCALE
+
+
 def format_term(key: str, *, first_use: bool = True) -> str:
     """İlk kullanımda tam biçim, sonrasında kısaltma."""
-    item = GLOSSARY.get(key)
+    item = localized_entry(key)
     if not item:
         return key
     if not first_use:
         return item["abbr"]
+    if _ui_lang() == "en":
+        return f"**{item['abbr']} ({item['en']}):** {item['definition']} {item['why']}"
     return (
         f"**{item['abbr']} ({item['en']} — {item['tr']}):** "
         f"{item['definition']} {item['why']}"
@@ -404,12 +437,17 @@ def term_chip_html(key: str) -> str:
 
 def glossary_plain_corpus() -> str:
     """AI geri getirme için düz metin derlemesi."""
+    lang = _ui_lang()
     parts = []
-    for item in GLOSSARY.values():
-        parts.append(
-            f"{item['abbr']} ({item['en']} — {item['tr']}): "
-            f"{item['definition']} {item['why']}"
-        )
+    for key, item in GLOSSARY.items():
+        loc = localized_entry(key) or item
+        if lang == "en":
+            parts.append(f"{item['abbr']} ({item['en']}): {loc['definition']} {loc['why']}")
+        else:
+            parts.append(
+                f"{item['abbr']} ({item['en']} — {item['tr']}): "
+                f"{loc['definition']} {loc['why']}"
+            )
     return "\n".join(parts)
 
 
