@@ -35,7 +35,6 @@ def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
     fnd = tech.get("foundation") or {}
     if not fnd:
         return
-    heading = t("teach.heading_compact") if compact else t("teach.heading")
     items = []
     for key, label_key in _TEACH_KEYS:
         text = fnd.get(key)
@@ -72,7 +71,6 @@ def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
         )
     st.markdown(
         f"""<div class="teach-stack">
-<div class="teach-heading-bar"><span>{escape(heading)}</span></div>
 {grid}
 <div class="glass-card teach-card">
 <div class="teach-label">{escape(t("teach.mental_model"))}</div>

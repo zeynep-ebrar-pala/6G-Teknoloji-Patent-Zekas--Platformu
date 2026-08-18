@@ -177,21 +177,6 @@ def inject_custom_styles():
             line-height: 1.5;
         }
 
-        .teach-heading-bar {
-            background: rgba(0, 200, 83, 0.08);
-            border: 1px solid rgba(0, 200, 83, 0.35);
-            border-radius: 6px;
-            padding: 4px 10px;
-            margin: 0;
-            line-height: 1.25;
-        }
-        .teach-heading-bar span {
-            color: #00C853 !important;
-            font-size: 0.82rem !important;
-            font-weight: 700 !important;
-            display: block;
-        }
-
         .tech-banner {
             border-left: 4px solid #0099FF !important;
             padding: 6px 12px !important;
@@ -769,7 +754,6 @@ def inject_custom_styles():
             display: none !important;
         }
         [data-testid="stMarkdownContainer"]:has(.tech-banner),
-        [data-testid="stMarkdownContainer"]:has(.teach-heading-bar),
         [data-testid="stMarkdownContainer"]:has(.teach-stack) {
             min-height: 0 !important;
         }
