@@ -39,45 +39,40 @@ def _corpus() -> List[Dict[str, str]]:
         }
     )
     for tech in DataService.get_all_technologies().values():
-        fnd = tech.get("foundation") or {}
-        formula_bits = []
-        for frm in tech.get("formulas") or []:
-            formula_bits.append(
-                f"{frm.get('name','')} {frm.get('tells_us','')} {frm.get('why_this_form','')} "
-                f"{frm.get('when_valid','')} {frm.get('assumptions','')}"
-            )
-        cmp_ = tech.get("comparison") or {}
-        body = " ".join(
-            [
-                tech.get("title", ""),
-                tech.get("acronym", ""),
-                _strip_html(tech.get("executive_summary", "")),
-                _strip_html(tech.get("beginner_card", "")),
-                str(fnd.get("what", "")),
-                str(fnd.get("why_needed", "")),
-                str(fnd.get("problem", "")),
-                str(fnd.get("mental_model", "")),
-                str(fnd.get("analogy_technical_map", "")),
-                str(fnd.get("when_used", "")),
-                str(fnd.get("when_not", "")),
-                str(fnd.get("not_to_confuse", "")),
-                str(fnd.get("real_world", "")),
-                str(fnd.get("tt_impact", "")),
-                _strip_html(tech.get("beginner_principle", "")),
-                _strip_html(tech.get("beginner_arch", "")),
-                _strip_html(tech.get("working_principle", "")),
-                _strip_html(tech.get("system_architecture", "")),
-                " ".join(tech.get("advantages", [])),
-                " ".join(tech.get("disadvantages", [])),
-                " ".join(formula_bits),
-                str(cmp_.get("title", "")),
-            ]
+        layers = DataService.teaching_layers(tech["id"])
+        chunks.append(
+            {
+                "id": f"tech:{tech['id']}:temel",
+                "title": f"{tech['acronym']} — {tech['title']} Temel (TRL {tech['trl']})",
+                "text": " ".join(
+                    [
+                        tech.get("title", ""),
+                        tech.get("acronym", ""),
+                        layers["beginner"],
+                        _strip_html(tech.get("beginner_card", "")),
+                        _strip_html(tech.get("beginner_principle", "")),
+                        _strip_html(tech.get("beginner_arch", "")),
+                    ]
+                ),
+            }
         )
         chunks.append(
             {
-                "id": f"tech:{tech['id']}",
-                "title": f"{tech['acronym']} — {tech['title']} (TRL {tech['trl']})",
-                "text": body,
+                "id": f"tech:{tech['id']}:uzman",
+                "title": f"{tech['acronym']} — {tech['title']} Uzman (TRL {tech['trl']})",
+                "text": " ".join(
+                    [
+                        tech.get("title", ""),
+                        tech.get("acronym", ""),
+                        layers["expert"],
+                        layers["formulas"],
+                        layers["comparison"],
+                        _strip_html(tech.get("working_principle", "")),
+                        _strip_html(tech.get("system_architecture", "")),
+                        " ".join(tech.get("advantages", [])),
+                        " ".join(tech.get("disadvantages", [])),
+                    ]
+                ),
             }
         )
     for pat in PatentService.get_top_patents():
@@ -101,7 +96,7 @@ def _corpus() -> List[Dict[str, str]]:
     return chunks
 
 
-def _retrieve(question: str, k: int = 6) -> List[Dict[str, str]]:
+def _retrieve(question: str, k: int = 6, view_mode: str = "") -> List[Dict[str, str]]:
     chunks = _corpus()
     if not chunks:
         return []
@@ -130,6 +125,10 @@ def _retrieve(question: str, k: int = 6) -> List[Dict[str, str]]:
         title = str(chunks[idx].get("title", "")).upper()
         if cid.startswith("tech:") or cid == "glossary":
             score += 0.18
+        if cid.endswith(":temel") and _is_beginner(view_mode):
+            score += 0.14
+        if cid.endswith(":uzman") and not _is_beginner(view_mode):
+            score += 0.14
         if any(tok in q_upper and tok in title for tok in ("RIS", "ISAC", "NTN", "THZ", "MIMO", "IOT", "AI-RAN", "AIRAN")):
             score += 0.22
         selected.append((score, chunks[idx]))
@@ -155,7 +154,8 @@ def _format_context(chunks: List[Dict[str, str]], view_mode: str = "") -> str:
     ]
     for ch in chunks:
         lines.append(f"[{ch['id']}] {ch['title']}")
-        lines.append(ch["text"][:1400])
+        limit = 2000 if str(ch.get("id", "")).startswith("tech:") else 1200
+        lines.append(ch["text"][:limit])
         lines.append("")
     return "\n".join(lines)
 
@@ -259,7 +259,7 @@ class AIAssistantService:
         if not (question or "").strip():
             return {"response": t("ai.empty_q"), "type": "error"}
 
-        chunks = _retrieve(question)
+        chunks = _retrieve(question, view_mode=view_mode or "")
         context = _format_context(chunks, view_mode or "")
         provider = (provider or "groq").lower()
         key = (api_key or "").strip()

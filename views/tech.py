@@ -1,5 +1,7 @@
 """6G Teknolojileri — yalnızca seçilen bölüm yüklenir."""
 
+from html import escape
+
 import streamlit as st
 
 from backend.data_service import DataService
@@ -11,6 +13,8 @@ from components.content_views import (
     render_formula_cards,
     render_foundation_layer,
     render_global_tt_trl,
+    render_section_label,
+    render_teach_note,
     render_use_cases,
 )
 from components.ui_helpers import current_view_mode, first_text, select_section, show_empty, show_error, show_plotly
@@ -41,16 +45,20 @@ selected_tech_id = st.selectbox(
 tech = DataService.get_technology_by_id(selected_tech_id)
 beginner = is_beginner(current_view_mode())
 trl_class = "trl-low" if tech["trl"] <= 4 else ("trl-mid" if tech["trl"] == 5 else "trl-high")
+depth_cls = "depth-badge-beginner" if beginner else "depth-badge-expert"
+lead = tech.get("beginner_kicker") if beginner else first_text(tech.get("trl_desc"))
 
 st.markdown(
     f"""<div class="glass-card tech-banner">
 <div class="tech-banner-row">
 <div>
 <span class="tt-badge">{t("tech.badge")}</span>
+<span class="depth-badge {depth_cls}">{t("depth.beginner") if beginner else t("depth.expert")}</span>
 <div class="tech-banner-title">{tech['icon']} {tech['title']}</div>
 </div>
 <span class="trl-pill {trl_class}">{t("trl.maturity", n=tech["trl"])}</span>
 </div>
+<p class="tech-banner-lead">{escape(lead)}</p>
 </div>""",
     unsafe_allow_html=True,
 )
@@ -69,58 +77,54 @@ section = _section_map.get(
 if section == "definition":
     render_foundation_layer(tech, compact=not beginner)
     if not beginner:
-        st.markdown(
-            f"""<div class="dual-card-expert">
-<h4 style="color:#00C2FF;margin-top:0;margin-bottom:12px;">{t("tech.expert_def")}</h4>
-<div style="color:#E2E8F0;font-size:0.95rem;line-height:1.6;">
-{tech['system_architecture']}
-</div>
-</div>""",
-            unsafe_allow_html=True,
-        )
         render_comparison_table(tech)
-        render_formula_cards(tech)
+        render_teach_note(t("tech.math_on_arch"))
 
 elif section == "principle":
     from components.diagrams import render_technology_diagram
 
     col_p_text, col_p_diag = st.columns([1, 1.1])
     with col_p_text:
-        principle = first_text(
-            tech.get("beginner_principle") if beginner else None,
-            tech.get("working_principle"),
-        )
-        heading = t("tech.principle_beginner") if beginner else t("tech.principle_expert")
-        st.markdown(f"### {heading}")
-        if not beginner:
+        render_section_label("tech.principle_beginner" if beginner else "tech.principle_expert")
+        if beginner:
             st.markdown(
-                f"""<div class="dual-card-beginner">
-<div style="color:#E2E8F0;font-size:0.9rem;line-height:1.6;">
-{first_text(tech.get("beginner_principle"))}
+                f"""<div class="glass-card">
+<div style="color:#E2E8F0;font-size:0.98rem;line-height:1.65;">
+{first_text(tech.get("beginner_principle"), tech.get("working_principle"))}
 </div>
 </div>""",
                 unsafe_allow_html=True,
             )
-        st.markdown(
-            f"""<div class="glass-card">
-<div style="color:#E2E8F0;font-size:0.95rem;line-height:1.65;">
-{principle}
+        else:
+            recall = first_text(tech.get("beginner_principle"))
+            if recall:
+                with st.expander(t("tech.principle_recall"), expanded=False):
+                    st.markdown(
+                        f"""<div class="dual-card-beginner">
+<div style="color:#E2E8F0;font-size:0.9rem;line-height:1.6;">{recall}</div>
+</div>""",
+                        unsafe_allow_html=True,
+                    )
+            st.markdown(
+                f"""<div class="glass-card">
+<div style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;">
+{first_text(tech.get("working_principle"))}
 </div>
 </div>""",
-            unsafe_allow_html=True,
-        )
+                unsafe_allow_html=True,
+            )
     with col_p_diag:
-        st.markdown(t("tech.diagram"))
+        render_section_label("tech.diagram")
         render_technology_diagram(tech["id"])
         render_diagram_legend(tech["id"])
 
 elif section == "architecture":
-    st.markdown(t("tech.arch_heading"))
+    render_section_label("tech.arch_heading")
     arch = first_text(tech.get("beginner_arch"))
     st.markdown(
         f"""<div class="dual-card-beginner">
-<h4 style="color:#00C853;margin-top:0;">{t("tech.arch_layers")}</h4>
-<div style="color:#E2E8F0;font-size:0.95rem;line-height:1.65;">
+<div class="teach-label">{escape(t("tech.arch_layers"))}</div>
+<div style="color:#E2E8F0;font-size:0.95rem;line-height:1.65;margin-top:8px;">
 {arch}
 </div>
 </div>""",
@@ -129,8 +133,8 @@ elif section == "architecture":
     if not beginner:
         st.markdown(
             f"""<div class="dual-card-expert">
-<h4 style="color:#00C2FF;margin-top:0;">{t("tech.arch_expert")}</h4>
-<div style="color:#E2E8F0;font-size:0.92rem;line-height:1.6;">
+<div class="teach-label">{escape(t("tech.arch_expert"))}</div>
+<div style="color:#E2E8F0;font-size:0.92rem;line-height:1.6;margin-top:8px;">
 {tech['system_architecture']}
 </div>
 </div>""",
@@ -155,8 +159,8 @@ else:
         render_technology_record_counts_chart,
     )
 
-    st.markdown(t("tech.perf_heading"))
-    st.caption(t("tech.perf_caption"))
+    render_section_label("tech.perf_heading")
+    render_teach_note(t("tech.perf_caption"))
     domain = PatentService.domain_for_tech(tech["id"])
     df_pat = PatentService.get_domain_yearly_df(tech["id"])
     if df_pat.empty:
@@ -179,11 +183,11 @@ else:
         else:
             show_plotly(render_academic_trends_chart(df_pub))
     else:
-        st.caption(t("tech.cell_free_oa"))
+        render_teach_note(t("tech.cell_free_oa"))
 
     st.divider()
-    st.markdown(t("tech.refs"))
-    st.caption(t("tech.refs_caption"))
+    render_section_label("tech.refs")
+    render_teach_note(t("tech.refs_caption"))
     ref_items = "".join(
         [
             f"""<p style='margin-bottom:8px; font-size:0.88rem; line-height:1.5; overflow-wrap:anywhere;'>

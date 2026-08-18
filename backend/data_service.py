@@ -129,6 +129,17 @@ def _with_layers(tech: dict | None) -> dict | None:
     return out
 
 
+def _plain_foundation(block: dict) -> str:
+    bits: list[str] = []
+    for key in FOUNDATION_KEYS:
+        val = block.get(key)
+        if isinstance(val, list):
+            bits.extend(str(item) for item in val if item)
+        elif val:
+            bits.append(str(val))
+    return " ".join(bits)
+
+
 class DataService:
     """Backend Data Access Service for 6G Knowledge Base."""
 
@@ -141,6 +152,31 @@ class DataService:
     def get_technology_by_id(tech_id: str) -> dict:
         """Retrieves a specific technology by its unique ID."""
         return _with_layers(TECHNOLOGIES.get(tech_id))
+
+    @staticmethod
+    def teaching_layers(tech_id: str) -> dict:
+        """Temel ve uzman düz metin — UI ve AI aynı kaynaktan aktarır."""
+        extra = _beginner_copy().get(tech_id, {})
+        expert = _expert_copy().get(tech_id, {})
+        depth = _expert_depth().get(tech_id, {})
+        cmp_ = depth.get("comparison") or {}
+        formula_bits = []
+        for frm in depth.get("formulas") or []:
+            formula_bits.append(
+                f"{frm.get('name', '')} {frm.get('tells_us', '')} {frm.get('why_this_form', '')} "
+                f"{frm.get('when_valid', '')} {frm.get('assumptions', '')}"
+            )
+        cmp_text = " ".join(
+            [str(cmp_.get("title", ""))]
+            + [str(h) for h in (cmp_.get("headers") or [])]
+            + [" ".join(str(c) for c in row) for row in (cmp_.get("rows") or [])]
+        )
+        return {
+            "beginner": _plain_foundation(extra),
+            "expert": _plain_foundation(expert),
+            "formulas": " ".join(formula_bits),
+            "comparison": cmp_text,
+        }
 
     @staticmethod
     def filter_technologies_by_trl(min_trl: int, max_trl: int) -> dict:
@@ -163,10 +199,12 @@ class DataService:
                 for uc in data.get("use_cases", [])
             )
             extra = _beginner_copy().get(t_id, {})
+            expert = _expert_copy().get(t_id, {})
             depth = _expert_depth().get(t_id, {})
             content_str = (
                 f"{data['title']} {data['acronym']} {data['executive_summary']} "
                 f"{use_case_text} {extra.get('card', '')} {extra.get('what', '')} "
+                f"{expert.get('what', '')} {expert.get('mental_model', '')} "
                 f"{depth.get('comparison', {}).get('title', '')}"
             ).lower()
             if query_lower in content_str or any(

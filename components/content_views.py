@@ -11,6 +11,22 @@ import streamlit as st
 from data.glossary import GLOSSARY, localized_entry, trl_scale
 from i18n.core import t
 
+
+def _plain_label(key: str) -> str:
+    return t(key).lstrip("#").strip()
+
+
+def render_teach_note(text: str) -> None:
+    """st.caption CSS ile gizlenir; öğretim notu HTML olarak kalır."""
+    if not text:
+        return
+    st.markdown(f'<p class="teach-note">{escape(str(text))}</p>', unsafe_allow_html=True)
+
+
+def render_section_label(key: str) -> None:
+    st.markdown(f'<div class="section-label">{escape(_plain_label(key))}</div>', unsafe_allow_html=True)
+
+
 def is_beginner(view_mode: str | None = None) -> bool:
     if view_mode is None:
         view_mode = st.session_state.get("view_mode", "beginner")
@@ -22,81 +38,102 @@ def is_beginner(view_mode: str | None = None) -> bool:
     return True
 
 
-def _teach_item(label_key: str, body) -> str:
+def _teach_item(label_key: str, body, n: int | None = None) -> str:
     if not body:
         return ""
+    label = t(label_key)
+    if n is not None:
+        label = f"{n:02d}  ·  {label}"
     return (
         "<div class='teach-item'>"
-        f"<div class='teach-label'>{escape(t(label_key))}</div>"
+        f"<div class='teach-label'>{escape(label)}</div>"
         f"<p>{escape(str(body))}</p></div>"
     )
 
 
-def _teach_card(label_key: str, body, extra_class: str = "", muted: bool = False) -> str:
+def _teach_card(label_key: str, body, extra_class: str = "", muted: bool = False, n: int | None = None) -> str:
     if not body:
         return ""
     cls = "teach-muted" if muted else "teach-body"
     extra = f" {extra_class}" if extra_class else ""
+    label = t(label_key)
+    if n is not None:
+        label = f"{n:02d}  ·  {label}"
     return (
         f"<div class='glass-card teach-card{extra}'>"
-        f"<div class='teach-label'>{escape(t(label_key))}</div>"
+        f"<div class='teach-label'>{escape(label)}</div>"
         f"<p class='{cls}'>{escape(str(body))}</p>"
         "</div>"
     )
 
 
+def _emit_stack(depth_cls: str, inner: str) -> None:
+    if not inner.strip():
+        return
+    st.markdown(f'<div class="teach-stack {depth_cls}">{inner}</div>', unsafe_allow_html=True)
+
+
 def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
-    """Sıra: problem → ihtiyaç → yöntem → mekanizma → sınır → uygulama."""
+    """Sıra: problem → ihtiyaç → yöntem → mekanizma → sınır → uygulama.
+
+    Tek dev HTML yerine sahnelere bölünür: Streamlit kırpmasın, okuyucu sırayı kaçırmasın.
+    """
     fnd = tech.get("foundation") or {}
     if not fnd:
         return
-    st.caption(t("teach.heading_expert") if compact else t("teach.heading"))
-    opener = "".join(
-        [
-            _teach_item("teach.problem", fnd.get("problem")),
-            _teach_item("teach.why_needed", fnd.get("why_needed")),
-        ]
+    beginner = not compact
+    depth_cls = "depth-beginner" if beginner else "depth-expert"
+    kicker = tech.get("beginner_kicker") if beginner else ""
+    kicker_html = f'<div class="card-kicker">{escape(str(kicker))}</div>' if kicker else ""
+    chips = t("teach.rail_beginner") if beginner else t("teach.rail_expert")
+    chip_html = "".join(
+        f"<span>{escape(part.strip())}</span>" for part in chips.split("·") if part.strip()
     )
-    opener_html = f"<div class='teach-grid'>{opener}</div>" if opener else ""
-    analogy = fnd.get("analogy")
-    tech_map = fnd.get("analogy_technical_map")
-    analogy_html = ""
-    if analogy:
-        analogy_html = (
-            "<div class='glass-card teach-card'>"
-            f"<div class='teach-label'>{escape(t('teach.analogy'))}</div>"
-            f"<p class='teach-body'>{escape(str(analogy))}</p>"
-            f"<div class='teach-label'>{escape(t('teach.analogy_map'))}</div>"
-            f"<p class='teach-muted'>{escape(str(tech_map or ''))}</p>"
-            "</div>"
-        )
-    steps = fnd.get("how_steps") or []
-    steps_html = ""
-    if steps:
-        lis = "".join(f"<li>{escape(str(s))}</li>" for s in steps)
-        steps_html = (
-            "<div class='glass-card teach-card'>"
-            f"<div class='teach-label'>{escape(t('teach.how_steps'))}</div>"
-            f"<ol class='teach-steps'>{lis}</ol>"
-            "</div>"
-        )
     st.markdown(
-        f"""<div class="teach-stack">
-{opener_html}
-{_teach_card("teach.what", fnd.get("what"))}
-{_teach_card("teach.mental_model", fnd.get("mental_model"))}
-{steps_html}
-{analogy_html}
-<div class="teach-pair">
-{_teach_card("teach.when_used", fnd.get("when_used"), "teach-used")}
-{_teach_card("teach.when_not", fnd.get("when_not"), "teach-not")}
-</div>
-{_teach_card("teach.not_to_confuse", fnd.get("not_to_confuse"))}
-{_teach_card("teach.real_world", fnd.get("real_world"), muted=True)}
-{_teach_card("teach.tt_impact", fnd.get("tt_impact"))}
+        f"""<div class="teach-wrap {depth_cls}">
+{kicker_html}
+<p class="teach-note">{escape(t("teach.heading_expert") if compact else t("teach.heading"))}</p>
+<div class="depth-rail">{chip_html}</div>
 </div>""",
         unsafe_allow_html=True,
     )
+    _emit_stack(
+        depth_cls,
+        f'<div class="teach-grid">{_teach_item("teach.problem", fnd.get("problem"), 1)}'
+        f'{_teach_item("teach.why_needed", fnd.get("why_needed"), 2)}</div>',
+    )
+    _emit_stack(depth_cls, _teach_card("teach.what", fnd.get("what"), n=3))
+    _emit_stack(depth_cls, _teach_card("teach.mental_model", fnd.get("mental_model"), n=4))
+    steps = fnd.get("how_steps") or []
+    if steps:
+        lis = "".join(f"<li>{escape(str(s))}</li>" for s in steps)
+        _emit_stack(
+            depth_cls,
+            "<div class='glass-card teach-card'>"
+            f"<div class='teach-label'>05  ·  {escape(t('teach.how_steps'))}</div>"
+            f"<ol class='teach-steps'>{lis}</ol></div>",
+        )
+    analogy = fnd.get("analogy")
+    tech_map = fnd.get("analogy_technical_map")
+    if analogy:
+        _emit_stack(
+            depth_cls,
+            "<div class='glass-card teach-card'>"
+            f"<div class='teach-label'>06  ·  {escape(t('teach.analogy'))}</div>"
+            f"<p class='teach-body'>{escape(str(analogy))}</p>"
+            f"<div class='teach-label'>{escape(t('teach.analogy_map'))}</div>"
+            f"<p class='teach-muted'>{escape(str(tech_map or ''))}</p></div>",
+        )
+    _emit_stack(
+        depth_cls,
+        '<div class="teach-pair">'
+        f'{_teach_card("teach.when_used", fnd.get("when_used"), "teach-used", n=7)}'
+        f'{_teach_card("teach.when_not", fnd.get("when_not"), "teach-not", n=8)}'
+        "</div>",
+    )
+    _emit_stack(depth_cls, _teach_card("teach.not_to_confuse", fnd.get("not_to_confuse"), n=9))
+    _emit_stack(depth_cls, _teach_card("teach.real_world", fnd.get("real_world"), muted=True, n=10))
+    _emit_stack(depth_cls, _teach_card("teach.tt_impact", fnd.get("tt_impact"), n=11))
 
 
 def render_formula_cards(tech: dict) -> None:
@@ -106,8 +143,8 @@ def render_formula_cards(tech: dict) -> None:
         if legacy:
             st.markdown(f"<div class='formula-box'>{legacy}</div>", unsafe_allow_html=True)
         return
-    st.markdown(t("teach.formula_heading"))
-    st.caption(t("teach.formula_caption"))
+    render_section_label("teach.formula_heading")
+    render_teach_note(t("teach.formula_caption"))
     for formula in formulas:
         st.markdown(
             f"""<div class="formula-card">
@@ -159,7 +196,10 @@ def render_comparison_table(tech: dict) -> None:
     headers = cmp_.get("headers") or []
     if not rows or not headers:
         return
-    st.markdown(f"#### {cmp_.get('title', t('teach.use_cases'))}")
+    st.markdown(
+        f'<div class="section-label">{escape(str(cmp_.get("title") or _plain_label("teach.use_cases")))}</div>',
+        unsafe_allow_html=True,
+    )
     head = "".join(f"<th>{escape(h)}</th>" for h in headers)
     body = "".join(
         "<tr>" + "".join(f"<td>{escape(str(c))}</td>" for c in row) + "</tr>" for row in rows
@@ -176,8 +216,8 @@ def render_comparison_table(tech: dict) -> None:
 
 
 def render_use_cases(tech: dict, *, beginner: bool) -> None:
-    st.markdown(t("teach.use_cases"))
-    st.caption(t("teach.use_cases_caption"))
+    render_section_label("teach.use_cases")
+    render_teach_note(t("teach.use_cases_caption"))
     cols = st.columns(2)
     for idx, uc in enumerate(tech.get("use_cases") or []):
         if isinstance(uc, dict):
@@ -216,7 +256,7 @@ def render_adv_dis(tech: dict, *, beginner: bool) -> None:
     adv_why = tech.get("adv_why") or []
     dis_why = tech.get("dis_why") or []
     with c_adv:
-        st.markdown(t("teach.advantages"))
+        render_section_label("teach.advantages")
         items = []
         for i, adv in enumerate(tech.get("advantages") or []):
             why = adv_why[i] if (not beginner and i < len(adv_why)) else ""
@@ -237,7 +277,7 @@ def render_adv_dis(tech: dict, *, beginner: bool) -> None:
             unsafe_allow_html=True,
         )
     with c_dis:
-        st.markdown(t("teach.disadvantages"))
+        render_section_label("teach.disadvantages")
         items = []
         for i, dis in enumerate(tech.get("disadvantages") or []):
             why = dis_why[i] if (not beginner and i < len(dis_why)) else ""
@@ -264,12 +304,12 @@ def render_global_tt_trl(tech: dict, *, beginner: bool, trl_class: str) -> None:
     global_why = tech.get("global_why") or []
     tt_why = tech.get("tt_why") or []
     with c_g:
-        st.markdown(t("teach.global"))
+        render_section_label("teach.global")
         if beginner:
-            st.caption(t("teach.global_caption"))
+            render_teach_note(t("teach.global_caption"))
         items = []
         for i, gr in enumerate(tech.get("global_research") or []):
-            why = global_why[i] if i < len(global_why) else ""
+            why = global_why[i] if (not beginner and i < len(global_why)) else ""
             why_html = (
                 f"<div style='color:#94A3B8;font-size:0.82rem;margin-top:4px;line-height:1.45;'>{escape(why)}</div>"
                 if why
@@ -286,11 +326,11 @@ def render_global_tt_trl(tech: dict, *, beginner: bool, trl_class: str) -> None:
             unsafe_allow_html=True,
         )
     with c_tt_box:
-        st.markdown(t("teach.tt_scenarios"))
-        st.caption(t("teach.tt_caption"))
+        render_section_label("teach.tt_scenarios")
+        render_teach_note(t("teach.tt_caption"))
         chunks = []
         for i, tt_sc in enumerate(tech.get("tt_scenarios") or []):
-            why = tt_why[i] if i < len(tt_why) else ""
+            why = tt_why[i] if (not beginner and i < len(tt_why)) else ""
             why_html = (
                 f"<span style='display:block;color:#94A3B8;font-size:0.82rem;margin-top:4px;'>{escape(why)}</span>"
                 if why
@@ -304,7 +344,7 @@ def render_global_tt_trl(tech: dict, *, beginner: bool, trl_class: str) -> None:
             unsafe_allow_html=True,
         )
     with c_t_level:
-        st.markdown(t("teach.trl_assess"))
+        render_section_label("teach.trl_assess")
         st.markdown(
             f"""<div class="glass-card" style="text-align:center;">
 <span class="trl-pill {trl_class}" style="font-size:1.3rem;padding:10px 24px;">{t("trl.pill", n=tech["trl"])}</span>

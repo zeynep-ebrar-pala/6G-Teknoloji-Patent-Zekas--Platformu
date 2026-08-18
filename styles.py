@@ -208,11 +208,88 @@ def inject_custom_styles():
             font-size: 0.64rem;
             padding: 2px 8px;
         }
+        .tech-banner-lead {
+            color: #E2E8F0 !important;
+            font-size: 0.86rem !important;
+            line-height: 1.45 !important;
+            margin: 6px 0 0 0 !important;
+            overflow-wrap: anywhere;
+        }
+        .depth-badge {
+            display: inline-block;
+            font-size: 0.58rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 6px;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .depth-badge-beginner {
+            background: rgba(0, 200, 83, 0.15);
+            color: #00C853 !important;
+            border: 1px solid rgba(0, 200, 83, 0.35);
+        }
+        .depth-badge-expert {
+            background: rgba(0, 153, 255, 0.15);
+            color: #00C2FF !important;
+            border: 1px solid rgba(0, 153, 255, 0.35);
+        }
+        .teach-note {
+            color: #CBD5E1 !important;
+            font-size: 0.86rem !important;
+            line-height: 1.45 !important;
+            margin: 0 0 8px 0 !important;
+        }
+        .section-label {
+            color: #00E5FF !important;
+            font-size: 0.78rem !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin: 8px 0 8px 0 !important;
+        }
+        .depth-rail {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 4px 0 4px 0;
+        }
+        .depth-rail span {
+            font-size: 0.66rem;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            color: #7DD3FC;
+            border: 1px solid rgba(0, 229, 255, 0.28);
+            padding: 3px 8px;
+            border-radius: 999px;
+        }
+        .depth-beginner .depth-rail span {
+            color: #86EFAC;
+            border-color: rgba(0, 200, 83, 0.35);
+        }
+        .teach-wrap { margin: 0 0 8px 0; }
 
         .teach-stack {
             display: flex;
             flex-direction: column;
             gap: 10px;
+        }
+        .teach-stack.depth-beginner .teach-body,
+        .teach-stack.depth-beginner .teach-item p {
+            font-size: 0.98rem !important;
+            line-height: 1.62 !important;
+        }
+        .teach-stack.depth-expert .teach-body,
+        .teach-stack.depth-expert .teach-item p,
+        .teach-stack.depth-expert .teach-muted,
+        .teach-stack.depth-expert .teach-steps {
+            font-size: 0.88rem !important;
+            line-height: 1.5 !important;
+        }
+        .glass-card.teach-card:hover {
+            transform: none !important;
         }
         .teach-stack .glass-card.teach-card {
             margin: 0 !important;
@@ -556,6 +633,12 @@ def inject_custom_styles():
             position: relative;
             z-index: 2;
         }
+        .tt-depth-note {
+            color: #94A3B8 !important;
+            font-size: 0.72rem !important;
+            line-height: 1.4 !important;
+            margin: 8px 2px 4px 2px !important;
+        }
 
         [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] {
             gap: 6px !important;
@@ -754,11 +837,13 @@ def inject_custom_styles():
             display: none !important;
         }
         [data-testid="stMarkdownContainer"]:has(.tech-banner),
-        [data-testid="stMarkdownContainer"]:has(.teach-stack) {
+        [data-testid="stMarkdownContainer"]:has(.teach-stack),
+        [data-testid="stMarkdownContainer"]:has(.teach-wrap) {
             min-height: 0 !important;
         }
         [data-testid="stMarkdownContainer"]:has(.tech-banner) p,
-        [data-testid="stMarkdownContainer"]:has(.teach-stack) > p {
+        [data-testid="stMarkdownContainer"]:has(.teach-stack) > p,
+        [data-testid="stMarkdownContainer"]:has(.teach-wrap) > p {
             margin: 0 !important;
         }
         </style>
