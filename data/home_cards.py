@@ -1,98 +1,75 @@
-"""Ana Sayfa kartları — kicker, gövde, üç çip. DataService katmanına bağlı değil."""
+"""Ana Sayfa kartları — kicker + gövde. Çipler UI'da kullanılmaz."""
 
 HOME_CARDS_TR = {
     "isac": {
         "kicker": "Sorun: kule konuşur, göremez",
         "chips": ["Yankıdan mesafe", "Doppler'den hız", "TRL 4, saha değil"],
         "blurb": (
-            "Sisli bir boğazda kule internet verir ama «karşıda bir gemi var mı» diye bakamaz; "
-            "kamera görüşünü kaybeder, ayrı radar kamyonu hem pahalıdır hem spektrumu kirletir. "
+            "Baz istasyonu veri taşır; çevreyi ölçmez. Kamera sis ve karanlıkta körleşir; "
+            "ayrı radar ikinci spektrum ve ikinci anten ister. "
             "ISAC (Integrated Sensing and Communication — Entegre Algılama ve İletişim) "
-            "aynı radyo dalgasını hem veri taşımak hem yankıdan ölçüm yapmak için kullanır: "
-            "gecikme mesafeyi, Doppler kayması hızı verir. "
-            "Bedeli, bu ölçümün laboratuvar dışında güvenilir kalmasıdır; "
-            "Türk Telekom için adaylık budur, mahalle ürünü değil. "
-            "TRL 4 seviyesindedir: yöntem laboratuvarda doğrulanmıştır, "
-            "ancak sahada gerçek bir şebekede henüz denenmemiştir."
+            "aynı RF zincirinde hem bit hem yankı işler: gecikme mesafe, Doppler hız verir. "
+            "TRL 4 — Rel-19 (TR 22.837); laboratuvar doğrulaması, TT sahası değil."
         ),
     },
     "ris": {
         "kicker": "Sorun: dalga köşeyi dönemez",
-        "chips": ["Faz kaydıran ayna", "Enerji kırıntısı", "TRL 5, ticari değil"],
+        "chips": ["Faz kaydıran yüzey", "Aktif verici yok", "TRL 5, ticari değil"],
         "blurb": (
-            "Yüksek frekanslı dalga düz gitmeye eğilimlidir; köşeyi dönmez, asansör boşluğunda kaybolur. "
-            "Her kör nokta için yeni kule dikmek pahalı ve pratik değildir. "
+            "Yüksek frekansta dalga köşeyi dönmez; her kör nokta için yeni gNB dikmek CAPEX ve kent yüküdür. "
             "RIS (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey) "
-            "cepheye asılan elektronik bir aynadır: yüzeydeki her küçük eleman dalganın fazını kaydırır, "
-            "hüzme size döner. Kendi başına sinyal üretmediği için enerji tüketimi kırıntı kadardır. "
-            "TRL 5 seviyesindedir: prototip üretilmiş ve saha denemeleri yapılmıştır, "
-            "ancak henüz ticari bir kulede kullanılmamaktadır."
+            "cephedeki programlanabilir yansıtıcıdır: eleman fazı θ_n hüzmeyi UE'ye çevirir, "
+            "kendi yüksek güçlü vericisi yoktur. TRL 5 — ETSI RIS ISG ve Rel-19/20; PoC sınıfı."
         ),
     },
     "cell_free": {
         "kicker": "Sorun: hücre sınırında zayıflar",
-        "chips": ["Handover kalkar", "Fronthaul bedeli", "TRL 4 stadyum adayı"],
+        "chips": ["Ortak ön kodlama", "Fronthaul bedeli", "TRL 4 stadyum adayı"],
         "blurb": (
-            "Klasik şebekede her mahallenin bir hücresi vardır; kenara yaklaşınca sinyal düşer, "
-            "kule değişince (handover) kopma riski doğar. "
-            "Hücresiz Masif MIMO (Multiple-Input Multiple-Output — Çok Girişli Çok Çıkışlı) "
-            "bu sınırı kaldırır: sokak lambası sıklığındaki erişim noktaları sizi birlikte taşır, "
-            "kenar diye bir yer kalmaz. Bedeli, antenleri merkeze bağlayan "
-            "fronthaul (ön bağlantı) fiberidir. "
-            "TRL 4 seviyesindedir, yani hâlâ deneysel aşamadadır; "
-            "ilk uygulama alanı olarak stadyum ve havalimanı gibi yoğun mekânlar düşünülmektedir."
+            "Hücre kenarında SINR düşer; handover kopma riski taşır. "
+            "Hücresiz Massive MIMO, yayılmış erişim noktalarının aynı anda ortak ön kodlama ile "
+            "hizmet verdiği mimaridir: kenar tasarım hedefi olarak kalkar. Bedeli fronthaul fiberidir. "
+            "TRL 4 — Rel-19/20 dağıtık MIMO; literatür prototip, TT sahası değil."
         ),
     },
     "thz": {
         "kicker": "Sorun: veri borusu hâlâ dar",
-        "chips": ["Bant katbekat artar", "Su buharı / duvar", "TRL 3, sokak değil"],
+        "chips": ["Bant büyür", "FSPL + emilim", "TRL 3, sokak değil"],
         "blurb": (
-            "5G hızlıdır ama kablosuz boru hâlâ dardır; sunucular arası terabit hızındaki aktarım "
-            "veya gerçek zamanlı hologram bu boruya sığmaz. "
-            "THz (terahertz) milimetre dalga ile kızılötesi arasındaki spektrumdur; "
-            "bant genişliği katbekat artar. Bedeli fiziktir: su buharı emer, duvar keser, mesafe kısalır. "
-            "TRL 3 seviyesindedir: laboratuvar sonuçları güçlüdür, "
-            "ama sokaktaki bir şebekede henüz kullanılmamaktadır. "
-            "Ayrıca 6G'nin tamamı THz teknolojisine dayanmamaktadır."
+            "Sub-6 GHz ve mmWave, veri merkezi içi mesh ve kule köprüsü için dar kalabilir. "
+            "THz (terahertz) milimetre dalga ile kızılötesi arasındaki spektrumu açar; "
+            "Shannon'da kapasite önce B ile büyür. Bedeli FSPL ve moleküler emilimdir: menzil kısalır. "
+            "TRL 3 — TR 38.807; laboratuvar. 6G yalnızca THz değildir."
         ),
     },
     "ai_ran": {
         "kicker": "Sorun: şebeke sabit kural izler",
         "chips": ["Ölçümle kaynak", "Sohbet botu değil", "TRL 5, insansız değil"],
         "blurb": (
-            "Klasik şebeke sabit kuralı ezberden okur: dolu stadyum ile ıssız gece aynı kurala bakınca "
-            "ya kaynak israf olur ya kalite düşer. "
-            "AI-RAN (Artificial Intelligence-Native RAN — yapay zekâ tabanlı telsiz erişim ağı) "
-            "kuleyi ölçer, milisaniye–saniye döngüsünde kaynak kaydırır. "
-            "Sohbet botu değildir, ağı yöneten karar mekanizmasıdır. "
-            "TRL 5 seviyesindedir: O-RAN RIC (RAN Intelligent Controller — RAN Akıllı Denetleyici) "
-            "üzerinde denemeler yapılmıştır, ancak sahada tamamen insansız çalışma henüz kanıtlanmamıştır."
+            "Sabit RRM kuralı dolu stadyum ile boş geceyi aynı tarifeyle yönetir. "
+            "AI-RAN (Artificial Intelligence-Native RAN) ölçüme göre milisaniye–saniye döngüsünde "
+            "kaynak kaydırır. Sohbet botu değildir. "
+            "TRL 5 — TR 38.843 ve O-RAN RIC deneme sınıfı; insansız saha kanıtı yok."
         ),
     },
     "ntn": {
         "kicker": "Sorun: kule her yere ulaşmaz",
-        "chips": ["Kule yokken göğe", "Gecikme + Doppler", "TRL 6 tamamlayıcı"],
+        "chips": ["Direct-to-cell", "Gecikme + Doppler", "TRL 6 tamamlayıcı"],
         "blurb": (
-            "Karasal kule şehri ve asfaltı kapsar; dağ, açık deniz ve enkaz boş kalır. "
-            "NTN (Non-Terrestrial Network — Karasal Olmayan Ağ) "
-            "LEO (Low Earth Orbit — Alçak Dünya Yörüngesi) uydularını ve "
-            "HAPS'ı (High-Altitude Platform Station — Yüksek İrtifa Platformu) "
-            "3GPP şebekesiyle birleştirir: kule yokken telefon doğrudan göğe bağlanır. "
-            "Bedeli, uzun mesafeden doğan gecikme ve uydu hareketinden gelen Doppler kaymasıdır. "
-            "TRL 6 seviyesindedir ve yedi teknoloji arasında en olgun olanıdır; "
-            "şehir içindeki 6G şebekesinin rakibi değil, onu tamamlayan bir çözümdür."
+            "Karasal gNB şehir ve asfaltı kapsar; dağ, deniz ve enkaz boş kalır. "
+            "NTN (Non-Terrestrial Network — Karasal Olmayan Ağ) LEO ve HAPS düğümlerini "
+            "Rel-17+ prosedürüyle çekirdeğe bağlar. Bedeli gecikme ve Doppler'dir. "
+            "TRL 6 — TR 38.811; kamuya açık direct-to-cell denemeleri. Rakip değil, tamamlayıcı."
         ),
     },
     "ambient_iot": {
         "kicker": "Sorun: her nesneye pil değiştirilemez",
-        "chips": ["Backscatter kimlik", "Video taşımaz", "TRL 4, rafa değil"],
+        "chips": ["Backscatter kimlik", "Video taşımaz", "TRL 4, raf ürünü değil"],
         "blurb": (
-            "Depodaki her koli, tarladaki her nem sensörü bugün pil ister. "
-            "Pil bitince cihaz susar; milyonlarca pili değiştirmek işlemez. "
-            "Ambient IoT ortamdaki RF (Radio Frequency — radyo frekansı) kırıntısını toplayıp "
-            "geri saçılımla (backscatter) «buradayım» der; video taşımaz, sadece kimlik bildirir. "
-            "TRL 4 seviyesindedir: 3GPP bünyesinde aktif bir çalışma kalemidir, "
-            "ancak henüz her rafa yapıştırılmış, yaygın kullanılan bir teknoloji değildir."
+            "Koli ve sera ölçeğinde pil değiştirmek ekonomik değildir. "
+            "Ambient IoT ortam RF'sinden enerji toplayıp backscatter (geri saçılım) ile "
+            "kısa kimlik bildirir; video taşımaz. "
+            "TRL 4 — TR 38.848; PoC sınıfı, raf ürünü değil."
         ),
     },
 }
@@ -102,90 +79,70 @@ HOME_CARDS_EN = {
         "kicker": "Problem: the tower talks, it cannot see",
         "chips": ["Range from the echo", "Speed from Doppler", "TRL 4, not in the field"],
         "blurb": (
-            "On a fog-bound strait the tower delivers internet but cannot look and ask "
-            "whether a ship is out there; the camera loses sight, and a separate radar truck "
-            "is both expensive and pollutes the spectrum. "
-            "ISAC (Integrated Sensing and Communication) uses the same radio wave both to carry data "
-            "and to measure from the echo: delay gives range, Doppler shift gives speed. "
-            "The bill is keeping that measurement reliable outside the laboratory; "
-            "for Türk Telekom this is a candidacy, not a neighbourhood product. "
-            "It is at TRL 4: the method has been validated in the lab, "
-            "but it has not yet been tried in a live field network."
+            "A base station carries data; it does not measure the scene. Cameras fail in fog "
+            "and darkness; a separate radar wants a second spectrum and a second antenna. "
+            "ISAC (Integrated Sensing and Communication) processes bits and echo on the same RF "
+            "chain: delay is range, Doppler is speed. "
+            "TRL 4 — Rel-19 work item (TR 22.837); laboratory validation, not a Türk Telekom field."
         ),
     },
     "ris": {
         "kicker": "Problem: the wave cannot turn the corner",
-        "chips": ["Phase-shifting mirror", "A scrap of energy", "TRL 5, not commercial"],
+        "chips": ["Phase-shifting surface", "No high-power Tx", "TRL 5, not commercial"],
         "blurb": (
-            "A high-frequency wave tends to travel in a straight line; it does not turn the corner, "
-            "and it vanishes in an elevator shaft. Planting a new tower for every blind spot "
-            "is expensive and impractical. "
-            "RIS (Reconfigurable Intelligent Surface) is an electronic mirror hung on the façade: "
-            "each small element on the surface shifts the wave’s phase, and the beam turns toward you. "
-            "Because it does not generate a signal of its own, energy use is a scrap. "
-            "It is at TRL 5: a prototype has been built and field trials have been run, "
-            "but it is not yet used on a commercial tower."
+            "At high frequency a wave does not turn the corner; a new gNB for every blind spot is "
+            "CAPEX and urban load. A RIS (Reconfigurable Intelligent Surface) is a programmable "
+            "reflector on the façade: element phase θ_n steers the beam to the UE; it has no "
+            "high-power transmitter of its own. TRL 5 — ETSI RIS ISG and Rel-19/20; operator-PoC class."
         ),
     },
     "cell_free": {
         "kicker": "Problem: it weakens at the cell boundary",
-        "chips": ["Handover disappears", "Fronthaul is the bill", "TRL 4 stadium candidate"],
+        "chips": ["Joint precoding", "Fronthaul is the bill", "TRL 4 stadium candidate"],
         "blurb": (
-            "In a classical network every neighbourhood has a cell; as you approach the edge the signal drops, "
-            "and when the serving tower changes (handover) drop risk appears. "
-            "Cell-free Massive MIMO (Multiple-Input Multiple-Output) removes that boundary: "
-            "access points as dense as street lamps carry you jointly, so there is no longer an “edge.” "
-            "The bill is the fronthaul fibre that ties the antennas back to the centre. "
-            "It is at TRL 4, still experimental; stadiums and airports are thought of as the first dense venues."
+            "SINR drops at the cell edge; handover carries drop risk. Cell-free Massive MIMO "
+            "is an architecture in which distributed access points serve jointly, on the same "
+            "frequency, with shared precoding: the edge is removed as a design object. The bill "
+            "is fronthaul fibre. TRL 4 — Rel-19/20 distributed MIMO; literature prototype, not a TT field."
         ),
     },
     "thz": {
         "kicker": "Problem: the data pipe is still narrow",
-        "chips": ["Bandwidth many times over", "Vapour / walls cut range", "TRL 3, not on the street"],
+        "chips": ["Bandwidth grows first", "FSPL + absorption", "TRL 3, not on the street"],
         "blurb": (
-            "5G is fast, but the wireless pipe is still narrow; terabit transfer between servers "
-            "or a real-time hologram will not fit down it. "
-            "THz (terahertz) is the spectrum between millimetre-wave and infrared; "
-            "bandwidth grows many times over. The bill is physics: water vapour absorbs, walls cut, range shrinks. "
-            "It is at TRL 3: laboratory results are strong, but it is not yet used in a street network. "
-            "6G as a whole also does not rest on THz."
+            "Sub-6 GHz and mmWave can stay narrow for intra-DC mesh and tower bridges. "
+            "THz (terahertz) opens the spectrum between millimetre-wave and infrared; in Shannon, "
+            "capacity grows first with B. The bill is FSPL and molecular absorption: range shrinks. "
+            "TRL 3 — TR 38.807; laboratory, not a street network. 6G is not THz alone."
         ),
     },
     "ai_ran": {
         "kicker": "Problem: the network follows a fixed rule",
         "chips": ["Resource from measurement", "Not a chatbot", "TRL 5, not unattended"],
         "blurb": (
-            "A classical network recites a fixed rule from memory: when a packed stadium and a deserted night "
-            "share the same rule, you either waste resource or lose quality. "
-            "AI-RAN (Artificial Intelligence-Native RAN) measures the tower and shifts resource "
-            "on a millisecond-to-second loop. It is not a chatbot; it is the decision mechanism that runs the network. "
-            "It is at TRL 5: trials have been run on an O-RAN RIC (RAN Intelligent Controller), "
-            "but fully unattended operation in the field has not yet been proven."
+            "A fixed RRM rule treats a packed stadium and an empty night with the same tariff. "
+            "AI-RAN (artificial-intelligence-native radio access network) shifts resource on a "
+            "millisecond-to-second loop from measurement. It is not a chatbot. "
+            "TRL 5 — TR 38.843 and O-RAN RIC trial class; no unattended field proof."
         ),
     },
     "ntn": {
         "kicker": "Problem: the tower does not reach everywhere",
-        "chips": ["To the sky, no tower", "Delay + Doppler", "TRL 6 complement"],
+        "chips": ["Direct-to-cell", "Delay + Doppler", "TRL 6 complement"],
         "blurb": (
-            "A terrestrial tower covers the city and the asphalt; mountain, open sea, and rubble stay empty. "
-            "NTN (Non-Terrestrial Network) joins LEO (Low Earth Orbit) satellites and "
-            "HAPS (High-Altitude Platform Station) to the 3GPP network: "
-            "when there is no tower the phone connects straight to the sky. "
-            "The bill is delay from the long path and Doppler shift from satellite motion. "
-            "It is at TRL 6 and the most mature of the seven; "
-            "not a rival to the urban 6G network, but the complement that completes it."
+            "A terrestrial gNB covers the city and the asphalt; mountain, sea, and rubble stay empty. "
+            "An NTN (non-terrestrial network) joins LEO and HAPS nodes to the core with Rel-17+ "
+            "procedures. The bill is delay and Doppler. "
+            "TRL 6 — TR 38.811; public Direct-to-Cell trials. Complements the urban site; does not rival it."
         ),
     },
     "ambient_iot": {
         "kicker": "Problem: you cannot replace the battery on every object",
-        "chips": ["Backscatter identity", "Does not carry video", "TRL 4, not on every shelf"],
+        "chips": ["Backscatter identity", "Does not carry video", "TRL 4, not a shelf product"],
         "blurb": (
-            "Every carton in the warehouse, every soil-moisture sensor in the field, still wants a battery today. "
-            "When the battery dies the device falls silent; swapping millions of batteries does not scale. "
-            "Ambient IoT harvests a scrap of ambient RF (radio frequency) and says “I am here” by backscatter; "
-            "it does not carry video, it only announces identity. "
-            "It is at TRL 4: an active 3GPP work item, "
-            "but not yet a technology stuck to every shelf and used at scale."
+            "Replacing batteries at carton and greenhouse scale is uneconomic. Ambient IoT harvests "
+            "ambient RF and reports a short identity by backscatter; it does not carry video. "
+            "TRL 4 — TR 38.848; PoC class, not a shelf product."
         ),
     },
 }

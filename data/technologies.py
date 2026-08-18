@@ -13,19 +13,25 @@ TECHNOLOGIES = {
         "icon": "📡",
         "trl": 4,
         "trl_desc": "3GPP Rel-19 çalışma kalemi (TR 22.837). Laboratuvar doğrulaması; TT şebekesinde ölçülmedi.",
-        "card_summary": "Kule bakamaz; ISAC aynı dalgayı hem veri hem yankı ölçümü için kullanır.",
-        "beginner_one_liner": "Telefon kulesi artık sadece konuşmaz; sisin arkasındaki arabayı da 'duyarak' görür.",
+        "card_summary": "Kule çevreyi ölçmez; ISAC aynı RF zincirinde bit ve yankıyı işler.",
+        "beginner_one_liner": "Aynı taşıyıcı hem veri taşır hem yankıdan mesafe/hız çıkarır; ayrı radar kutusu değildir.",
         "highlights": ["Yankıdan mesafe", "Doppler'den hız", "TRL 4, saha değil"],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
-            "ISAC, baz istasyonlarının sadece cihazlara veri taşımasını değil, aynı zamanda tıpkı bir <strong style='color: #FFFFFF;'>görünmez radar</strong> gibi çevredeki araçları, insanları, dronları ve engelleri santimetre hassasiyetinde tespit etmesini sağlayan 6G teknolojisidir.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
-            "Sıradan bir baz istasyonu sadece 'konuşan' bir radyo kulesidir. ISAC özellikli 6G baz istasyonu ise hem konuşan hem de gözleriyle çevreyi tarayıp 3 boyutlu haritalandıran <strong style='color: #FFFFFF;'>akıllı bir gözcü kulesine</strong> dönüşür."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "Klasik gNB yalnızca haberleşme kanalını optimize eder. Kamera sis ve karanlıkta düşer; "
+            "ayrı radar ikinci spektrum ve EMI üretir.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Yöntem</strong><br>"
+            "ISAC (Integrated Sensing and Communication), aynı taşıyıcı, anten ve çoğu zaman aynı dalga şeklinde "
+            "hem kullanıcı verisini hem yansıyan enerjiden mesafe, hız ve açı çıkarımını birlikte tasarlar. "
+            "Yanına radar kutusu eklemek değildir.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
+            "Güç ve zaman aynı bütçeden bölünür; eko R⁴ ile zayıflar. Santimetre hassasiyeti literatür hedefidir. "
+            "TRL 4 — Rel-19 (TR 22.837); laboratuvar, TT sahası değil."
         ),
         "beginner_principle": (
-            "1. Kule hem internet sinyali gönderir hem de bu sinyalin arabadan/duvardan geri sekmesini dinler.<br>"
-            "2. Yankı ne kadar geç dönerse nesne o kadar uzaktır; sesi nasıl kayıyorsa o kadar hızlıdır.<br>"
-            "3. Aynı anten hem konuşur hem bakar. Ekstra radar kamyonu gerekmez."
+            "1. gNB, kullanıcı çerçevesini basar; ayrı radar donanımı yoktur.<br>"
+            "2. Gecikme mesafe, Doppler hız, dizi faz farkı AoA verir.<br>"
+            "3. Bit ile yankı zaman/frekans/kodda paylaşılır. Aynı güç bütçesi iki görevi besler."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Ortak Dalga Şekli ve Donanım Paylaşımı (Joint Communication and Sensing - JCR):</strong><br>"
@@ -54,11 +60,11 @@ TECHNOLOGIES = {
         "use_cases": [
             {
                 "title": "Otonom Araçlar & V2X Trafik Güvenliği",
-                "description": "Baz istasyonu hem veri taşır hem radar gibi çalışarak kör nokta ve sis altındaki araçları tespit eder; çarpışma önleme sistemlerine santimetre hassasiyetinde konum verir."
+                "description": "Baz istasyonu hem veri taşır hem yankı işler; sis ve kör noktada araç kinematiği adayıdır. Santimetre iddiası bu platformda ölçülmedi."
             },
             {
                 "title": "Alçak İrtifa İHA/Dron Trafik Yönetimi (UTM)",
-                "description": "6G kuleleri şehir üzerindeki ticari ve kaçak dronları duvar arkasından bile algılayarak hava koridorlarının güvenliğini ve izinsiz uçuşların engellenmesini sağlar."
+                "description": "Alçak irtifa hedefin RCS'i küçüktür; mevcut kule geometrisi koridoru kesiyorsa ayrı UTM radarı yerine adaydır. Duvar arkası 'her zaman' iddiası değildir."
             },
             {
                 "title": "Akıllı Şehir Trafik & Yaya Akışı Haritalama",
@@ -66,7 +72,7 @@ TECHNOLOGIES = {
             },
             {
                 "title": "Endüstriyel Depo Otonom Robot (AGV) Navigasyonu",
-                "description": "Kapalı depolarda AGV'ler GPS veya LiDAR olmadan ISAC sinyalleriyle engelleri ve diğer robotları algılayarak çarpışmasız, milimetre doğrulukta rota izler."
+                "description": "İç mekânda çok yollu eko harita zenginliği olabilir. LiDAR füzyonu olmadan milimetre rota abartıdır."
             },
             {
                 "title": "Sağlık & Yaşlı Bakımı (Kamerasız İzleme)",
@@ -74,10 +80,10 @@ TECHNOLOGIES = {
             },
         ],
         "advantages": [
-            "Ek Radar Donanımı Maliyetini Sıfıra İndirme (Mevcut 6G şebekesi radar görevi görür)",
-            "Yüksek Hassasiyet (Santimetre altı mesafe ve derece altı açı tespiti)",
-            "Gece, Sis ve Kötü Hava Şartlarında Kesintisiz Çalışma (Kameraya kıyasla üstünlük)",
-            "Frekans Spektrumunun Çift Kullanımı (Yüksek Spektral Verimlilik)"
+            "Ayrı radar RF zinciri ve spektrum lisansı ödenmez; mevcut gNB geometrisi kullanılır",
+            "Menzil çözünürlüğü bantla, açı çözünürlüğü dizi açıklığıyla ölçeklenir (literatür hedefi, saha garantisi değil)",
+            "Optik sensörlerin sis-yağmur-gece zayıflığı RF'de daha hafiftir (frekansa bağlı)",
+            "Aynı Hz hem bit hem eko taşır; spektral verim ödünleşme doğru yönetilirse artar"
         ],
         "disadvantages": [
             "İletişim Hızı ile Radar Çözünürlüğü Arasında Güç/Yansıma Çatışması (Trade-off)",
@@ -118,19 +124,23 @@ TECHNOLOGIES = {
         "icon": "🪞",
         "trl": 5,
         "trl_desc": "ETSI RIS ISG ve 3GPP Rel-19/20 çalışma kalemi; kamuya açık operatör PoC sınıfı. TT sahası ölçülmedi.",
-        "card_summary": "Dalga köşeyi dönmez; RIS cepheye asılan elektronik bir aynadır.",
-        "beginner_one_liner": "Sinyal duvara çarpıp kaybolmasın diye binaya elektronik bir ayna asılır; ışığı istediğiniz odaya çevirir.",
-        "highlights": ["Faz kaydıran ayna", "Enerji kırıntısı", "TRL 5, ticari değil"],
+        "card_summary": "Dalga köşeyi dönmez; RIS cephedeki programlanabilir yansıtıcıdır.",
+        "beginner_one_liner": "Eleman fazı θ_n hüzmeyi UE'ye çevirir; yüzey yüksek güçlü verici değildir.",
+        "highlights": ["Faz kaydıran yüzey", "Aktif verici yok", "TRL 5, ticari değil"],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
-            "RIS, binaların dış cephelerine, camlara veya duvarlara kaplanan ve gelen radyo sinyallerini istenen yöne bir <strong style='color: #FFFFFF;'>akıllı ayna</strong> gibi yansıtarak sinyal ulaşmayan kör noktaları kapsayan teknolojidir.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
-            "Karanlık bir odadasınız ve el feneri (baz istasyonu) duvarın arkasını aydınlatamıyor. Duvara yerleştirdiğiniz açıları ayarlanabilir bir ayna (RIS), fener ışığını bükerek görünmeyen odaya <strong style='color: #FFFFFF;'>odaklanmış ışık demeti</strong> olarak yönlendirir."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "mmWave ve üzeri bantlarda LoS yoksa yol kopar veya hız düşer. Her kör noktaya kule CAPEX ve EMC yüküdür.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Yöntem</strong><br>"
+            "RIS (Reconfigurable Intelligent Surface), PIN/varaktör elemanlarla gelen dalganın fazını 0–2π kaydıran "
+            "programlanabilir yansıtıcıdır. İnternet üretmez; gNB yayınını hedeflenen UE'ye yönlendirir.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
+            "Çift yol kaybı vardır; kanal kestirilemezse kazanç düşer. '%90 enerji' literatür/hedeftir. "
+            "TRL 5 — ETSI RIS ISG ve Rel-19/20; PoC sınıfı, TT sahası değil."
         ),
         "beginner_principle": (
-            "1. Bina cephesine ince bir elektronik ayna asılır.<br>"
-            "2. Aynanın her küçük parçası sinyali biraz döndürür; hepsi birlikte ışığı sizin telefona çevirir.<br>"
-            "3. Neredeyse elektrik harcamaz; yeni kule dikmeden kör noktayı kapsar."
+            "1. Cepheye ince yansıtıcı asılır. Bu bir baz istasyonu değildir.<br>"
+            "2. Elemanlar θ_n ile hüzmeyi UE cihazına çevirir.<br>"
+            "3. gNB düşük bit hızlı kontrol hattından hedefi bildirir. Bedeli kanal kestirimi ve çift yol kaybıdır."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Faz Kontrolü ve Metamalzeme Yansıma Prensibi:</strong><br>"
@@ -179,10 +189,10 @@ TECHNOLOGIES = {
             },
         ],
         "advantages": [
-            "Çok Düşük Maliyet ve Enerji Tüketimi (Aktif Baz İstasyonuna Göre %90+ Tasarruf)",
-            "Kolay Montaj (Duvarlara, camlara, binalara yapıştırılabilir esnek yapı)",
-            "Çevre Dostu Yeşil Teknoloji (Aktif Radyasyon Yaymaz, Gelen Dalgayı Yönlendirir)",
-            "Frekans Bandından Bağımsız Tasarlanabilme (Sub-6GHz'den THz'e)"
+            "Aktif röleden düşük enerji adayıdır (yüzey yüksek güçlü RF zinciri taşımaz)",
+            "Cephe/cam/tünel geometrisine asılabilir; yeni kule dikmeden kapsama deliği adayı",
+            "Aktif radyasyon üretmez; gelen dalgayı yönlendirir (Maxwell iptal olmaz)",
+            "Alt-6 GHz'den THz'e kadar yüzey tasarlanabilir; kanal kestirimi ayrı bedeldir"
         ],
         "disadvantages": [
             "Kanal Kestirimi (Channel Estimation) Zorluğu (Pasif elemanlar kanal ölçemez)",
@@ -223,25 +233,29 @@ TECHNOLOGIES = {
         "icon": "📶",
         "trl": 4,
         "trl_desc": "3GPP Rel-19/20 dağıtık MIMO çalışma kalemi; literatür prototip/simülasyon. TT sahası ölçülmedi.",
-        "card_summary": "Hücre kenarında kopma; hücresiz MIMO bu sınırı kaldırır.",
-        "beginner_one_liner": "Şehirde kule değiştirirken sinyal düşmez; yanınızdaki küçük antenler sizi el ele tutar.",
-        "highlights": ["Handover kalkar", "Fronthaul bedeli", "TRL 4 stadyum adayı"],
+        "card_summary": "Hücre kenarında SINR düşer; hücresiz MIMO kenarı tasarım nesnesi olmaktan çıkarır.",
+        "beginner_one_liner": "Yayılmış AP'ler aynı frekansta ortak ön kodlama ile hizmet verir; bedel fronthaul'dur.",
+        "highlights": ["Ortak ön kodlama", "Fronthaul bedeli", "TRL 4 stadyum adayı"],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
-            "Hücresiz Masif MIMO, bilinen klasik 'hücre' (cell) sınırlarını ortadan kaldırarak yüzlerce küçük erişim noktasının (AP) tek bir devasa sistem gibi çalışıp her kullanıcıyı kesintisiz kuşatmasıdır.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
-            "Klasik hücresel sistemde kullanıcı bir baz istasyonundan diğerine geçerken sinyal düşer ve kopma riski oluşur. Hücresiz sistemde ise nerede olursanız olun etrafınızdaki onlarca mini anten sizi ortak bir <strong style='color: #FFFFFF;'>sinyal bulutu</strong> gibi takip eder."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "Hücre kenarında SINR düşer; handover kopma riski taşır. Tek makro + çok kullanıcı tribünün bir yanını tok bırakır.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Yöntem</strong><br>"
+            "Hücresiz Massive MIMO, coğrafyaya yayılmış AP'lerin aynı frekansta, merkezi veya yarı-dağıtık işlemle "
+            "birlikte hizmet verdiği mimaridir. Hücre sınırı tasarım olarak kalkar.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
+            "Fronthaul fiber ve senkron yoksa ortak hüzme yazılamaz. 5×–10× spektral kazanç literatür aralığıdır. "
+            "TRL 4 — Rel-19/20 dağıtık MIMO; TT sahası değil."
         ),
         "beginner_principle": (
-            "1. Sokak lambası gibi sık yerleştirilmiş küçük antenler vardır, tek dev kule yoktur.<br>"
-            "2. Telefonunuz bunlardan birkaçına aynı anda bağlanır.<br>"
-            "3. Yürürken antenler sizi sessizce devreder; 'hücre kenarı' hissi kalmaz."
+            "1. AP'ler sık yerleştirilir; tek makro kuleye bel bağlanmaz.<br>"
+            "2. UE aynı anda birkaç AP'ye bağlanır.<br>"
+            "3. Fronthaul üzerindeki işlemci MMSE tipi ön kodlama uygular. Fatura fronthaul ve hesaptır."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Dağıtık Koordinasyon ve Hücresiz Mimari:</strong><br>"
             "Geleneksel ağlarda kullanıcılar belirli bir hücresel sektöre (Cell) bağlıdır ve hücre kenarlarında (Cell Edge) parazit (Interference) artar.<br><br>"
             "1. <strong style='color: #FFFFFF;'>Dağıtık Erişim Noktaları (Distributed APs):</strong> Coğrafi olarak geniş alana dağıtılmış çok sayıda basit erişim noktası (AP), yüksek hızlı ön-bağlantı (Fronthaul) ile Merkezi İşleme Birimine (CPU) bağlanır.<br>"
-            "2. <strong style='color: #FFFFFF;'>Ortak İşbirlikçi Ön Kodlama (Coordinated Precoding):</strong> Tüm AP'ler kullanıcıya aynı anda ve aynı frekansta hizmet verir. Hücre kenarı kavramı tamamen yok olur.<br>"
+            "2. <strong style='color: #FFFFFF;'>Ortak İşbirlikçi Ön Kodlama (Coordinated Precoding):</strong> Tüm AP'ler kullanıcıya aynı anda ve aynı frekansta hizmet verir. Hücre kenarı tasarım nesnesi olarak kalkar; senkron ve fronthaul yoksa kazanç tersine döner.<br>"
             "3. <strong style='color: #FFFFFF;'>Parazit Bastırma (Interference Cancellation):</strong> Komşu hücre paraziti, işbirlikçi sinyal işleme sayesinde faydalı sinyal gücüne dönüştürülür."
         ),
         "system_architecture": (
@@ -252,8 +266,8 @@ TECHNOLOGIES = {
             "• Tüm AP'leri Merkezi İşleme Birimine (CPU) bağlayan eCPRI ve RoF (Radio over Fiber) tabanlı yüksek bant genişlikli fiber ve optik altyapı.<br>"
             "• Zaman senkronizasyonu (PTP IEEE 1588) ile nanosaniye hassasiyetinde anten eşzamanlaması sağlanır.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.02rem;'>3. Merkezi İşleme Birimi (Central Processing Unit - CPU & Edge Cloud):</strong><br>"
-            "• Kenar bulut üzerinde çalışan MMSE (Minimum Mean Square Error) ve Zero-Forcing ön kodlama matrislerini hesaplayan sunucu havuzu.<br>"
-            "• Tüm kullanıcılara eşit ve adil (Quality of Experience) Terabit seviyesinde bağlantı kalitesi sunulur."
+            "• Kenar bulut üzerinde MMSE ve Zero-Forcing ön kodlama matrislerini hesaplayan sunucu havuzu.<br>"
+            "• Adil QoE hedefi literatürdür; terabit 'her kullanıcı' bu platformda ölçülmedi."
         ),
         "mathematical_foundation": (
             "Kullanıcı k için Sinyal-Gürültü ve Parazit Oranı (SINR):\n"
@@ -263,7 +277,7 @@ TECHNOLOGIES = {
         "use_cases": [
             {
                 "title": "Stadyum & Konser Alanları",
-                "description": "On binlerce kişi aynı anda bağlandığında hücre kenarı paraziti ortadan kalkar; tüm tribünlerde eşit gigabit hız deneyimi sunulur."
+                "description": "Yoğun tribünde yük tek makroya yığılmaz; ortak ön kodlama kenar parazitini işler. 'Eşit gigabit' saha garantisi değildir."
             },
             {
                 "title": "Havaalanı & Tren Garı İç Mekan",
@@ -279,10 +293,10 @@ TECHNOLOGIES = {
             },
         ],
         "advantages": [
-            "Hücre Kenarı Sorununun Tamamen Çözülmesi (Uniform User Experience)",
-            "Çok Yüksek Spektral Verimlilik (Klasik MIMO'ya kıyasla 5x-10x artış)",
-            "Makro Kule İhtiyacının Azalması (Daha estetik ve dağıtık mimari)",
-            "Makro Kopmaların (Handover Failures) Sıfıra İnmesi"
+            "Hücre kenarı SINR çöküşü tasarım nesnesi olarak kalkar (uniform deneyim adayı)",
+            "Spektral verim artışı literatürde raporlanır (5×–10× aralık; bu platformda ölçülmedi)",
+            "Makro kule estetiği istenmeyen iç mekânda dağıtık AP adayı",
+            "Klasik handover başarısızlığı ortak hizmetle azalır (fiber/senkron şart)"
         ],
         "disadvantages": [
             "Devasa Fronthaul Yükü (Tüm AP'lerin merkezi bir birime yüksek hızda bağlanma gereksinimi)",
@@ -315,19 +329,23 @@ TECHNOLOGIES = {
         "icon": "⚡",
         "trl": 3,
         "trl_desc": "3GPP TR 38.807 (NR beyond 52.6 GHz) + laboratuvar spektrum çalışmaları. Sokak şebekesi değil.",
-        "card_summary": "Kablosuz boru hâlâ dar; THz bant açar, fizik menzili keser.",
-        "beginner_one_liner": "Radyo ile ışık arasındaki çok yüksek tonda konuşulur; film indirmek saniyeler değil, kırpışma kadar sürer.",
-        "highlights": ["Bant katbekat artar", "Su buharı / duvar", "TRL 3, sokak değil"],
+        "card_summary": "Kablosuz boru dar kalabilir; THz bant açar, FSPL ve emilim menzili keser.",
+        "beginner_one_liner": "Shannon'da kapasite önce B ile büyür; THz kısa hop ve görüş hattı ister.",
+        "highlights": ["Bant büyür", "FSPL + emilim", "TRL 3, sokak değil"],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
-            "THz İletişimi, radyo dalgaları ile kızılötesi ışık arasındaki ultra yüksek frekans bandını (100 GHz - 10 THz) kullanarak <strong style='color: #FFFFFF;'>saniyede 1 Terabit (1000 Gbps)</strong> hızında ışık hızında veri aktarımı sağlayan teknolojidir.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
-            "4G bir köy yolu, 5G geniş bir otoban ise, Terahertz iletişimi adeta bir <strong style='color: #FFFFFF;'>ışınlanma tüpüdür</strong>. Çok büyük veri hacimlerini (örneğin tüm bir 8K filmi saniyenin yüzde birinde) iletebilir."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "Sub-6 GHz ve mmWave, veri merkezi içi mesh ve kule köprüsü için dar kalabilir. Fiber her geometriye gitmez.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Yöntem</strong><br>"
+            "THz iletişimi, kabaca 0,1–10 THz diliminde onlarca GHz bant açma adayıdır. "
+            "Shannon: C = B log₂(1+SNR); B birinci terimdir.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
+            "FSPL ve su buharı emilimi menzili keser. '1 Tbps her aboneye' pazarlamadır. "
+            "TRL 3 — TR 38.807; laboratuvar, sokak şebekesi değil. 6G yalnızca THz değildir."
         ),
         "beginner_principle": (
-            "1. Daha tiz bir radyo sesi kullanılır; boru daha geniştir, daha çok veri sığar.<br>"
-            "2. Bu ses duvarı ve yağmuru zor geçer; kısa mesafe ve görüş hattı ister.<br>"
-            "3. Bu yüzden TRL düşüktür: laboratuvar güçlü, saha henüz sınırlı."
+            "1. mmWave ile kızılötesi arasındaki spektrum açılır; B büyür.<br>"
+            "2. Su buharı, duvar ve el FSPL'ye ek kayıp basar.<br>"
+            "3. Dar hüzme kaybı telafi eder; menzil kısa kalır. Doğru geometri raf, salon, kule köprüsüdür."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Sub-THz ve THz Spektrum Fiziği:</strong><br>"
@@ -360,7 +378,7 @@ TECHNOLOGIES = {
             },
             {
                 "title": "Holografik & 3D Gerçek Zamanlı VR/AR",
-                "description": "Saniyede yüzlerce gigabit gerektiren hologram ve sürükleyici VR içerikleri ultra geniş bant THz hüzmeleriyle gecikmesiz iletilir."
+                "description": "Saniyede yüzlerce gigabit holografi/VR iddiası literatür hedefidir; bu platformda ölçülmedi. Kısa LoS hop şarttır."
             },
             {
                 "title": "Kısa Menzil Kablosuz Backhaul / Fronthaul",
@@ -368,7 +386,7 @@ TECHNOLOGIES = {
             },
             {
                 "title": "Tıbbi Nanosensör Ağları",
-                "description": "Vücut içi implant ve nanosensörler THz bandının miniaturizasyon avantajıyla ultra düşük gecikmeyle veri alışverişi yapar."
+                "description": "Vücut içi nanosensör araştırma ufkudur; Rel-19 ticari özellik değildir."
             },
             {
                 "title": "THz Spektroskopi & Malzeme Algılama",
@@ -376,10 +394,10 @@ TECHNOLOGIES = {
             },
         ],
         "advantages": [
-            "Terabit/sn Seviyesinde Rekor Veri Transfer Hızı (100 Gbps - 1 Tbps)",
-            "Ultra Düşük Gecikme Süresi (Sub-millisecond / Microsecond seviyesi)",
-            "Yüksek Güvenlik (Çok dar hüzme nedeniyle dinlenmesi/hacklenmesi imkansız)",
-            "Devasa Spektrum Kaynağı (Frekans sıkışıklığı yaşanmaz)"
+            "Yüksek B, Shannon'da kapasiteyi önce bantla büyütür (hedef mertebe literatürdür)",
+            "Kısa hopta düşük gecikme adayı; URLLC vaadi sokak makrosu için geçerli değildir",
+            "Dar hüzme dinlemeyi zorlaştırır; 'imkânsız' iddiası güvenlik garantisi değildir",
+            "Spektrum sıkışıklığı Sub-6'ya göre rahattır; cihaz ve emilim bedeli ayrıdır"
         ],
         "disadvantages": [
             "Kısa Menzil (Yüksek Atmosferik & Moleküler Emilim Kaybı nedeniyle genellikle < 100-500 metre)",
@@ -416,23 +434,27 @@ TECHNOLOGIES = {
         "icon": "🧠",
         "trl": 5,
         "trl_desc": "3GPP TR 38.843 (AI/ML for NR) ve O-RAN RIC deneme sınıfı. Insansız saha kanıtı yok; TT ölçmedi.",
-        "card_summary": "Şebeke ezber okur; AI-RAN ölçüme göre milisaniyede kaynak dağıtır.",
-        "beginner_one_liner": "Baz istasyonu ezber kural okumak yerine canlı trafiği izleyip milisaniyede karar verir.",
+        "card_summary": "Sabit RRM kuralı yetersiz kalır; AI-RAN ölçüm döngüsünde kaynak kaydırır.",
+        "beginner_one_liner": "O-RAN RIC üzerindeki xApp/rApp ölçüme göre politika üretir; sohbet botu değildir.",
         "highlights": ["Ölçümle kaynak", "Sohbet botu değil", "TRL 5, insansız değil"],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
-            "AI-Native RAN, 6G telsiz erişim ağının (baz istasyonları ve radyo donanımları) sonradan eklenen bir yazılımla değil, en alt temel seviyeden itibaren <strong style='color: #FFFFFF;'>yapay zeka tarafından yönetilecek şekilde</strong> tasarlanmasıdır.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
-            "Klasik şebeke, sadece insan mühendislerin yazdığı katı kuralları uygulayan bir robot gibidir. AI-Native RAN ise trafiği ve kullanıcı davranışlarını izleyip kendi parametrelerini milisaniyeler içinde optimize eden <strong style='color: #FFFFFF;'>öğrenen otonom bir pilot</strong> gibidir."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "Sabit RRM tarife dolu stadyum ile boş geceyi aynı kurala bağlar. İnsan her saniye politika yazamaz.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Yöntem</strong><br>"
+            "AI-native RAN, PHY/MAC ve kaynak yönetiminin bir kısmını öğrenilmiş modele alır. "
+            "Bugün pratik giriş O-RAN RIC üzerindeki xApp/rApp'tir; hava arayüzünün tamamını sinir ağı yapmak araştırma ucudur.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
+            "'%50–70 enerji' ve 'sıfır insan' hedef/pazarlamadır. TRL 5 — TR 38.843 ve O-RAN RIC deneme sınıfı; insansız saha kanıtı yok."
         ),
         "beginner_principle": (
-            "1. Kule, kimlerin nerede sıkıştığını sürekli ölçer.<br>"
-            "2. Yazılım 'bu mahallede kapasiteyi artır' diye kendi kararını verir.<br>"
-            "3. İnsan her saniye kural yazmaz; ağ öğrenerek yeşil ve hızlı kalır."
+            "1. Yük, kanal, enerji, kopma ölçülür.<br>"
+            "2. RIC üzerinde xApp/rApp politika üretir.<br>"
+            "3. Sonuç izlenir; geri alma yolu tasarımın parçasıdır. Denetim kalkmaz."
         ),
         "working_principle": (
-            "<strong style='color: #00E5FF;'>Uçtan Uca Derin Öğrenmeli Radyo Mimarisi:</strong><br>"
-            "AI-Native RAN, geleneksel 3GPP protokol katmanlarını (PHY/MAC/RLC/PDCP) derin yapay zeka modelleri (Deep Learning, Reinforcement Learning, Transformer) ile ikame eder.<br><br>"
+            "<strong style='color: #00E5FF;'>Öğrenen RRM ve (araştırma ucunda) nöral PHY:</strong><br>"
+            "AI-native RAN, pratikte PHY/MAC'in tamamını silmez. Bugünkü giriş O-RAN RIC üzerindeki xApp/rApp ile "
+            "kaynak yönetimidir. Hava arayüzünü otokodlayıcıyla ikame etmek araştırma ucudur (TR 38.843).<br><br>"
             "1. <strong style='color: #FFFFFF;'>Derin Öğrenmeli Fiziksel Katman (Deep PHY Autoencoder):</strong> Modülasyon ve kodlama algoritmaları sabit matematiksel formüller yerine Derin Otokodlayıcılar (Autoencoders) ile uçtan uca öğrenilir.<br>"
             "2. <strong style='color: #FFFFFF;'>O-RAN RIC (RAN Intelligent Controller):</strong> Gerçek zamanlı (Near-RT ve Non-RT) RIC birimleri, xApps ve rApps yapay zeka uygulamaları ile radyo kaynaklarını (RRM) dinamik yönetir.<br>"
             "3. <strong style='color: #FFFFFF;'>Akıllı Derin Uyku (Deep Sleep Mode):</strong> Trafik olmadığı anlarda baz istasyonu parçalarını milisaniyelik hassasiyetle uyutarak devasa enerji tasarrufu sağlar."
@@ -473,10 +495,10 @@ TECHNOLOGIES = {
             },
         ],
         "advantages": [
-            "Maksimum Enerji Verimliliği (%50-%70 Enerji Tasarrufu)",
-            "Sıfır İnsan Müdahalesi ile Otonom Ağ Yönetimi (Zero-Touch Network - ZTN)",
-            "Kanal Şartlarına Göre İdeal Modülasyonu Anlık Öğrenme",
-            "O-RAN Entegrasyonu ile Operatör Bağımsız Altyapı Esnekliği"
+            "Enerji hedefi ölçüm döngüsüyle izlenir; %50–70 tasarruf hedef/pazarlamadır",
+            "Zero-touch iddiası araştırma ucudur; canlı şebekede geri alma ve denetim kalır",
+            "Kanal değişince politika güncellenir; kara kutu düzenleyiciye açıklanmalıdır",
+            "O-RAN arayüzü çok tedarikçili denemeyi mümkün kılar; O-RAN ≠ AI değildir"
         ],
         "disadvantages": [
             "Yapay Zeka Modellerinin Kara Kutu (Black Box) Olması ve Açıklanabilirlik Zorluğu",
@@ -509,19 +531,23 @@ TECHNOLOGIES = {
         "icon": "🛰️",
         "trl": 6,
         "trl_desc": "3GPP Rel-17 NTN şartnamesi (TR 38.811) ve Rel-17/18 iş kalemi; kamuya açık direct-to-cell denemeleri. TT sahası değil.",
-        "card_summary": "Kule her yere yetişmez; NTN 3GPP şebekesini göğe açar.",
-        "beginner_one_liner": "Şehirdeki kule yetmezse gökteki uydu devreye girer; telefon aynı kalır.",
-        "highlights": ["Kule yokken göğe", "Gecikme + Doppler", "TRL 6 tamamlayıcı"],
+        "card_summary": "Kule her yere yetişmez; NTN Rel-17+ ile LEO/HAPS hücresini çekirdeğe bağlar.",
+        "beginner_one_liner": "Direct-to-cell: standart UE uydu hücresini görür; bedel gecikme ve Doppler'dir.",
+        "highlights": ["Direct-to-cell", "Gecikme + Doppler", "TRL 6 tamamlayıcı"],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
-            "NTN (Karasal Olmayan Ağlar), alçak irtifa uyduları (LEO), zeplinler ve insansız hava araçlarını (HAPS) karasal baz istasyonlarıyla tek bir ağda birleştirerek <strong style='color: #FFFFFF;'>dünyanın her noktasında kesintisiz 6G kapsama</strong> sağlayan teknolojidir.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
-            "Karasal şebeke sadece şehirlerde ve yollarda olan sokak lambaları gibidir. NTN ise tüm dünyayı yukarıdan aydınlatan <strong style='color: #FFFFFF;'>uzaydaki devasa bir projektördür</strong>; okyanusun ortasında da olsanız dağın başında da olsanız sinyal kopmaz."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "Karasal gNB şehir ve asfaltı kapsar; dağ, deniz ve enkaz boş kalır. Kırsal CAPEX karasal modeli kırar.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Yöntem</strong><br>"
+            "NTN, LEO/GEO/HAPS düğümlerini karasal çekirdeğe 3GPP Rel-17+ ile bağlar. "
+            "Direct-to-cell: özel çanak yerine standart UE'nin uydu hücresini görmesi.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
+            "'%100 küresel sıfır boşluk' pazarlamadır. Şehir içi kapasite ve milisaniye altı URLLC için birincil yol değildir. "
+            "TRL 6 — TR 38.811; kamuya açık denemeler. Rakip değil, tamamlayıcı."
         ),
         "beginner_principle": (
-            "1. Yer kuleleri şehir ve yolu kapsar.<br>"
-            "2. Boş kalan yerde alçak yörünge uydusu veya yüksek irtifa platformu konuşur.<br>"
-            "3. Telefonunuz özel bir uydu telefonu olmak zorunda değildir; şebeke gökle yeri birleştirir."
+            "1. Şehir kulede kalır. Boş coğrafyada LEO / HAPS.<br>"
+            "2. Hedef 3GPP UE'nin uydu hücresini görmesidir.<br>"
+            "3. PHY Doppler ve gecikmeyi düzeltir; yer kulesi kadar düşük gecikme vaadi değildir."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Uzay-Hava-Kara Entegre Mimari:</strong><br>"
@@ -566,10 +592,10 @@ TECHNOLOGIES = {
             },
         ],
         "advantages": [
-            "Coğrafi Kısıtlama Olmaksızın %100 Küresel Kapsama (Zero Coverage Gap)",
-            "Afet Anlarında Karasal Altyapıdan Tamamen Bağımsız Çalışabilme",
-            "Kırsal Bölgelere Fiber Çekme Maliyetini Ortadan Kaldırma",
-            "Standart Akıllı Telefonlar İle Doğrudan Bağlantı İmkanı"
+            "Kule ekonomisinin işlemediği coğrafyada kapsama adayı (küresel '%100' pazarlamadır)",
+            "Karasal site düştüğünde yedek yol senaryosu; saha garantisi değil",
+            "Kırsal fiber çekme CAPEX'ini her mezrada ödememe adayı",
+            "Rel-17+ direct-to-cell: standart UE hedefi; her eski cihaz garanti değildir"
         ],
         "disadvantages": [
             "Karasal Ağlara Göre Daha Yüksek Gecikme Süresi (LEO için 10-30 ms)",
@@ -610,19 +636,23 @@ TECHNOLOGIES = {
         "icon": "🔋",
         "trl": 4,
         "trl_desc": "3GPP Rel-19 çalışma kalemi (TR 38.848). PoC sınıfı; raf ürünü değil. TT sahası ölçülmedi.",
-        "card_summary": "Her nesneye pil takılmaz; Ambient IoT RF kırıntısıyla «buradayım» der.",
-        "beginner_one_liner": "Koli bandı kadar ucuz bir etiket, Wi-Fi veya 6G dalgasından elektrik alıp 'buradayım' der.",
-        "highlights": ["Backscatter kimlik", "Video taşımaz", "TRL 4, rafa değil"],
+        "card_summary": "Pil lojistiği ölçeklenmez; Ambient IoT ortam RF'sinden backscatter kimlik bildirir.",
+        "beginner_one_liner": "Rectenna hasadı × backscatter = kısa kimlik; video taşımaz, telefonun yerini almaz.",
+        "highlights": ["Backscatter kimlik", "Video taşımaz", "TRL 4, raf ürünü değil"],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>1 Cümlede Nedir?</strong><br>"
-            "Ambient IoT, içerisinde <strong style='color: #FFFFFF;'>hiçbir pil veya batarya bulunmayan</strong>, ihtiyaç duyduğu elektriği havadaki radyo dalgalarından (RF Energy Harvesting) elde ederek çalışan ultra ucuz akıllı etiketler teknolojisidir.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Basit Analoji:</strong><br>"
-            "Eski radyo etiketleri pasiftir. Ambient IoT etiketleri ise küçük bir güneş paneli gibi havadaki Wi-Fi ve 6G sinyallerini emerek <strong style='color: #FFFFFF;'>kendi enerjisini üreten pilsiz minik akıllı sensörler</strong> gibidir."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "Koli, sera ve sayaç ölçeğinde pil değiştirmek ekonomik değildir. NB-IoT ve RedCap hâlâ bir enerji kaynağı ister.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Yöntem</strong><br>"
+            "Ambient IoT, pili olmayan veya çok küçük olan etiketlerin ortam RF'sinden enerji toplayıp "
+            "çoğunlukla backscatter ile kısa durum mesajı verdiği IoT sınıfıdır.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
+            "Menzil kısa, bit hızı düşüktür. '1 sent, trilyon nesne' hedef/pazarlamadır. "
+            "TRL 4 — TR 38.848; PoC sınıfı, raf ürünü değil."
         ),
         "beginner_principle": (
-            "1. Etiketin pili yoktur; havadaki radyo dalgasından kırıntı enerji toplar.<br>"
-            "2. Bu enerjiyle kısa bir 'buradayım' mesajı yollar.<br>"
-            "3. Depo, tarım ve lojistikte milyarlarca nesne pilsiz izlenebilir."
+            "1. Rectenna RF kırıntısını DC'ye çevirir.<br>"
+            "2. Kendi PA'sı yoktur; gelen taşıyıcı modüle edilir. Menzil kısadır.<br>"
+            "3. Yakın okuyucu zayıf yankıyı ayırır. Video taşımaz."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Enerji Hasadı ve Geri Saçılım İletişimi:</strong><br>"
@@ -667,10 +697,10 @@ TECHNOLOGIES = {
             },
         ],
         "advantages": [
-            "Sıfır Batarya Maliyeti ve Batarya Değiştirme İşçiliğinin Yok Olması",
-            "Çevre Dostu Sıfır Atık (Batarya kimyasal atık kirliliği yaşanmaz)",
-            "1 Sentin Altında Ultra Düşük Üretim Maliyeti",
-            "Sınırsız Kullanım Ömrü (Batarya ömrüyle sınırlı değildir)"
+            "Pil değiştirme lojistiği kalkar (enerji ortam RF'sine bağlıdır, garanti değildir)",
+            "Kimyasal pil atığı üretmez; RF zayıf köşede etiket susar",
+            "Hedef maliyet düşük etikettir; '1 sent' pazarlama/hedeftir",
+            "Pil ömrü sınırı yoktur; okunabilir bit Friis hasadına bağlıdır"
         ],
         "disadvantages": [
             "Ultra Düşük Güç Nedeniyle Kısa İletişim Menzili (< 10-50 metre)",

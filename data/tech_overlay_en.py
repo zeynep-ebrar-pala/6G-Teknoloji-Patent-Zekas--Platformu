@@ -14,12 +14,10 @@ TECH_OVERLAY_EN: dict = {
             "not measured on a Türk Telekom network."
         ),
         "card_summary": (
-            "The tower talks; it does not look. ISAC uses the same wave "
-            "for talk and for echo."
+            "The site does not measure the scene; ISAC processes bits and echo on the same RF chain."
         ),
         "beginner_one_liner": (
-            "The cell site no longer only talks; it also 'hears' the car "
-            "behind the fog."
+            "The same carrier carries data and extracts range/speed from the echo; it is not a radar box."
         ),
         "highlights": [
             "Range from the echo",
@@ -27,19 +25,21 @@ TECH_OVERLAY_EN: dict = {
             "TRL 4, not in the field",
         ],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
-            "ISAC is the 6G technology that lets base stations carry data to devices "
-            "and, like an <strong style='color: #FFFFFF;'>invisible radar</strong>, detect vehicles, people, "
-            "drones, and obstacles in the surroundings at centimetre-level accuracy.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Plain analogy:</strong><br>"
-            "An ordinary base station is a radio tower that only 'talks'. An ISAC-capable 6G site "
-            "becomes a <strong style='color: #FFFFFF;'>smart watchtower</strong>: it talks and scans the scene "
-            "into a three-dimensional map."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "A classical gNB optimises only the communications channel. Cameras fail in fog and darkness; "
+            "a separate radar wants a second spectrum and produces EMI.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Method</strong><br>"
+            "ISAC (Integrated Sensing and Communication) jointly designs user-plane delivery and extraction of "
+            "range, speed, and angle from reflected energy — on the same carrier, antennas, and often the same waveform. "
+            "It is not a radar box bolted beside the site.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Limit</strong><br>"
+            "Power and time are split from the same budget; the echo decays as R⁴. Centimetre accuracy is a literature target. "
+            "TRL 4 — Rel-19 (TR 22.837); laboratory, not a Türk Telekom field."
         ),
         "beginner_principle": (
-            "1. The site both transmits an internet signal and listens for that signal bouncing back from cars or walls.<br>"
-            "2. The later the echo returns, the farther the object; how the tone shifts tells you how fast it is moving.<br>"
-            "3. The same antenna talks and looks. No extra radar truck is required."
+            "1. The gNB radiates the user frame; there is no separate radar hardware.<br>"
+            "2. Delay is range, Doppler is speed, array phase difference is AoA.<br>"
+            "3. Bits and echo share time/frequency/code. The same power budget feeds both tasks."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Shared waveform and hardware (Joint Communication and Sensing — JCR):</strong><br>"
@@ -104,10 +104,10 @@ TECH_OVERLAY_EN: dict = {
             },
         ],
         "advantages": [
-            "Zero extra radar hardware cost (the existing 6G network performs the radar role)",
-            "High accuracy (sub-centimetre range and sub-degree angle estimation)",
-            "Uninterrupted operation at night, in fog, and in bad weather (advantage over cameras)",
-            "Dual use of the frequency spectrum (high spectral efficiency)",
+            "No second radar RF chain or spectrum licence; existing gNB geometry is used",
+            "Range resolution scales with bandwidth, angle with array aperture (literature target, not a field guarantee)",
+            "Optical sensors weaken in fog, rain, and night; RF is milder (frequency-dependent)",
+            "The same hertz carries bits and echo; spectral efficiency rises if the trade-off is managed",
         ],
         "disadvantages": [
             "Power/reflection trade-off between communication rate and radar resolution",
@@ -134,31 +134,30 @@ TECH_OVERLAY_EN: dict = {
             "Not a Türk Telekom field measurement."
         ),
         "card_summary": (
-            "The signal cannot turn the corner; RIS is an electronic mirror on the façade."
+            "The wave does not turn the corner; RIS is a programmable reflector on the façade."
         ),
         "beginner_one_liner": (
-            "An electronic mirror is hung on the building so the signal is not lost on the wall; "
-            "it turns the beam into the room you choose."
+            "Element phase θ_n steers the beam to the UE; the surface is not a high-power transmitter."
         ),
         "highlights": [
-            "Phase-shifting mirror",
-            "A scrap of energy",
+            "Phase-shifting surface",
+            "No high-power Tx",
             "TRL 5, not commercial",
         ],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
-            "RIS is a technology applied to façades, windows, or walls that reflects incoming radio signals "
-            "toward a chosen direction like a <strong style='color: #FFFFFF;'>smart mirror</strong>, covering "
-            "blind spots the signal never reached.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Plain analogy:</strong><br>"
-            "You are in a dark room and the flashlight (the base station) cannot light the far side of the wall. "
-            "An adjustable mirror on that wall (RIS) bends the beam and sends a "
-            "<strong style='color: #FFFFFF;'>focused light pencil</strong> into the unseen room."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "At mmWave and above, the path drops or dies without LoS. A site per blind spot is CAPEX and EMC load.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Method</strong><br>"
+            "A RIS (Reconfigurable Intelligent Surface) is a programmable reflector whose PIN/varactor elements "
+            "shift incident phase over 0–2π. It does not generate internet; it steers the gNB transmission toward the intended UE.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Limit</strong><br>"
+            "Double-path loss applies; gain collapses if the channel cannot be estimated. “90% energy saving” is literature/target. "
+            "TRL 5 — ETSI RIS ISG and Rel-19/20; PoC class, not a Türk Telekom field."
         ),
         "beginner_principle": (
-            "1. A thin electronic mirror is mounted on the building façade.<br>"
-            "2. Each tiny patch of the mirror rotates the signal a little; together they steer the beam onto your phone.<br>"
-            "3. It draws almost no electricity; it covers a blind spot without raising a new tower."
+            "1. A thin reflector is mounted on the façade. This is not a base station.<br>"
+            "2. Elements steer the beam to the UE via θ_n.<br>"
+            "3. The gNB names the target on a low-rate control link. The bill is channel estimation and double-path loss."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Phase control and metamaterial reflection:</strong><br>"
@@ -220,10 +219,10 @@ TECH_OVERLAY_EN: dict = {
             },
         ],
         "advantages": [
-            "Very low cost and energy use (90%+ saving versus an active base station)",
-            "Easy installation (flexible form factor that can be applied to walls, glass, and buildings)",
-            "Environmentally friendly green technology (does not radiate actively; it steers the incident wave)",
-            "Designable across frequency bands (from sub-6 GHz to THz)",
+            "Lower-energy candidate than an active relay (the surface carries no high-power RF chain)",
+            "Can be mounted on façade, glass, or tunnel geometry; a coverage-hole candidate without a new tower",
+            "Does not radiate actively; it steers the incident wave (Maxwell is not cancelled)",
+            "Surfaces can be designed from sub-6 GHz to THz; channel estimation is a separate bill",
         ],
         "disadvantages": [
             "Channel-estimation difficulty (passive elements cannot measure the channel)",
@@ -250,30 +249,30 @@ TECH_OVERLAY_EN: dict = {
             "Not a Türk Telekom field measurement."
         ),
         "card_summary": (
-            "A drop at the cell edge; cell-free MIMO erases that boundary."
+            "SINR drops at the cell edge; cell-free MIMO removes the edge as a design object."
         ),
         "beginner_one_liner": (
-            "The signal does not drop when you change towers in the city; the small antennas beside you "
-            "hold you hand in hand."
+            "Distributed APs serve jointly on the same frequency with shared precoding; the bill is fronthaul."
         ),
         "highlights": [
-            "Handover disappears",
+            "Joint precoding",
             "Fronthaul is the bill",
             "TRL 4 stadium candidate",
         ],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
-            "Cell-Free Massive MIMO removes the classical 'cell' boundaries so that hundreds of small access points (APs) "
-            "act as one vast system and surround every user without a break.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Plain analogy:</strong><br>"
-            "In a classical cellular system the signal drops — and a drop-out is likely — when a user moves from one "
-            "base station to the next. In a cell-free system, wherever you are, dozens of mini-antennas around you "
-            "follow you as a shared <strong style='color: #FFFFFF;'>signal cloud</strong>."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "SINR drops at the cell edge; handover carries drop risk. One macro plus many users leaves one side of the stand starved.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Method</strong><br>"
+            "Cell-free Massive MIMO is an architecture in which geographically spread APs serve jointly, on the same frequency, "
+            "with central or semi-distributed processing. The cell boundary is designed out.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Limit</strong><br>"
+            "Without fronthaul fibre and synchronisation, joint precoding cannot be written. 5×–10× spectral gain is a literature range. "
+            "TRL 4 — Rel-19/20 distributed MIMO; not a Türk Telekom field."
         ),
         "beginner_principle": (
-            "1. Small antennas sit densely, like street lamps; there is no single giant tower.<br>"
-            "2. Your phone attaches to several of them at once.<br>"
-            "3. As you walk, the antennas hand you over silently; the 'cell-edge' feeling disappears."
+            "1. APs are placed densely; the design does not rest on one macro.<br>"
+            "2. The UE attaches to several APs at once.<br>"
+            "3. The processor on fronthaul applies MMSE-style precoding. The bill is fronthaul and compute."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Distributed coordination and cell-free architecture:</strong><br>"
@@ -327,10 +326,10 @@ TECH_OVERLAY_EN: dict = {
             },
         ],
         "advantages": [
-            "Cell-edge problem solved outright (uniform user experience)",
-            "Very high spectral efficiency (5×–10× versus classical MIMO)",
-            "Less need for macro towers (a more aesthetic, distributed architecture)",
-            "Macro drop-outs (handover failures) driven toward zero",
+            "Cell-edge SINR collapse is designed out (a uniform-experience candidate)",
+            "Spectral-efficiency gains are reported in the literature (5×–10× range; not measured on this platform)",
+            "Distributed-AP candidate for indoor spaces that do not want a macro aesthetic",
+            "Classical handover failures fall under joint service (fibre/sync required)",
         ],
         "disadvantages": [
             "Massive fronthaul load (every AP must connect to a central unit at high rate)",
@@ -357,30 +356,30 @@ TECH_OVERLAY_EN: dict = {
             "Not a street network."
         ),
         "card_summary": (
-            "The wireless pipe is still narrow; THz opens bandwidth, physics cuts range."
+            "The wireless pipe can stay narrow; THz opens bandwidth, FSPL and absorption cut range."
         ),
         "beginner_one_liner": (
-            "You talk at a very high pitch between radio and light; downloading a film takes a blink, not seconds."
+            "In Shannon, capacity grows first with B; THz wants a short hop and line of sight."
         ),
         "highlights": [
-            "Bandwidth many times over",
-            "Vapour / walls cut range",
+            "Bandwidth grows first",
+            "FSPL + absorption",
             "TRL 3, not on the street",
         ],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
-            "THz communications uses the ultra-high frequency band between radio waves and infrared light "
-            "(100 GHz–10 THz) to move data at <strong style='color: #FFFFFF;'>1 terabit per second (1000 Gbps)</strong>, "
-            "at the speed of light.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Plain analogy:</strong><br>"
-            "If 4G is a country road and 5G a wide motorway, terahertz communications is a "
-            "<strong style='color: #FFFFFF;'>teleportation tube</strong>. It can move huge volumes "
-            "(for example an entire 8K film in a hundredth of a second)."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "Sub-6 GHz and mmWave can stay narrow for intra-DC mesh and tower bridges. Fibre does not reach every geometry.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Method</strong><br>"
+            "THz communication is the attempt to open tens of GHz of bandwidth in, roughly, 0.1–10 THz. "
+            "Shannon: C = B log₂(1+SNR); B is the first term.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Limit</strong><br>"
+            "FSPL and water-vapour absorption cut range. “1 Tbps to every subscriber” is marketing. "
+            "TRL 3 — TR 38.807; laboratory, not a street network. 6G is not THz alone."
         ),
         "beginner_principle": (
-            "1. A higher-pitched radio tone is used; the pipe is wider, so more data fits.<br>"
-            "2. That tone struggles through walls and rain; it wants short range and line of sight.<br>"
-            "3. That is why the TRL is low: the laboratory is strong, the field is still limited."
+            "1. Spectrum between mmWave and infrared opens; B grows.<br>"
+            "2. Vapour, walls, and a hand add loss on top of FSPL.<br>"
+            "3. A narrow beam offsets loss; range stays short. The right geometry is a rack, a hall, a tower hop."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Sub-THz and THz spectrum physics:</strong><br>"
@@ -442,10 +441,10 @@ TECH_OVERLAY_EN: dict = {
             },
         ],
         "advantages": [
-            "Record data rate at terabit/s class (100 Gbps–1 Tbps)",
-            "Ultra-low latency (sub-millisecond / microsecond class)",
-            "High security (extremely narrow beam makes eavesdropping / hacking effectively impossible)",
-            "Vast spectrum resource (no frequency congestion)",
+            "Large B grows Shannon capacity first with bandwidth (target order of magnitude is literature)",
+            "Low-latency candidate on a short hop; a URLLC claim does not hold for a street macro",
+            "A narrow beam makes eavesdropping harder; “impossible” is not a security guarantee",
+            "Spectrum congestion is milder than at sub-6; devices and absorption are a separate bill",
         ],
         "disadvantages": [
             "Short range (typically &lt; 100–500 metres because of high atmospheric and molecular absorption)",
@@ -472,10 +471,10 @@ TECH_OVERLAY_EN: dict = {
             "Unattended field proof is absent; not measured by this platform."
         ),
         "card_summary": (
-            "The network recites from memory; AI-RAN redistributes resource on a millisecond loop."
+            "A fixed RRM rule is not enough; AI-RAN shifts resource on a measurement loop."
         ),
         "beginner_one_liner": (
-            "Instead of reading memorised rules, the base station watches live traffic and decides in milliseconds."
+            "xApps/rApps on an O-RAN RIC produce policy from measurement; it is not a chatbot."
         ),
         "highlights": [
             "Resource from measurement",
@@ -483,24 +482,23 @@ TECH_OVERLAY_EN: dict = {
             "TRL 5, not unattended",
         ],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
-            "AI-Native RAN means the 6G radio access network (base stations and radio hardware) is designed "
-            "<strong style='color: #FFFFFF;'>from the lowest layer to be run by artificial intelligence</strong>, "
-            "not patched afterwards with an add-on application.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Plain analogy:</strong><br>"
-            "A classical network is a robot that only applies rigid rules written by human engineers. "
-            "AI-Native RAN is a <strong style='color: #FFFFFF;'>learning autonomous pilot</strong> that watches traffic "
-            "and user behaviour and retunes its own parameters within milliseconds."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "A fixed RRM tariff treats a packed stadium and an empty night with the same rule. A human cannot write policy every second.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Method</strong><br>"
+            "AI-native RAN designs parts of PHY/MAC and resource management to run on a learned model. "
+            "Practical entry today is xApps/rApps on an O-RAN RIC; making the whole air interface a neural net is the research edge.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Limit</strong><br>"
+            "“50–70% energy” and “zero human” are target/marketing. TRL 5 — TR 38.843 and O-RAN RIC trial class; no unattended field proof."
         ),
         "beginner_principle": (
-            "1. The site continuously measures who is congested and where.<br>"
-            "2. Software decides on its own to 'raise capacity in this neighbourhood'.<br>"
-            "3. Humans do not write a rule every second; the network stays green and fast by learning."
+            "1. Load, channel, energy, and drops are measured.<br>"
+            "2. xApps/rApps on the RIC produce policy.<br>"
+            "3. The outcome is watched; a rollback path is part of the design. Supervision does not disappear."
         ),
         "working_principle": (
-            "<strong style='color: #00E5FF;'>End-to-end deep-learning radio architecture:</strong><br>"
-            "AI-Native RAN replaces conventional 3GPP protocol layers (PHY/MAC/RLC/PDCP) with deep AI models "
-            "(deep learning, reinforcement learning, transformers).<br><br>"
+            "<strong style='color: #00E5FF;'>Learned RRM and (at the research edge) neural PHY:</strong><br>"
+            "AI-native RAN does not, in practice, delete PHY/MAC wholesale. Today's entry is resource management via "
+            "xApps/rApps on an O-RAN RIC. Replacing the air interface with an autoencoder is the research edge (TR 38.843).<br><br>"
             "1. <strong style='color: #FFFFFF;'>Deep-learning physical layer (Deep PHY autoencoder):</strong> Modulation and coding "
             "are learned end-to-end with deep autoencoders instead of fixed closed-form algorithms.<br>"
             "2. <strong style='color: #FFFFFF;'>O-RAN RIC (RAN Intelligent Controller):</strong> Near-RT and Non-RT RIC units run xApps "
@@ -550,10 +548,10 @@ TECH_OVERLAY_EN: dict = {
             },
         ],
         "advantages": [
-            "Maximum energy efficiency (50%–70% energy saving)",
-            "Autonomous network management with zero human intervention (Zero-Touch Network — ZTN)",
-            "Instant learning of the modulation that fits the channel",
-            "Infrastructure flexibility independent of a single vendor via O-RAN integration",
+            "An energy target is tracked on a measurement loop; 50–70% saving is target/marketing",
+            "Zero-touch is a research-edge claim; rollback and supervision stay on a live network",
+            "Policy updates when the channel changes; a black box must still be explainable to a regulator",
+            "The O-RAN interface enables a multi-vendor trial; O-RAN is not the same as AI",
         ],
         "disadvantages": [
             "AI models as a black box and the difficulty of explainability",
@@ -580,30 +578,30 @@ TECH_OVERLAY_EN: dict = {
             "public Direct-to-Cell trials. Not a Türk Telekom field measurement."
         ),
         "card_summary": (
-            "The tower cannot reach everywhere; NTN opens the 3GPP network to the sky."
+            "The tower does not reach everywhere; NTN joins a LEO/HAPS cell to the core with Rel-17+."
         ),
         "beginner_one_liner": (
-            "When the city tower is not enough, the satellite overhead takes over; the phone stays the same."
+            "Direct-to-cell: a standard UE sees the satellite cell; the bill is delay and Doppler."
         ),
         "highlights": [
-            "To the sky, no tower",
+            "Direct-to-cell",
             "Delay + Doppler",
             "TRL 6 complement",
         ],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
-            "NTN (Non-Terrestrial Networks) merges low-Earth-orbit satellites (LEO), airships, and high-altitude "
-            "platform stations (HAPS) with terrestrial base stations into one network, delivering "
-            "<strong style='color: #FFFFFF;'>unbroken 6G coverage at every point on Earth</strong>.<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Plain analogy:</strong><br>"
-            "The terrestrial network is street lighting that exists only in cities and along roads. NTN is a "
-            "<strong style='color: #FFFFFF;'>giant spotlight in space</strong> that lights the whole planet from above; "
-            "the signal does not drop in mid-ocean or on a mountain summit."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "A terrestrial gNB covers the city and the asphalt; mountain, sea, and rubble stay empty. Rural CAPEX breaks the terrestrial model.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Method</strong><br>"
+            "NTN joins LEO/GEO/HAPS nodes to the terrestrial core with 3GPP Rel-17+. "
+            "Direct-to-cell: a standard UE seeing a satellite cell, not a dedicated dish.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Limit</strong><br>"
+            "“100% global, zero gap” is marketing. Not the primary path for urban capacity or sub-millisecond URLLC. "
+            "TRL 6 — TR 38.811; public trials. Complements the urban site; does not rival it."
         ),
         "beginner_principle": (
-            "1. Ground sites cover the city and the road.<br>"
-            "2. Where that leaves a gap, a low-Earth-orbit satellite or a high-altitude platform speaks.<br>"
-            "3. Your phone does not have to be a special satellite handset; the network joins sky and ground."
+            "1. The city stays on towers. Empty geography uses LEO / HAPS.<br>"
+            "2. The target is a 3GPP UE seeing the satellite cell.<br>"
+            "3. PHY corrects Doppler and delay; it is not a promise of terrestrial-class latency."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Space–air–ground integrated architecture:</strong><br>"
@@ -656,10 +654,10 @@ TECH_OVERLAY_EN: dict = {
             },
         ],
         "advantages": [
-            "100% global coverage with no geographic restriction (zero coverage gap)",
-            "Ability to operate fully independent of terrestrial infrastructure in disasters",
-            "Eliminates the cost of pulling fibre to rural regions",
-            "Direct connectivity from standard smartphones",
+            "Coverage candidate where tower economics fail (“100% global” is marketing)",
+            "Backup-path scenario when the terrestrial site falls; not a field guarantee",
+            "Candidate for not paying rural fibre CAPEX in every hamlet",
+            "Rel-17+ direct-to-cell targets a standard UE; every legacy device is not guaranteed",
         ],
         "disadvantages": [
             "Higher latency than terrestrial networks (10–30 ms for LEO)",
@@ -686,30 +684,30 @@ TECH_OVERLAY_EN: dict = {
             "Not a Türk Telekom field measurement."
         ),
         "card_summary": (
-            "You cannot put a battery on every object; Ambient IoT says “I am here” on RF scraps."
+            "Battery logistics do not scale; Ambient IoT reports identity by backscatter from ambient RF."
         ),
         "beginner_one_liner": (
-            "A tag as cheap as packing tape takes power from a Wi-Fi or 6G wave and says 'I am here'."
+            "Friis harvest × backscatter = a short identity; it does not carry video or replace a phone."
         ),
         "highlights": [
             "Backscatter identity",
             "Does not carry video",
-            "TRL 4, not on every shelf",
+            "TRL 4, not a shelf product",
         ],
         "executive_summary": (
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
-            "Ambient IoT is the technology of ultra-cheap smart tags that contain "
-            "<strong style='color: #FFFFFF;'>no cell or battery at all</strong> and draw the electricity they need "
-            "from radio waves in the air (RF energy harvesting).<br><br>"
-            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Plain analogy:</strong><br>"
-            "Legacy radio tags are passive. Ambient IoT tags are more like a tiny solar panel: they absorb "
-            "Wi-Fi and 6G signals in the air and become "
-            "<strong style='color: #FFFFFF;'>battery-free miniature smart sensors that generate their own energy</strong>."
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
+            "Replacing batteries at carton, greenhouse, and meter scale is uneconomic. NB-IoT and RedCap still want an energy source.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Method</strong><br>"
+            "Ambient IoT is the class of tags with no battery, or a very small one, that harvest ambient RF "
+            "and send a short status, mostly by backscatter.<br><br>"
+            "<strong style='color: #00E5FF; font-size: 1.05rem;'>Limit</strong><br>"
+            "Range is short and bit-rate low. “One cent, a trillion objects” is target/marketing. "
+            "TRL 4 — TR 38.848; PoC class, not a shelf product."
         ),
         "beginner_principle": (
-            "1. The tag has no battery; it gathers scraps of energy from radio waves in the air.<br>"
-            "2. With that energy it sends a short 'I am here' message.<br>"
-            "3. In warehouses, farms, and logistics, billions of objects can be tracked without batteries."
+            "1. A rectenna converts an RF scrap to DC.<br>"
+            "2. There is no PA; the incoming carrier is modulated. Range is short.<br>"
+            "3. A nearby reader separates the weak echo. It does not carry video."
         ),
         "working_principle": (
             "<strong style='color: #00E5FF;'>Energy harvesting and backscatter communications:</strong><br>"
@@ -763,10 +761,10 @@ TECH_OVERLAY_EN: dict = {
             },
         ],
         "advantages": [
-            "Zero battery cost and no battery-replacement labour",
-            "Environmentally friendly zero waste (no battery chemical pollution)",
-            "Ultra-low manufacturing cost under one cent",
-            "Unbounded service life (not limited by battery lifetime)",
+            "Battery-replacement logistics disappear (energy depends on ambient RF; it is not guaranteed)",
+            "No chemical battery waste; in an RF-weak pocket the tag falls silent",
+            "The cost target is a cheap tag; “one cent” is marketing/target",
+            "No battery-life cap; a readable bit still depends on Friis harvest",
         ],
         "disadvantages": [
             "Short communication range because of ultra-low power (&lt; 10–50 metres)",

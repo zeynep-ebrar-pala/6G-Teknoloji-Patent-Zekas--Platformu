@@ -33,39 +33,45 @@ UI = {
             "radio": "Derinlik",
             "beginner": "Temel",
             "expert": "Uzman",
-            "caption": "Temel: kavram + analoji → teknik karşılık. Uzman: temel katman + denklem / 3GPP / varsayım.",
+            "caption": "Temel: problem → yöntem → çalışma modeli. Uzman: temel katman + denklem / 3GPP / varsayım.",
         },
         "home": {
             "intro_beginner": """<div class="home-intro">
 <h4>6G nedir</h4>
 <p>
-<strong>6G</strong>, telefonunuzun internetini hızlandırmak değildir; aynı kuleye — ve kule olmayan yerlere —
-yeni işler vermektir. Bugün <strong>5G</strong>'de kule konuşur, telefon dinler, bitler akar; ama kule bakmaz,
-köşeyi dönemez, denizde ve dağda susar.
-<strong>RIS</strong> kör noktayı yansıtır; <strong>hücresiz MIMO</strong> hücre sınırını kaldırır;
-<strong>NTN</strong> telefonu göğe bağlar; <strong>ISAC</strong> aynı dalgayı yankı için dinler;
-<strong>AI-RAN</strong> ölçüme göre ayarlar; <strong>Ambient IoT</strong> pilsiz «buradayım» der;
-<strong>THz</strong> ileride bant açar.
+<strong>6G</strong>, 5G'nin yalnızca bit taşıyan erişim mimarisine yeni görevler ekler.
+Bugün kule konuşur; çevreyi ölçmez, köşeyi dönemez, kule olmayan coğrafyada susar.
+Yedi girdi bu boşlukları kapatma adayıdır:
+<strong>ISAC</strong> aynı RF zincirinde yankı işler;
+<strong>RIS</strong> cepheyi programlanabilir yansıtıcı yapar;
+<strong>hücresiz MIMO</strong> hücre kenarını tasarım nesnesi olmaktan çıkarır;
+<strong>NTN</strong> Rel-17+ ile LEO/HAPS hücresini çekirdeğe bağlar;
+<strong>AI-RAN</strong> RRM'i ölçüm döngüsüne alır;
+<strong>Ambient IoT</strong> pilsiz backscatter etiketi hedefler;
+<strong>THz</strong> kısa hopta bant açar.
 </p>
 <p class="home-intro-note">
-Bağlantıdan önce farkındalıktır. Yedi teknoloji aynı rafta durmaz; her biri kendi
-<strong>TRL</strong> (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) basamağındadır.
-6G bugün vaat değil, yarının inşasıdır.
+Hepsi aynı rafta durmaz. Her biri kendi
+<strong>TRL</strong> (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) basamağındadır;
+tam sayı 3GPP teknik raporu veya kamuya açık deneme sınıfına göre eşlenir.
 </p>
 </div>""",
             "intro_expert": """<div class="home-intro">
 <h4>6G nedir — uzman okuma (temel katman atlanmaz)</h4>
 <p>
-<strong>Temel:</strong> 6G, 5G'nin yalnızca iletişim kuran mimarisine algı, karar ve enerji bağımsızlığı ekler.
-Kule konuşur, dinler, görür ve karar verir; sahne atlanmaz.
-<strong>Uzman:</strong> ISAC ortak OFDM dalgası, ΔR = c/2B ve Doppler; Pareto ödünleşimi.
-RIS faz (φ) + CSI gecikmesi. Hücresiz MIMO: kenar kalkar, bedel fronthaul / senkron.
-NTN LEO + Rel-17+, TRL 6. AI-RAN: O-RAN RIC, ölçüm → politika.
-Ambient IoT: backscatter, Friis. THz: Friis + soğurum, TRL 3, sokak şebekesi değil.
+<strong>Temel:</strong> 6G, 5G'nin iletişim-only mimarisine algılama, programlanabilir kanal,
+dağıtık anten, uydu hücresi, öğrenen RRM ve pilsiz etiket adaylarını ekler.
+<strong>Uzman:</strong> ISAC: ortak dalga şekli, R⁴, CRB–Shannon ödünleşmesi (TR 22.837).
+RIS: Φ = diag(e^{jθ_n}), çift yol kaybı, CSI gecikmesi (ETSI RIS ISG).
+Hücresiz MIMO: ortak ön kodlama, bedel fronthaul/senkron (Rel-19/20).
+NTN: Rel-17 TR 38.811, Doppler f_d = f_c (v/c) cosθ, TRL 6.
+AI-RAN: O-RAN RIC xApp/rApp, TR 38.843; nöral PHY araştırma ucu.
+Ambient IoT: Friis hasadı × backscatter, TR 38.848.
+THz: L(f,d) = FSPL · e^{K(f)d}, TR 38.807, TRL 3.
 </p>
 <p class="home-intro-note">
-Bu yedi girdi tek bir «6G ürünü» değil, farklı olgunluklarda standartlaşma girdisidir.
-Denklem ve varsayım kartın altında ve <strong>6G Teknolojileri</strong>ndedir.
+Yedi girdi tek bir ticari «6G ürünü» değildir; farklı olgunlukta standartlaşma girdileridir.
+Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknolojileri</strong> uzman katmanındadır.
 </p>
 </div>""",
             "cards_heading": "Yedi Yapı Taşı",
@@ -91,15 +97,15 @@ Denklem ve varsayım kartın altında ve <strong>6G Teknolojileri</strong>ndedir
             "scale_title": "TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi)",
         },
         "teach": {
-            "problem": "Nedir / hangi problem?",
+            "problem": "Hangi problem?",
             "why_needed": "Neden gerekli?",
             "what": "Ne işe yarar?",
             "tt_impact": "Türk Telekom ve TRL",
-            "heading": "Kavramsal temel — nedir, neden, nasıl",
-            "heading_compact": "Kavramsal temel (sıkıştırılmış)",
-            "mental_model": "Zihinsel model",
-            "analogy": "Analoji",
-            "analogy_map": "Bu analojinin teknik karşılığı",
+            "heading": "Tanım katmanı — problem, ihtiyaç, yöntem",
+            "heading_compact": "Tanım katmanı (özet)",
+            "mental_model": "Çalışma modeli",
+            "analogy": "Karşılaştırma",
+            "analogy_map": "Teknik karşılık",
             "when_used": "Ne zaman kullanılır?",
             "when_not": "Ne zaman kullanılmaz?",
             "not_to_confuse": "Neyle karıştırılmamalıdır?",
@@ -146,8 +152,8 @@ Denklem ve varsayım kartın altında ve <strong>6G Teknolojileri</strong>ndedir
                 "global_tt": "6. Dünyadaki Çalışmalar & TT Senaryoları",
                 "performance": "7. Performans Grafikleri & Referanslar",
             },
-            "def_heading": "### Teknoloji tanımı — katmanlı anlatım",
-            "expert_def": "Uzman katmanı: teknik tanım ve mimari bağlam",
+            "def_heading": "### Teknoloji tanımı — problem, yöntem, sınır",
+            "expert_def": "Uzman katmanı: mimari, karşılaştırma, varsayım",
             "principle_beginner": "Çalışma prensibi — adımlar",
             "principle_expert": "Çalışma prensibi (mekanizma + terim)",
             "diagram": "### Blok diyagram",
@@ -403,7 +409,7 @@ ve gerçek fiber topolojisi modele girmez. Sayıyı «ölçülmüş 6G performan
         },
         "ai": {
             "title": "AI Asistan",
-            "lead": "Yanıtlar sklearn TF-IDF ile seçilen teknoloji, patent, makale ve sözlük kayıtlarındandır. Dual-Depth kenar çubuğu anlatım kademesini belirler (Temel: zihinsel model; Uzman: denklem + varsayım). Mod: <strong style=\"color:#00E5FF;\">{mode}</strong> · Sağlayıcı: <strong style=\"color:#00E5FF;\">{provider}</strong>",
+            "lead": "Yanıtlar sklearn TF-IDF ile seçilen teknoloji, patent, makale ve sözlük kayıtlarındandır. Dual-Depth kenar çubuğu anlatım kademesini belirler (Temel: problem ve çalışma modeli; Uzman: denklem + varsayım). Mod: <strong style=\"color:#00E5FF;\">{mode}</strong> · Sağlayıcı: <strong style=\"color:#00E5FF;\">{provider}</strong>",
             "mode_llm": "LLM + TF-IDF",
             "mode_local": "yalnızca TF-IDF (yerel)",
             "caption": "Bağlamda olmayan patent numarası, DOI veya atıf sayısı üretilmez.",
@@ -423,7 +429,7 @@ ve gerçek fiber topolojisi modele girmez. Sayıyı «ölçülmüş 6G performan
             "cite_n": "{n} atıf",
             "cite_na": "atıf sayısı OpenAlex’ten alınamadı",
             "pedagogy": "Anlatım kuralı: önemli kavramda Nedir, Neden gerekli, Ne işe yarar, Nasıl çalışır, Ne zaman kullanılır, Ne zaman kullanılmaz, Neyle karıştırılmamalı, Gerçekte nerede çıkar. Kısaltmayı ilk geçişte «KISALTMA (English — Türkçe):» diye aç; sonra kısaltma kullan. Formül varsa sembol ve varsayımı söyle; ezberletme. Bağlamda olmayan sayı, patent ID, DOI, atıf uydurma. Emin değilsen «Platform verisinde bu bilgi yok» de.",
-            "depth_beginner": "Seviye: TEMEL. Zihinsel model, analoji→teknik karşılık ve ne zaman/kullanılmaz ağırlıklı yaz. Denklem istersen sembolleri açıkla; varsayımı atlama.",
+            "depth_beginner": "Seviye: TEMEL. Problem, ihtiyaç, yöntem, çalışma modeli, ne zaman/kullanılmaz ve neyle karıştırılmamalı ağırlıklı yaz. Çocuklaştırma. Denklem istersen sembolleri açıkla; varsayımı atlama.",
             "depth_expert": "Seviye: UZMAN. Kavramsal temeli atlama; ardından denklem, varsayım, sınır ve alternatif ekle.",
             "ctx_header": "=== DOĞRULANMIŞ 6G VERİ BAĞLAMI (TF-IDF ile seçilmiş parçalar) ===",
             "ctx_rule": "KURAL: Bu bağlamda olmayan sayı, patent ID veya makale uydurma. Emin değilsen 'Platform verisinde bu bilgi yok' de.",
@@ -569,38 +575,45 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "radio": "Depth",
             "beginner": "Beginner",
             "expert": "Expert",
-            "caption": "Beginner: concept + analogy → technical map. Expert: foundation + equation / 3GPP / assumption.",
+            "caption": "Foundation: problem → method → operating model. Expert: foundation + equation / 3GPP / assumption.",
         },
         "home": {
             "intro_beginner": """<div class="home-intro">
 <h4>What is 6G</h4>
 <p>
-<strong>6G</strong> is not about making your phone’s internet faster; it gives the same tower — and places that are not towers —
-new jobs. Today in <strong>5G</strong> the tower talks, the phone listens, bits flow; but the tower does not see,
-cannot turn a corner, and falls silent at sea and in the mountains.
-<strong>RIS</strong> reflects a dead zone; <strong>cell-free MIMO</strong> removes the cell edge;
-<strong>NTN</strong> ties the phone to the sky; <strong>ISAC</strong> listens to the same wave as an echo;
-<strong>AI-RAN</strong> retunes from measurements; <strong>Ambient IoT</strong> says “I am here” without a battery;
-<strong>THz</strong> opens a wider band later.
+<strong>6G</strong> adds new jobs to 5G’s bit-carrying access architecture.
+Today the site talks; it does not measure the scene, cannot turn a corner, and falls silent where there is no tower.
+Seven inputs are candidates to close those gaps:
+<strong>ISAC</strong> processes echo on the same RF chain;
+<strong>RIS</strong> makes the façade a programmable reflector;
+<strong>cell-free MIMO</strong> removes the cell edge as a design object;
+<strong>NTN</strong> joins a LEO/HAPS cell to the core with Rel-17+;
+<strong>AI-RAN</strong> puts RRM on a measurement loop;
+<strong>Ambient IoT</strong> targets a batteryless backscatter tag;
+<strong>THz</strong> opens bandwidth on a short hop.
 </p>
 <p class="home-intro-note">
-Awareness before connectivity. The seven technologies do not sit on the same shelf; each sits on its own
-<strong>TRL</strong> (Technology Readiness Level) rung. 6G is not a promise today; it is tomorrow’s construction.
+They do not sit on the same shelf. Each sits on its own
+<strong>TRL</strong> (Technology Readiness Level) rung;
+the integer is mapped from a 3GPP technical report or a public trial class.
 </p>
 </div>""",
             "intro_expert": """<div class="home-intro">
 <h4>What is 6G — expert reading (foundation is not skipped)</h4>
 <p>
-<strong>Foundation:</strong> 6G adds sensing, decision, and energy independence to 5G’s communications-only architecture.
-The tower talks, listens, sees, and decides; the scene is not skipped.
-<strong>Expert:</strong> ISAC joint OFDM, ΔR = c/2B and Doppler; Pareto trade-off.
-RIS phase (φ) + CSI delay. Cell-free MIMO: edge gone, bill is fronthaul / sync.
-NTN LEO + Rel-17+, TRL 6. AI-RAN: O-RAN RIC, measurement → policy.
-Ambient IoT: backscatter, Friis. THz: Friis + absorption, TRL 3, not a street network.
+<strong>Foundation:</strong> 6G adds sensing, a programmable channel, distributed antennas, a satellite cell,
+learned RRM and a batteryless tag as candidates on top of 5G’s communications-only architecture.
+<strong>Expert:</strong> ISAC: shared waveform, R⁴, CRB–Shannon trade-off (TR 22.837).
+RIS: Φ = diag(e^{jθ_n}), double-path loss, CSI delay (ETSI RIS ISG).
+Cell-free MIMO: joint precoding; the bill is fronthaul/sync (Rel-19/20).
+NTN: Rel-17 TR 38.811, Doppler f_d = f_c (v/c) cosθ, TRL 6.
+AI-RAN: O-RAN RIC xApp/rApp, TR 38.843; neural PHY is the research edge.
+Ambient IoT: Friis harvest × backscatter, TR 38.848.
+THz: L(f,d) = FSPL · e^{K(f)d}, TR 38.807, TRL 3.
 </p>
 <p class="home-intro-note">
-None of these is a single “6G product”; they are standards inputs at different maturities.
-Equations and assumptions sit on the cards and in <strong>6G Technologies</strong>.
+The seven inputs are not a single commercial “6G product”; they are standards inputs at different maturities.
+Equations, assumptions and validity windows sit in the expert layer of <strong>6G Technologies</strong>.
 </p>
 </div>""",
             "cards_heading": "Seven Building Blocks",
@@ -626,15 +639,15 @@ Equations and assumptions sit on the cards and in <strong>6G Technologies</stron
             "scale_title": "Technology Readiness Level (TRL)",
         },
         "teach": {
-            "problem": "What is it / which problem?",
+            "problem": "Which problem?",
             "why_needed": "Why is it needed?",
             "what": "What does it do?",
             "tt_impact": "Türk Telekom and TRL",
-            "heading": "Conceptual foundation — what, why, how",
-            "heading_compact": "Conceptual foundation (compact)",
-            "mental_model": "Mental model",
-            "analogy": "Analogy",
-            "analogy_map": "Technical counterpart of this analogy",
+            "heading": "Definition layer — problem, need, method",
+            "heading_compact": "Definition layer (summary)",
+            "mental_model": "Operating model",
+            "analogy": "Comparison",
+            "analogy_map": "Technical counterpart",
             "when_used": "When to use it",
             "when_not": "When not to use it",
             "not_to_confuse": "What not to confuse it with",
@@ -681,8 +694,8 @@ Equations and assumptions sit on the cards and in <strong>6G Technologies</stron
                 "global_tt": "6. Global Work & TT Scenarios",
                 "performance": "7. Performance Charts & References",
             },
-            "def_heading": "### Technology definition — layered explanation",
-            "expert_def": "Expert layer: technical definition and architectural context",
+            "def_heading": "### Technology definition — problem, method, limit",
+            "expert_def": "Expert layer: architecture, comparison, assumptions",
             "principle_beginner": "Operating principle — steps",
             "principle_expert": "Operating principle (mechanism + terms)",
             "diagram": "### Block diagram",
@@ -936,7 +949,7 @@ and the real fibre topology are not in the model. Do not read the numbers as mea
         },
         "ai": {
             "title": "AI Assistant",
-            "lead": "Answers are grounded in technology, patent, paper, and glossary records selected with sklearn TF-IDF. The dual-depth sidebar sets the explanation level (foundation: mental model; expert: equation + assumption). Mode: <strong style=\"color:#00E5FF;\">{mode}</strong> · Provider: <strong style=\"color:#00E5FF;\">{provider}</strong>",
+            "lead": "Answers are grounded in technology, patent, paper, and glossary records selected with sklearn TF-IDF. The dual-depth sidebar sets the explanation level (foundation: problem and operating model; expert: equation + assumption). Mode: <strong style=\"color:#00E5FF;\">{mode}</strong> · Provider: <strong style=\"color:#00E5FF;\">{provider}</strong>",
             "mode_llm": "LLM + TF-IDF",
             "mode_local": "TF-IDF only (local)",
             "caption": "Patent numbers, DOIs, or citation counts that are not in context are not invented.",
@@ -956,7 +969,7 @@ and the real fibre topology are not in the model. Do not read the numbers as mea
             "cite_n": "{n} citations",
             "cite_na": "citation count was not returned by OpenAlex",
             "pedagogy": "Teaching rule: for an important concept cover what it is, why it is needed, what it does, how it works, when to use it, when not to, what not to confuse it with, and where it shows up in the real world. On first use expand an abbreviation as ABBR (English expansion); then use the abbreviation. If you cite an equation, name the symbols and the assumption; do not drill memorisation. Do not invent numbers, patent IDs, DOIs, or citation counts that are not in context. If you are unsure, say the platform data does not contain that information.",
-            "depth_beginner": "Level: FOUNDATIONAL. Lead with the mental model, analogy mapped to the technical counterpart, and when / when-not. If an equation is needed, explain the symbols and keep the assumption.",
+            "depth_beginner": "Level: FOUNDATIONAL. Lead with problem, need, method, operating model, when / when-not, and what not to confuse it with. Do not talk down. If an equation is needed, explain the symbols and keep the assumption.",
             "depth_expert": "Level: EXPERT. Do not skip the conceptual foundation; then add the equation, assumption, limit, and alternative.",
             "ctx_header": "=== VERIFIED 6G DATA CONTEXT (TF-IDF-selected passages) ===",
             "ctx_rule": "RULE: Do not invent a number, patent ID, or paper that is not in this context. If unsure, say the platform data does not contain that information.",
