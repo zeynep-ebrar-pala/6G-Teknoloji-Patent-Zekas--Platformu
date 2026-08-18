@@ -633,12 +633,6 @@ def inject_custom_styles():
             position: relative;
             z-index: 2;
         }
-        .tt-depth-note {
-            color: #94A3B8 !important;
-            font-size: 0.72rem !important;
-            line-height: 1.4 !important;
-            margin: 8px 2px 4px 2px !important;
-        }
 
         [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] {
             gap: 6px !important;

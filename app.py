@@ -98,11 +98,6 @@ with st.sidebar:
                 st.session_state["view_mode"] = "expert"
                 st.rerun()
 
-    st.markdown(
-        f'<p class="tt-depth-note">{t("depth.caption")}</p>',
-        unsafe_allow_html=True,
-    )
-
     if st.session_state.get("api_key") or st.session_state.get("ai_ready"):
         if st.button(t("app.ai_logout"), key="ai_logout_btn", width="stretch"):
             for key in ("authenticated", "api_key", "ai_provider", "ai_ready", "chat_messages", "chat_lang"):
