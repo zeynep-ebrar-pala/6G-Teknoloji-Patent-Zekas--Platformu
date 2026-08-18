@@ -36,12 +36,6 @@ def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
     if not fnd:
         return
     heading = t("teach.heading_compact") if compact else t("teach.heading")
-    st.markdown(
-        f"""<div class="teach-heading-bar">
-<h4>{heading}</h4>
-</div>""",
-        unsafe_allow_html=True,
-    )
     items = []
     for key, label_key in _TEACH_KEYS:
         text = fnd.get(key)
@@ -51,66 +45,60 @@ def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
                 f"<div class='teach-label'>{escape(t(label_key))}</div>"
                 f"<p>{escape(str(text))}</p></div>"
             )
-    if items:
-        st.markdown(f"<div class='teach-grid'>{''.join(items)}</div>", unsafe_allow_html=True)
-
-    st.markdown(
-        f"""<div class="glass-card">
-<div class="teach-label">{t("teach.mental_model")}</div>
-<p style="color:#E2E8F0;line-height:1.65;margin:8px 0 0 0;">{escape(str(fnd.get('mental_model') or ''))}</p>
-</div>""",
-        unsafe_allow_html=True,
-    )
+    grid = f"<div class='teach-grid'>{''.join(items)}</div>" if items else ""
     analogy = fnd.get("analogy")
     tech_map = fnd.get("analogy_technical_map")
+    analogy_html = ""
     if analogy:
-        st.markdown(
-            f"""<div class="glass-card">
-<div class="teach-label">{t("teach.analogy")}</div>
-<p style="color:#E2E8F0;line-height:1.65;margin:8px 0 12px 0;">{escape(str(analogy))}</p>
-<div class="teach-label">{t("teach.analogy_map")}</div>
-<p style="color:#CBD5E1;line-height:1.65;margin:8px 0 0 0;">{escape(str(tech_map or ''))}</p>
-</div>""",
-            unsafe_allow_html=True,
+        analogy_html = (
+            "<div class='glass-card teach-card'>"
+            f"<div class='teach-label'>{escape(t('teach.analogy'))}</div>"
+            f"<p class='teach-body'>{escape(str(analogy))}</p>"
+            f"<div class='teach-label'>{escape(t('teach.analogy_map'))}</div>"
+            f"<p class='teach-muted'>{escape(str(tech_map or ''))}</p>"
+            "</div>"
         )
-
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown(
-            f"""<div class="glass-card" style="border-left:4px solid #00C853;">
-<div class="teach-label">{t("teach.when_used")}</div>
-<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.6;margin:8px 0 0 0;">{escape(str(fnd.get('when_used') or ''))}</p>
-</div>""",
-            unsafe_allow_html=True,
+    steps = fnd.get("how_steps") or []
+    steps_html = ""
+    if steps and not compact:
+        lis = "".join(
+            f"<li>{escape(str(s))}</li>" for s in steps
         )
-    with c2:
-        st.markdown(
-            f"""<div class="glass-card" style="border-left:4px solid #FF5252;">
-<div class="teach-label">{t("teach.when_not")}</div>
-<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.6;margin:8px 0 0 0;">{escape(str(fnd.get('when_not') or ''))}</p>
-</div>""",
-            unsafe_allow_html=True,
+        steps_html = (
+            "<div class='glass-card teach-card'>"
+            f"<div class='teach-label'>{escape(t('teach.how_steps'))}</div>"
+            f"<ol class='teach-steps'>{lis}</ol>"
+            "</div>"
         )
     st.markdown(
-        f"""<div class="glass-card">
-<div class="teach-label">{t("teach.not_to_confuse")}</div>
-<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 12px 0;">{escape(str(fnd.get('not_to_confuse') or ''))}</p>
-<div class="teach-label">{t("teach.real_world")}</div>
-<p style="color:#CBD5E1;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">{escape(str(fnd.get('real_world') or ''))}</p>
+        f"""<div class="teach-stack">
+<div class="teach-heading-bar"><span>{escape(heading)}</span></div>
+{grid}
+<div class="glass-card teach-card">
+<div class="teach-label">{escape(t("teach.mental_model"))}</div>
+<p class="teach-body">{escape(str(fnd.get("mental_model") or ""))}</p>
+</div>
+{analogy_html}
+<div class="teach-pair">
+<div class="glass-card teach-card teach-used">
+<div class="teach-label">{escape(t("teach.when_used"))}</div>
+<p class="teach-body">{escape(str(fnd.get("when_used") or ""))}</p>
+</div>
+<div class="glass-card teach-card teach-not">
+<div class="teach-label">{escape(t("teach.when_not"))}</div>
+<p class="teach-body">{escape(str(fnd.get("when_not") or ""))}</p>
+</div>
+</div>
+<div class="glass-card teach-card">
+<div class="teach-label">{escape(t("teach.not_to_confuse"))}</div>
+<p class="teach-body">{escape(str(fnd.get("not_to_confuse") or ""))}</p>
+<div class="teach-label">{escape(t("teach.real_world"))}</div>
+<p class="teach-muted">{escape(str(fnd.get("real_world") or ""))}</p>
+</div>
+{steps_html}
 </div>""",
         unsafe_allow_html=True,
     )
-
-    steps = fnd.get("how_steps") or []
-    if steps and not compact:
-        lis = "".join(f"<li style='margin-bottom:8px;line-height:1.55;'>{escape(str(s))}</li>" for s in steps)
-        st.markdown(
-            f"""<div class="glass-card">
-<div class="teach-label">{t("teach.how_steps")}</div>
-<ol style="color:#E2E8F0;font-size:0.92rem;margin:10px 0 0 18px;padding:0;">{lis}</ol>
-</div>""",
-            unsafe_allow_html=True,
-        )
 
 
 def render_formula_cards(tech: dict) -> None:

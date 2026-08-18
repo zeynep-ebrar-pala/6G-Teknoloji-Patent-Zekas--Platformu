@@ -43,11 +43,11 @@ beginner = is_beginner(current_view_mode())
 trl_class = "trl-low" if tech["trl"] <= 4 else ("trl-mid" if tech["trl"] == 5 else "trl-high")
 
 st.markdown(
-    f"""<div class="glass-card tech-banner" style="border-left: 5px solid #0099FF;">
-<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+    f"""<div class="glass-card tech-banner">
+<div class="tech-banner-row">
 <div>
 <span class="tt-badge">{t("tech.badge")}</span>
-<h2>{tech['icon']} {tech['title']}</h2>
+<div class="tech-banner-title">{tech['icon']} {tech['title']}</div>
 </div>
 <span class="trl-pill {trl_class}">{t("trl.maturity", n=tech["trl"])}</span>
 </div>
@@ -67,7 +67,6 @@ section = _section_map.get(
 )
 
 if section == "definition":
-    st.markdown(t("tech.def_heading"))
     render_foundation_layer(tech, compact=not beginner)
     if not beginner:
         st.markdown(

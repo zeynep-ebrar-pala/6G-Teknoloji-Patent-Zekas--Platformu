@@ -180,54 +180,99 @@ def inject_custom_styles():
         .teach-heading-bar {
             background: rgba(0, 200, 83, 0.08);
             border: 1px solid rgba(0, 200, 83, 0.35);
-            border-radius: 8px;
-            padding: 6px 12px;
-            margin: 0 0 8px 0;
-            line-height: 1.3;
+            border-radius: 6px;
+            padding: 4px 10px;
+            margin: 0;
+            line-height: 1.25;
         }
-        .teach-heading-bar h4 {
+        .teach-heading-bar span {
             color: #00C853 !important;
-            margin: 0 !important;
-            font-size: 0.88rem !important;
+            font-size: 0.82rem !important;
             font-weight: 700 !important;
+            display: block;
         }
 
         .tech-banner {
-            padding: 8px 14px !important;
-            margin-bottom: 8px !important;
+            border-left: 4px solid #0099FF !important;
+            padding: 6px 12px !important;
+            margin: 0 !important;
         }
         .tech-banner:hover {
             transform: none !important;
         }
-        .tech-banner h2 {
-            color: #FFF !important;
+        .tech-banner-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .tech-banner-title {
+            color: #FFFFFF !important;
             margin: 2px 0 0 0 !important;
-            font-size: 1.15rem !important;
-            line-height: 1.25 !important;
+            font-size: 1.02rem !important;
+            line-height: 1.2 !important;
             font-weight: 700 !important;
         }
         .tech-banner .tt-badge {
-            font-size: 0.52rem;
-            padding: 1px 7px;
-            margin-bottom: 2px;
+            font-size: 0.5rem;
+            padding: 1px 6px;
+            margin-bottom: 0;
         }
         .tech-banner .trl-pill {
-            font-size: 0.68rem;
-            padding: 3px 8px;
+            font-size: 0.64rem;
+            padding: 2px 8px;
         }
+
+        .teach-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .teach-stack .glass-card.teach-card {
+            margin: 0 !important;
+            padding: 12px 14px !important;
+        }
+        .teach-body {
+            color: #E2E8F0 !important;
+            font-size: 0.92rem !important;
+            line-height: 1.55 !important;
+            margin: 6px 0 0 0 !important;
+        }
+        .teach-muted {
+            color: #CBD5E1 !important;
+            font-size: 0.9rem !important;
+            line-height: 1.55 !important;
+            margin: 6px 0 0 0 !important;
+        }
+        .teach-steps {
+            color: #E2E8F0;
+            font-size: 0.92rem;
+            margin: 8px 0 0 18px;
+            padding: 0;
+        }
+        .teach-steps li { margin-bottom: 6px; line-height: 1.5; }
+        .teach-pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .teach-used { border-left: 4px solid #00C853 !important; }
+        .teach-not { border-left: 4px solid #FF5252 !important; }
 
         .teach-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin: 8px 0 18px 0;
+            margin: 0;
         }
         .teach-item {
             background: rgba(0, 229, 255, 0.06);
             border: 1px solid rgba(0, 229, 255, 0.18);
             border-left: 3px solid #00E5FF;
             border-radius: 10px;
-            padding: 14px 16px;
+            padding: 12px 14px;
         }
         .teach-item p {
             color: #E2E8F0 !important;
@@ -260,7 +305,7 @@ def inject_custom_styles():
             text-transform: none;
         }
         @media (max-width: 900px) {
-            .teach-grid { grid-template-columns: 1fr; }
+            .teach-grid, .teach-pair { grid-template-columns: 1fr; }
         }
 
         .dual-card-expert {
@@ -707,17 +752,30 @@ def inject_custom_styles():
             padding-right: 1.4rem !important;
         }
         [data-testid="stMain"] [data-testid="stVerticalBlock"] {
-            gap: 0.7rem !important;
+            gap: 0.55rem !important;
         }
         [data-testid="stMain"] .stMarkdown {
             margin-bottom: 0 !important;
         }
         [data-testid="stMain"] h3 {
-            margin: 0.25rem 0 0.15rem 0 !important;
-            font-size: 1.18rem !important;
+            margin: 0.2rem 0 0.1rem 0 !important;
+            font-size: 1.08rem !important;
         }
         [data-testid="stMain"] [data-testid="stCaptionContainer"] {
             display: none !important;
+        }
+        [data-testid="stHeaderActionElements"],
+        [data-testid="stHeadingWithActionElements"] a {
+            display: none !important;
+        }
+        [data-testid="stMarkdownContainer"]:has(.tech-banner),
+        [data-testid="stMarkdownContainer"]:has(.teach-heading-bar),
+        [data-testid="stMarkdownContainer"]:has(.teach-stack) {
+            min-height: 0 !important;
+        }
+        [data-testid="stMarkdownContainer"]:has(.tech-banner) p,
+        [data-testid="stMarkdownContainer"]:has(.teach-stack) > p {
+            margin: 0 !important;
         }
         </style>
     """, unsafe_allow_html=True)
