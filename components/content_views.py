@@ -11,14 +11,6 @@ import streamlit as st
 from data.glossary import GLOSSARY, localized_entry, trl_scale
 from i18n.core import t
 
-_TEACH_KEYS = (
-    ("problem", "teach.problem"),
-    ("why_needed", "teach.why_needed"),
-    ("what", "teach.what"),
-    ("tt_impact", "teach.tt_impact"),
-)
-
-
 def is_beginner(view_mode: str | None = None) -> bool:
     if view_mode is None:
         view_mode = st.session_state.get("view_mode", "beginner")
@@ -30,21 +22,41 @@ def is_beginner(view_mode: str | None = None) -> bool:
     return True
 
 
+def _teach_item(label_key: str, body) -> str:
+    if not body:
+        return ""
+    return (
+        "<div class='teach-item'>"
+        f"<div class='teach-label'>{escape(t(label_key))}</div>"
+        f"<p>{escape(str(body))}</p></div>"
+    )
+
+
+def _teach_card(label_key: str, body, extra_class: str = "", muted: bool = False) -> str:
+    if not body:
+        return ""
+    cls = "teach-muted" if muted else "teach-body"
+    extra = f" {extra_class}" if extra_class else ""
+    return (
+        f"<div class='glass-card teach-card{extra}'>"
+        f"<div class='teach-label'>{escape(t(label_key))}</div>"
+        f"<p class='{cls}'>{escape(str(body))}</p>"
+        "</div>"
+    )
+
+
 def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
-    """Temel kavramsal katman — uzman modda da atlanmaz."""
+    """Sıra: problem → ihtiyaç → yöntem → mekanizma → sınır → uygulama."""
     fnd = tech.get("foundation") or {}
     if not fnd:
         return
-    items = []
-    for key, label_key in _TEACH_KEYS:
-        text = fnd.get(key)
-        if text:
-            items.append(
-                "<div class='teach-item'>"
-                f"<div class='teach-label'>{escape(t(label_key))}</div>"
-                f"<p>{escape(str(text))}</p></div>"
-            )
-    grid = f"<div class='teach-grid'>{''.join(items)}</div>" if items else ""
+    opener = "".join(
+        [
+            _teach_item("teach.problem", fnd.get("problem")),
+            _teach_item("teach.why_needed", fnd.get("why_needed")),
+        ]
+    )
+    opener_html = f"<div class='teach-grid'>{opener}</div>" if opener else ""
     analogy = fnd.get("analogy")
     tech_map = fnd.get("analogy_technical_map")
     analogy_html = ""
@@ -59,10 +71,8 @@ def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
         )
     steps = fnd.get("how_steps") or []
     steps_html = ""
-    if steps and not compact:
-        lis = "".join(
-            f"<li>{escape(str(s))}</li>" for s in steps
-        )
+    if steps:
+        lis = "".join(f"<li>{escape(str(s))}</li>" for s in steps)
         steps_html = (
             "<div class='glass-card teach-card'>"
             f"<div class='teach-label'>{escape(t('teach.how_steps'))}</div>"
@@ -71,29 +81,18 @@ def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
         )
     st.markdown(
         f"""<div class="teach-stack">
-{grid}
-<div class="glass-card teach-card">
-<div class="teach-label">{escape(t("teach.mental_model"))}</div>
-<p class="teach-body">{escape(str(fnd.get("mental_model") or ""))}</p>
-</div>
+{opener_html}
+{_teach_card("teach.what", fnd.get("what"))}
+{_teach_card("teach.mental_model", fnd.get("mental_model"))}
+{steps_html}
 {analogy_html}
 <div class="teach-pair">
-<div class="glass-card teach-card teach-used">
-<div class="teach-label">{escape(t("teach.when_used"))}</div>
-<p class="teach-body">{escape(str(fnd.get("when_used") or ""))}</p>
+{_teach_card("teach.when_used", fnd.get("when_used"), "teach-used")}
+{_teach_card("teach.when_not", fnd.get("when_not"), "teach-not")}
 </div>
-<div class="glass-card teach-card teach-not">
-<div class="teach-label">{escape(t("teach.when_not"))}</div>
-<p class="teach-body">{escape(str(fnd.get("when_not") or ""))}</p>
-</div>
-</div>
-<div class="glass-card teach-card">
-<div class="teach-label">{escape(t("teach.not_to_confuse"))}</div>
-<p class="teach-body">{escape(str(fnd.get("not_to_confuse") or ""))}</p>
-<div class="teach-label">{escape(t("teach.real_world"))}</div>
-<p class="teach-muted">{escape(str(fnd.get("real_world") or ""))}</p>
-</div>
-{steps_html}
+{_teach_card("teach.not_to_confuse", fnd.get("not_to_confuse"))}
+{_teach_card("teach.real_world", fnd.get("real_world"), muted=True)}
+{_teach_card("teach.tt_impact", fnd.get("tt_impact"))}
 </div>""",
         unsafe_allow_html=True,
     )
