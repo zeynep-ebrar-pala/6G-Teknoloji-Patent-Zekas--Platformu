@@ -6,7 +6,7 @@ from backend.data_service import DataService
 from components.content_views import is_beginner, render_trl_explainer
 from components.ui_helpers import current_view_mode, show_plotly
 from data.home_cards import home_card
-from i18n.core import t
+from i18n.core import get_lang, t
 
 TECHNOLOGIES = DataService.get_all_technologies()
 beginner = is_beginner(current_view_mode())
@@ -58,7 +58,12 @@ with col_radar:
 with col_info:
     render_trl_explainer()
 
+_radar_caption = (
+    "Slices use the NASA/EU TRL 1–9 scale; each integer is mapped from a 3GPP technical report or a public trial class."
+    if get_lang() == "en"
+    else "Dilimler NASA/AB TRL 1–9 ölçeğidir; her tam sayı, 3GPP teknik raporu veya kamuya açık deneme sınıfına göre eşlenir."
+)
 st.markdown(
-    f'<div class="home-radar-note">{t("home.radar_caption")}</div>',
+    f'<div class="home-radar-note">{_radar_caption}</div>',
     unsafe_allow_html=True,
 )
