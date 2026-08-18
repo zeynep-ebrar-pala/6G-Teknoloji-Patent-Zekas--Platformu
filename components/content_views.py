@@ -37,8 +37,8 @@ def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
         return
     heading = t("teach.heading_compact") if compact else t("teach.heading")
     st.markdown(
-        f"""<div class="dual-card-beginner">
-<h4 style="margin-top:0;margin-bottom:14px;">{heading}</h4>
+        f"""<div class="teach-heading-bar">
+<h4>{heading}</h4>
 </div>""",
         unsafe_allow_html=True,
     )

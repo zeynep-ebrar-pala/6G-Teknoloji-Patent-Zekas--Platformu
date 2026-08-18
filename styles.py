@@ -159,22 +159,61 @@ def inject_custom_styles():
         .dual-card-beginner {
             background: rgba(0, 200, 83, 0.08);
             border: 1px solid rgba(0, 200, 83, 0.35);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
             backdrop-filter: blur(8px);
         }
 
         .dual-card-beginner h4 {
             color: #00C853 !important;
             margin-top: 0;
-            margin-bottom: 6px;
-            font-size: 1rem;
+            margin-bottom: 4px;
+            font-size: 0.92rem;
         }
 
         .dual-card-beginner p {
             font-size: 0.9rem;
             line-height: 1.5;
+        }
+
+        .teach-heading-bar {
+            background: rgba(0, 200, 83, 0.08);
+            border: 1px solid rgba(0, 200, 83, 0.35);
+            border-radius: 8px;
+            padding: 6px 12px;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+        }
+        .teach-heading-bar h4 {
+            color: #00C853 !important;
+            margin: 0 !important;
+            font-size: 0.88rem !important;
+            font-weight: 700 !important;
+        }
+
+        .tech-banner {
+            padding: 8px 14px !important;
+            margin-bottom: 8px !important;
+        }
+        .tech-banner:hover {
+            transform: none !important;
+        }
+        .tech-banner h2 {
+            color: #FFF !important;
+            margin: 2px 0 0 0 !important;
+            font-size: 1.15rem !important;
+            line-height: 1.25 !important;
+            font-weight: 700 !important;
+        }
+        .tech-banner .tt-badge {
+            font-size: 0.52rem;
+            padding: 1px 7px;
+            margin-bottom: 2px;
+        }
+        .tech-banner .trl-pill {
+            font-size: 0.68rem;
+            padding: 3px 8px;
         }
 
         .teach-grid {
