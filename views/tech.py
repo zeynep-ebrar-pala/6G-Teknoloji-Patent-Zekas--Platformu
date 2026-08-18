@@ -13,12 +13,24 @@ from components.content_views import (
     render_formula_cards,
     render_foundation_layer,
     render_global_tt_trl,
-    render_section_label,
-    render_teach_note,
     render_use_cases,
 )
 from components.ui_helpers import current_view_mode, first_text, select_section, show_empty, show_error, show_plotly
 from i18n.core import get_lang, t
+
+
+def _teach_note(text: str) -> None:
+    if not text:
+        return
+    st.markdown(f'<p class="teach-note">{escape(str(text))}</p>', unsafe_allow_html=True)
+
+
+def _section_label(key: str) -> None:
+    st.markdown(
+        f'<div class="section-label">{escape(t(key).lstrip("#").strip())}</div>',
+        unsafe_allow_html=True,
+    )
+
 
 TECH_SECTION_KEYS = [
     "definition",
@@ -78,14 +90,14 @@ if section == "definition":
     render_foundation_layer(tech, compact=not beginner)
     if not beginner:
         render_comparison_table(tech)
-        render_teach_note(t("tech.math_on_arch"))
+        _teach_note(t("tech.math_on_arch"))
 
 elif section == "principle":
     from components.diagrams import render_technology_diagram
 
     col_p_text, col_p_diag = st.columns([1, 1.1])
     with col_p_text:
-        render_section_label("tech.principle_beginner" if beginner else "tech.principle_expert")
+        _section_label("tech.principle_beginner" if beginner else "tech.principle_expert")
         if beginner:
             st.markdown(
                 f"""<div class="glass-card">
@@ -114,12 +126,12 @@ elif section == "principle":
                 unsafe_allow_html=True,
             )
     with col_p_diag:
-        render_section_label("tech.diagram")
+        _section_label("tech.diagram")
         render_technology_diagram(tech["id"])
         render_diagram_legend(tech["id"])
 
 elif section == "architecture":
-    render_section_label("tech.arch_heading")
+    _section_label("tech.arch_heading")
     arch = first_text(tech.get("beginner_arch"))
     st.markdown(
         f"""<div class="dual-card-beginner">
@@ -159,8 +171,8 @@ else:
         render_technology_record_counts_chart,
     )
 
-    render_section_label("tech.perf_heading")
-    render_teach_note(t("tech.perf_caption"))
+    _section_label("tech.perf_heading")
+    _teach_note(t("tech.perf_caption"))
     domain = PatentService.domain_for_tech(tech["id"])
     df_pat = PatentService.get_domain_yearly_df(tech["id"])
     if df_pat.empty:
@@ -183,11 +195,11 @@ else:
         else:
             show_plotly(render_academic_trends_chart(df_pub))
     else:
-        render_teach_note(t("tech.cell_free_oa"))
+        _teach_note(t("tech.cell_free_oa"))
 
     st.divider()
-    render_section_label("tech.refs")
-    render_teach_note(t("tech.refs_caption"))
+    _section_label("tech.refs")
+    _teach_note(t("tech.refs_caption"))
     ref_items = "".join(
         [
             f"""<p style='margin-bottom:8px; font-size:0.88rem; line-height:1.5; overflow-wrap:anywhere;'>

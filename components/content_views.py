@@ -1,5 +1,8 @@
 """
 İki kademeli içerik gösterimi: temel katman, formül kartları, karşılaştırma, kullanım/TRL.
+
+Modül seviyesinde i18n/glossary import etmez: Streamlit Cloud (Python 3.14)
+sayfa yüklemesinde ImportError üretmesin.
 """
 
 from __future__ import annotations
@@ -8,8 +11,11 @@ from html import escape
 
 import streamlit as st
 
-from data.glossary import GLOSSARY, localized_entry, trl_scale
-from i18n.core import t
+
+def t(key: str, **kwargs):
+    from i18n.core import t as translate
+
+    return translate(key, **kwargs)
 
 
 def _plain_label(key: str) -> str:
@@ -344,6 +350,8 @@ def render_global_tt_trl(tech: dict, *, beginner: bool, trl_class: str) -> None:
             unsafe_allow_html=True,
         )
     with c_t_level:
+        from data.glossary import trl_scale
+
         render_section_label("teach.trl_assess")
         st.markdown(
             f"""<div class="glass-card" style="text-align:center;">
@@ -367,6 +375,8 @@ def render_global_tt_trl(tech: dict, *, beginner: bool, trl_class: str) -> None:
 
 
 def render_trl_explainer() -> None:
+    from data.glossary import GLOSSARY, localized_entry
+
     trl = localized_entry("TRL") or GLOSSARY["TRL"]
     st.markdown(
         f"""<div class="glass-card">
