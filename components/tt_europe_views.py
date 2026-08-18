@@ -1,0 +1,174 @@
+"""
+Patent Zekası ve Yayın Trendleri — Türk Telekom Avrupa izi bölümü.
+"""
+
+from __future__ import annotations
+
+import streamlit as st
+
+from backend.tt_europe_service import TTEuropeService
+from components.charts import (
+    render_tt_europe_choropleth,
+    render_tt_office_chart,
+    render_tt_role_kind_chart,
+    render_tt_vs_vendors_chart,
+)
+from components.ui_helpers import (
+    current_view_mode,
+    render_paper_card,
+    render_patent_card,
+    render_source_button,
+    show_plotly,
+)
+from i18n.core import format_int, get_lang, t
+
+_LAYER_HEX = {
+    "hq": "#E20074",
+    "wholesale": "#00C2FF",
+    "rd_collab": "#A855F7",
+    "standards": "#FFB020",
+    "mou_venue": "#14B8A6",
+    "ep_grant": "#64748B",
+}
+
+
+def _explainer() -> None:
+    expert = current_view_mode() == "expert"
+    st.markdown(
+        f"""<div class="glass-card">
+<div class="teach-label">{t("tt_eu.what_title")}</div>
+{t("tt_eu.what_body")}
+</div>""",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        f"""<div class="glass-card" style="border-left: 5px solid #E20074;">
+<div class="teach-label">{t("tt_eu.role_title")}</div>
+{t("tt_eu.role_body")}
+</div>""",
+        unsafe_allow_html=True,
+    )
+    if expert:
+        st.markdown(
+            f"""<div class="glass-card">
+<div class="teach-label">{t("tt_eu.expert_title")}</div>
+{t("tt_eu.expert_body")}
+</div>""",
+            unsafe_allow_html=True,
+        )
+
+
+def _metrics() -> None:
+    s = TTEuropeService.summary()
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        st.metric(t("tt_eu.metric_pat"), format_int(s["patent_n"]))
+    with c2:
+        st.metric(t("tt_eu.metric_ep"), format_int(s["ep_n"]))
+    with c3:
+        st.metric(t("tt_eu.metric_papers"), format_int(s["paper_n"]))
+    with c4:
+        st.metric(t("tt_eu.metric_named"), format_int(s["wholesale_named_n"]))
+
+
+def _named_country_chips(rows: list, lang: str) -> None:
+    st.markdown(t("tt_eu.named_heading"))
+    st.caption(t("tt_eu.named_caption"))
+    chips = []
+    order = ("hq", "wholesale", "rd_collab", "standards", "mou_venue")
+    ranked = sorted(rows, key=lambda r: (order.index(r["layer"]) if r["layer"] in order else 99, r["iso3"]))
+    for row in ranked:
+        name = row["name_tr"] if lang == "tr" else row["name_en"]
+        layer = t(f"tt_eu.layer.{row['layer']}")
+        hex_c = _LAYER_HEX.get(row["layer"], "#64748B")
+        chips.append(
+            f'<span style="display:inline-block;margin:0 8px 8px 0;padding:7px 12px;'
+            f'border-radius:999px;border:1px solid {hex_c};background:{hex_c}22;'
+            f'color:#F8FAFC;font-size:0.82rem;">{name} · {layer}</span>'
+        )
+    st.markdown(
+        f'<div style="margin:4px 0 12px 0;">{"".join(chips)}</div>',
+        unsafe_allow_html=True,
+    )
+
+
+def _position_visuals(*, show_vendor_compare: bool) -> None:
+    lang = get_lang()
+    st.markdown(t("tt_eu.map_heading"))
+    st.caption(t("tt_eu.map_caption"))
+    rows = TTEuropeService.map_rows()
+    show_plotly(render_tt_europe_choropleth(rows, lang=lang))
+    _named_country_chips(rows, lang)
+    ir = TTEuropeService.get_ir_wholesale()
+    st.caption(ir["attribution_tr"] if lang == "tr" else ir["attribution_en"])
+    c_ir, c_tti = st.columns(2)
+    with c_ir:
+        render_source_button(ir["url"], t("tt_eu.open_ir"))
+    with c_tti:
+        render_source_button(ir["tti_url"], t("tt_eu.open_tti"))
+
+    st.markdown(t("tt_eu.role_heading"))
+    st.caption(t("tt_eu.role_caption"))
+    show_plotly(render_tt_role_kind_chart(TTEuropeService.role_kind_counts()))
+
+    if show_vendor_compare:
+        st.markdown(t("tt_eu.vs_heading"))
+        st.caption(t("tt_eu.vs_caption"))
+        show_plotly(render_tt_vs_vendors_chart(TTEuropeService.vendor_sample_vs_tt()))
+
+
+def _rd_touchpoints() -> None:
+    st.markdown(t("tt_eu.presence_heading"))
+    st.caption(t("tt_eu.presence_caption"))
+    lang = get_lang()
+    for row in TTEuropeService.get_touchpoints():
+        title = row["title_tr"] if lang == "tr" else row["title_en"]
+        detail = row["detail_tr"] if lang == "tr" else row["detail_en"]
+        place = row["country_name_tr"] if lang == "tr" else row["country_name_en"]
+        st.markdown(
+            f"""<div class="glass-card" style="margin-bottom:8px;padding:16px;">
+<span class="trl-pill trl-mid">{place}</span>
+<h4 style="color:#FFFFFF;margin:8px 0 6px 0;">{title}</h4>
+<p style="color:#C8D1DC;font-size:0.88rem;margin:0;">{detail}</p>
+</div>""",
+            unsafe_allow_html=True,
+        )
+        render_source_button(row["url"], t("tt_eu.open_touch"))
+
+
+def _press_note() -> None:
+    claim = TTEuropeService.get_press_claims()
+    text = claim["attribution_tr"] if get_lang() == "tr" else claim["attribution_en"]
+    st.caption(text)
+    render_source_button(claim["url"], t("tt_eu.open_press"))
+
+
+def render_tt_europe_patent_section() -> None:
+    _explainer()
+    _metrics()
+    _position_visuals(show_vendor_compare=True)
+    st.markdown(t("tt_eu.office_heading"))
+    st.caption(t("tt_eu.office_caption"))
+    show_plotly(render_tt_office_chart(TTEuropeService.office_counts()))
+    _press_note()
+    st.markdown(t("tt_eu.pat_list_heading"))
+    st.caption(t("tt_eu.pat_list_caption"))
+    for pat in TTEuropeService.get_patents():
+        render_patent_card(pat)
+    _rd_touchpoints()
+
+
+def render_tt_europe_pub_section() -> None:
+    _explainer()
+    _metrics()
+    _position_visuals(show_vendor_compare=False)
+    st.markdown(t("tt_eu.oa_heading"))
+    st.caption(t("tt_eu.oa_caption"))
+    st.markdown(t("tt_eu.papers_heading"))
+    st.caption(t("tt_eu.papers_caption"))
+    for paper in TTEuropeService.get_papers():
+        render_paper_card(paper)
+        note = paper.get("note") or ""
+        if note:
+            st.caption(note)
+    _rd_touchpoints()

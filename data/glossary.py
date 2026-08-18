@@ -282,6 +282,29 @@ GLOSSARY: dict[str, dict[str, str]] = {
         "definition": "Kaynak, dalga şekli ve işlemeyi iletişim ile algılama için birlikte optimize etme yaklaşımıdır.",
         "why": "Ayrı radar + ayrı şebeke yerine spektrum ve antenin çift kullanımını ifade eder.",
     },
+    "EPO": {
+        "abbr": "EPO",
+        "en": "European Patent Office",
+        "tr": "Avrupa Patent Ofisi",
+        "definition": (
+            "Avrupa Patent Sözleşmesi (EPC) üyeleri için tek başvuru ile bölgesel inceleme yapan ofistir. "
+            "Verilen EP patenti, seçilen üye ülkelerde ayrıca yürürlüğe konur (validation)."
+        ),
+        "why": (
+            "TR milli başvuru Almanya'yı korumaz; Avrupa'da hak için EP (veya her ülkede ayrı ulusal) yol gerekir. "
+            "Türkiye EPO üyesidir; üyelik, otomatik EP tescili demek değildir."
+        ),
+    },
+    "PCT": {
+        "abbr": "PCT",
+        "en": "Patent Cooperation Treaty",
+        "tr": "Patent İşbirliği Anlaşması",
+        "definition": (
+            "WIPO nezdinde uluslararası başvuru (WO) yoludur. Tek başına tescil vermez; "
+            "sonra ulusal/bölgesel faza (EP, US, TR…) girilir."
+        ),
+        "why": "WO numarası 'dünya patenti' değildir; hangi ofiste hak doğduğunu publication prefix söyler (EP, US, TR).",
+    },
     "API": {
         "abbr": "API",
         "en": "Application Programming Interface",

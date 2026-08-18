@@ -25,9 +25,9 @@ from components.ui_helpers import (
     show_empty,
     show_plotly,
 )
-from i18n.core import format_int, get_lang, t
+from components.tt_europe_views import render_tt_europe_patent_section
 
-PATENT_SECTION_KEYS = ["year", "topics", "tree", "map", "list"]
+PATENT_SECTION_KEYS = ["year", "topics", "tree", "map", "list", "tt_eu"]
 
 
 def render_patent_intelligence_module():
@@ -161,6 +161,9 @@ def render_patent_intelligence_module():
             show_empty(t("patent.empty_net"))
         else:
             show_plotly(render_patent_network_graph(edges))
+
+    elif section == "tt_eu":
+        render_tt_europe_patent_section()
 
     else:
         st.markdown(t("patent.list_heading"))

@@ -210,6 +210,7 @@ ticarileşme tarihi değildir.
                 "tree": "Patent Ağacı & Yoğunluk",
                 "map": "Teknoloji Haritası & Ağ",
                 "list": "Patent Başlıkları",
+                "tt_eu": "TT Avrupa izi",
             },
             "year_heading": "### Yıllara Göre Dağılım",
             "year_caption": "Her çubuk bir takvim yılıdır (ör. 2024, 2025). Kayıtlarda ay bilgisi olmadığı için 2024.2 gibi ara değer veya uydurma «2. Ay» dilimi yok.",
@@ -266,6 +267,7 @@ Google Scholar ayrı bir API sunmaz; sayılar OpenAlex’tendir.
                 "inst": "Kurumlar",
                 "country": "Ülkeler",
                 "papers": "Makaleler",
+                "tt_eu": "TT Avrupa izi",
             },
             "doi_heading": "### DOI ile doğrulanmış 6G makaleleri",
             "doi_caption": "Çubuklar yalnızca platformda listelenen makalelerin yayın yılı ve konusudur. Her karttaki buton makaleyi DOI üzerinden açar.",
@@ -298,6 +300,71 @@ Google Scholar ayrı bir API sunmaz; sayılar OpenAlex’tendir.
             "citations_na": "Atıf: —",
             "authors": "Yazarlar",
             "open_doi": "Makaleyi DOI ile Aç ↗",
+        },
+        "tt_eu": {
+            "what_title": "Patent neden ülkeye bağlıdır?",
+            "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
+<strong>Patent ülkeseldir:</strong> TR milli başvuru yalnızca Türkiye’de hak doğurur.
+<strong>EPO (European Patent Office — Avrupa Patent Ofisi):</strong> EPC üyeleri için tek inceleme;
+verilen EP, seçilen ülkede ayrıca yürürlüğe konur. Türkiye EPO üyesidir; üyelik otomatik EP tescili değildir.
+<strong>PCT (Patent Cooperation Treaty — Patent İşbirliği Anlaşması):</strong> WO numarası dünya patenti değildir.
+</p>
+<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
+Bu sekme Türk Telekom’un <em>Avrupa’daki yerini</em> üç ayrı şey olarak ayırır: (1) doğrulanmış patent ofisi,
+(2) yazar bağlılıklı makale, (3) işbirliği / standart organı. İşbirliği = tescil değildir.
+Firma filtresindeki Nokia–ZTE kümesi rakip örneklemdir; burası TT grubu örneğidir.
+</p>""",
+            "expert_title": "Bu kümede ne doğrulandı, ne doğrulanmadı?",
+            "expert_body": """<p style="color:#E2E8F0;font-size:0.9rem;line-height:1.65;margin:8px 0 0 0;">
+Google Patents’te bu platformun kilitlediği TT-grup 6G-komşu tesciller <strong>Netsia Inc.</strong> (USPTO) altındadır.
+Netsia, Argela/Türk Telekom ABD Ar-Ge iştirakidir; hukuki assignee Netsia’dır.
+<strong>EP yayın numarası bu örnekte 0’dır</strong> — gizlenmez, uydurulmaz.
+Yayınlarda ham bağlılık «Türk Telekom, Ankara/İstanbul, Türkiye». OpenAlex kurum grafı
+bazı kaydı DE/MY/CZ şirketine yanlış düşürebilir; ülke çubuğu o hatayı TT Avrupa yayını diye okumaz.
+</p>""",
+            "metric_pat": "TT-grup doğrulanmış patent",
+            "metric_ep": "EPO (EP) kayıt",
+            "metric_papers": "TT bağlılıklı makale (DOI)",
+            "metric_touch": "Avrupa dokunuşu",
+            "metric_named": "Adı geçen TTI ülkesi",
+            "role_title": "Pazardaki yer: satıcı değil, operatör",
+            "role_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
+Türk Telekom <strong>Türkiye’de entegre operatördür</strong> (sabit, mobil, genişbant).
+Avrupa 6G <em>ekipman</em> pazarında Nokia / Ericsson sınıfı RAN satıcısı değildir.
+<strong>Türk Telekom International (TTI):</strong> %100 iştirak; CEE–Türkiye–Kafkasya–Ortadoğu toptan veri/ses.
+Harita yalnızca adı kaynakta geçen ülkeleri boyar. Boyanmayan Avrupa ülkesi «yok» iddiası değil:
+bu platformda o ülke adı kilitlenmedi.
+</p>""",
+            "map_heading": "### Avrupa haritası (kaynakta adı geçen ülkeler)",
+            "map_caption": "Katmanlar ayrıdır: merkez, TTI toptan first-mover, 6G Ar-Ge ortağı, ETSI merkezi, MoU imza yeri. Abone/pazar payı değildir.",
+            "role_heading": "### Kanıt türü (kaç ülkede adı geçti)",
+            "role_caption": "EP tescil çubuğu 0’dır. Toptan 6 ülke TTI About «first mover» listesidir; 19 veya 24’ün tamamı değildir.",
+            "vs_heading": "### Bu platformun kilitli 6G örnek kümesi",
+            "vs_caption": "Nokia–ZTE çubukları doğrulanmış 6G örnek kayıttır. TT çubuğu Netsia USPTO tescilleridir. Küresel SEP veya gelir payı değildir.",
+            "office_heading": "### Patent ofisi (doğrulanmış küme)",
+            "office_caption": "EP=0, bu örnekte Avrupa bölgesel tescil yok demektir. 921 milli başvuru iddiası çubuğa işlenmez.",
+            "pat_list_heading": "### Netsia Inc. (Türk Telekom grubu) — Google Patents",
+            "pat_list_caption": "Assignee Netsia Inc. Kart, rakip (Nokia–ZTE) kümesine karıştırılmaz.",
+            "named_heading": "### Kaynakta adı geçen ülkeler (eksiksiz liste)",
+            "named_caption": "Haritada boyanan ülkelerin tam kümesi budur. 19 veya 24 ülke adı raporda yok; eklenmez.",
+            "presence_heading": "### 6G dokunuşları — işbirliği / standart / proje",
+            "presence_caption": "Kart resmi duyurudur. Eşit yükseklikli «ülke başına 1» çubuk pazar payı gibi okunduğu için çizilmez.",
+            "oa_heading": "### OpenAlex ülke grafını TT Avrupa’sı sanmayın",
+            "oa_caption": "Üstteki «Ülkeler» sekmesi küresel 6G konu aramasıdır, TT portföyü değildir. Aşağıdaki makalelerin ham bağlılığı TR’dir.",
+            "papers_heading": "### Türk Telekom Ar-Ge bağlılıklı makaleler",
+            "papers_caption": "DOI kilitlidir. Atıf OpenAlex’ten gelirse kartta görünür.",
+            "open_touch": "Kaynak duyuruyu aç ↗",
+            "open_press": "Milli başvuru açıklamasını aç ↗",
+            "open_ir": "2024 entegre raporu PDF ↗",
+            "open_tti": "TTI About sayfasını aç ↗",
+            "layer": {
+                "hq": "Merkez / operatör Ar-Ge",
+                "wholesale": "TTI toptan (first-mover)",
+                "rd_collab": "6G Ar-Ge ortaklığı",
+                "standards": "Standart organı (ETSI)",
+                "mou_venue": "MoU imza yeri",
+                "ep_grant": "EPO (EP) tescil",
+            },
         },
         "ui": {
             "source": "Kaynakta Aç ↗",
@@ -455,8 +522,8 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "mod_left": """
 - **Ana Sayfa** — 7 teknolojinin TRL radar haritası; Dual-Depth (Temel/Uzman) giriş metnini değiştirir
 - **6G Teknolojileri** — kavramsal temel + uzman katman (formül, varsayım, karşılaştırma); tüm sekmeler anlatım derinliğini dinler
-- **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; yıl, konu, kelime bulutu, ağaç, yoğunluk, harita; patent özetleri kaynakta kilitli
-- **Yayın Trendleri** — OpenAlex yıl / kurum / ülke; DOI doğrulamalı makaleler
+- **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; TT Avrupa izi; yıl, konu, kelime bulutu, ağaç, yoğunluk, harita; patent özetleri kaynakta kilitli
+- **Yayın Trendleri** — OpenAlex yıl / kurum / ülke; DOI doğrulamalı makaleler; TT Avrupa izi
             """,
             "mod_right": """
 - **Türk Telekom Görünümü** — saha senaryo çözümleyici
@@ -472,8 +539,8 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
 1. Amaç ve kapsam (1 dk)
 2. Ana Sayfa TRL radar (2 dk)
 3. Bir teknoloji (ör. RIS) — prensip + diyagram + TT senaryosu (3 dk)
-4. Patent Zekası — firma filtresi, yıl grafiği, kelime bulutu (3 dk)
-5. Yayın Trendleri — OpenAlex yıl + kurum/ülke + DOI kartı (3 dk)
+4. Patent Zekası — firma filtresi, yıl grafiği, TT Avrupa izi (3 dk)
+5. Yayın Trendleri — OpenAlex yıl + kurum/ülke + TT bağlılıklı DOI (3 dk)
 6. AI Asistan — «RIS nedir?» ve «NTN ile ISAC arasındaki fark» (2 dk)
 7. Kaynak doğrulama kuralı: uydurma ID/sayı yok (1 dk)
         """,
@@ -504,6 +571,14 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "sunburst": "Patent ağacı (firma → alan → kayıt)",
             "tfidf": "Patent teknoloji haritası (TF-IDF + PCA, başlık vektörleri)",
             "oa_bar_x": "Yayın sayısı (OpenAlex)",
+            "tt_office": "TT-grup patent ofisi (doğrulanmış küme)",
+            "tt_office_x": "Ofis kodu (EP / US / TR)",
+            "tt_europe": "TT Avrupa dokunuşu (işbirliği / standart / proje)",
+            "tt_europe_x": "Doğrulanmış dokunuş sayısı",
+            "tt_map": "TT Avrupa yeri — yalnızca adı kaynakta geçen ülkeler",
+            "tt_role": "TT kanıt türü (ülke adı adedi)",
+            "tt_role_x": "Adı geçen ülke / kayıt",
+            "tt_vs_vendors": "Kilitli 6G örnek küme vs TT-grup (Netsia)",
         },
         "diagram": {
             "isac_ue": "Kullanıcı (UE)",
@@ -756,6 +831,7 @@ not commercialisation date.
                 "tree": "Patent Tree & Density",
                 "map": "Technology Map & Network",
                 "list": "Patent Titles",
+                "tt_eu": "TT Europe footprint",
             },
             "year_heading": "### Distribution by year",
             "year_caption": "Each bar is a calendar year (e.g. 2024, 2025). Records have no month field, so there is no 2024.2 tick and no invented “Month 2” slice.",
@@ -812,6 +888,7 @@ Google Scholar does not expose a public API; the numbers here are from OpenAlex.
                 "inst": "Institutions",
                 "country": "Countries",
                 "papers": "Papers",
+                "tt_eu": "TT Europe footprint",
             },
             "doi_heading": "### DOI-verified 6G papers",
             "doi_caption": "Bars are publication year and topic for papers listed on this platform. Each card’s button opens the paper via its DOI.",
@@ -844,6 +921,71 @@ Google Scholar does not expose a public API; the numbers here are from OpenAlex.
             "citations_na": "Citations: —",
             "authors": "Authors",
             "open_doi": "Open the paper via DOI ↗",
+        },
+        "tt_eu": {
+            "what_title": "Why a patent is tied to a country",
+            "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
+A <strong>patent is territorial:</strong> a Turkish national filing creates a right only in Türkiye.
+<strong>EPO (European Patent Office):</strong> one examination for EPC members; a granted EP is then validated in chosen states.
+Türkiye is an EPO member; membership is not an automatic EP grant.
+<strong>PCT (Patent Cooperation Treaty):</strong> a WO number is not a world patent.
+</p>
+<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
+This tab splits Türk Telekom’s <em>European place</em> into three things: (1) verified patent office,
+(2) affiliation-locked papers, (3) collaboration / standards body. A partnership is not a grant.
+The Nokia–ZTE filter is a vendor sample; this tab is the TT-group sample.
+</p>""",
+            "expert_title": "What this set verified — and what it did not",
+            "expert_body": """<p style="color:#E2E8F0;font-size:0.9rem;line-height:1.65;margin:8px 0 0 0;">
+Google Patents records locked here for the TT group sit under <strong>Netsia Inc.</strong> (USPTO).
+Netsia is Argela/Türk Telekom’s US R&amp;D affiliate; the legal assignee is Netsia.
+<strong>EP publication count in this sample is 0</strong> — it is shown, not invented.
+Papers’ raw affiliation is “Türk Telekom, Ankara/Istanbul, Türkiye”. OpenAlex’s institution graph
+can mis-map a record to a DE/MY/CZ company; the country bar on the global tab is not read as TT’s European output.
+</p>""",
+            "metric_pat": "TT-group verified patents",
+            "metric_ep": "EPO (EP) records",
+            "metric_papers": "TT-affiliated papers (DOI)",
+            "metric_touch": "European touchpoints",
+            "metric_named": "Named TTI countries",
+            "role_title": "Market place: operator, not equipment vendor",
+            "role_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
+Türk Telekom is an <strong>integrated operator in Türkiye</strong> (fixed, mobile, broadband).
+It is not a Nokia/Ericsson-class RAN vendor in the European 6G <em>equipment</em> market.
+<strong>Türk Telekom International (TTI)</strong> is a 100% subsidiary for wholesale data/voice across
+CEE–Türkiye–Caucasus–Middle East. The map paints only countries named in a locked source.
+An unpainted European country is not a claim of absence — its name was not locked here.
+</p>""",
+            "map_heading": "### Europe map (countries named in a source)",
+            "map_caption": "Layers are distinct: HQ, TTI wholesale first-mover, 6G R&amp;D partner, ETSI seat, MoU venue. Not subscriber or revenue share.",
+            "role_heading": "### Evidence type (how many named countries)",
+            "role_caption": "The EP-grant bar is 0. Wholesale 6 is TTI About’s first-mover list, not the full 19 or 24.",
+            "vs_heading": "### This platform’s locked 6G sample",
+            "vs_caption": "Nokia–ZTE bars are verified 6G sample records. The TT bar is Netsia USPTO grants. Not global SEP or revenue share.",
+            "office_heading": "### Patent office (verified set)",
+            "office_caption": "EP=0 means no European regional grant in this sample. The 921 national-filing claim is not plotted.",
+            "pat_list_heading": "### Netsia Inc. (Türk Telekom group) — Google Patents",
+            "pat_list_caption": "Assignee is Netsia Inc. These cards are not mixed into the Nokia–ZTE vendor set.",
+            "named_heading": "### Countries named in a source (complete list)",
+            "named_caption": "This is the full set painted on the map. The 19 or 24 country names are not in the report; they are not added.",
+            "presence_heading": "### 6G touchpoints — collaboration / standards / project",
+            "presence_caption": "Each card is an official announcement. Equal-height “1 per country” bars are not drawn; they read as market share.",
+            "oa_heading": "### Do not read the OpenAlex country chart as TT-in-Europe",
+            "oa_caption": "The Countries tab above is a global 6G topic search, not a TT portfolio. Raw affiliation on the papers below is TR.",
+            "papers_heading": "### Papers with Türk Telekom R&amp;D affiliation",
+            "papers_caption": "DOIs are locked. Citation count appears when OpenAlex returns it.",
+            "open_touch": "Open the source announcement ↗",
+            "open_press": "Open the national-filing statement ↗",
+            "open_ir": "2024 integrated report PDF ↗",
+            "open_tti": "Open the TTI About page ↗",
+            "layer": {
+                "hq": "HQ / operator R&D",
+                "wholesale": "TTI wholesale (first-mover)",
+                "rd_collab": "6G R&D partnership",
+                "standards": "Standards body (ETSI)",
+                "mou_venue": "MoU signing venue",
+                "ep_grant": "EPO (EP) grant",
+            },
         },
         "ui": {
             "source": "Open Source ↗",
@@ -1000,8 +1142,8 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "mod_left": """
 - **Home** — TRL radar for the seven technologies; dual-depth (foundation/expert) switches the intro
 - **6G Technologies** — conceptual foundation plus expert layer (equation, assumption, comparison); every section respects depth
-- **Patent Intelligence** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; year, topic, word cloud, tree, density, map; abstracts locked to the source
-- **Publication Trends** — OpenAlex year / institution / country; DOI-verified papers
+- **Patent Intelligence** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; TT Europe footprint; year, topic, word cloud, tree, density, map; abstracts locked to the source
+- **Publication Trends** — OpenAlex year / institution / country; DOI-verified papers; TT Europe footprint
             """,
             "mod_right": """
 - **Türk Telekom View** — field scenario engine
@@ -1017,8 +1159,8 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
 1. Purpose and scope (1 min)
 2. Home TRL radar (2 min)
 3. One technology (e.g. RIS) — principle + diagram + TT scenario (3 min)
-4. Patent Intelligence — company filter, year chart, word cloud (3 min)
-5. Publication Trends — OpenAlex year + institution/country + DOI card (3 min)
+4. Patent Intelligence — company filter, year chart, TT Europe footprint (3 min)
+5. Publication Trends — OpenAlex year + institution/country + TT-affiliated DOI (3 min)
 6. AI Assistant — “What is RIS?” and “NTN vs ISAC” (2 min)
 7. Source rule: no invented IDs or counts (1 min)
         """,
@@ -1049,6 +1191,14 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "sunburst": "Patent tree (company → domain → record)",
             "tfidf": "Patent technology map (TF-IDF + PCA, title vectors)",
             "oa_bar_x": "Publication count (OpenAlex)",
+            "tt_office": "TT-group patent office (verified set)",
+            "tt_office_x": "Office code (EP / US / TR)",
+            "tt_europe": "TT European touchpoints (collaboration / standards / project)",
+            "tt_europe_x": "Verified touchpoint count",
+            "tt_map": "TT in Europe — only countries named in a source",
+            "tt_role": "TT evidence type (named-country count)",
+            "tt_role_x": "Named countries / records",
+            "tt_vs_vendors": "Locked 6G sample vs TT-group (Netsia)",
         },
         "diagram": {
             "isac_ue": "User equipment (UE)",

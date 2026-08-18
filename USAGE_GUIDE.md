@@ -38,8 +38,9 @@ Patent özetleri ve DOI kayıtları kaynakta kilitlidir (yeniden yazılmaz).
 
 1. Üstteki firmayı seçin (`Tümü` veya şartnamedeki 6 firmadan biri).
 2. Kayıt yoksa grafik çizilmez; sayı uydurulmaz.
-3. Sekmeler: yıl trendi, konu + kelime bulutu, patent ağacı + yoğunluk, TF-IDF harita + ağ, patent listesi.
+3. Sekmeler: yıl trendi, konu + kelime bulutu, patent ağacı + yoğunluk, TF-IDF harita + ağ, patent listesi, **TT Avrupa izi**.
 4. Her karttaki **Kaynakta Aç** Google Patents sayfasını açar.
+5. **TT Avrupa izi:** TT Avrupa’da RAN satıcısı değil, Türkiye operatörü + TTI toptandır. Harita yalnızca adı kaynakta geçen ülkeleri boyar (TTI first-mover 6 ülke; 19/24 iddiası boyanmaz). Netsia Inc. USPTO; EP=0 gizlenmez. 921 milli başvuru çubuğa işlenmez. Örnek küme çubuğu küresel SEP payı değildir.
 
 Bu küme tam küresel portföy değildir; yalnızca Google Patents’ten doğrulanmış örnek kayıtlardır.
 
@@ -49,6 +50,7 @@ Bu küme tam küresel portföy değildir; yalnızca Google Patents’ten doğrul
 - API yanıt vermezse grafik gizlenir; statik tablo gösterilmez.
 - Makale atıfları yalnızca OpenAlex `cited_by_count` alanındandır; yoksa «—» yazılır.
 - OpenAlex, IEEE / Springer / Elsevier ve Google Scholar indeksli literatürü kapsar. Google Scholar ayrı bir API sunmaz.
+- **TT Avrupa izi** sekmesi: aynı harita + kanıt türü; DOI’ler TR bağlılıklıdır. OpenAlex küresel ülke grafı TT portföyü değildir.
 
 ## 5. AI Asistan
 

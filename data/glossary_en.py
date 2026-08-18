@@ -173,6 +173,23 @@ GLOSSARY_EN: dict[str, dict[str, str]] = {
         "definition": "Joint optimisation of resources, waveform, and processing for communication and sensing together.",
         "why": "It names dual use of spectrum and antennas instead of a separate radar plus a separate network.",
     },
+    "EPO": {
+        "definition": (
+            "The office that examines a single application for European Patent Convention (EPC) states. "
+            "A granted EP patent must then be validated in the chosen member countries."
+        ),
+        "why": (
+            "A Turkish national filing does not cover Germany. European rights need an EP (or separate national) path. "
+            "Türkiye is an EPO member; membership is not an automatic EP grant."
+        ),
+    },
+    "PCT": {
+        "definition": (
+            "The WIPO international filing route (WO). It does not itself grant a patent; "
+            "the case later enters national or regional phase (EP, US, TR…)."
+        ),
+        "why": "A WO number is not a ‘world patent’; the publication prefix (EP, US, TR) names the office.",
+    },
     "API": {
         "definition": "A ruled call interface that one piece of software exposes to others.",
         "why": "OpenAlex and optional LLM providers attach to this platform through APIs.",

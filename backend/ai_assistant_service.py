@@ -12,6 +12,7 @@ from typing import Any, Dict, List, Optional
 from backend.academic_service import AcademicService
 from backend.data_service import DataService
 from backend.patent_service import PatentService
+from backend.tt_europe_service import TTEuropeService
 from data.glossary import glossary_plain_corpus
 from i18n.core import format_int, t
 
@@ -91,6 +92,49 @@ def _corpus() -> List[Dict[str, str]]:
                 "id": f"paper:{paper.get('doi','')}",
                 "title": paper["title"],
                 "text": f"{paper['title']} {paper.get('authors','')} {paper.get('journal','')} {cite_txt} DOI {paper.get('doi','')}",
+            }
+        )
+    tt_sum = TTEuropeService.summary()
+    chunks.append(
+        {
+            "id": "tt_eu:overview",
+            "title": t("tt_eu.what_title"),
+            "text": " ".join(
+                [
+                    _strip_html(t("tt_eu.what_body")),
+                    _strip_html(t("tt_eu.role_body")),
+                    _strip_html(t("tt_eu.expert_body")),
+                    f"EP {tt_sum['ep_n']} USPTO {tt_sum['us_n']} papers {tt_sum['paper_n']}",
+                    "Netsia Inc Türk Telekom grubu operatör toptan TTI EPO PCT territorial patent",
+                ]
+            ),
+        }
+    )
+    for pat in TTEuropeService.get_patents():
+        chunks.append(
+            {
+                "id": f"tt_eu:patent:{pat['publication_number']}",
+                "title": f"{pat['publication_number']} — {pat['title']}",
+                "text": f"{pat['title']} {pat.get('assignee','')} Netsia Türk Telekom {pat.get('domain','')} {pat.get('abstract','')}",
+            }
+        )
+    for paper in TTEuropeService.get_papers():
+        chunks.append(
+            {
+                "id": f"tt_eu:paper:{paper.get('doi','')}",
+                "title": paper["title"],
+                "text": (
+                    f"{paper['title']} {paper.get('authors','')} {paper.get('journal','')} "
+                    f"Türk Telekom Ar-Ge Türkiye DOI {paper.get('doi','')} {paper.get('note','')}"
+                ),
+            }
+        )
+    for row in TTEuropeService.get_touchpoints():
+        chunks.append(
+            {
+                "id": f"tt_eu:touch:{row['country']}",
+                "title": f"{row['country_name_tr']} — {row['title_tr']}",
+                "text": f"{row['title_tr']} {row['title_en']} {row['detail_tr']} {row['detail_en']} {row['url']}",
             }
         )
     return chunks

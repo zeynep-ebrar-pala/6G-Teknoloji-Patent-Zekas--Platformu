@@ -19,9 +19,9 @@ from components.ui_helpers import (
     show_empty,
     show_plotly,
 )
-from i18n.core import format_int, get_lang, t
+from components.tt_europe_views import render_tt_europe_pub_section
 
-PUB_SECTION_KEYS = ["doi", "trend", "inst", "country", "papers"]
+PUB_SECTION_KEYS = ["doi", "trend", "inst", "country", "papers", "tt_eu"]
 
 
 def render_academic_publication_module():
@@ -138,6 +138,9 @@ def render_academic_publication_module():
                 show_plotly(render_academic_bar_chart(verified_cc, t("pub.chart_cc_fb")))
             else:
                 show_empty(t("pub.empty_cc"))
+
+    elif section == "tt_eu":
+        render_tt_europe_pub_section()
 
     else:
         st.markdown(t("pub.papers_heading"))

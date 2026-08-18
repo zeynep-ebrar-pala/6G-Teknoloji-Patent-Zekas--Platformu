@@ -42,6 +42,8 @@ COMPANY_COLORS = {
     "Samsung": "#14B8A6",
     "Qualcomm": "#22C55E",
     "ZTE": "#818CF8",
+    "Türk Telekom": "#E20074",
+    "Türk Telekom (Netsia)": "#E20074",
     "AT&T": "#F97316",
     "Deutsche Telekom": "#EC4899",
     "InterDigital": "#3B82F6",
@@ -550,6 +552,149 @@ def render_patent_wordcloud(keywords_dict: Dict[str, int]):
     fig.patch.set_facecolor("#1A1F2B")
     ax.set_facecolor("#1A1F2B")
     fig.tight_layout(pad=0)
+    return fig
+
+
+def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") -> go.Figure:
+    """Yalnızca adı doğrulanmış ülkeler. 19/24 iddiası boyanmaz."""
+    df = pd.DataFrame(rows)
+    name_col = "name_tr" if lang == "tr" else "name_en"
+    label_col = "label_tr" if lang == "tr" else "label_en"
+    df["cat"] = df["layer"].map(lambda k: t(f"tt_eu.layer.{k}"))
+    df["place"] = df[name_col]
+    df["hint"] = df[label_col]
+    color_map = {
+        t("tt_eu.layer.hq"): "#E20074",
+        t("tt_eu.layer.wholesale"): "#00C2FF",
+        t("tt_eu.layer.rd_collab"): "#A855F7",
+        t("tt_eu.layer.standards"): "#FFB020",
+        t("tt_eu.layer.mou_venue"): "#14B8A6",
+    }
+    fig = px.choropleth(
+        df,
+        locations="iso3",
+        color="cat",
+        hover_name="place",
+        hover_data={"iso3": False, "cat": True, "hint": True, "place": False},
+        color_discrete_map=color_map,
+        category_orders={"cat": list(color_map.keys())},
+        locationmode="ISO-3",
+    )
+    fig.update_geos(
+        bgcolor="#1A1F2B",
+        landcolor="#121620",
+        oceancolor="#0E1117",
+        lakecolor="#0E1117",
+        subunitcolor="rgba(200,209,220,0.2)",
+        countrycolor="rgba(200,209,220,0.25)",
+        coastlinecolor="rgba(200,209,220,0.3)",
+        showlakes=False,
+        showframe=False,
+        showcountries=True,
+        showcoastlines=True,
+        # Plotly «europe» kapsamı Anadolu’yu keser; TR + UA + SE + ES buraya sığmalı.
+        projection_type="natural earth",
+        center=dict(lat=48.2, lon=19.5),
+        lonaxis_range=[-12, 48],
+        lataxis_range=[34, 72],
+    )
+    layout = _layout()
+    layout.update(
+        title=dict(text=f"<b>{t('charts.tt_map')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        height=520,
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=0.98,
+            xanchor="left",
+            x=0.0,
+            bgcolor="rgba(18, 22, 32, 0.92)",
+            font=dict(color="#FFFFFF", size=11),
+        ),
+        margin=dict(l=10, r=10, t=50, b=10),
+    )
+    fig.update_layout(**layout)
+    fig.update_traces(marker_line_width=0.6, marker_line_color="rgba(200,209,220,0.35)")
+    return fig
+
+
+def render_tt_role_kind_chart(items: List[Dict[str, Any]]) -> go.Figure:
+    """Kanıt türü adedi — pazar payı değil."""
+    names = [t(f"tt_eu.layer.{i['id']}") for i in items]
+    counts = [i["count"] for i in items]
+    fig = go.Figure(go.Bar(
+        x=counts,
+        y=names,
+        orientation="h",
+        marker=dict(color=["#E20074", "#00C2FF", "#A855F7", "#FFB020", "#14B8A6", "#64748B"][: len(names)]),
+    ))
+    fig.update_layout(
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.tt_role')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=dict(title=t("charts.tt_role_x"), gridcolor="rgba(200, 209, 220, 0.1)", dtick=1),
+        yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
+        height=max(320, 36 * max(len(items), 1) + 80),
+    )
+    return fig
+
+
+def render_tt_vs_vendors_chart(counts: Dict[str, int]) -> go.Figure:
+    """Kilitli örnek küme. Küresel pazar veya SEP payı değildir."""
+    sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+    names = [c for c, _ in sorted_items]
+    fig = go.Figure(go.Bar(
+        x=names,
+        y=[n for _, n in sorted_items],
+        marker=dict(color=_color_list(names)),
+    ))
+    fig.update_layout(
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.tt_vs_vendors')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)", tickangle=-25),
+        yaxis=_count_axis(t("charts.patent_count")),
+        height=400,
+        bargap=0.28,
+    )
+    return fig
+
+
+def render_tt_office_chart(counts: Dict[str, int]) -> go.Figure:
+    """TT-grup doğrulanmış patentlerin ofis kodu — EP 0 ise 0 basılır."""
+    order = ["EP", "US", "TR"]
+    names = [k for k in order if k in counts] + [k for k in counts if k not in order]
+    fig = go.Figure(go.Bar(
+        x=names,
+        y=[counts[k] for k in names],
+        marker=dict(color="#E20074"),
+    ))
+    fig.update_layout(
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.tt_office')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=dict(title=t("charts.tt_office_x"), gridcolor="rgba(200, 209, 220, 0.1)"),
+        yaxis=_count_axis(t("charts.patent_count")),
+        height=340,
+        bargap=0.35,
+    )
+    return fig
+
+
+def render_tt_europe_presence_chart(items: List[Dict[str, Any]], name_key: str = "name") -> go.Figure:
+    """Avrupa dokunuşu sayısı (işbirliği/standart/proje) — patent sayısı değildir."""
+    names = [i[name_key] for i in items]
+    counts = [i["count"] for i in items]
+    fig = go.Figure(go.Bar(
+        x=counts,
+        y=names,
+        orientation="h",
+        marker=dict(color="#818CF8"),
+    ))
+    fig.update_layout(
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.tt_europe')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=dict(title=t("charts.tt_europe_x"), gridcolor="rgba(200, 209, 220, 0.1)"),
+        yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
+        height=max(320, 36 * max(len(items), 1) + 80),
+    )
     return fig
 
 
