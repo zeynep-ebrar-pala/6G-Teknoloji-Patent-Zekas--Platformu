@@ -14,17 +14,17 @@ TECH_OVERLAY_EN: dict = {
             "(TRL 4 — 3GPP Rel-19/20 target)"
         ),
         "card_summary": (
-            "The base station both delivers connectivity and, like a radar, "
-            "senses the surrounding environment."
+            "The tower talks; it does not look. ISAC uses the same wave "
+            "for talk and for echo."
         ),
         "beginner_one_liner": (
             "The cell site no longer only talks; it also 'hears' the car "
             "behind the fog."
         ),
         "highlights": [
-            "🎯 1 cm radar accuracy",
-            "📡 100+ Gbps throughput",
-            "🛰️ V2X / drone tracking",
+            "Range from the echo",
+            "Speed from Doppler",
+            "TRL 4, not in the field",
         ],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
@@ -134,16 +134,16 @@ TECH_OVERLAY_EN: dict = {
             "(TRL 5 — low-power intelligent surfaces)"
         ),
         "card_summary": (
-            "A smart mirror mounted on a building steers the signal around the corner."
+            "The signal cannot turn the corner; RIS is an electronic mirror on the façade."
         ),
         "beginner_one_liner": (
             "An electronic mirror is hung on the building so the signal is not lost on the wall; "
             "it turns the beam into the room you choose."
         ),
         "highlights": [
-            "🪞 Smart reflecting surface",
-            "🌱 90% energy saving",
-            "🏙️ Blind-spot coverage",
+            "Phase-shifting mirror",
+            "A scrap of energy",
+            "TRL 5, not commercial",
         ],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
@@ -250,16 +250,16 @@ TECH_OVERLAY_EN: dict = {
             "(TRL 4 — cell-free network architecture)"
         ),
         "card_summary": (
-            "Instead of one tower, many small antennas around you carry you together."
+            "A drop at the cell edge; cell-free MIMO erases that boundary."
         ),
         "beginner_one_liner": (
             "The signal does not drop when you change towers in the city; the small antennas beside you "
             "hold you hand in hand."
         ),
         "highlights": [
-            "🔄 Unbroken signal cloud",
-            "⚡ Zero cell boundary",
-            "📶 Uniform 1 Gbps+ experience",
+            "Handover disappears",
+            "Fronthaul is the bill",
+            "TRL 4 stadium candidate",
         ],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
@@ -357,15 +357,15 @@ TECH_OVERLAY_EN: dict = {
             "(TRL 3 — 0.1 THz–10 THz spectrum)"
         ),
         "card_summary": (
-            "A much fatter wireless data pipe than today's 5G — still in the laboratory."
+            "The wireless pipe is still narrow; THz opens bandwidth, physics cuts range."
         ),
         "beginner_one_liner": (
             "You talk at a very high pitch between radio and light; downloading a film takes a blink, not seconds."
         ),
         "highlights": [
-            "⚡ 1 Tbps record rate",
-            "⏱️ Sub-millisecond latency",
-            "🖥️ Wireless data centre",
+            "Bandwidth many times over",
+            "Vapour / walls cut range",
+            "TRL 3, not on the street",
         ],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
@@ -472,15 +472,15 @@ TECH_OVERLAY_EN: dict = {
             "(TRL 5 — AI-native 6G)"
         ),
         "card_summary": (
-            "The network behaves like a traffic officer who retunes itself when congestion hits."
+            "The network recites from memory; AI-RAN redistributes resource on a millisecond loop."
         ),
         "beginner_one_liner": (
             "Instead of reading memorised rules, the base station watches live traffic and decides in milliseconds."
         ),
         "highlights": [
-            "🧠 AI-based PHY",
-            "📊 Dynamic spectrum allocation",
-            "🌿 Green-network target",
+            "Resource from measurement",
+            "Not a chatbot",
+            "TRL 5, not unattended",
         ],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
@@ -580,15 +580,15 @@ TECH_OVERLAY_EN: dict = {
             "(TRL 6 — satellite integration)"
         ),
         "card_summary": (
-            "The satellite brings coverage to the phone on the mountain and at sea as well."
+            "The tower cannot reach everywhere; NTN opens the 3GPP network to the sky."
         ),
         "beginner_one_liner": (
             "When the city tower is not enough, the satellite overhead takes over; the phone stays the same."
         ),
         "highlights": [
-            "🛰️ Direct-to-cell satellites",
-            "🌍 100% global coverage",
-            "🆘 Disaster resilience",
+            "To the sky, no tower",
+            "Delay + Doppler",
+            "TRL 6 complement",
         ],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"
@@ -686,15 +686,15 @@ TECH_OVERLAY_EN: dict = {
             "(TRL 4 — battery-free Internet of Things)"
         ),
         "card_summary": (
-            "Battery-free tags run on radio energy harvested from the air."
+            "You cannot put a battery on every object; Ambient IoT says “I am here” on RF scraps."
         ),
         "beginner_one_liner": (
             "A tag as cheap as packing tape takes power from a Wi-Fi or 6G wave and says 'I am here'."
         ),
         "highlights": [
-            "🔋 Battery-free operation",
-            "📦 RF energy harvesting",
-            "🌐 Trillion-sensor scale",
+            "Backscatter identity",
+            "Does not carry video",
+            "TRL 4, not on every shelf",
         ],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>What is it in one sentence?</strong><br>"

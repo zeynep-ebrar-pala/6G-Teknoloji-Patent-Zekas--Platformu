@@ -8,15 +8,17 @@ when / when not, not to confuse, real world, Türk Telekom impact.
 BEGINNER_COPY = {
     "isac": {
         "card": (
-            "On a fog-bound strait a tower can deliver internet, but it cannot answer "
-            "whether a ship is out there; cameras go blind, and a separate radar truck is "
-            "both expensive and pollutes the spectrum. "
-            "Integrated Sensing and Communication (ISAC) counts the same radio wave as both "
-            "conversation and echo: delay is range, Doppler shift is speed. "
-            "For Türk Telekom this is a candidacy, not a neighbourhood product. "
-            "Technology Readiness Level (TRL) 4 — laboratory-validated, not a live field network."
+            "On a fog-bound strait the tower delivers internet but cannot look and ask "
+            "whether a ship is out there; the camera loses sight, and a separate radar truck "
+            "is both expensive and pollutes the spectrum. "
+            "ISAC (Integrated Sensing and Communication) uses the same radio wave both to carry data "
+            "and to measure from the echo: delay gives range, Doppler shift gives speed. "
+            "The bill is keeping that measurement reliable outside the laboratory; "
+            "for Türk Telekom this is a candidacy, not a neighbourhood product. "
+            "It is at TRL 4: the method has been validated in the lab, "
+            "but it has not yet been tried in a live field network."
         ),
-        "kicker": "Problem: the tower talks, it does not look",
+        "kicker": "Problem: the tower talks, it cannot see",
         "what": (
             "Integrated Sensing and Communication (ISAC) is a radio architecture that jointly "
             "designs bit delivery to the user and extraction of range, speed, and angle from the "
@@ -114,15 +116,16 @@ BEGINNER_COPY = {
     },
     "ris": {
         "card": (
-            "At higher frequencies a wave tends to travel in a straight line; it does not turn the "
-            "corner, and it dies in an elevator shaft. Building a new tower for every blind spot "
-            "does not scale. "
-            "A Reconfigurable Intelligent Surface (RIS) is an electronic mirror hung on a façade: "
-            "each small element shifts phase, and the beam turns toward you. "
-            "Because it is not a transmitter in its own right, it consumes only a scrap of energy. "
-            "Technology Readiness Level (TRL) 5 — prototype / field trial, not a commercial tower."
+            "A high-frequency wave tends to travel in a straight line; it does not turn the corner, "
+            "and it vanishes in an elevator shaft. Planting a new tower for every blind spot "
+            "is expensive and impractical. "
+            "RIS (Reconfigurable Intelligent Surface) is an electronic mirror hung on the façade: "
+            "each small element on the surface shifts the wave’s phase, and the beam turns toward you. "
+            "Because it does not generate a signal of its own, energy use is a scrap. "
+            "It is at TRL 5: a prototype has been built and field trials have been run, "
+            "but it is not yet used on a commercial tower."
         ),
-        "kicker": "Problem: the signal cannot turn the corner",
+        "kicker": "Problem: the wave cannot turn the corner",
         "what": (
             "A RIS is a surface of hundreds or thousands of tunable reflecting elements. "
             "The elements, switched by a PIN diode, varactor, or similar device, shift the phase of "
@@ -213,14 +216,14 @@ BEGINNER_COPY = {
     },
     "cell_free": {
         "card": (
-            "In a classical network every neighbourhood has a cell; as you approach the edge the "
-            "signal drops, and when the serving tower changes (handover) you risk a drop. "
-            "Cell-free Massive MIMO removes that boundary: access points as dense as street lamps "
-            "carry you jointly, so there is no longer an “edge.” "
+            "In a classical network every neighbourhood has a cell; as you approach the edge the signal drops, "
+            "and when the serving tower changes (handover) drop risk appears. "
+            "Cell-free Massive MIMO (Multiple-Input Multiple-Output) removes that boundary: "
+            "access points as dense as street lamps carry you jointly, so there is no longer an “edge.” "
             "The bill is the fronthaul fibre that ties the antennas back to the centre. "
-            "Technology Readiness Level (TRL) 4 — experimental; stadium and airport are the first candidates."
+            "It is at TRL 4, still experimental; stadiums and airports are thought of as the first dense venues."
         ),
-        "kicker": "Problem: drops at the cell edge",
+        "kicker": "Problem: it weakens at the cell boundary",
         "what": (
             "Cell-free Massive MIMO (Multiple-Input Multiple-Output) is an architecture in which "
             "the user is not bound to a single cell. Many geographically distributed access points "
@@ -305,13 +308,14 @@ BEGINNER_COPY = {
     },
     "thz": {
         "card": (
-            "5G is fast, but the wireless pipe is still narrow; inter-rack terabit or a real-time "
-            "hologram will not fit down it. Terahertz (THz) is the spectrum between millimetre-wave "
-            "and infrared; bandwidth explodes. The bill is physics: water vapour absorbs, walls cut, "
-            "range shrinks. Technology Readiness Level (TRL) 3 — the laboratory is strong, the street network is not. "
-            "6G is not THz in its entirety."
+            "5G is fast, but the wireless pipe is still narrow; terabit transfer between servers "
+            "or a real-time hologram will not fit down it. "
+            "THz (terahertz) is the spectrum between millimetre-wave and infrared; "
+            "bandwidth grows many times over. The bill is physics: water vapour absorbs, walls cut, range shrinks. "
+            "It is at TRL 3: laboratory results are strong, but it is not yet used in a street network. "
+            "6G as a whole also does not rest on THz."
         ),
-        "kicker": "Problem: the wireless pipe is still narrow",
+        "kicker": "Problem: the data pipe is still narrow",
         "what": (
             "THz communications is the attempt to open tens of GHz of bandwidth by using the "
             "spectrum that sits, roughly, in the 0.1–10 THz slice (hundreds of GHz and above), "
@@ -395,13 +399,14 @@ BEGINNER_COPY = {
     },
     "ai_ran": {
         "card": (
-            "A classical network recites the engineer’s tariff from memory: when a packed stadium "
-            "and a deserted night share the same rule, you either waste resource or lose quality. "
-            "An Artificial Intelligence–managed Radio Access Network (AI-RAN) measures the tower "
-            "and shifts resource on a millisecond-to-second loop. It is not a chatbot. "
-            "Technology Readiness Level (TRL) 5 — O-RAN RIC trials exist; “no human in the loop” is not field-proven."
+            "A classical network recites a fixed rule from memory: when a packed stadium and a deserted night "
+            "share the same rule, you either waste resource or lose quality. "
+            "AI-RAN (Artificial Intelligence-Native RAN) measures the tower and shifts resource "
+            "on a millisecond-to-second loop. It is not a chatbot; it is the decision mechanism that runs the network. "
+            "It is at TRL 5: trials have been run on an O-RAN RIC (RAN Intelligent Controller), "
+            "but fully unattended operation in the field has not yet been proven."
         ),
-        "kicker": "Problem: the network recites a memorised rule",
+        "kicker": "Problem: the network follows a fixed rule",
         "what": (
             "An AI-native RAN is the design of parts of PHY/MAC and resource management to run on "
             "learned models (autoencoder, reinforcement learning, prediction) instead of a fixed "
@@ -486,13 +491,15 @@ BEGINNER_COPY = {
     },
     "ntn": {
         "card": (
-            "Terrestrial towers cover the city and the asphalt; mountain, open sea, and debris "
-            "fields stay empty. A Non-Terrestrial Network (NTN) joins Low Earth Orbit (LEO) "
-            "satellites and High-Altitude Platform Stations (HAPS) to the 3GPP network: a standard "
-            "phone falls back to the sky when there is no tower. The bill is latency and Doppler. "
-            "Technology Readiness Level (TRL) 6 — the most mature of the seven; not a rival to urban 6G, a complement."
+            "A terrestrial tower covers the city and the asphalt; mountain, open sea, and rubble stay empty. "
+            "NTN (Non-Terrestrial Network) joins LEO (Low Earth Orbit) satellites and "
+            "HAPS (High-Altitude Platform Station) to the 3GPP network: "
+            "when there is no tower the phone connects straight to the sky. "
+            "The bill is delay from the long path and Doppler shift from satellite motion. "
+            "It is at TRL 6 and the most mature of the seven; "
+            "not a rival to the urban 6G network, but the complement that completes it."
         ),
-        "kicker": "Problem: the tower cannot reach everywhere",
+        "kicker": "Problem: the tower does not reach everywhere",
         "what": (
             "NTN is the architecture that ties LEO, Geostationary Earth Orbit (GEO), and HAPS nodes "
             "into the terrestrial core with 3GPP Rel-17+ procedures. "
@@ -571,13 +578,14 @@ BEGINNER_COPY = {
     },
     "ambient_iot": {
         "card": (
-            "Every carton in the warehouse, every soil-moisture sensor in the field, still wants a "
-            "battery today. When the battery dies the device dies; swapping millions of batteries "
-            "does not scale. Ambient IoT harvests a scrap of ambient RF and says “I am here” by "
-            "backscatter. It does not carry video. Technology Readiness Level (TRL) 4 — a 3GPP work item; it is not stuck to "
-            "every shelf."
+            "Every carton in the warehouse, every soil-moisture sensor in the field, still wants a battery today. "
+            "When the battery dies the device falls silent; swapping millions of batteries does not scale. "
+            "Ambient IoT harvests a scrap of ambient RF (radio frequency) and says “I am here” by backscatter; "
+            "it does not carry video, it only announces identity. "
+            "It is at TRL 4: an active 3GPP work item, "
+            "but not yet a technology stuck to every shelf and used at scale."
         ),
-        "kicker": "Problem: you cannot put a battery on every object",
+        "kicker": "Problem: you cannot replace the battery on every object",
         "what": (
             "Ambient IoT is the IoT class in which tags with no battery, or a very small one, "
             "harvest energy from ambient RF (tower, Wi-Fi, a dedicated illuminator) and, most "

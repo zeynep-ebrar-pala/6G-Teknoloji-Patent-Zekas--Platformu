@@ -58,10 +58,10 @@ def inject_custom_styles():
         .tt-header-container {
             background: linear-gradient(135deg, rgba(26, 31, 43, 0.95) 0%, rgba(14, 17, 23, 0.9) 100%);
             border: 1px solid rgba(0, 153, 255, 0.25);
-            border-radius: 16px;
-            padding: 26px 36px;
-            margin-bottom: 28px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 153, 255, 0.1);
+            border-radius: 10px;
+            padding: 8px 16px;
+            margin-bottom: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(16px);
         }
 
@@ -69,46 +69,90 @@ def inject_custom_styles():
             background: linear-gradient(90deg, #0099FF 0%, #00C2FF 100%);
             color: #FFFFFF !important;
             font-weight: 800 !important;
-            font-size: 0.72rem;
-            letter-spacing: 1.8px;
-            padding: 4px 14px;
-            border-radius: 20px;
+            font-size: 0.58rem;
+            letter-spacing: 1.4px;
+            padding: 2px 8px;
+            border-radius: 12px;
             text-transform: uppercase;
             display: inline-block;
-            margin-bottom: 12px;
-            box-shadow: 0 0 14px rgba(0, 153, 255, 0.4);
+            margin-bottom: 3px;
+            box-shadow: 0 0 8px rgba(0, 153, 255, 0.3);
         }
 
         .tt-title {
             color: #FFFFFF !important;
-            font-size: 2.2rem;
+            font-size: 1.18rem;
             font-weight: 800 !important;
             margin: 0;
-            line-height: 1.2;
+            line-height: 1.15;
         }
 
         .tt-subtitle {
             color: #CBD5E1;
-            font-size: 1.02rem;
-            margin-top: 8px;
+            font-size: 0.78rem;
+            margin-top: 2px;
             margin-bottom: 0;
+        }
+
+        .home-intro {
+            background: rgba(0, 200, 83, 0.08);
+            border: 1px solid rgba(0, 200, 83, 0.4);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin: 0 0 8px 0;
+        }
+        .home-intro h4 {
+            color: #00C853 !important;
+            margin: 0 0 4px 0 !important;
+            font-size: 0.95rem !important;
+        }
+        .home-intro p {
+            color: #E2E8F0 !important;
+            font-size: 0.82rem !important;
+            line-height: 1.42 !important;
+            margin: 0 0 6px 0 !important;
+        }
+        .home-intro p.home-intro-note {
+            color: #94A3B8 !important;
+            font-size: 0.76rem !important;
+            margin: 0 !important;
+        }
+        .home-cards-head {
+            margin: 0 0 6px 0;
+        }
+        .home-cards-head h3 {
+            color: #FFFFFF !important;
+            font-size: 1.02rem !important;
+            margin: 0 0 2px 0 !important;
+            font-weight: 700 !important;
+        }
+        .home-cards-head p {
+            color: #94A3B8 !important;
+            font-size: 0.76rem !important;
+            margin: 0 !important;
+            line-height: 1.35 !important;
         }
 
         /* Dual Depth Cards (Temel Seviye vs Uzman) */
         .dual-card-beginner {
             background: rgba(0, 200, 83, 0.08);
             border: 1px solid rgba(0, 200, 83, 0.35);
-            border-radius: 14px;
-            padding: 22px;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
             backdrop-filter: blur(8px);
         }
 
         .dual-card-beginner h4 {
             color: #00C853 !important;
             margin-top: 0;
-            margin-bottom: 12px;
-            font-size: 1.1rem;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .dual-card-beginner p {
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         .teach-grid {
@@ -138,15 +182,21 @@ def inject_custom_styles():
             text-transform: uppercase;
         }
         .card-kicker {
-            display: inline-block;
-            background: rgba(0, 229, 255, 0.12);
-            color: #7DD3FC !important;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.03em;
-            padding: 3px 8px;
+            display: block !important;
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(255, 176, 32, 0.14);
+            border: 1px solid rgba(255, 176, 32, 0.4);
+            border-left: 4px solid #FFB020;
+            color: #FFD37A !important;
+            font-size: 0.86rem !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.01em;
+            padding: 6px 10px;
             border-radius: 6px;
-            margin-bottom: 8px;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+            text-transform: none;
         }
         @media (max-width: 900px) {
             .teach-grid { grid-template-columns: 1fr; }
@@ -155,28 +205,83 @@ def inject_custom_styles():
         .dual-card-expert {
             background: rgba(0, 153, 255, 0.08);
             border: 1px solid rgba(0, 153, 255, 0.35);
-            border-radius: 14px;
-            padding: 22px;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
             backdrop-filter: blur(8px);
         }
 
         .dual-card-expert h4 {
             color: #00C2FF !important;
             margin-top: 0;
-            margin-bottom: 12px;
-            font-size: 1.1rem;
+            margin-bottom: 6px;
+            font-size: 1rem;
         }
 
         /* Glassmorphism Surface Cards */
         .glass-card {
             background: #1A1F2B;
             border: 1px solid rgba(200, 209, 220, 0.15);
-            border-radius: 14px;
-            padding: 24px;
-            margin-bottom: 20px;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .home-tech-card {
+            min-height: 0 !important;
+            padding: 10px 12px !important;
+            margin-bottom: 8px !important;
+        }
+        .home-tech-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .home-tech-icon { font-size: 1.35rem; line-height: 1; }
+        .home-tech-acronym {
+            color: #FFFFFF !important;
+            margin: 0 !important;
+            font-size: 0.98rem !important;
+            overflow-wrap: anywhere;
+        }
+        .home-tech-title {
+            color: #00C2FF;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin: 0 0 6px 0;
+            overflow-wrap: anywhere;
+        }
+        .home-tech-blurb {
+            color: #E2E8F0 !important;
+            font-size: 0.8rem !important;
+            line-height: 1.45 !important;
+            margin: 0 0 8px 0 !important;
+            overflow-wrap: anywhere;
+        }
+        .home-tech-chips { margin-bottom: 4px; }
+        .home-chip {
+            background: rgba(0, 153, 255, 0.12);
+            color: #00C2FF;
+            border: 1px solid rgba(0, 153, 255, 0.3);
+            font-size: 0.68rem;
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 2px 2px 2px 0;
+            overflow-wrap: anywhere;
+        }
+        .home-tech-cta {
+            padding-top: 5px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.7rem;
+            color: #94A3B8;
+            overflow-wrap: anywhere;
         }
 
         .glass-card:hover {
@@ -188,10 +293,10 @@ def inject_custom_styles():
         /* TRL Level Pills */
         .trl-pill {
             display: inline-block;
-            padding: 5px 14px;
-            border-radius: 20px;
+            padding: 4px 10px;
+            border-radius: 16px;
             font-weight: 700 !important;
-            font-size: 0.82rem;
+            font-size: 0.74rem;
             text-align: center;
         }
 
@@ -511,6 +616,38 @@ def inject_custom_styles():
         [data-baseweb="tab"], [data-testid="stPills"] button {
             white-space: normal !important;
             height: auto !important;
+        }
+
+        /* Streamlit 1.61: varsayılan ~6rem üst boşluk kartları katlıyor */
+        header[data-testid="stHeader"],
+        .stAppHeader,
+        [data-testid="stHeader"] {
+            background: rgba(14, 17, 23, 0.85) !important;
+            height: 2.4rem !important;
+        }
+        [data-testid="stDecoration"] { display: none !important; }
+        .stMainBlockContainer,
+        [data-testid="stMainBlockContainer"],
+        .stMain .block-container,
+        section.stMain .block-container,
+        div.block-container {
+            padding-top: 2.6rem !important;
+            padding-bottom: 1.2rem !important;
+            padding-left: 1.4rem !important;
+            padding-right: 1.4rem !important;
+        }
+        [data-testid="stMain"] [data-testid="stVerticalBlock"] {
+            gap: 0.35rem !important;
+        }
+        [data-testid="stMain"] .stMarkdown {
+            margin-bottom: 0 !important;
+        }
+        [data-testid="stMain"] h3 {
+            margin: 0.1rem 0 0.05rem 0 !important;
+            font-size: 1.02rem !important;
+        }
+        [data-testid="stMain"] [data-testid="stCaptionContainer"] {
+            display: none !important;
         }
         </style>
     """, unsafe_allow_html=True)

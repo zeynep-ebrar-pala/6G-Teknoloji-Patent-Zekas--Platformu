@@ -36,62 +36,42 @@ UI = {
             "caption": "Temel: kavram + analoji → teknik karşılık. Uzman: temel katman + denklem / 3GPP / varsayım.",
         },
         "home": {
-            "intro_beginner": """<div class="dual-card-beginner">
-<h4 style="margin-top:0;">6G nedir</h4>
-<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
-Telefonunuz bugün bir <strong>5G</strong> kulesine tutunur: kule konuşur, cihaz dinler, bitler akar.
-<strong>6G</strong> bu boruyu biraz daha kalınlaştırmak değildir. Aynı kuleye — ve kule olmayan yerlere —
-yeni işler vermektir; çünkü bugünkü şebeke birkaç sahada kör kalır.
+            "intro_beginner": """<div class="home-intro">
+<h4>6G nedir</h4>
+<p>
+<strong>6G</strong>, telefonunuzun internetini hızlandırmak değildir; aynı kuleye — ve kule olmayan yerlere —
+yeni işler vermektir. Bugün <strong>5G</strong>'de kule konuşur, telefon dinler, bitler akar; ama kule bakmaz,
+köşeyi dönemez, denizde ve dağda susar.
+<strong>RIS</strong> kör noktayı yansıtır; <strong>hücresiz MIMO</strong> hücre sınırını kaldırır;
+<strong>NTN</strong> telefonu göğe bağlar; <strong>ISAC</strong> aynı dalgayı yankı için dinler;
+<strong>AI-RAN</strong> ölçüme göre ayarlar; <strong>Ambient IoT</strong> pilsiz «buradayım» der;
+<strong>THz</strong> ileride bant açar.
 </p>
-<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
-Şehirde yüksek frekanslı dalga köşeyi dönemez, asansör boşluğunda ölür. Hücre kenarına yaklaşınca
-sinyal düşer; kule değişince kopma riski doğar. Dağ, açık deniz ve enkaz karasal kuleye yetişmez.
-Sis ve gecede kule konuşur ama bakmaz. Şebeke gece-gündüz aynı ezber tarife ile kaynak ayırır.
-Depodaki her etikete pil takmak ölçeklenmez. İleride kablosuz boru da dar gelir.
-</p>
-<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
-Aşağıdaki yedi kart bu yedi boşluğa birer cevap verir.
-<strong>RIS</strong> kör noktayı yansıtır; <strong>hücresiz MIMO</strong> kenarı kaldırır;
-<strong>NTN</strong> telefonu göğe düşürür; <strong>ISAC</strong> aynı dalgayı yankı gibi dinler;
-<strong>AI-RAN</strong> kuleyi ölçüme göre ayarlar; <strong>Ambient IoT</strong> pilsiz «buradayım» der;
-<strong>THz</strong> ileride daha geniş bant açar. Hepsi birden «hazır 6G» diye satılmaz;
-her biri kendi <strong>TRL</strong> (Technology Readiness Level — Teknoloji Hazırlık Seviyesi)
-basamağında durur.
-</p>
-<p style="color:#CBD5E1; font-size:0.92rem; line-height:1.65; margin:0;">
-<strong>Temel</strong> kademe şunu öğretir: nedir, neden var, nasıl çalışır, ne zaman kullanılır
-ve ne zaman kullanılmaz. Kısaltmalar ilk geçişte açılır. <strong>Uzman</strong> kademe aynı sahneyi
-atlamaz; üstüne denklem, varsayım ve 3GPP bağlamını ekler. Uydurma tepe hız yoktur.
+<p class="home-intro-note">
+Bağlantıdan önce farkındalıktır. Yedi teknoloji aynı rafta durmaz; her biri kendi
+<strong>TRL</strong> (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) basamağındadır.
+6G bugün vaat değil, yarının inşasıdır.
 </p>
 </div>""",
-            "intro_expert": """<div class="dual-card-beginner" style="background:rgba(0,200,83,0.10);border:1px solid rgba(0,200,83,0.45);border-radius:14px;padding:22px;margin-bottom:20px;">
-<h4 style="margin-top:0;color:#00C853;">6G yapı taşları — uzman okuma (temel katman atlanmaz)</h4>
-<p style="color:#E2E8F0; font-size:0.98rem; line-height:1.7; margin:0 0 12px 0;">
-<strong>Temel katman:</strong> 6G, 5G kulesine daha kalın bir boru takmak değildir. Kör kalan sahaya —
-köşe, hücre kenarı, dağ/deniz, sis, ezber tarife, pilsiz etiket, dar spektrum — yeni işlev vermektir.
-Aşağıdaki yedi kart hâlâ bu yedi boşluğa karşılık gelir; sahne atlanmaz.
+            "intro_expert": """<div class="home-intro">
+<h4>6G nedir — uzman okuma (temel katman atlanmaz)</h4>
+<p>
+<strong>Temel:</strong> 6G, 5G'nin yalnızca iletişim kuran mimarisine algı, karar ve enerji bağımsızlığı ekler.
+Kule konuşur, dinler, görür ve karar verir; sahne atlanmaz.
+<strong>Uzman:</strong> ISAC ortak OFDM dalgası, ΔR = c/2B ve Doppler; Pareto ödünleşimi.
+RIS faz (φ) + CSI gecikmesi. Hücresiz MIMO: kenar kalkar, bedel fronthaul / senkron.
+NTN LEO + Rel-17+, TRL 6. AI-RAN: O-RAN RIC, ölçüm → politika.
+Ambient IoT: backscatter, Friis. THz: Friis + soğurum, TRL 3, sokak şebekesi değil.
 </p>
-<p style="color:#E2E8F0; font-size:0.98rem; line-height:1.7; margin:0 0 12px 0;">
-<strong>Uzman katman</strong> aynı sahneye standart, bound ve varsayım ekler.
-<strong>ISAC</strong> (Integrated Sensing and Communication — Entegre Algılama ve İletişim): ortak dalga şekli;
-menzil/hızda <strong>CRB</strong> (Cramér–Rao Bound), bitlerde Shannon. Varsayım: yüksek SNR, düzenli model — şehir çokyollusu bunu gevşetir.
-<strong>RIS</strong> (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey): pasif faz;
-ideal diyagonal kanal 1–2 bit fazda bozulur.
-<strong>Hücresiz Massive MIMO</strong>: hücre kenarı kalkar; bedel fronthaul ve faz hizasıdır.
-<strong>Sub-THz/THz</strong>: bant açılır, Friis + atmosfer soğurması menzili keser — TRL 3, sokak şebekesi değil.
-<strong>AI-native RAN</strong> (<strong>O-RAN RIC</strong>): ölçüm → politika; etiketsiz izde model uydurur.
-<strong>NTN</strong> (Non-Terrestrial Network — Karasal Olmayan Ağ): 3GPP Rel-17+ Direct-to-Cell, TRL 6 saha adayı.
-<strong>Ambient IoT</strong>: backscatter, pil yok; hasat Friis ile sınırlıdır.
-</p>
-<p style="color:#CBD5E1; font-size:0.9rem; line-height:1.65; margin:0;">
-TRL 1–9 radar saha/standart olgunluğudur, basın takvimi değildir. Denklem, protokol ve DOI için
-<strong>6G Teknolojileri</strong>. Tepe hız sloganı saha ölçümü sayılmaz.
+<p class="home-intro-note">
+Bu yedi girdi tek bir «6G ürünü» değil, farklı olgunluklarda standartlaşma girdisidir.
+Denklem ve varsayım kartın altında ve <strong>6G Teknolojileri</strong>ndedir.
 </p>
 </div>""",
-            "cards_heading": "### Yedi yapı taşı — her biri bir sorunu çözer",
+            "cards_heading": "Yedi yapı taşı — her biri bir sorunu çözer",
             "cards_caption": "Kartta önce sahadaki sorun, sonra çözüm vardır. Adım adım anlatım, formül ve Türk Telekom senaryosu için soldan «6G Teknolojileri» menüsüne geçin.",
             "card_cta": "Adım adım anlatım: 6G Teknolojileri → bu kartı seçin",
-            "cards_heading_expert": "### Yedi yapı taşı — bound, varsayım ve TRL",
+            "cards_heading_expert": "Yedi yapı taşı — bound, varsayım ve TRL",
             "cards_caption_expert": "Kartta problem + teknik karşılık vardır. Çipte formül adı görünür. Shannon/CRB, 3GPP ve geçerlilik penceresi için «6G Teknolojileri»ne geçin.",
             "card_cta_expert": "Denklem ve 3GPP bağlamı: 6G Teknolojileri → bu kartı seçin",
             "radar_heading": "### 6G Teknolojileri Olgunluk Seviyesi (TRL Radar Haritası)",
@@ -590,60 +570,41 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "caption": "Beginner: concept + analogy → technical map. Expert: foundation + equation / 3GPP / assumption.",
         },
         "home": {
-            "intro_beginner": """<div class="dual-card-beginner">
-<h4 style="margin-top:0;">What is 6G</h4>
-<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
-Your phone today hangs off a <strong>5G</strong> tower: the tower talks, the device listens, bits flow.
-<strong>6G</strong> is not simply a fatter pipe on the same mast. It gives that mast — and nodes that are not masts —
-new jobs, because today’s network goes blind in several real settings.
-</p>
-<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
-In a city, a high-frequency wave will not turn a corner; it dies in an elevator shaft. Near the cell edge
-the signal collapses; a handover can drop the call. Mountains, open sea, and rubble sit beyond terrestrial towers.
-In fog and at night the tower still talks but cannot see. The radio resource plan barely changes between noon and 03:00.
-Putting a battery on every warehouse tag does not scale. And eventually the wireless pipe itself runs out of width.
-</p>
-<p style="color:#E2E8F0; font-size:1.02rem; line-height:1.7; margin:0 0 12px 0;">
-The seven cards below answer those seven gaps.
+            "intro_beginner": """<div class="home-intro">
+<h4>What is 6G</h4>
+<p>
+<strong>6G</strong> is not about making your phone’s internet faster; it gives the same tower — and places that are not towers —
+new jobs. Today in <strong>5G</strong> the tower talks, the phone listens, bits flow; but the tower does not see,
+cannot turn a corner, and falls silent at sea and in the mountains.
 <strong>RIS</strong> reflects a dead zone; <strong>cell-free MIMO</strong> removes the cell edge;
-<strong>NTN</strong> puts the phone on a sky node; <strong>ISAC</strong> listens to the same wave as an echo;
-<strong>AI-RAN</strong> retunes the site from measurements; <strong>Ambient IoT</strong> says “I am here” without a battery;
-<strong>THz</strong> opens a much wider band later. None of this is sold as “6G, ready now”;
-each sits on its own <strong>TRL</strong> (Technology Readiness Level) rung.
+<strong>NTN</strong> ties the phone to the sky; <strong>ISAC</strong> listens to the same wave as an echo;
+<strong>AI-RAN</strong> retunes from measurements; <strong>Ambient IoT</strong> says “I am here” without a battery;
+<strong>THz</strong> opens a wider band later.
 </p>
-<p style="color:#CBD5E1; font-size:0.92rem; line-height:1.65; margin:0;">
-The <strong>foundational</strong> track teaches what it is, why it exists, how it works, when to use it,
-and when not to. Abbreviations expand on first use. The <strong>expert</strong> track does not skip that scene;
-it adds equations, assumptions, and 3GPP context. Peak-rate marketing copy is not a field measurement.
+<p class="home-intro-note">
+Awareness before connectivity. The seven technologies do not sit on the same shelf; each sits on its own
+<strong>TRL</strong> (Technology Readiness Level) rung. 6G is not a promise today; it is tomorrow’s construction.
 </p>
 </div>""",
-            "intro_expert": """<div class="dual-card-beginner" style="background:rgba(0,200,83,0.10);border:1px solid rgba(0,200,83,0.45);border-radius:14px;padding:22px;margin-bottom:20px;">
-<h4 style="margin-top:0;color:#00C853;">6G building blocks — expert reading (foundation is not skipped)</h4>
-<p style="color:#E2E8F0; font-size:0.98rem; line-height:1.7; margin:0 0 12px 0;">
-<strong>Foundation layer:</strong> 6G is not a fatter pipe on a 5G mast. It assigns new jobs to the radio —
-corner, cell edge, mountain/sea, fog, a frozen scheduler, batteryless tags, scarce spectrum.
-The seven cards still map onto those seven gaps; the scene is not skipped.
+            "intro_expert": """<div class="home-intro">
+<h4>What is 6G — expert reading (foundation is not skipped)</h4>
+<p>
+<strong>Foundation:</strong> 6G adds sensing, decision, and energy independence to 5G’s communications-only architecture.
+The tower talks, listens, sees, and decides; the scene is not skipped.
+<strong>Expert:</strong> ISAC joint OFDM, ΔR = c/2B and Doppler; Pareto trade-off.
+RIS phase (φ) + CSI delay. Cell-free MIMO: edge gone, bill is fronthaul / sync.
+NTN LEO + Rel-17+, TRL 6. AI-RAN: O-RAN RIC, measurement → policy.
+Ambient IoT: backscatter, Friis. THz: Friis + absorption, TRL 3, not a street network.
 </p>
-<p style="color:#E2E8F0; font-size:0.98rem; line-height:1.7; margin:0 0 12px 0;">
-The <strong>expert layer</strong> adds the standard, the bound, and the assumption.
-<strong>ISAC</strong> (Integrated Sensing and Communication): a joint waveform; range/speed via the
-<strong>CRB</strong> (Cramér–Rao Bound), bits via Shannon. Assumption: high SNR and a regular model — urban multipath relaxes both.
-<strong>RIS</strong> (Reconfigurable Intelligent Surface): passive phase; the ideal diagonal channel breaks at 1–2 bit quantisation.
-<strong>Cell-free massive MIMO</strong>: the cell edge disappears; the bill is fronthaul and phase alignment.
-<strong>Sub-THz/THz</strong>: bandwidth opens, Friis plus atmospheric absorption cuts range — TRL 3, not a street network.
-<strong>AI-native RAN</strong> (<strong>O-RAN RIC</strong>): measurement → policy; without labelled traces the model fabricates.
-<strong>NTN</strong> (Non-Terrestrial Network): 3GPP Rel-17+ direct-to-cell, TRL 6 field candidate.
-<strong>Ambient IoT</strong>: backscatter, no battery; harvest is Friis-limited.
-</p>
-<p style="color:#CBD5E1; font-size:0.9rem; line-height:1.65; margin:0;">
-The TRL 1–9 radar is field/standards maturity, not a press-release timeline. For equations, protocol and DOI
-open <strong>6G Technologies</strong>. A peak-rate slogan is not a field measurement.
+<p class="home-intro-note">
+None of these is a single “6G product”; they are standards inputs at different maturities.
+Equations and assumptions sit on the cards and in <strong>6G Technologies</strong>.
 </p>
 </div>""",
-            "cards_heading": "### Seven building blocks — each closes a gap",
+            "cards_heading": "Seven building blocks — each closes a gap",
             "cards_caption": "Each card states the field problem first, then the method. For the step-by-step walkthrough, equations, and the Türk Telekom scenario, open 6G Technologies in the sidebar.",
             "card_cta": "Step-by-step walkthrough: 6G Technologies → select this card",
-            "cards_heading_expert": "### Seven building blocks — bounds, assumptions, and TRL",
+            "cards_heading_expert": "Seven building blocks — bounds, assumptions, and TRL",
             "cards_caption_expert": "Each card states the problem plus the technical counterpart. Chips name the governing equation. For Shannon/CRB, 3GPP and the validity window, open 6G Technologies.",
             "card_cta_expert": "Equations and 3GPP context: 6G Technologies → select this card",
             "radar_heading": "### 6G technology maturity (TRL radar)",
