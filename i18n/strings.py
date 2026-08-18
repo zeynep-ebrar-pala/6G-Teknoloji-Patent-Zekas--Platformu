@@ -75,10 +75,7 @@ Denklem ve varsayım kartın altında ve <strong>6G Teknolojileri</strong>ndedir
             "cards_caption_expert": "Kartta problem + teknik karşılık vardır. Shannon/CRB, 3GPP ve geçerlilik penceresi için «6G Teknolojileri»ne geçin.",
             "card_cta_expert": "Denklem ve 3GPP bağlamı: 6G Teknolojileri → bu kartı seçin",
             "radar_heading": "### TRL radar — 3GPP / kamuya açık deneme eşlemesi",
-            "radar_caption": "Türk Telekom sahası bu platformda ölçülmedi. Dilimler NASA/AB TRL 1–9 ölçeğidir; her tam sayı, 3GPP teknik raporu veya kamuya açık deneme sınıfına göre eşlenir. Ara değer çizilmez.",
-            "radar_table_tech": "Teknoloji",
-            "radar_table_trl": "TRL",
-            "radar_table_basis": "Dayanak",
+            "radar_caption": "Dilimler NASA/AB TRL 1–9 ölçeğidir; her tam sayı, 3GPP teknik raporu veya kamuya açık deneme sınıfına göre eşlenir.",
         },
         "trl": {
             "pill": "TRL {n}",
@@ -613,10 +610,7 @@ Equations and assumptions sit on the cards and in <strong>6G Technologies</stron
             "cards_caption_expert": "Each card states the problem plus the technical counterpart. For Shannon/CRB, 3GPP and the validity window, open 6G Technologies.",
             "card_cta_expert": "Equations and 3GPP context: 6G Technologies → select this card",
             "radar_heading": "### TRL radar — 3GPP / public-trial mapping",
-            "radar_caption": "Türk Telekom field data was not measured on this platform. Slices use the NASA/EU TRL 1–9 scale; each integer is mapped from a 3GPP technical report or a public trial class. No interpolated values.",
-            "radar_table_tech": "Technology",
-            "radar_table_trl": "TRL",
-            "radar_table_basis": "Basis",
+            "radar_caption": "Slices use the NASA/EU TRL 1–9 scale; each integer is mapped from a 3GPP technical report or a public trial class.",
         },
         "trl": {
             "pill": "TRL {n}",

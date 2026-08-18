@@ -140,37 +140,35 @@ def _count_axis(title: str) -> dict:
         separatethousands=False,
     )
 
-def _trl_bar_color(level: int) -> str:
-    if level <= 3:
-        return "#FF5252"
-    if level == 4:
-        return "#FFB020"
-    if level == 5:
-        return "#00C2FF"
-    return "#00C853"
-
-
 def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
-    """TRL dilimleri: yalnızca data/technologies.py tam sayıları. Ara değer / interpolasyon yok."""
+    """Örümcek ağı TRL: data/technologies.py tam sayıları; hover dayanağı trl_desc."""
     categories = [tech["acronym"] for tech in technologies_data.values()]
     trl_values = [int(tech["trl"]) for tech in technologies_data.values()]
-    colors = [_trl_bar_color(n) for n in trl_values]
+    bases = [str(tech.get("trl_desc") or "") for tech in technologies_data.values()]
+
+    categories_closed = categories + [categories[0]]
+    trl_values_closed = trl_values + [trl_values[0]]
+    bases_closed = bases + [bases[0]]
 
     fig = go.Figure()
-    fig.add_trace(go.Barpolar(
-        r=trl_values,
-        theta=categories,
+    fig.add_trace(go.Scatterpolar(
+        r=trl_values_closed,
+        theta=categories_closed,
+        fill="toself",
         name=t("charts.trl_series"),
-        marker=dict(color=colors, line=dict(color="#0E1117", width=1)),
-        customdata=[str(tech.get("trl_desc") or "") for tech in technologies_data.values()],
+        fillcolor="rgba(0, 153, 255, 0.25)",
+        line=dict(color="#00E5FF", width=3),
+        marker=dict(size=8, color="#0099FF", symbol="circle"),
+        customdata=bases_closed,
         hovertemplate=t("charts.trl_hover"),
     ))
     fig.add_trace(go.Scatterpolar(
-        r=[n + 0.45 for n in trl_values],
+        r=trl_values,
         theta=categories,
         mode="text",
         text=[str(n) for n in trl_values],
-        textfont=dict(color="#FFFFFF", size=13, family="Inter, sans-serif"),
+        textposition="top center",
+        textfont=dict(color="#FFFFFF", size=12, family="Inter, sans-serif"),
         hoverinfo="skip",
         showlegend=False,
     ))
@@ -182,7 +180,7 @@ def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
             radialaxis=dict(
                 visible=True,
                 range=[0, 9],
-                tickvals=[1, 2, 3, 4, 5, 6, 7, 8, 9],
+                tickvals=[1, 3, 5, 7, 9],
                 gridcolor='rgba(200, 209, 220, 0.15)',
                 linecolor='rgba(200, 209, 220, 0.2)',
                 tickfont=dict(color='#94A3B8')

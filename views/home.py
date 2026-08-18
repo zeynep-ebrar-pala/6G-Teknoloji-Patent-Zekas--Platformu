@@ -1,7 +1,5 @@
 """Ana Sayfa — kart metni data/home_cards.py (eski DataService katmanına bağlı değil)."""
 
-from html import escape
-
 import streamlit as st
 
 from backend.data_service import DataService
@@ -19,11 +17,9 @@ st.markdown(
 )
 
 heading = t("home.cards_heading") if beginner else t("home.cards_heading_expert")
-caption = t("home.cards_caption") if beginner else t("home.cards_caption_expert")
 st.markdown(
     f"""<div class="home-cards-head">
 <h3>{heading}</h3>
-<p>{caption}</p>
 </div>""",
     unsafe_allow_html=True,
 )
@@ -64,25 +60,5 @@ with col_info:
 
 st.markdown(
     f'<p class="home-radar-note">{t("home.radar_caption")}</p>',
-    unsafe_allow_html=True,
-)
-rows = []
-for tech in TECHNOLOGIES.values():
-    rows.append(
-        "<tr>"
-        f"<td>{escape(str(tech.get('acronym') or ''))}</td>"
-        f"<td>TRL {int(tech['trl'])}</td>"
-        f"<td>{escape(str(tech.get('trl_desc') or ''))}</td>"
-        "</tr>"
-    )
-st.markdown(
-    f"""<table class="home-trl-table">
-<thead><tr>
-<th>{escape(t("home.radar_table_tech"))}</th>
-<th>{escape(t("home.radar_table_trl"))}</th>
-<th>{escape(t("home.radar_table_basis"))}</th>
-</tr></thead>
-<tbody>{''.join(rows)}</tbody>
-</table>""",
     unsafe_allow_html=True,
 )
