@@ -31,22 +31,9 @@ PATENT_SECTION_KEYS = ["year", "topics", "tree", "map", "list"]
 
 
 def render_patent_intelligence_module():
-    spec = PatentService.get_spec_companies()
-    filter_options = ["all"] + spec
-    company = st.selectbox(
-        t("patent.filter"),
-        options=filter_options,
-        index=0,
-        format_func=lambda x: t("patent.all") if x == "all" else x,
-    )
-    company_arg = None if company == "all" else company
-
-    summary = PatentService.get_summary(company_arg)
-    patents = PatentService.get_top_patents(company_arg)
-
     render_module_header(
         t("patent.title"),
-        t("patent.subtitle", source=summary["source"]),
+        t("patent.subtitle", source=PatentService.get_data_source()),
     )
 
     st.markdown(
@@ -56,6 +43,20 @@ def render_patent_intelligence_module():
 </div>""",
         unsafe_allow_html=True,
     )
+
+    spec = PatentService.get_spec_companies()
+    filter_options = ["all"] + spec
+    company = st.selectbox(
+        t("patent.filter"),
+        options=filter_options,
+        index=0,
+        format_func=lambda x: t("patent.all") if x == "all" else x,
+        key="patent_company_filter",
+    )
+    company_arg = None if company == "all" else company
+
+    summary = PatentService.get_summary(company_arg)
+    patents = PatentService.get_top_patents(company_arg)
 
     if not patents:
         show_empty(t("patent.empty_company", company=company if company != "all" else t("patent.all")))

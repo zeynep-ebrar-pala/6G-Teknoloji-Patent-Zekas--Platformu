@@ -13,6 +13,7 @@ SPEC_COMPANIES = [
     "Huawei",
     "Samsung",
     "Qualcomm",
+    "ZTE",
 ]
 
 # Doğrulanmış veri kümesinde en az bir kaydı olan assignee'ler
@@ -22,6 +23,7 @@ PATENT_COMPANIES = [
     "Qualcomm",
     "Samsung",
     "Ericsson",
+    "ZTE",
     "InterDigital",
     "Northeastern Univ.",
     "AT&T",
@@ -220,6 +222,42 @@ VERIFIED_PATENTS = [
         "domain": "NTN",
         "url": "https://patents.google.com/patent/WO2025030345A1/en",
         "abstract": "Karasal olmayan ağ (NTN) cihazı seçimi; aday NTN düğümleri arasından terminal seçimi.",
+    },
+    {
+        "id": "WO2025156259A1",
+        "title": "Systems and methods for integrated sensing and communication configuration",
+        "assignee": "ZTE Corporation",
+        "year": 2025,
+        "domain": "ISAC",
+        "url": "https://patents.google.com/patent/WO2025156259A1/en",
+        "abstract": "ISAC birimleri arasında algılama yapılandırması, hata nedeni ve algılama kipinin (gNB/UE mono-statik veya bi-statik) iletimi.",
+    },
+    {
+        "id": "WO2023133870A1",
+        "title": "Techniques to configure a reconfigurable intelligent surface device",
+        "assignee": "ZTE Corporation",
+        "year": 2023,
+        "domain": "RIS",
+        "url": "https://patents.google.com/patent/WO2023133870A1/en",
+        "abstract": "RIS cihazının ağ düğümünden kontrol bilgisi alarak yansıtıcı panel, kod kiti ve uyanma işaretini yapılandırması.",
+    },
+    {
+        "id": "US12113606B2",
+        "title": "Methods and systems for mobility management in non-terrestrial networks",
+        "assignee": "ZTE Corporation",
+        "year": 2024,
+        "domain": "NTN",
+        "url": "https://patents.google.com/patent/US12113606B2/en",
+        "abstract": "Karasal olmayan ağlarda (NTN) hareketlilik yönetimi; şeffaf uydu geçişinde çekirdek ağa doğru çapa düğümünün korunması.",
+    },
+    {
+        "id": "WO2025148296A1",
+        "title": "Ambient internet of things",
+        "assignee": "ZTE Corporation",
+        "year": 2025,
+        "domain": "Ambient IoT",
+        "url": "https://patents.google.com/patent/WO2025148296A1/en",
+        "abstract": "Ambient IoT okuyucu UE'nin AIoT işaretleşmesi ile envanter, komut ve A-Uu kaynak tahsili işlemlerini yürütmesi.",
     },
 ]
 

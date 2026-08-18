@@ -32,6 +32,7 @@ _ASSIGNEE_MAP = {
     "Nokia Technologies Oy": "Nokia",
     "Nokia Shanghai Bell Co Ltd": "Nokia",
     "ZTE Corporation": "ZTE",
+    "ZTE Corp": "ZTE",
     "NEC Corporation": "NEC",
     "Intel Corporation": "Intel",
     "InterDigital Patent Holdings Inc.": "InterDigital",

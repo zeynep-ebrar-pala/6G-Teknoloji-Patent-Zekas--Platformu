@@ -24,7 +24,7 @@ Tarayıcıda `http://localhost:8501` açılır.
 |------|----------------|
 | Ana Sayfa | 7 teknolojinin TRL radar haritası ve özet kartları |
 | 6G Teknolojileri | Tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL, kayıt sayımı grafikleri, referanslar |
-| Patent Zekası | Nokia, Ericsson, Huawei, Samsung, Qualcomm filtreli patent analitiği |
+| Patent Zekası | Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE filtreli patent analitiği |
 | Yayın Trendleri | OpenAlex yıl / kurum / ülke grafikleri ve DOI doğrulamalı makaleler |
 | Türk Telekom Görünümü | Saha senaryo çözümleyici |
 | AI Asistan | «RIS nedir?» ve «NTN ile ISAC arasındaki fark» dahil sorular; TF-IDF + isteğe bağlı LLM |
@@ -36,7 +36,7 @@ Patent özetleri ve DOI kayıtları kaynakta kilitlidir (yeniden yazılmaz).
 
 ## 3. Patent Zekası
 
-1. Üstteki firmayı seçin (`Tümü` veya şartnamedeki 5 firmadan biri).
+1. Üstteki firmayı seçin (`Tümü` veya şartnamedeki 6 firmadan biri).
 2. Kayıt yoksa grafik çizilmez; sayı uydurulmaz.
 3. Sekmeler: yıl trendi, konu + kelime bulutu, patent ağacı + yoğunluk, TF-IDF harita + ağ, patent listesi.
 4. Her karttaki **Kaynakta Aç** Google Patents sayfasını açar.

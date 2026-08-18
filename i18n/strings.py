@@ -176,7 +176,7 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknolojileri</strong> uz
         "patent": {
             "title": "Patent Zekası",
             "subtitle": "Küresel telekom firmalarının 6G patent kayıtları — tüm kayıtlar Google Patents üzerinden doğrulanabilir. Bu küme tam portföy değildir; yalnızca doğrulanmış örnek kayıtlardır. Kaynak: {source}",
-            "filter": "Firma (şartname listesi: Nokia, Ericsson, Huawei, Samsung, Qualcomm):",
+            "filter": "Firma (şartname listesi: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE):",
             "all": "Tümü",
             "what_title": "Bu sayfa ne işe yarar?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
@@ -455,7 +455,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "mod_left": """
 - **Ana Sayfa** — 7 teknolojinin TRL radar haritası; Dual-Depth (Temel/Uzman) giriş metnini değiştirir
 - **6G Teknolojileri** — kavramsal temel + uzman katman (formül, varsayım, karşılaştırma); tüm sekmeler anlatım derinliğini dinler
-- **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm; yıl, konu, kelime bulutu, ağaç, yoğunluk, harita; patent özetleri kaynakta kilitli
+- **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; yıl, konu, kelime bulutu, ağaç, yoğunluk, harita; patent özetleri kaynakta kilitli
 - **Yayın Trendleri** — OpenAlex yıl / kurum / ülke; DOI doğrulamalı makaleler
             """,
             "mod_right": """
@@ -723,7 +723,7 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
         "patent": {
             "title": "Patent Intelligence",
             "subtitle": "6G patent records from global telecom vendors — every record is checkable on Google Patents. This set is not a full portfolio; it is a verified sample. Source: {source}",
-            "filter": "Company (specification list: Nokia, Ericsson, Huawei, Samsung, Qualcomm):",
+            "filter": "Company (specification list: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE):",
             "all": "All",
             "what_title": "What this page is for",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
@@ -1000,7 +1000,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "mod_left": """
 - **Home** — TRL radar for the seven technologies; dual-depth (foundation/expert) switches the intro
 - **6G Technologies** — conceptual foundation plus expert layer (equation, assumption, comparison); every section respects depth
-- **Patent Intelligence** — Nokia, Ericsson, Huawei, Samsung, Qualcomm; year, topic, word cloud, tree, density, map; abstracts locked to the source
+- **Patent Intelligence** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; year, topic, word cloud, tree, density, map; abstracts locked to the source
 - **Publication Trends** — OpenAlex year / institution / country; DOI-verified papers
             """,
             "mod_right": """

@@ -41,6 +41,7 @@ COMPANY_COLORS = {
     "Nokia": "#A855F7",
     "Samsung": "#14B8A6",
     "Qualcomm": "#22C55E",
+    "ZTE": "#818CF8",
     "AT&T": "#F97316",
     "Deutsche Telekom": "#EC4899",
     "InterDigital": "#3B82F6",
