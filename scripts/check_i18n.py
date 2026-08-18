@@ -19,7 +19,7 @@ def main() -> int:
         for line in problems:
             print(f"  - {line}")
         return 1
-    print("i18n OK: UI catalogs, beginner copy, expert depth, tech overlay, glossary.")
+    print("i18n OK: UI catalogs, beginner copy, expert copy, expert depth, tech overlay, glossary.")
     return 0
 
 

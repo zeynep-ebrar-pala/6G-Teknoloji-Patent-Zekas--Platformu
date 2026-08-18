@@ -79,6 +79,7 @@ if section == "definition":
             unsafe_allow_html=True,
         )
         render_comparison_table(tech)
+        render_formula_cards(tech)
 
 elif section == "principle":
     from components.diagrams import render_technology_diagram

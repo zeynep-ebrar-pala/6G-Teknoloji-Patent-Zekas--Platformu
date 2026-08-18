@@ -43,6 +43,52 @@ def check_beginner_copy() -> list[str]:
     return diff_keys(nested_keys(TR), nested_keys(EN), "tr", "en beginner_copy")
 
 
+def check_expert_copy() -> list[str]:
+    from data.expert_copy import EXPERT_COPY as TR
+    from data.expert_copy_en import EXPERT_COPY as EN
+
+    return diff_keys(nested_keys(TR), nested_keys(EN), "tr", "en expert_copy")
+
+
+_FOUNDATION_PROSE = (
+    "what",
+    "why_needed",
+    "problem",
+    "how_steps",
+    "mental_model",
+    "analogy",
+    "analogy_technical_map",
+    "when_used",
+    "when_not",
+    "not_to_confuse",
+    "real_world",
+    "tt_impact",
+)
+
+
+def check_expert_copy_not_cloned() -> list[str]:
+    """Uzman cümleleri Temel ile aynı olamaz — Dual-Depth regresyon kilidi."""
+    from data.beginner_copy import BEGINNER_COPY as BTR
+    from data.beginner_copy_en import BEGINNER_COPY as BEN
+    from data.expert_copy import EXPERT_COPY as ETR
+    from data.expert_copy_en import EXPERT_COPY as EEN
+
+    problems: list[str] = []
+    for label, beginner, expert in (("tr", BTR, ETR), ("en", BEN, EEN)):
+        for tid, btech in beginner.items():
+            etech = expert.get(tid)
+            if not etech:
+                problems.append(f"expert_copy {label} missing tech: {tid}")
+                continue
+            for key in _FOUNDATION_PROSE:
+                left, right = btech.get(key), etech.get(key)
+                if left is None or right is None:
+                    continue
+                if str(left).strip() == str(right).strip():
+                    problems.append(f"expert_copy.{label}.{tid}.{key} identical to beginner")
+    return problems
+
+
 def check_expert_depth() -> list[str]:
     from data.expert_depth import EXPERT_DEPTH as TR
     from data.expert_depth_en import EXPERT_DEPTH as EN
@@ -108,6 +154,8 @@ def run_all() -> list[str]:
     problems: list[str] = []
     problems += check_ui_catalogs()
     problems += check_beginner_copy()
+    problems += check_expert_copy()
+    problems += check_expert_copy_not_cloned()
     problems += check_expert_depth()
     problems += check_tech_overlay()
     problems += check_glossary_en()

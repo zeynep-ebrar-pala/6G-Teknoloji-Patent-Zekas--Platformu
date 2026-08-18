@@ -30,6 +30,31 @@ def _lang() -> str:
         return "tr"
 
 
+def _expert_copy() -> dict:
+    if _lang() == "en":
+        from data.expert_copy_en import EXPERT_COPY
+
+        return EXPERT_COPY
+    from data.expert_copy import EXPERT_COPY
+
+    return EXPERT_COPY
+
+
+def _is_expert_view() -> bool:
+    try:
+        import streamlit as st
+
+        mode = st.session_state.get("view_mode", "beginner")
+        if mode == "expert":
+            return True
+        if mode == "beginner":
+            return False
+        text = str(mode)
+        return "Uzman" in text or "Expert" in text
+    except Exception:
+        return False
+
+
 def _beginner_copy() -> dict:
     if _lang() == "en":
         from data.beginner_copy_en import BEGINNER_COPY
@@ -54,6 +79,7 @@ def _with_layers(tech: dict | None) -> dict | None:
     if not tech:
         return tech
     extra = _beginner_copy().get(tech.get("id"), {})
+    expert_extra = _expert_copy().get(tech.get("id"), {}) if _is_expert_view() else {}
     depth = _expert_depth().get(tech.get("id"), {})
     out = dict(tech)
     if _lang() == "en":
@@ -70,7 +96,12 @@ def _with_layers(tech: dict | None) -> dict | None:
         out["beginner_principle"] = extra["principle_html"]
     if extra.get("arch_html"):
         out["beginner_arch"] = extra["arch_html"]
-    foundation = {k: extra.get(k) for k in FOUNDATION_KEYS if extra.get(k) is not None}
+    foundation_src = {k: extra.get(k) for k in FOUNDATION_KEYS if extra.get(k) is not None}
+    if expert_extra:
+        for k in FOUNDATION_KEYS:
+            if expert_extra.get(k) is not None:
+                foundation_src[k] = expert_extra[k]
+    foundation = {k: foundation_src.get(k) for k in FOUNDATION_KEYS if foundation_src.get(k) is not None}
     if foundation:
         out["foundation"] = foundation
     if depth.get("formulas"):

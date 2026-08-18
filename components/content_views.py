@@ -50,6 +50,7 @@ def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
     fnd = tech.get("foundation") or {}
     if not fnd:
         return
+    st.caption(t("teach.heading_expert") if compact else t("teach.heading"))
     opener = "".join(
         [
             _teach_item("teach.problem", fnd.get("problem")),
