@@ -183,17 +183,17 @@ def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
                 tickvals=[1, 3, 5, 7, 9],
                 gridcolor='rgba(200, 209, 220, 0.15)',
                 linecolor='rgba(200, 209, 220, 0.2)',
-                tickfont=dict(color='#94A3B8')
+                tickfont=dict(color='#94A3B8', size=12)
             ),
             angularaxis=dict(
                 gridcolor='rgba(200, 209, 220, 0.15)',
                 linecolor='rgba(200, 209, 220, 0.2)',
-                tickfont=dict(color='#FFFFFF', size=13)
+                tickfont=dict(color='#FFFFFF', size=14)
             ),
             bgcolor='#121620'
         ),
         showlegend=False,
-        height=380
+        height=460
     )
     return fig
 

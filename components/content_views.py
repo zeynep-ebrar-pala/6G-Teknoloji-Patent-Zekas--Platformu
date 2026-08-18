@@ -345,13 +345,13 @@ def render_trl_explainer() -> None:
     st.markdown(
         f"""<div class="glass-card">
 <h4 style="color:#00E5FF;margin-top:0;">{t("trl.explainer_title")}</h4>
-<p style="font-size:0.92rem;color:#C8D1DC;line-height:1.65;">
+<p style="font-size:1rem;color:#C8D1DC;line-height:1.65;">
 <strong>{escape(t("trl.explainer_lead", abbr=trl["abbr"], en=trl["en"], tr=trl["tr"], definition=trl["definition"], why=trl["why"]))}</strong>
 </p>
-<p style="font-size:0.88rem;color:#94A3B8;line-height:1.6;">
+<p style="font-size:0.96rem;color:#94A3B8;line-height:1.6;">
 {escape(t("trl.explainer_body"))}
 </p>
-<ul style="font-size:0.88rem;color:#CBD5E1;padding-left:20px;line-height:1.7;">
+<ul style="font-size:0.96rem;color:#CBD5E1;padding-left:20px;line-height:1.7;">
 <li><strong style="color:#00C853;">{escape(t("trl.explainer_ntn"))}</strong></li>
 <li><strong style="color:#FFB020;">{escape(t("trl.explainer_ris"))}</strong></li>
 <li><strong style="color:#FF5252;">{escape(t("trl.explainer_lab"))}</strong></li>

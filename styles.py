@@ -81,62 +81,78 @@ def inject_custom_styles():
 
         .tt-title {
             color: #FFFFFF !important;
-            font-size: 1.18rem;
+            font-size: 1.38rem;
             font-weight: 800 !important;
             margin: 0;
-            line-height: 1.15;
+            line-height: 1.2;
         }
 
         .tt-subtitle {
             color: #CBD5E1;
-            font-size: 0.78rem;
-            margin-top: 2px;
+            font-size: 0.92rem;
+            margin-top: 4px;
             margin-bottom: 0;
         }
 
         .home-intro {
             background: rgba(0, 200, 83, 0.08);
             border: 1px solid rgba(0, 200, 83, 0.4);
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin: 0 0 8px 0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 0 0 16px 0;
         }
         .home-intro h4 {
             color: #00C853 !important;
-            margin: 0 0 4px 0 !important;
-            font-size: 0.95rem !important;
+            margin: 0 0 8px 0 !important;
+            font-size: 1.12rem !important;
         }
         .home-intro p {
             color: #E2E8F0 !important;
-            font-size: 0.82rem !important;
-            line-height: 1.42 !important;
-            margin: 0 0 6px 0 !important;
+            font-size: 0.98rem !important;
+            line-height: 1.6 !important;
+            margin: 0 0 10px 0 !important;
         }
         .home-intro p.home-intro-note {
-            color: #94A3B8 !important;
-            font-size: 0.76rem !important;
+            color: #CBD5E1 !important;
+            font-size: 0.92rem !important;
             margin: 0 !important;
         }
         .home-cards-head {
-            margin: 0 0 6px 0;
+            margin: 4px 0 14px 0;
         }
         .home-cards-head h3 {
             color: #FFFFFF !important;
-            font-size: 1.02rem !important;
-            margin: 0 0 2px 0 !important;
+            font-size: 1.22rem !important;
+            margin: 0 0 4px 0 !important;
             font-weight: 700 !important;
         }
         .home-cards-head p {
             color: #94A3B8 !important;
-            font-size: 0.76rem !important;
+            font-size: 0.9rem !important;
             margin: 0 !important;
-            line-height: 1.35 !important;
+            line-height: 1.4 !important;
         }
         .home-radar-note {
-            color: #94A3B8 !important;
-            font-size: 0.78rem !important;
-            margin: 6px 0 8px 0 !important;
-            line-height: 1.45 !important;
+            display: block;
+            background: rgba(0, 153, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.35);
+            border-left: 4px solid #00E5FF;
+            border-radius: 10px;
+            color: #E2E8F0 !important;
+            font-size: 0.98rem !important;
+            font-weight: 500 !important;
+            margin: 12px 0 8px 0 !important;
+            padding: 14px 16px !important;
+            line-height: 1.55 !important;
+        }
+        [data-testid="stMain"] [data-testid="stHorizontalBlock"]:has(.home-tech-card) {
+            gap: 1.35rem !important;
+            align-items: stretch !important;
+            margin-bottom: 0.4rem !important;
+        }
+        [data-testid="stMain"] [data-testid="stColumn"]:has(.home-tech-card) {
+            padding-left: 0.15rem !important;
+            padding-right: 0.15rem !important;
         }
 
         /* Dual Depth Cards (Temel Seviye vs Uzman) */
@@ -195,7 +211,7 @@ def inject_custom_styles():
             border: 1px solid rgba(255, 176, 32, 0.4);
             border-left: 4px solid #FFB020;
             color: #FFD37A !important;
-            font-size: 0.86rem !important;
+            font-size: 0.95rem !important;
             font-weight: 800 !important;
             letter-spacing: 0.01em;
             padding: 6px 10px;
@@ -237,36 +253,41 @@ def inject_custom_styles():
 
         .home-tech-card {
             min-height: 0 !important;
-            padding: 10px 12px !important;
-            margin-bottom: 8px !important;
+            height: calc(100% - 14px) !important;
+            box-sizing: border-box !important;
+            padding: 16px 18px !important;
+            margin: 0 0 16px 0 !important;
+        }
+        .home-tech-card:hover {
+            transform: none !important;
         }
         .home-tech-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2px;
-            gap: 6px;
+            margin-bottom: 6px;
+            gap: 8px;
             flex-wrap: wrap;
         }
-        .home-tech-icon { font-size: 1.35rem; line-height: 1; }
+        .home-tech-icon { font-size: 1.5rem; line-height: 1; }
         .home-tech-acronym {
             color: #FFFFFF !important;
             margin: 0 !important;
-            font-size: 0.98rem !important;
+            font-size: 1.12rem !important;
             overflow-wrap: anywhere;
         }
         .home-tech-title {
             color: #00C2FF;
-            font-size: 0.7rem;
+            font-size: 0.86rem;
             font-weight: 600;
-            margin: 0 0 6px 0;
+            margin: 0 0 10px 0;
             overflow-wrap: anywhere;
         }
         .home-tech-blurb {
             color: #E2E8F0 !important;
-            font-size: 0.8rem !important;
-            line-height: 1.45 !important;
-            margin: 0 0 8px 0 !important;
+            font-size: 0.94rem !important;
+            line-height: 1.55 !important;
+            margin: 0 !important;
             overflow-wrap: anywhere;
         }
         .home-tech-chips { margin-bottom: 4px; }
@@ -294,6 +315,10 @@ def inject_custom_styles():
             border-color: rgba(0, 153, 255, 0.4);
             transform: translateY(-2px);
             box-shadow: 0 12px 30px rgba(0, 153, 255, 0.15);
+        }
+        .glass-card.home-tech-card:hover {
+            transform: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
 
         /* TRL Level Pills */
@@ -643,14 +668,14 @@ def inject_custom_styles():
             padding-right: 1.4rem !important;
         }
         [data-testid="stMain"] [data-testid="stVerticalBlock"] {
-            gap: 0.35rem !important;
+            gap: 0.7rem !important;
         }
         [data-testid="stMain"] .stMarkdown {
             margin-bottom: 0 !important;
         }
         [data-testid="stMain"] h3 {
-            margin: 0.1rem 0 0.05rem 0 !important;
-            font-size: 1.02rem !important;
+            margin: 0.25rem 0 0.15rem 0 !important;
+            font-size: 1.18rem !important;
         }
         [data-testid="stMain"] [data-testid="stCaptionContainer"] {
             display: none !important;

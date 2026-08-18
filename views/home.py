@@ -24,7 +24,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-cols = st.columns(3, gap="small")
+cols = st.columns(3, gap="large")
 for idx, (tech_id, tech) in enumerate(TECHNOLOGIES.items()):
     col = cols[idx % 3]
     with col:
@@ -59,6 +59,6 @@ with col_info:
     render_trl_explainer()
 
 st.markdown(
-    f'<p class="home-radar-note">{t("home.radar_caption")}</p>',
+    f'<div class="home-radar-note">{t("home.radar_caption")}</div>',
     unsafe_allow_html=True,
 )
