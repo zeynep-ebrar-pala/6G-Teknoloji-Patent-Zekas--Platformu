@@ -36,7 +36,6 @@ def render_language_selector() -> str:
             clicked = "en"
     if clicked and clicked != lang:
         st.session_state[SESSION_KEY] = clicked
-        st.query_params["lang"] = clicked
         st.rerun()
     return lang
 

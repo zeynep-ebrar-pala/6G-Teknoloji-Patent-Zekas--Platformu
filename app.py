@@ -59,7 +59,6 @@ with st.sidebar:
         ):
             if lang != "tr":
                 st.session_state[SESSION_KEY] = "tr"
-                st.query_params["lang"] = "tr"
                 st.rerun()
     with col_en:
         if st.button(
@@ -70,7 +69,6 @@ with st.sidebar:
         ):
             if lang != "en":
                 st.session_state[SESSION_KEY] = "en"
-                st.query_params["lang"] = "en"
                 st.rerun()
 
     depth = st.session_state.get("view_mode", "beginner")

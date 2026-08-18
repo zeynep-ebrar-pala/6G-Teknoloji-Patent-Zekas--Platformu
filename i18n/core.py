@@ -39,7 +39,7 @@ def _catalogs() -> dict[str, dict[str, str]]:
 
 
 def bootstrap_lang() -> str:
-    """query_params + session_state. Widget'tan önce çağırın."""
+    """query_params okur, session_state yazar. URL yazılmaz: Cloud iframe rerun döngüsü olmasın."""
     import streamlit as st
 
     raw = st.query_params.get("lang")
@@ -53,8 +53,6 @@ def bootstrap_lang() -> str:
     if lang not in SUPPORTED_LANGS:
         lang = DEFAULT_LANG
         st.session_state[SESSION_KEY] = lang
-    if st.query_params.get("lang") != lang:
-        st.query_params["lang"] = lang
     return lang
 
 

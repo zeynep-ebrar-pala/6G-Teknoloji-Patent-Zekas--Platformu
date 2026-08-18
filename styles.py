@@ -132,6 +132,37 @@ def inject_custom_styles():
             margin: 0 !important;
             line-height: 1.35 !important;
         }
+        .home-radar-note {
+            color: #94A3B8 !important;
+            font-size: 0.78rem !important;
+            margin: 6px 0 8px 0 !important;
+            line-height: 1.45 !important;
+        }
+        .home-trl-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+            margin: 0 0 8px 0;
+        }
+        .home-trl-table th {
+            text-align: left;
+            color: #94A3B8;
+            font-weight: 600;
+            padding: 6px 8px;
+            border-bottom: 1px solid rgba(0, 153, 255, 0.25);
+        }
+        .home-trl-table td {
+            color: #E2E8F0;
+            padding: 6px 8px;
+            vertical-align: top;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+            line-height: 1.4;
+        }
+        .home-trl-table td:nth-child(2) {
+            color: #00E5FF;
+            font-weight: 700;
+            white-space: nowrap;
+        }
 
         /* Dual Depth Cards (Temel Seviye vs Uzman) */
         .dual-card-beginner {

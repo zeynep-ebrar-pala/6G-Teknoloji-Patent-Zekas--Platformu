@@ -10,8 +10,8 @@ TECH_OVERLAY_EN: dict = {
     "isac": {
         "title": "Integrated Sensing and Communication (ISAC)",
         "trl_desc": (
-            "Laboratory validation and early field trials "
-            "(TRL 4 — 3GPP Rel-19/20 target)"
+            "3GPP Rel-19 work item (TR 22.837). Laboratory validation; "
+            "not measured on a Türk Telekom network."
         ),
         "card_summary": (
             "The tower talks; it does not look. ISAC uses the same wave "
@@ -130,8 +130,8 @@ TECH_OVERLAY_EN: dict = {
     "ris": {
         "title": "Reconfigurable Intelligent Surfaces (RIS)",
         "trl_desc": (
-            "Field trials and prototype validation "
-            "(TRL 5 — low-power intelligent surfaces)"
+            "ETSI RIS ISG and 3GPP Rel-19/20 work item; public operator-PoC class. "
+            "Not a Türk Telekom field measurement."
         ),
         "card_summary": (
             "The signal cannot turn the corner; RIS is an electronic mirror on the façade."
@@ -246,8 +246,8 @@ TECH_OVERLAY_EN: dict = {
     "cell_free": {
         "title": "Cell-Free Massive MIMO",
         "trl_desc": (
-            "Experimental prototype and simulation tests "
-            "(TRL 4 — cell-free network architecture)"
+            "3GPP Rel-19/20 distributed-MIMO work item; literature prototype/simulation. "
+            "Not a Türk Telekom field measurement."
         ),
         "card_summary": (
             "A drop at the cell edge; cell-free MIMO erases that boundary."
@@ -353,8 +353,8 @@ TECH_OVERLAY_EN: dict = {
     "thz": {
         "title": "Terahertz (THz) Communications",
         "trl_desc": (
-            "Proof of concept and laboratory experiments "
-            "(TRL 3 — 0.1 THz–10 THz spectrum)"
+            "3GPP TR 38.807 (NR beyond 52.6 GHz) plus laboratory spectrum studies. "
+            "Not a street network."
         ),
         "card_summary": (
             "The wireless pipe is still narrow; THz opens bandwidth, physics cuts range."
@@ -468,8 +468,8 @@ TECH_OVERLAY_EN: dict = {
     "ai_ran": {
         "title": "AI-Native Radio Access Network (AI-RAN)",
         "trl_desc": (
-            "O-RAN RIC trials and AI protocol tests "
-            "(TRL 5 — AI-native 6G)"
+            "3GPP TR 38.843 (AI/ML for NR) and O-RAN RIC trial class. "
+            "Unattended field proof is absent; not measured by this platform."
         ),
         "card_summary": (
             "The network recites from memory; AI-RAN redistributes resource on a millisecond loop."
@@ -576,8 +576,8 @@ TECH_OVERLAY_EN: dict = {
     "ntn": {
         "title": "Non-Terrestrial Networks (NTN)",
         "trl_desc": (
-            "3GPP Rel-17/18 standardisation and commercial satellite trials "
-            "(TRL 6 — satellite integration)"
+            "3GPP Rel-17 NTN specification (TR 38.811) and Rel-17/18 work item; "
+            "public Direct-to-Cell trials. Not a Türk Telekom field measurement."
         ),
         "card_summary": (
             "The tower cannot reach everywhere; NTN opens the 3GPP network to the sky."
@@ -682,8 +682,8 @@ TECH_OVERLAY_EN: dict = {
     "ambient_iot": {
         "title": "Ambient IoT (Battery-Free Internet of Things)",
         "trl_desc": (
-            "3GPP Rel-19 study item and battery-free tag PoC "
-            "(TRL 4 — battery-free Internet of Things)"
+            "3GPP Rel-19 work item (TR 38.848). PoC class; not a shelf product. "
+            "Not a Türk Telekom field measurement."
         ),
         "card_summary": (
             "You cannot put a battery on every object; Ambient IoT says “I am here” on RF scraps."

@@ -13,7 +13,9 @@ headless = true
 runOnSave = false
 fileWatcherType = "none"
 enableWebsocketCompression = false
-websocketPingInterval = 20
+# uvicorn 0.43 ping_timeout = interval. 20s Cloud soğuk açılışta
+# keepalive ping timeout ile siyah ekran bırakıyor (Python 3.14 import).
+websocketPingInterval = 55
 
 [runner]
 fastReruns = false
