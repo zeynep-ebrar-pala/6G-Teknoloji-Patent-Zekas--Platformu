@@ -4,7 +4,10 @@ Trend, kurum ve ülke sayıları statik değildir; OpenAlex API'den canlı alın
 Atıf sayıları bu dosyada tutulmaz; OpenAlex cited_by_count ile doldurulur.
 """
 
-ACADEMIC_DATA_SOURCE = "DOI kilitli set; kartta Google Scholar DOI araması. Scholar sayım API’si yok — toplam uydurulmaz."
+ACADEMIC_DATA_SOURCE = (
+    "IEEE / Springer / Elsevier: DOI öneki + Türkiye/Avrupa bağlılığı, başlık 6G, "
+    "2020–2026 dergi ve bildiri. Scholar ve WoS herkese açık sayım API’si yok."
+)
 
 ACADEMIC_SOURCES = ["IEEE Xplore", "Springer", "Elsevier"]
 

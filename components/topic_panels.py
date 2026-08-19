@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, Tuple
 
 import streamlit as st
 
@@ -53,8 +53,8 @@ def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
     return picked
 
 
-def render_pub_topic_panel(key_suffix: str = "pub") -> Optional[str]:
-    """Konu seçimi kilitli makale kümesini ve yayın aramasını birlikte değiştirir."""
+def render_pub_topic_panel(key_suffix: str = "pub") -> Tuple[Optional[str], str]:
+    """Konu + bölge: Türkiye / Avrupa 6G yayın taraması. Kilitli örnek yok."""
     from backend.academic_service import AcademicService
     from backend.source_links import SPEC_PUB_TOPICS, topic_pub_searches
     from components.ui_helpers import render_link_row, render_source_totals
@@ -62,6 +62,18 @@ def render_pub_topic_panel(key_suffix: str = "pub") -> Optional[str]:
 
     st.markdown(t("sources.topic_pub_heading"))
     st.caption(t("sources.topic_pub_caption"))
+    region_labels = {
+        t("pub.region.both"): "both",
+        t("pub.region.tr"): "tr",
+        t("pub.region.eu"): "eu",
+    }
+    region_ui = st.radio(
+        t("pub.region_label"),
+        list(region_labels.keys()),
+        horizontal=True,
+        key=f"spec_pub_region_{key_suffix}_{get_lang()}",
+    )
+    region = region_labels.get(region_ui, "both")
     options = ["all"] + list(SPEC_PUB_TOPICS.keys())
     topic = st.selectbox(
         t("sources.topic_search"),
@@ -70,22 +82,21 @@ def render_pub_topic_panel(key_suffix: str = "pub") -> Optional[str]:
         key=f"spec_pub_topic_{key_suffix}_{get_lang()}",
     )
     picked = None if topic == "all" else topic
-    n = AcademicService.get_summary(picked)["verified_paper_count"]
+    bundle = AcademicService.get_bundle(region, picked)
+    tr_n = bundle.get("total_tr")
+    n = format_int(tr_n) if isinstance(tr_n, int) else "—"
     if picked is None:
-        st.info(t("sources.topic_live_all_pub", n=format_int(n)))
-        st.caption(t("sources.topic_buttons_hint_pub"))
-        render_link_row(topic_pub_searches("6G"), key_suffix=f"{key_suffix}_all")
-        render_source_totals("pub", None, f"{key_suffix}_all")
-        return None
-    st.info(
-        t(
-            "sources.topic_live_one_pub",
-            n=format_int(n),
-            topic=picked,
-            q=SPEC_PUB_TOPICS[picked],
+        st.info(t("sources.topic_live_all_pub", n=n))
+    else:
+        st.info(
+            t(
+                "sources.topic_live_one_pub",
+                n=n,
+                topic=picked,
+                q=SPEC_PUB_TOPICS[picked],
+            )
         )
-    )
     st.caption(t("sources.topic_buttons_hint_pub"))
-    render_link_row(topic_pub_searches(picked), key_suffix=f"{key_suffix}_{picked}")
-    render_source_totals("pub", picked, f"{key_suffix}_{picked}")
-    return picked
+    render_link_row(topic_pub_searches(picked or "6G", region), key_suffix=f"{key_suffix}_{picked or 'all'}_{region}")
+    render_source_totals("pub", picked, f"{key_suffix}_{picked or 'all'}")
+    return picked, region

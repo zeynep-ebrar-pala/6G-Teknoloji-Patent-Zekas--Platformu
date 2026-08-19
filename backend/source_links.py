@@ -205,8 +205,14 @@ def spec_pub_databases() -> List[Dict[str, str]]:
     ]
 
 
-def topic_pub_searches(topic: str) -> List[Dict[str, str]]:
-    query = topic_query(topic)
+def topic_pub_searches(topic: str, region: str = "both") -> List[Dict[str, str]]:
+    """6G + konu. Türkiye seçilince aramaya Turkey eklenir. Sayı çekilmez."""
+    base = topic_query(topic)
+    query = f"6G {base}".strip() if base and base != "6G" else "6G"
+    if region == "tr":
+        query = f"{query} Turkey"
+    elif region == "eu":
+        query = f"{query} Europe"
     return [
         {
             "id": "ieee",

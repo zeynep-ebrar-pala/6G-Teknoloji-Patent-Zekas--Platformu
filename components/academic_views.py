@@ -1,7 +1,10 @@
 """
-Modül 3 — Akademik Yayın Analizi arayüzü.
-DOI kilitli set tam sayı olarak çizilir. Google Scholar kayıt araması açılır; sayım API’si yoktur.
+Modül 3 — Akademik Yayın Analizi.
+Türkiye ve Avrupa 6G literatürü: yıl, kurum, ülke, atıf, trend.
+Kilitli örnek liste yok. Scholar / WoS sayısı uydurulmaz.
 """
+
+from __future__ import annotations
 
 import streamlit as st
 
@@ -10,6 +13,7 @@ from i18n.core import format_int, get_lang, t
 from components.charts import (
     render_academic_bar_chart,
     render_academic_database_chart,
+    render_academic_trends_chart,
 )
 from components.ui_helpers import (
     render_link_row,
@@ -23,7 +27,30 @@ from components.ui_helpers import (
 from components.topic_panels import render_pub_topic_panel
 from components.tt_europe_views import render_tt_europe_pub_section
 
-PUB_SECTION_KEYS = ["doi", "trend", "where", "tt_eu"]
+PUB_SECTION_KEYS = ["year", "inst", "country", "cited", "trend", "tt_eu"]
+
+
+def _fmt(n) -> str:
+    return format_int(n) if isinstance(n, int) else "—"
+
+
+def _cc_name(cc: str) -> str:
+    key = f"pub.cc.{cc}"
+    label = t(key)
+    return cc if label == key else label
+
+
+def _with_source(paper: dict) -> dict:
+    out = dict(paper)
+    prefix = str(out.get("prefix") or "")
+    if not out.get("source"):
+        if prefix.startswith("10.1109"):
+            out["source"] = "IEEE Xplore"
+        elif prefix.startswith("10.1007"):
+            out["source"] = "Springer"
+        elif prefix.startswith("10.1016"):
+            out["source"] = "Elsevier"
+    return out
 
 
 def render_academic_publication_module():
@@ -42,45 +69,48 @@ def render_academic_publication_module():
     )
 
     render_spec_pub_sources()
-    topic = render_pub_topic_panel("pub")
+    topic, region = render_pub_topic_panel("pub")
+    bundle = AcademicService.get_bundle(region, topic)
+    pubs = bundle.get("publishers") or {}
 
-    papers = AcademicService.get_most_cited_papers(topic)
-    year_counts = AcademicService.get_verified_year_counts(topic)
-    topic_counts = AcademicService.get_verified_topic_counts(topic)
+    c1, c2, c3, c4, c5 = st.columns(5)
+    with c1:
+        st.metric(t("pub.metric_ieee"), _fmt(pubs.get("ieee")))
+    with c2:
+        st.metric(t("pub.metric_scholar"), "—")
+    with c3:
+        st.metric(t("pub.metric_springer"), _fmt(pubs.get("springer")))
+    with c4:
+        st.metric(t("pub.metric_elsevier"), _fmt(pubs.get("elsevier")))
+    with c5:
+        st.metric(t("pub.metric_wos"), "—")
+    st.caption(t("pub.source_metric_caption"))
 
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric(t("pub.metric_doi"), format_int(len(papers)))
-    with col2:
-        peak_year, peak_n = "—", "—"
-        if year_counts:
-            peak_year = max(year_counts, key=lambda y: year_counts[y])
-            peak_n = format_int(year_counts[peak_year])
-        st.metric(t("pub.metric_peak_year"), peak_year, t("pub.metric_peak_delta", n=peak_n) if peak_n != "—" else None)
-    with col3:
-        top_topic, top_n = "—", None
-        if topic_counts:
-            top_topic = max(topic_counts, key=topic_counts.get)
-            top_n = format_int(topic_counts[top_topic])
-        st.metric(t("pub.metric_topic"), top_topic, t("pub.metric_topic_delta", n=top_n) if top_n else None)
-    with col4:
-        st.metric(t("pub.metric_cites"), "—")
-    st.caption(t("pub.scholar_metric_caption"))
+    tr_n = bundle.get("total_tr")
+    col_a, col_b, col_c = st.columns(3)
+    with col_a:
+        st.metric(t("pub.metric_tr"), _fmt(tr_n))
+    with col_b:
+        years = bundle.get("year_counts") or {}
+        if years:
+            peak = max(years, key=lambda y: years[y])
+            st.metric(t("pub.metric_peak_year"), peak, t("pub.metric_peak_delta", n=_fmt(years[peak])))
+        else:
+            st.metric(t("pub.metric_peak_year"), "—")
+    with col_c:
+        countries = bundle.get("countries") or []
+        if countries:
+            top = countries[0]
+            st.metric(t("pub.metric_top_cc"), _cc_name(top["cc"]), t("pub.metric_topic_delta", n=_fmt(top["count"])))
+        else:
+            st.metric(t("pub.metric_top_cc"), "—")
+
     from backend.source_links import topic_pub_searches
 
-    scholar = [item for item in topic_pub_searches(topic or "6G") if item.get("id") == "scholar"]
-    if scholar:
-        render_link_row(scholar, key_suffix=f"pub_scholar_{topic or 'all'}")
-
-    st.markdown(t("pub.papers_heading"))
-    st.caption(t("pub.papers_caption"))
-    if not papers:
-        show_empty(t("pub.empty_topic", topic=topic) if topic else t("pub.empty"))
-    else:
-        for paper in papers:
-            render_paper_card(paper)
-
-    st.divider()
+    render_link_row(
+        topic_pub_searches(topic or "6G", region),
+        key_suffix=f"pub_src_{region}_{topic or 'all'}",
+    )
 
     _labels = [t(f"pub.section.{k}") for k in PUB_SECTION_KEYS]
     _map = dict(zip(_labels, PUB_SECTION_KEYS))
@@ -93,60 +123,75 @@ def render_academic_publication_module():
         render_tt_europe_pub_section(topic)
         return
 
-    if not papers:
-        return
-
-    if section == "doi":
-        st.markdown(t("pub.doi_heading"))
-        st.caption(t("pub.doi_caption"))
-        year_counts = AcademicService.get_verified_year_counts(topic)
-        topic_counts = AcademicService.get_verified_topic_counts(topic)
-        db_dist = AcademicService.get_database_distribution(topic)
-        col_y, col_t = st.columns(2)
-        with col_y:
-            if year_counts:
+    if section == "year":
+        st.markdown(t("pub.year_heading"))
+        st.caption(t("pub.year_caption"))
+        years = bundle.get("year_counts") or {}
+        if region == "tr" and years:
+            show_plotly(
+                render_academic_database_chart(years, t("pub.chart_year"), t("pub.chart_year_x"))
+            )
+        else:
+            df = AcademicService.get_trend_df(region)
+            if df is not None and not df.empty:
+                rename = {c: _cc_name(c) for c in df.columns if c != "Years"}
+                show_plotly(render_academic_trends_chart(df.rename(columns=rename)))
+            elif years:
                 show_plotly(
-                    render_academic_database_chart(year_counts, t("pub.chart_year"), t("pub.chart_year_x"))
+                    render_academic_database_chart(years, t("pub.chart_year"), t("pub.chart_year_x"))
                 )
             else:
                 show_empty(t("pub.empty_year"))
-        with col_t:
-            if topic_counts:
-                show_plotly(
-                    render_academic_bar_chart(
-                        [{"name": k, "count": v} for k, v in topic_counts.items()],
-                        t("pub.chart_topic"),
-                    )
-                )
-        if db_dist:
-            show_plotly(render_academic_database_chart(db_dist, t("pub.chart_publisher")))
-
-    elif section == "trend":
-        st.markdown(t("pub.scholar_heading"))
-        st.caption(t("pub.scholar_caption"))
-        if year_counts:
+        topics = bundle.get("topics") or {}
+        if topics:
             show_plotly(
-                render_academic_database_chart(year_counts, t("pub.chart_year"), t("pub.chart_year_x"))
+                render_academic_bar_chart(
+                    [{"name": k, "count": v} for k, v in topics.items()],
+                    t("pub.chart_topic"),
+                )
             )
-        else:
-            show_empty(t("pub.empty_year"))
-        from backend.source_links import topic_pub_searches as _pub_s
 
-        render_link_row(_pub_s(topic or "6G"), key_suffix=f"pub_trend_{topic or 'all'}")
-
-    else:
+    elif section == "inst":
         st.markdown(t("pub.inst_heading"))
-        st.caption(t("pub.inst_fallback"))
-        verified_inst = AcademicService.get_verified_institutions(topic)
-        if verified_inst:
-            show_plotly(render_academic_bar_chart(verified_inst, t("pub.chart_inst_fb")))
+        st.caption(t("pub.inst_caption"))
+        inst = bundle.get("institutions") or []
+        if inst:
+            show_plotly(render_academic_bar_chart(inst, t("pub.chart_inst")))
         else:
             show_empty(t("pub.empty_inst"))
 
+    elif section == "country":
         st.markdown(t("pub.cc_heading"))
-        st.caption(t("pub.cc_fallback"))
-        verified_cc = AcademicService.get_verified_countries(topic)
-        if verified_cc:
-            show_plotly(render_academic_bar_chart(verified_cc, t("pub.chart_cc_fb")))
+        st.caption(t("pub.cc_caption"))
+        rows = [
+            {"name": _cc_name(r["cc"]), "count": r["count"]}
+            for r in (bundle.get("countries") or [])
+        ]
+        if rows:
+            show_plotly(render_academic_bar_chart(rows, t("pub.chart_cc")))
         else:
             show_empty(t("pub.empty_cc"))
+
+    elif section == "cited":
+        st.markdown(t("pub.cited_heading"))
+        st.caption(t("pub.cited_caption"))
+        papers = bundle.get("cited") or []
+        if not papers:
+            show_empty(t("pub.empty_cited"))
+        else:
+            for paper in papers:
+                render_paper_card(_with_source(paper))
+
+    else:
+        st.markdown(t("pub.trend_heading"))
+        st.caption(t("pub.trend_caption"))
+        df = AcademicService.get_trend_df(region)
+        if df is not None and not df.empty:
+            rename = {c: _cc_name(c) for c in df.columns if c != "Years"}
+            show_plotly(render_academic_trends_chart(df.rename(columns=rename)))
+        else:
+            show_empty(t("pub.empty_year"))
+        render_link_row(
+            topic_pub_searches(topic or "6G", region),
+            key_suffix=f"pub_trend_{region}_{topic or 'all'}",
+        )

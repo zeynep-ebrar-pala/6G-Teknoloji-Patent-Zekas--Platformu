@@ -1,0 +1,445 @@
+{
+  "fetched_at": "2026-08-19",
+  "filter": "from-pub-date:2020,until-pub-date:2026,type:journal-article,type:proceedings-article",
+  "query_title": "6G",
+  "types": "journal-article|proceedings-article",
+  "TR": {
+    "affiliation_query": "Turkey",
+    "total": 119,
+    "years": {
+      "2025": 34,
+      "2024": 25,
+      "2023": 24,
+      "2022": 18,
+      "2026": 14,
+      "2021": 2,
+      "2020": 2
+    },
+    "affiliations": {
+      "Ericsson Research,Turkey": 8,
+      "Turk Telekom,Istanbul,Turkey": 4,
+      "Ericsson Research,Sweden": 4,
+      "Yildiz Technical University,Department of Electronics and Communication Engineering,Istanbul,Turkey": 3,
+      "Smart City Research Center, Astana IT University, Astana 010000, Kazakhstan": 3,
+      "Istanbul Technical University,Faculty of Computer and Informatics,Department of Artificial Intelligence and Data Engineering,Istanbul,Turkey": 3,
+      "Istanbul Technical University,Department of Computer Engineering,Istanbul,Turkey": 3,
+      "Ericsson Research,Germany": 3,
+      "Edinburgh Napier University,UK": 3,
+      "BTS Group,Turkey": 3
+    },
+    "publishers": {
+      "ieee": 92,
+      "springer": 0,
+      "elsevier": 0
+    },
+    "topics": {
+      "ISAC": 1,
+      "RIS": 2,
+      "NTN": 1,
+      "AI-RAN": 2,
+      "THz": 3,
+      "Ambient IoT": 4
+    },
+    "top_cited": [
+      {
+        "title": "Sixth Generation (6G) Wireless Networks: Vision, Research Activities, Challenges and Potential Solutions",
+        "doi": "10.3390/sym12040676",
+        "authors": "Alsharif, Kelechi, Albreem, Chaudhry, Zia, Kim",
+        "journal": "Symmetry",
+        "year": 2020,
+        "citations": 314,
+        "publisher": "MDPI AG",
+        "prefix": "10.3390"
+      },
+      {
+        "title": "Intelligent Surfaces Empowered Wireless Network: Recent Advances and the Road to 6G",
+        "doi": "10.1109/jproc.2024.3397910",
+        "authors": "Wu, Zheng, You, Zhu, Shen, Shao",
+        "journal": "Proceedings of the IEEE",
+        "year": 2024,
+        "citations": 186,
+        "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+        "prefix": "10.1109"
+      },
+      {
+        "title": "Revolution or Evolution? Technical Requirements and Considerations towards 6G Mobile Communications",
+        "doi": "10.3390/s22030762",
+        "authors": "Alraih, Shayea, Behjati, Nordin, Abdullah, Abu-Samah",
+        "journal": "Sensors",
+        "year": 2022,
+        "citations": 140,
+        "publisher": "MDPI AG",
+        "prefix": "10.3390"
+      },
+      {
+        "title": "Digital Twin for 6G: Taxonomy, Research Challenges, and the Road Ahead",
+        "doi": "10.1109/ojcoms.2022.3219015",
+        "authors": "Masaracchia, Sharma, Canberk, Dobre, Duong",
+        "journal": "IEEE Open Journal of the Communications Society",
+        "year": 2022,
+        "citations": 123,
+        "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+        "prefix": "10.1109"
+      },
+      {
+        "title": "Deep Learning-Aided 6G Wireless Networks: A Comprehensive Survey of Revolutionary PHY Architectures",
+        "doi": "10.1109/ojcoms.2022.3210648",
+        "authors": "Ozpoyraz, Dogukan, Gevez, Altun, Basar",
+        "journal": "IEEE Open Journal of the Communications Society",
+        "year": 2022,
+        "citations": 112,
+        "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+        "prefix": "10.1109"
+      },
+      {
+        "title": "Technology Trends for Massive MIMO towards 6G",
+        "doi": "10.3390/s23136062",
+        "authors": "Huo, Lin, Di, Zhang, Hernando, Tan",
+        "journal": "Sensors",
+        "year": 2023,
+        "citations": 89,
+        "publisher": "MDPI AG",
+        "prefix": "10.3390"
+      },
+      {
+        "title": "Wireless Sensor Networks and Green Networking for 6G communication- An Overview",
+        "doi": "10.1109/cictn57981.2023.10141262",
+        "authors": "Salama, Al-Turjman, Bordoloi, Yadav",
+        "journal": "2023 International Conference on Computational Intelligence, Communication Technology and Networking (CICTN)",
+        "year": 2023,
+        "citations": 85,
+        "publisher": "IEEE",
+        "prefix": "10.1109"
+      },
+      {
+        "title": "Explainable and Robust Artificial Intelligence for Trustworthy Resource Management in 6G Networks",
+        "doi": "10.1109/mcom.001.2300172",
+        "authors": "Khan, Coleri, Abdallah, Celik, Eltawil",
+        "journal": "IEEE Communications Magazine",
+        "year": 2024,
+        "citations": 62,
+        "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+        "prefix": "10.1109"
+      },
+      {
+        "title": "Design Methodology for 6G End-to-End System: Hexa-X-II Perspective",
+        "doi": "10.1109/ojcoms.2024.3398504",
+        "authors": "Kerboeuf, Porambage, Jain, Rugeland, Wikström, Ericson",
+        "journal": "IEEE Open Journal of the Communications Society",
+        "year": 2024,
+        "citations": 53,
+        "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+        "prefix": "10.1109"
+      },
+      {
+        "title": "Free Space Optical Communication: An Enabling Backhaul Technology for 6G Non-Terrestrial Networks",
+        "doi": "10.3390/photonics10111210",
+        "authors": "Elamassie, Uysal",
+        "journal": "Photonics",
+        "year": 2023,
+        "citations": 53,
+        "publisher": "MDPI AG",
+        "prefix": "10.3390"
+      }
+    ]
+  },
+  "EU_countries": {
+    "DE": {
+      "affiliation_query": "Germany",
+      "total": 539,
+      "years": {
+        "2024": 147,
+        "2025": 139,
+        "2023": 106,
+        "2026": 86,
+        "2022": 51,
+        "2021": 8,
+        "2020": 2
+      }
+    },
+    "FR": {
+      "affiliation_query": "France",
+      "total": 306,
+      "years": {
+        "2025": 80,
+        "2024": 67,
+        "2026": 62,
+        "2023": 44,
+        "2022": 41,
+        "2021": 9,
+        "2020": 3
+      }
+    },
+    "IT": {
+      "affiliation_query": "Italy",
+      "total": 371,
+      "years": {
+        "2024": 101,
+        "2025": 78,
+        "2023": 72,
+        "2026": 55,
+        "2022": 50,
+        "2021": 13,
+        "2020": 2
+      }
+    },
+    "ES": {
+      "affiliation_query": "Spain",
+      "total": 371,
+      "years": {
+        "2024": 113,
+        "2025": 101,
+        "2026": 68,
+        "2023": 53,
+        "2022": 33,
+        "2020": 2,
+        "2021": 1
+      }
+    },
+    "GB": {
+      "affiliation_query": "United Kingdom",
+      "total": 253,
+      "years": {
+        "2025": 84,
+        "2026": 46,
+        "2024": 45,
+        "2023": 43,
+        "2022": 29,
+        "2021": 3,
+        "2020": 3
+      }
+    },
+    "FI": {
+      "affiliation_query": "Finland",
+      "total": 295,
+      "years": {
+        "2025": 82,
+        "2024": 80,
+        "2023": 50,
+        "2026": 44,
+        "2022": 30,
+        "2021": 6,
+        "2020": 3
+      }
+    },
+    "SE": {
+      "affiliation_query": "Sweden",
+      "total": 231
+    },
+    "NL": {
+      "affiliation_query": "Netherlands",
+      "total": 62
+    },
+    "BE": {
+      "affiliation_query": "Belgium",
+      "total": 73
+    },
+    "AT": {
+      "affiliation_query": "Austria",
+      "total": 41
+    },
+    "CH": {
+      "affiliation_query": "Switzerland",
+      "total": 61
+    },
+    "NO": {
+      "affiliation_query": "Norway",
+      "total": 45
+    },
+    "DK": {
+      "affiliation_query": "Denmark",
+      "total": 101
+    },
+    "PL": {
+      "affiliation_query": "Poland",
+      "total": 76
+    },
+    "PT": {
+      "affiliation_query": "Portugal",
+      "total": 75
+    },
+    "GR": {
+      "affiliation_query": "Greece",
+      "total": 312,
+      "years": {
+        "2025": 94,
+        "2024": 84,
+        "2026": 62,
+        "2023": 42,
+        "2022": 26,
+        "2021": 4
+      }
+    },
+    "IE": {
+      "affiliation_query": "Ireland",
+      "total": 112
+    },
+    "CZ": {
+      "affiliation_query": "Czech Republic",
+      "total": 232,
+      "years": {
+        "2025": 79,
+        "2026": 47,
+        "2024": 46,
+        "2023": 37,
+        "2022": 18,
+        "2020": 3,
+        "2021": 2
+      }
+    },
+    "HU": {
+      "affiliation_query": "Hungary",
+      "total": 35
+    },
+    "RO": {
+      "affiliation_query": "Romania",
+      "total": 33
+    },
+    "BG": {
+      "affiliation_query": "Bulgaria",
+      "total": 17
+    },
+    "HR": {
+      "affiliation_query": "Croatia",
+      "total": 6
+    },
+    "SK": {
+      "affiliation_query": "Slovakia",
+      "total": 9
+    },
+    "SI": {
+      "affiliation_query": "Slovenia",
+      "total": 3
+    },
+    "LT": {
+      "affiliation_query": "Lithuania",
+      "total": 3
+    },
+    "LV": {
+      "affiliation_query": "Latvia",
+      "total": 7
+    },
+    "EE": {
+      "affiliation_query": "Estonia",
+      "total": 10
+    },
+    "LU": {
+      "affiliation_query": "Luxembourg",
+      "total": 77
+    },
+    "MT": {
+      "affiliation_query": "Malta",
+      "total": 6
+    },
+    "CY": {
+      "affiliation_query": "Cyprus",
+      "total": 36
+    },
+    "IS": {
+      "affiliation_query": "Iceland",
+      "total": 2
+    }
+  },
+  "EU_top_cited": [
+    {
+      "title": "Integrated Sensing and Communications: Toward Dual-Functional Wireless Networks for 6G and Beyond",
+      "doi": "10.1109/jsac.2022.3156632",
+      "authors": "Liu, Cui, Masouros, Xu, Han, Eldar",
+      "journal": "IEEE Journal on Selected Areas in Communications",
+      "year": 2022,
+      "citations": 3690,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "prefix": "10.1109"
+    },
+    {
+      "title": "On the Road to 6G: Visions, Requirements, Key Technologies, and Testbeds",
+      "doi": "10.1109/comst.2023.3249835",
+      "authors": "Wang, You, Gao, Zhu, Li, Zhang",
+      "journal": "IEEE Communications Surveys &amp; Tutorials",
+      "year": 2023,
+      "citations": 2289,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "prefix": "10.1109"
+    },
+    {
+      "title": "Active RIS vs. Passive RIS: Which Will Prevail in 6G?",
+      "doi": "10.1109/tcomm.2022.3231893",
+      "authors": "Zhang, Dai, Chen, Liu, Yang, Schober",
+      "journal": "IEEE Transactions on Communications",
+      "year": 2023,
+      "citations": 1012,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "prefix": "10.1109"
+    },
+    {
+      "title": "Evolution of NOMA Toward Next Generation Multiple Access (NGMA) for 6G",
+      "doi": "10.1109/jsac.2022.3145234",
+      "authors": "Liu, Zhang, Mu, Ding, Schober, Al-Dhahir",
+      "journal": "IEEE Journal on Selected Areas in Communications",
+      "year": 2022,
+      "citations": 575,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "prefix": "10.1109"
+    },
+    {
+      "title": "Terahertz Communications and Sensing for 6G and Beyond: A Comprehensive Review",
+      "doi": "10.1109/comst.2024.3385908",
+      "authors": "Jiang, Zhou, He, Habibi, Melnyk, El-Absi",
+      "journal": "IEEE Communications Surveys &amp; Tutorials",
+      "year": 2024,
+      "citations": 500,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "prefix": "10.1109"
+    },
+    {
+      "title": "What Will the Future of UAV Cellular Communications Be? A Flight From 5G to 6G",
+      "doi": "10.1109/comst.2022.3171135",
+      "authors": "Geraci, Garcia-Rodriguez, Azari, Lozano, Mezzavilla, Chatzinotas",
+      "journal": "IEEE Communications Surveys &amp; Tutorials",
+      "year": 2022,
+      "citations": 483,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "prefix": "10.1109"
+    },
+    {
+      "title": "Toward Multi-Functional 6G Wireless Networks: Integrating Sensing, Communication, and Security",
+      "doi": "10.1109/mcom.002.2100972",
+      "authors": "Wei, Liu, Masouros, Su, Petropulu",
+      "journal": "IEEE Communications Magazine",
+      "year": 2022,
+      "citations": 411,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "prefix": "10.1109"
+    },
+    {
+      "title": "5G-Advanced Toward 6G: Past, Present, and Future",
+      "doi": "10.1109/jsac.2023.3274037",
+      "authors": "Chen, Lin, Lee, Toskala, Sun, Chiasserini",
+      "journal": "IEEE Journal on Selected Areas in Communications",
+      "year": 2023,
+      "citations": 408,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "prefix": "10.1109"
+    },
+    {
+      "title": "The Integrated Sensing and Communication Revolution for 6G: Vision, Techniques, and Applications",
+      "doi": "10.1109/jproc.2024.3397609",
+      "authors": "González-Prelcic, Furkan Keskin, Kaltiokallio, Valkama, Dardari, Shen",
+      "journal": "Proceedings of the IEEE",
+      "year": 2024,
+      "citations": 309,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "prefix": "10.1109"
+    },
+    {
+      "title": "6G Wireless Communications: From Far-Field Beam Steering to Near-Field Beam Focusing",
+      "doi": "10.1109/mcom.001.2200259",
+      "authors": "Zhang, Shlezinger, Guidi, Dardari, Eldar",
+      "journal": "IEEE Communications Magazine",
+      "year": 2023,
+      "citations": 290,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+      "prefix": "10.1109"
+    }
+  ]
+}

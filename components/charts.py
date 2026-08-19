@@ -424,7 +424,7 @@ def render_academic_database_chart(
     title: str | None = None,
     xlabel: str | None = None,
 ) -> go.Figure:
-    """Renders bar chart of verified sample paper publisher counts."""
+    """Renders bar chart of measured paper counts (integer axis, integer hover)."""
     title = title or t("charts.db_default")
     xlabel = xlabel or t("charts.publisher")
     labels = list(db_dict.keys())
