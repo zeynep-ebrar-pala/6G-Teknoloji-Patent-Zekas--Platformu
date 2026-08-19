@@ -6,6 +6,7 @@ Tüm patent kayıtları Google Patents üzerinden doğrulanabilir.
 import streamlit as st
 
 from backend.patent_service import PatentService
+from i18n.core import format_int, get_lang, t
 from components.charts import (
     render_company_counts_chart,
     render_company_patent_domain_chart,
@@ -27,7 +28,7 @@ from components.ui_helpers import (
 )
 from components.tt_europe_views import render_tt_europe_patent_section
 
-PATENT_SECTION_KEYS = ["year", "topics", "tree", "map", "list", "tt_eu"]
+PATENT_SECTION_KEYS = ["tt_eu", "year", "topics", "tree", "map", "list"]
 
 
 def render_patent_intelligence_module():
@@ -86,7 +87,7 @@ def render_patent_intelligence_module():
     _labels = [t(f"patent.section.{k}") for k in PATENT_SECTION_KEYS]
     _map = dict(zip(_labels, PATENT_SECTION_KEYS))
     section = _map.get(
-        select_section(t("patent.view"), _labels, key=f"patent_section_{get_lang()}"),
+        select_section(t("patent.view"), _labels, key=f"patent_section_eu1_{get_lang()}"),
         PATENT_SECTION_KEYS[0],
     )
 

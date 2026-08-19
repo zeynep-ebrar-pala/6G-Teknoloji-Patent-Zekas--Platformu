@@ -6,6 +6,7 @@ DOI doğrulamalı set her zaman doludur; OpenAlex canlı/önbellek varsa eklenir
 import streamlit as st
 
 from backend.academic_service import AcademicService
+from i18n.core import format_int, get_lang, t
 from components.charts import (
     render_academic_bar_chart,
     render_academic_database_chart,
@@ -21,7 +22,7 @@ from components.ui_helpers import (
 )
 from components.tt_europe_views import render_tt_europe_pub_section
 
-PUB_SECTION_KEYS = ["doi", "trend", "inst", "country", "papers", "tt_eu"]
+PUB_SECTION_KEYS = ["tt_eu", "doi", "trend", "inst", "country", "papers"]
 
 
 def render_academic_publication_module():
@@ -69,7 +70,7 @@ def render_academic_publication_module():
     _labels = [t(f"pub.section.{k}") for k in PUB_SECTION_KEYS]
     _map = dict(zip(_labels, PUB_SECTION_KEYS))
     section = _map.get(
-        select_section(t("pub.view"), _labels, key=f"academic_section_{get_lang()}"),
+        select_section(t("pub.view"), _labels, key=f"academic_section_eu1_{get_lang()}"),
         PUB_SECTION_KEYS[0],
     )
 

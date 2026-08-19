@@ -81,7 +81,7 @@ section = _section_map.get(
     select_section(
         t("tech.section_label"),
         _section_labels,
-        key=f"tech_section_{selected_tech_id}_{get_lang()}",
+        key=f"tech_section_sb_{selected_tech_id}_{get_lang()}",
     ),
     TECH_SECTION_KEYS[0],
 )

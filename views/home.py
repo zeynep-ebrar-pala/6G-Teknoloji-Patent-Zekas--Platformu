@@ -15,6 +15,13 @@ st.markdown(
     t("home.intro_beginner") if beginner else t("home.intro_expert"),
     unsafe_allow_html=True,
 )
+st.markdown(
+    f"""<div class="glass-card" style="border-left: 5px solid #E20074; margin-bottom: 12px;">
+<div class="teach-label">{t("home.tt_eu_teaser_title")}</div>
+<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.6;margin:8px 0 0 0;">{t("home.tt_eu_teaser")}</p>
+</div>""",
+    unsafe_allow_html=True,
+)
 
 heading = t("home.cards_heading") if beginner else t("home.cards_heading_expert")
 st.markdown(

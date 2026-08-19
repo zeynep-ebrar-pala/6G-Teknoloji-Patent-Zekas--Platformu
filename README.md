@@ -74,7 +74,7 @@ Streamlit Frontend (components/*, app.py)
 | 6G Teknolojileri | Kavramsal temel, formül kartları, karşılaştırma, TT senaryoları, kayıt sayımı |
 | Patent Zekası | Yıl, konu, kelime bulutu, ağaç, yoğunluk, TF-IDF harita, Google Patents listesi |
 | Yayın Trendleri | OpenAlex yıl / kurum / ülke; DOI-doğrulamalı makaleler |
-| Türk Telekom Görünümü | Bölge/yoğunluk/önceliğe göre mimari önerisi |
+| Türk Telekom Görünümü | Avrupa’daki yer (doğrulanmış harita) + bölge/yoğunluk/önceliğe göre mimari önerisi |
 | AI Asistan | TF-IDF yerel geri getirme + isteğe bağlı Groq/Gemini |
 | Hakkında | Amaç, yığın, sunum iskeleti |
 

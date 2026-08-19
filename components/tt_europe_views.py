@@ -97,7 +97,10 @@ def _position_visuals(*, show_vendor_compare: bool) -> None:
     st.markdown(t("tt_eu.map_heading"))
     st.caption(t("tt_eu.map_caption"))
     rows = TTEuropeService.map_rows()
-    show_plotly(render_tt_europe_choropleth(rows, lang=lang))
+    try:
+        show_plotly(render_tt_europe_choropleth(rows, lang=lang))
+    except Exception:
+        st.info(t("tt_eu.map_fail"))
     _named_country_chips(rows, lang)
     ir = TTEuropeService.get_ir_wholesale()
     st.caption(ir["attribution_tr"] if lang == "tr" else ir["attribution_en"])

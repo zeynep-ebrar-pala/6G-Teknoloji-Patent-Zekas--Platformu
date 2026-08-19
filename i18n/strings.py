@@ -27,6 +27,13 @@ UI = {
             "ai": "AI Asistan",
             "about": "Hakkında",
         },
+        "tt_page": {
+            "view": "Türk Telekom görünümü",
+            "section": {
+                "footprint": "Avrupa’daki yeri",
+                "scenario": "Saha senaryosu",
+            },
+        },
         "settings": {"language": "Dil", "language_help": "Arayüz ve yeni AI yanıtları seçilen dile geçer."},
         "depth": {
             "label": "Anlatım derinliği",
@@ -82,6 +89,8 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknolojileri</strong> uz
             "card_cta_expert": "Denklem ve 3GPP bağlamı: 6G Teknolojileri → bu kartı seçin",
             "radar_heading": "### TRL radar — 3GPP / kamuya açık deneme eşlemesi",
             "radar_caption": "Dilimler NASA/AB TRL 1–9 ölçeğidir; her tam sayı, 3GPP teknik raporu veya kamuya açık deneme sınıfına göre eşlenir.",
+            "tt_eu_teaser_title": "Türk Telekom’un Avrupa’daki yeri",
+            "tt_eu_teaser": "Operatör + TTI toptan; RAN satıcısı değil. Harita yalnızca adı kaynakta geçen ülkeleri boyar. Aç: soldan <strong>Türk Telekom Görünümü</strong>.",
         },
         "trl": {
             "pill": "TRL {n}",
@@ -337,6 +346,7 @@ bu platformda o ülke adı kilitlenmedi.
 </p>""",
             "map_heading": "### Avrupa haritası (kaynakta adı geçen ülkeler)",
             "map_caption": "Katmanlar ayrıdır: merkez, TTI toptan first-mover, 6G Ar-Ge ortağı, ETSI merkezi, MoU imza yeri. Abone/pazar payı değildir.",
+            "map_fail": "Harita çizilemedi; aşağıdaki liste kaynakta adı geçen ülkelerin tam kümesidir.",
             "role_heading": "### Kanıt türü (kaç ülkede adı geçti)",
             "role_caption": "EP tescil çubuğu 0’dır. Toptan 6 ülke TTI About «first mover» listesidir; 19 veya 24’ün tamamı değildir.",
             "vs_heading": "### Bu platformun kilitli 6G örnek kümesi",
@@ -649,6 +659,13 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "ai": "AI Assistant",
             "about": "About",
         },
+        "tt_page": {
+            "view": "Türk Telekom view",
+            "section": {
+                "footprint": "Place in Europe",
+                "scenario": "Field scenario",
+            },
+        },
         "settings": {"language": "Language", "language_help": "The interface and new AI answers switch to the selected language."},
         "depth": {
             "label": "Explanation depth",
@@ -704,6 +721,8 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
             "card_cta_expert": "Equations and 3GPP context: 6G Technologies → select this card",
             "radar_heading": "### TRL radar — 3GPP / public-trial mapping",
             "radar_caption": "Slices use the NASA/EU TRL 1–9 scale; each integer is mapped from a 3GPP technical report or a public trial class.",
+            "tt_eu_teaser_title": "Türk Telekom’s place in Europe",
+            "tt_eu_teaser": "Operator + TTI wholesale; not a RAN vendor. The map paints only countries named in a source. Open <strong>Türk Telekom View</strong> in the sidebar.",
         },
         "trl": {
             "pill": "TRL {n}",
@@ -958,6 +977,7 @@ An unpainted European country is not a claim of absence — its name was not loc
 </p>""",
             "map_heading": "### Europe map (countries named in a source)",
             "map_caption": "Layers are distinct: HQ, TTI wholesale first-mover, 6G R&amp;D partner, ETSI seat, MoU venue. Not subscriber or revenue share.",
+            "map_fail": "The map could not be drawn; the list below is the complete set of countries named in a source.",
             "role_heading": "### Evidence type (how many named countries)",
             "role_caption": "The EP-grant bar is 0. Wholesale 6 is TTI About’s first-mover list, not the full 19 or 24.",
             "vs_heading": "### This platform’s locked 6G sample",
