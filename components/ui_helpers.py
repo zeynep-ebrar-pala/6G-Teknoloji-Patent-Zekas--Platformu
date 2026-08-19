@@ -150,11 +150,7 @@ def render_patent_card(patent: dict) -> None:
 
 
 def render_paper_card(paper: dict) -> None:
-    cites = paper.get("citations")
-    if isinstance(cites, int):
-        cite_label = _t("pub.citations_n", n=_format_int(cites))
-    else:
-        cite_label = _t("pub.citations_na")
+    cite_label = _t("pub.citations_na")
     doi = paper.get("doi", "")
     from backend.source_links import paper_record_links
 

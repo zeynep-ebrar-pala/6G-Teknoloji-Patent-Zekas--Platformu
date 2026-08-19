@@ -245,37 +245,39 @@ ticarileşme tarihi değildir.
         },
         "pub": {
             "title": "Yayın Trendleri",
-            "subtitle": "Bu sayfa önce DOI ile doğrulanmış makale setini gösterir. OpenAlex canlı sayımı gelirse küresel trend eklenir; gelmezse uydurma sayı yazılmaz. Kaynak: {source}",
-            "what_title": "DOI, OpenAlex ve atıf ne anlama gelir?",
+            "subtitle": "Bu sayfa DOI ile kilitli makale setini tam sayı olarak çizer. Google Scholar kayıt araması kartta ve konu taramasında açılır; Scholar herkese açık sayım API’si sunmaz, hit sayısı uydurulmaz. Kaynak: {source}",
+            "what_title": "DOI ve Google Scholar burada ne işe yarar?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
 <strong>DOI (Digital Object Identifier — dijital nesne tanımlayıcı):</strong>
-makaleye kalıcı kimlik verir; karttaki «Kaynakta Aç» bu kimliği çözümler.
-Uydurma DOI üretmek bu platformda yasaktır.
+makaleye kalıcı kimlik verir. Çubuklar bu kilitli listedeki makale <em>adedi</em>dir (1, 2, 3) — oran değildir.
+Uydurma DOI veya uydurma Scholar toplamı yasaktır.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-<strong>OpenAlex:</strong> açık akademik graf API’sidir. Yıl/kurum/ülke sayıları bu API’den gelir;
-erişilemezse grafik gizlenir, statik tablo uydurulmaz.
-<strong>Atıf sayısı</strong> (<em>cited_by_count</em>) bir makalenin kaç kez referans verildiğidir —
-kalite notu değildir; yeni makale düşük, tarama makalesi yüksek olabilir.
-Google Scholar ayrı bir API sunmaz; sayılar OpenAlex’tendir.
+<strong>Google Scholar:</strong> herkese açık sayım API’si yoktur; bu yüzden «Scholar’da 12 400 sonuç» yazılmaz.
+Karttaki Scholar düğmesi o makalenin DOI’sini Scholar’da açar. Konu taramasındaki Scholar düğmesi aynı sorguyu açar.
+Atıf sayısı bu platformda ölçülmediyse <strong>—</strong> kalır.
 </p>""",
             "empty": "Doğrulanmış makale kaydı bulunamadı.",
             "empty_topic": "Kilitli DOI setinde «{topic}» kaydı yok. Sayı uydurulmaz. Aşağıdaki yayın butonları aynı konuyu sitede arar.",
             "metric_doi": "Doğrulanmış makale (DOI)",
             "metric_oa_year": "OpenAlex {year} (6 konu)",
-            "metric_topic": "En aktif OpenAlex konusu",
-            "metric_cites": "En yüksek atıf (OpenAlex)",
+            "metric_peak_year": "En çok makale yılı (kilitli set)",
+            "metric_peak_delta": "{n} makale",
+            "metric_topic": "En sık konu (kilitli set)",
+            "metric_topic_delta": "{n} makale",
+            "metric_cites": "Scholar atıf sayısı",
+            "scholar_metric_caption": "Atıf: — (Google Scholar herkese açık API vermez; sayı uydurulmaz). Aşağıdaki düğme aynı sorguyu Scholar’da açar.",
             "open_oa": "OpenAlex kaynak sayfasını aç ↗",
             "snapshot": "Son başarılı OpenAlex önbelleği: {ts}",
             "view": "Kartlardan sonra — analiz",
             "section": {
                 "doi": "Kilitli set (yıl / konu / yayıncı)",
-                "trend": "OpenAlex yıl trendi",
+                "trend": "Yıl + Google Scholar araması",
                 "where": "Kurum ve ülke",
                 "tt_eu": "TT Avrupa izi",
             },
             "doi_heading": "### DOI ile doğrulanmış 6G makaleleri",
-            "doi_caption": "Çubuklar yalnızca platformda listelenen makalelerin yayın yılı ve konusudur. Her karttaki buton makaleyi DOI üzerinden açar.",
+            "doi_caption": "Çubuklar kilitli listedeki makale adedidir (tam sayı). Fareyle sütunun üstüne gelince aynı tam sayı görünür. Google Scholar toplamı değildir.",
             "chart_year": "Doğrulanmış set — yayın yılı",
             "chart_year_x": "Takvim yılı",
             "chart_topic": "Doğrulanmış set — konu",
@@ -286,21 +288,23 @@ Google Scholar ayrı bir API sunmaz; sayılar OpenAlex’tendir.
             "oa_empty": "OpenAlex şu an canlı yanıt vermedi ve disk önbelleği de boş. Yukarıdaki DOI doğrulamalı set kullanılabilir. OpenAlex düzelince trend otomatik dolar.",
             "try_oa": "OpenAlex’i tarayıcıda dene ↗",
             "open_oa_counts": "Bu sayıları OpenAlex’te aç ↗",
-            "inst_heading": "### En çok yayın yapan kurumlar",
+            "scholar_heading": "### Kilitli set — yıl ve Google Scholar araması",
+            "scholar_caption": "Çubuklar yine kilitli DOI adedidir. Scholar düğmesi sorguyu yeni sekmede açar; sonuç sayısını buraya yazmayız.",
+            "inst_heading": "### Yazar kurumları (kilitli set)",
             "oa_groupby": "OpenAlex group_by — 2020–2025, 6G konu araması.",
             "chart_inst": "Kurumlara göre yayın (OpenAlex)",
             "open_inst": "OpenAlex kurum filtresini aç ↗",
-            "inst_fallback": "Canlı küresel sayım yok. Aşağıdaki liste yalnızca DOI setindeki OpenAlex yazar kurumlarıdır.",
-            "chart_inst_fb": "Doğrulanmış 8 makale — yazar kurumları",
-            "empty_inst": "Kurum listesi için OpenAlex yanıtı yok. Makale kartlarındaki DOI butonunu kullanın.",
-            "cc_heading": "### En çok yayın yapan ülkeler",
+            "inst_fallback": "Yalnızca kilitli DOI kartlarındaki yazar kurumu. Google Scholar kurum toplamı yoktur; uydurulmaz.",
+            "chart_inst_fb": "Kilitli set — yazar kurumları (makale adedi)",
+            "empty_inst": "Kilitli setten kurum adı çıkmadı. Karttaki Scholar / DOI düğmesini kullanın.",
+            "cc_heading": "### Ülkeler (kilitli set)",
             "chart_cc": "Ülkelere göre yayın (OpenAlex)",
             "open_cc": "OpenAlex ülke filtresini aç ↗",
-            "cc_fallback": "Canlı küresel sayım yok. Aşağıdaki liste yalnızca DOI setindeki OpenAlex ülke kodlarıdır.",
-            "chart_cc_fb": "Doğrulanmış 8 makale — ülke kodları",
-            "empty_cc": "Ülke listesi için OpenAlex yanıtı yok. Makale kartlarındaki DOI butonunu kullanın.",
+            "cc_fallback": "Yalnızca kilitli DOI kartlarındaki ülke. Scholar ülke toplamı uydurulmaz.",
+            "chart_cc_fb": "Kilitli set — ülke (makale adedi)",
+            "empty_cc": "Kilitli setten ülke kodu çıkmadı. Karttaki Scholar / DOI düğmesini kullanın.",
             "papers_heading": "### Doğrulanmış 6G makaleleri",
-            "papers_caption": "Sıra: yıl yeniden eskiye; aynı yılda OpenAlex atıf yüksekten düşüğe. Atıf yoksa «—». DOI her zaman; IEEE / Springer / Elsevier yalnızca o yayınevinin DOI öneki varsa; Scholar DOI araması.",
+            "papers_caption": "Sıra: yıl yeniden eskiye. Atıf bu sayfada — (Scholar API yok). DOI her zaman; IEEE / Springer / Elsevier yalnızca o yayınevinin DOI öneki varsa; Scholar DOI araması.",
             "citations_n": "{n} atıf",
             "citations_na": "Atıf: —",
             "authors": "Yazarlar",
@@ -738,11 +742,13 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "domain_radar": "Firma bazlı 6G teknoloji yetkinlik dağılımı (%)",
             "keywords": "Patent istemlerinde en sık geçen anahtar kelimeler",
             "kw_x": "Geçtiği istem sayısı",
-            "academic_trend": "Akademik yayın sayıları trendi (OpenAlex, konu bazlı)",
-            "pub_count": "Yayın sayısı",
+            "academic_trend": "Kilitli set — yıllara göre makale adedi",
+            "pub_count": "Makale sayısı",
             "db_default": "Doğrulanmış örnek set — yayıncı sayısı",
             "publisher": "Yayıncı",
             "paper_count": "Makale sayısı",
+            "hover_v": "%{{x}}<br><b>%{{y}}</b> {unit}<extra></extra>",
+            "hover_h": "%{{y}}<br><b>%{{x}}</b> {unit}<extra></extra>",
             "network": "Assignee ↔ teknoloji alanı ağ grafiği",
             "nx_missing": "NetworkX yüklü değil; ağ grafiği gösterilemiyor.",
             "company_counts": "En çok kayıtlı firmalar (doğrulanmış küme)",
@@ -750,7 +756,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "density": "Patent yoğunluğu (firma × alan, kayıt sayısı)",
             "sunburst": "Patent ağacı (firma → alan → kayıt)",
             "tfidf": "Patent teknoloji haritası (TF-IDF + PCA, başlık vektörleri)",
-            "oa_bar_x": "Yayın sayısı (OpenAlex)",
+            "oa_bar_x": "Makale sayısı",
             "tt_office": "TT-grup — hangi patent ofisinde tescil var (kilitli küme)",
             "tt_office_x": "Patent ofisi",
             "office_epo": "Avrupa Patent Ofisi",
@@ -1049,37 +1055,39 @@ not commercialisation date.
         },
         "pub": {
             "title": "Publication Trends",
-            "subtitle": "This page leads with the DOI-verified paper set. If a live OpenAlex count arrives, the global trend is added; if not, no invented number is shown. Source: {source}",
-            "what_title": "What DOI, OpenAlex, and citations mean",
+            "subtitle": "This page plots the DOI-locked paper set as whole numbers. Google Scholar record search opens from the card and topic search; Scholar has no public count API, so hit totals are not invented. Source: {source}",
+            "what_title": "What DOI and Google Scholar do here",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-A <strong>DOI (Digital Object Identifier)</strong> is a persistent identity for a paper;
-the “Open source” button on each card resolves that identity.
-Inventing a DOI is forbidden on this platform.
+A <strong>DOI (Digital Object Identifier)</strong> is a persistent identity for a paper.
+The bars are the <em>count</em> of papers in this locked list (1, 2, 3) — not a ratio.
+Inventing a DOI or a Scholar total is forbidden.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-<strong>OpenAlex</strong> is an open scholarly-graph API. Year / institution / country counts come from it;
-if it is unreachable, the chart is hidden and no static global table is invented.
-<strong>Citation count</strong> (<em>cited_by_count</em>) is how often a paper is referenced —
-it is not a quality grade; a new paper can sit low, a review paper high.
-Google Scholar does not expose a public API; the numbers here are from OpenAlex.
+<strong>Google Scholar</strong> has no public count API, so “12,400 Scholar hits” is not written here.
+The Scholar button on a card opens that DOI on Scholar. Topic search opens the same query.
+If a citation count was not measured on this platform it stays <strong>—</strong>.
 </p>""",
             "empty": "No verified paper records were found.",
             "empty_topic": "The locked DOI set has no “{topic}” records. Counts are not invented. The publication buttons below search the same topic on the site.",
             "metric_doi": "Verified papers (DOI)",
             "metric_oa_year": "OpenAlex {year} (6 topics)",
-            "metric_topic": "Most active OpenAlex topic",
-            "metric_cites": "Highest citation count (OpenAlex)",
+            "metric_peak_year": "Peak year (locked set)",
+            "metric_peak_delta": "{n} papers",
+            "metric_topic": "Most frequent topic (locked set)",
+            "metric_topic_delta": "{n} papers",
+            "metric_cites": "Scholar citation count",
+            "scholar_metric_caption": "Citations: — (Google Scholar has no public API; counts are not invented). The button below opens the same query on Scholar.",
             "open_oa": "Open the OpenAlex source page ↗",
             "snapshot": "Last successful OpenAlex cache: {ts}",
             "view": "After the cards — analysis",
             "section": {
                 "doi": "Locked set (year / topic / publisher)",
-                "trend": "OpenAlex yearly trend",
+                "trend": "Year + Google Scholar search",
                 "where": "Institutions and countries",
                 "tt_eu": "TT Europe footprint",
             },
             "doi_heading": "### DOI-verified 6G papers",
-            "doi_caption": "Bars are publication year and topic for papers listed on this platform. Each card’s button opens the paper via its DOI.",
+            "doi_caption": "Bars are whole-number paper counts in the locked list. Hover a bar to see the same integer. This is not a Google Scholar total.",
             "chart_year": "Verified set — publication year",
             "chart_year_x": "Calendar year",
             "chart_topic": "Verified set — topic",
@@ -1090,21 +1098,23 @@ Google Scholar does not expose a public API; the numbers here are from OpenAlex.
             "oa_empty": "OpenAlex did not respond live and the disk cache is empty. The DOI-verified set above remains usable. The trend fills automatically when OpenAlex recovers.",
             "try_oa": "Try OpenAlex in the browser ↗",
             "open_oa_counts": "Open these counts on OpenAlex ↗",
-            "inst_heading": "### Institutions with the most publications",
+            "scholar_heading": "### Locked set — year and Google Scholar search",
+            "scholar_caption": "Bars are again locked DOI counts. A Scholar button opens the query in a new tab; the hit count is not copied here.",
+            "inst_heading": "### Author institutions (locked set)",
             "oa_groupby": "OpenAlex group_by — 2020–2025, 6G topic search.",
             "chart_inst": "Publications by institution (OpenAlex)",
             "open_inst": "Open the OpenAlex institution filter ↗",
-            "inst_fallback": "No live global count. The list below is OpenAlex author institutions from the DOI set only.",
-            "chart_inst_fb": "Verified 8 papers — author institutions",
-            "empty_inst": "No OpenAlex response for institutions. Use the DOI button on each paper card.",
-            "cc_heading": "### Countries with the most publications",
+            "inst_fallback": "Author institutions from locked DOI cards only. There is no Scholar institution total; it is not invented.",
+            "chart_inst_fb": "Locked set — author institutions (paper count)",
+            "empty_inst": "No institution name came out of the locked set. Use the Scholar / DOI button on the card.",
+            "cc_heading": "### Countries (locked set)",
             "chart_cc": "Publications by country (OpenAlex)",
             "open_cc": "Open the OpenAlex country filter ↗",
-            "cc_fallback": "No live global count. The list below is OpenAlex country codes from the DOI set only.",
-            "chart_cc_fb": "Verified 8 papers — country codes",
-            "empty_cc": "No OpenAlex response for countries. Use the DOI button on each paper card.",
+            "cc_fallback": "Countries from locked DOI cards only. A Scholar country total is not invented.",
+            "chart_cc_fb": "Locked set — country (paper count)",
+            "empty_cc": "No country code came out of the locked set. Use the Scholar / DOI button on the card.",
             "papers_heading": "### Verified 6G papers",
-            "papers_caption": "Order: year newest to oldest; within a year, OpenAlex citations high to low. “—” if no citation count. DOI always; IEEE / Springer / Elsevier only when the DOI prefix belongs to that publisher; Scholar is a DOI search.",
+            "papers_caption": "Order: year newest to oldest. Citations on this page are — (no Scholar API). DOI always; IEEE / Springer / Elsevier only when the DOI prefix belongs to that publisher; Scholar is a DOI search.",
             "citations_n": "{n} citations",
             "citations_na": "Citations: —",
             "authors": "Authors",
@@ -1541,11 +1551,13 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "domain_radar": "Company 6G technology-domain mix (%)",
             "keywords": "Most frequent keywords in patent claims",
             "kw_x": "Claim occurrences",
-            "academic_trend": "Academic publication trend (OpenAlex, by topic)",
-            "pub_count": "Publication count",
+            "academic_trend": "Locked set — papers by year",
+            "pub_count": "Paper count",
             "db_default": "Verified sample set — publisher count",
             "publisher": "Publisher",
             "paper_count": "Paper count",
+            "hover_v": "%{{x}}<br><b>%{{y}}</b> {unit}<extra></extra>",
+            "hover_h": "%{{y}}<br><b>%{{x}}</b> {unit}<extra></extra>",
             "network": "Assignee ↔ technology-domain network",
             "nx_missing": "NetworkX is not installed; the network graph cannot be shown.",
             "company_counts": "Companies with the most records (verified set)",
@@ -1553,7 +1565,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "density": "Patent density (company × domain, record count)",
             "sunburst": "Patent tree (company → domain → record)",
             "tfidf": "Patent technology map (TF-IDF + PCA, title vectors)",
-            "oa_bar_x": "Publication count (OpenAlex)",
+            "oa_bar_x": "Paper count",
             "tt_office": "TT-group — which patent office granted the locked records",
             "tt_office_x": "Patent office",
             "office_epo": "European Patent Office",

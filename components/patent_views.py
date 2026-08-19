@@ -117,7 +117,10 @@ def render_patent_intelligence_module():
     if section == "year":
         st.markdown(t("patent.companies_heading"))
         counts = PatentService.get_company_counts(company_arg, topic)
-        if not counts:
+        if not company_arg:
+            spec = PatentService.get_spec_companies()
+            counts = {name: int(counts.get(name, 0)) for name in spec}
+        if not any(counts.values()):
             show_empty(t("patent.empty_counts"))
         else:
             show_plotly(render_company_counts_chart(counts))

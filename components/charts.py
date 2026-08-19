@@ -150,13 +150,66 @@ def _year_axis(labels: List[str]) -> dict:
     )
 
 
-def _count_axis(title: str) -> dict:
-    return dict(
+def _ints(vals) -> List[int]:
+    out: List[int] = []
+    for val in vals:
+        try:
+            out.append(int(val))
+        except (TypeError, ValueError):
+            out.append(0)
+    return out
+
+
+def _count_axis(title: str, values: Optional[List[int]] = None) -> dict:
+    """Sayım ekseni: 0.5 tik yok; küçük kümede 1’er adım."""
+    vals = _ints(values or [])
+    vmax = max(vals) if vals else 0
+    axis = dict(
         title=title,
         gridcolor="rgba(200, 209, 220, 0.1)",
         rangemode="tozero",
         tickformat="d",
         separatethousands=False,
+        hoverformat="d",
+    )
+    if vmax <= 30:
+        axis["dtick"] = 1
+        axis["tick0"] = 0
+        axis["range"] = [0, max(vmax, 1) + max(1, (vmax + 4) // 5)]
+    return axis
+
+
+def _count_bar(
+    labels: List[str],
+    values,
+    *,
+    horizontal: bool = False,
+    unit_key: str = "charts.paper_count",
+) -> go.Bar:
+    vals = _ints(values)
+    unit = t(unit_key)
+    hover = (
+        t("charts.hover_h", unit=unit) if horizontal else t("charts.hover_v", unit=unit)
+    )
+    if horizontal:
+        return go.Bar(
+            x=vals,
+            y=labels,
+            orientation="h",
+            marker=dict(color=_color_list(labels)),
+            text=[str(v) for v in vals],
+            textposition="outside",
+            cliponaxis=False,
+            hovertemplate=hover,
+        )
+    return go.Bar(
+        x=labels,
+        y=vals,
+        marker=dict(color=_color_list(labels)),
+        text=[str(v) for v in vals],
+        textposition="outside",
+        cliponaxis=False,
+        hovertemplate=hover,
     )
 
 def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
@@ -220,12 +273,17 @@ def render_technology_record_counts_chart(df_counts: pd.DataFrame, tech_label: s
     """Doğrulanmış patent kayıtlarının yıla göre sayısı — temsili hedef metriği yok."""
     y_col = [c for c in df_counts.columns if c != "Years"][0]
     labels = _year_labels(df_counts["Years"])
+    y_vals = _ints(df_counts[y_col])
     fig = go.Figure()
     fig.add_trace(go.Bar(
         x=labels,
-        y=df_counts[y_col],
+        y=y_vals,
         marker=dict(color="#00E5FF"),
         name=tech_label,
+        text=[str(v) for v in y_vals],
+        textposition="outside",
+        cliponaxis=False,
+        hovertemplate=t("charts.hover_v", unit=t("charts.count")),
     ))
     fig.update_layout(
         **_layout(),
@@ -234,7 +292,7 @@ def render_technology_record_counts_chart(df_counts: pd.DataFrame, tech_label: s
             x=0.02, y=0.95, font=dict(size=14, color="#FFFFFF"),
         ),
         xaxis=_year_axis(labels),
-        yaxis=_count_axis(t("charts.count")),
+        yaxis=_count_axis(t("charts.count"), y_vals),
         height=320,
         bargap=0.35,
     )
@@ -247,12 +305,16 @@ def render_patent_trends_chart(df_trends: pd.DataFrame) -> go.Figure:
     companies = [c for c in df_trends.columns if c != "Years"]
     colors = _color_list(companies)
 
+    all_vals: List[int] = []
     for col, color in zip(companies, colors):
+        y_vals = _ints(df_trends[col])
+        all_vals.extend(y_vals)
         fig.add_trace(go.Bar(
             x=labels,
-            y=df_trends[col],
+            y=y_vals,
             name=col,
             marker=dict(color=color, line=dict(width=0)),
+            hovertemplate=t("charts.hover_v", unit=t("charts.patent_count")),
         ))
 
     fig.update_layout(
@@ -260,7 +322,7 @@ def render_patent_trends_chart(df_trends: pd.DataFrame) -> go.Figure:
         barmode="group",
         title=dict(text=f"<b>{t('charts.patent_year')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=_year_axis(labels),
-        yaxis=_count_axis(t("charts.patent_count")),
+        yaxis=_count_axis(t("charts.patent_count"), all_vals),
         height=480,
         bargap=0.22,
         bargroupgap=0.08,
@@ -335,20 +397,24 @@ def render_academic_trends_chart(df_academic: pd.DataFrame) -> go.Figure:
     markers = ["circle", "square", "diamond", "triangle-up", "star", "x", "cross", "hexagon"]
 
     for idx, (col, color) in enumerate(zip(topics, colors)):
+        y_vals = _ints(df_academic[col])
         fig.add_trace(go.Scatter(
             x=labels,
-            y=df_academic[col],
+            y=y_vals,
             mode="lines+markers",
             name=col,
             line=dict(width=3, color=color),
             marker=dict(size=9, color=color, symbol=markers[idx % len(markers)], line=dict(width=1, color="#FFFFFF")),
+            hovertemplate=t("charts.hover_v", unit=t("charts.paper_count")),
         ))
 
     fig.update_layout(
         **_layout(),
         title=dict(text=f"<b>{t('charts.academic_trend')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=_year_axis(labels),
-        yaxis=dict(title=t("charts.pub_count"), gridcolor='rgba(200, 209, 220, 0.1)', rangemode='tozero', tickformat='d'),
+        yaxis=_count_axis(t("charts.paper_count"), [
+            int(v) for col in topics for v in _ints(df_academic[col])
+        ]),
         height=480
     )
     return fig
@@ -362,18 +428,15 @@ def render_academic_database_chart(
     title = title or t("charts.db_default")
     xlabel = xlabel or t("charts.publisher")
     labels = list(db_dict.keys())
-    fig = go.Figure(data=[go.Bar(
-        x=labels,
-        y=list(db_dict.values()),
-        marker=dict(color=_color_list(labels))
-    )])
-    
+    vals = _ints(db_dict.values())
+    fig = go.Figure(_count_bar(labels, vals, unit_key="charts.paper_count"))
     fig.update_layout(
         **_layout(),
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color='#FFFFFF')),
         xaxis=dict(title=xlabel, type="category", gridcolor='rgba(200, 209, 220, 0.1)'),
-        yaxis=_count_axis(t("charts.paper_count")),
-        height=360
+        yaxis=_count_axis(t("charts.paper_count"), vals),
+        height=360,
+        bargap=0.35,
     )
     return fig
 
@@ -467,17 +530,15 @@ def render_company_counts_chart(counts: Dict[str, int]) -> go.Figure:
     """En çok kayıtlı firmalar — doğrulanmış küme sayımı."""
     sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
     names = [c for c, _ in sorted_items]
-    fig = go.Figure(go.Bar(
-        x=names,
-        y=[n for _, n in sorted_items],
-        marker=dict(color=_color_list(names)),
-    ))
+    vals = _ints(n for _, n in sorted_items)
+    fig = go.Figure(_count_bar(names, vals, unit_key="charts.patent_count"))
     fig.update_layout(
         **_layout(),
         title=dict(text=f"<b>{t('charts.company_counts')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)"),
-        yaxis=dict(title=t("charts.patent_count"), gridcolor="rgba(200, 209, 220, 0.1)"),
+        yaxis=_count_axis(t("charts.patent_count"), vals),
         height=360,
+        bargap=0.28,
     )
     return fig
 
@@ -665,16 +726,13 @@ def render_tt_vs_vendors_chart(counts: Dict[str, int]) -> go.Figure:
     """Kilitli örnek küme. Küresel pazar veya SEP payı değildir."""
     sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
     names = [c for c, _ in sorted_items]
-    fig = go.Figure(go.Bar(
-        x=names,
-        y=[n for _, n in sorted_items],
-        marker=dict(color=_color_list(names)),
-    ))
+    vals = _ints(n for _, n in sorted_items)
+    fig = go.Figure(_count_bar(names, vals, unit_key="charts.patent_count"))
     fig.update_layout(
         **_layout(),
         title=dict(text=f"<b>{t('charts.tt_vs_vendors')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)", tickangle=-25),
-        yaxis=_count_axis(t("charts.patent_count")),
+        yaxis=_count_axis(t("charts.patent_count"), vals),
         height=400,
         bargap=0.28,
     )
@@ -689,12 +747,20 @@ def render_tt_country_rank_chart(
     names = [r["name"] for r in ordered]
     vals = [int(r.get(value_key) or 0) for r in ordered]
     colors = [TT_BAR if r.get("is_tt") or _is_tt_name(r.get("name") or "") else OTHER_BAR for r in ordered]
-    fig = go.Figure(go.Bar(x=names, y=vals, marker=dict(color=colors)))
+    fig = go.Figure(go.Bar(
+        x=names,
+        y=vals,
+        marker=dict(color=colors),
+        text=[str(v) for v in vals],
+        textposition="outside",
+        cliponaxis=False,
+        hovertemplate=t("charts.hover_v", unit=x_title),
+    ))
     fig.update_layout(
         **_layout(),
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)", tickangle=-20),
-        yaxis=_count_axis(x_title),
+        yaxis=_count_axis(x_title, vals),
         height=360,
         bargap=0.28,
     )
@@ -805,7 +871,9 @@ def render_tt_office_chart(counts: Dict[str, int]) -> go.Figure:
             y=vals,
             text=[str(v) for v in vals],
             textposition="outside",
+            cliponaxis=False,
             marker=dict(color="#E20074"),
+            hovertemplate=t("charts.hover_v", unit=t("charts.patent_count")),
         )
     )
     layout = _layout()
@@ -817,7 +885,7 @@ def render_tt_office_chart(counts: Dict[str, int]) -> go.Figure:
             tickangle=-18,
             automargin=True,
         ),
-        yaxis=_count_axis(t("charts.patent_count")),
+        yaxis=_count_axis(t("charts.patent_count"), vals),
         height=380,
         bargap=0.35,
         margin=dict(l=40, r=20, t=50, b=110),
@@ -846,22 +914,25 @@ def render_tt_europe_presence_chart(items: List[Dict[str, Any]], name_key: str =
     return fig
 
 
-def render_academic_bar_chart(items: List[Dict[str, Any]], title: str, name_key: str = "name") -> go.Figure:
-    """Kurum veya ülke yayın sayımı (OpenAlex group_by)."""
+def render_academic_bar_chart(
+    items: List[Dict[str, Any]],
+    title: str,
+    name_key: str = "name",
+    x_title: str | None = None,
+) -> go.Figure:
+    """Kilitli makale kümesi veya tamsayı sayım — oran ekseni yok."""
     names = [i[name_key] for i in items]
-    counts = [i["count"] for i in items]
-    fig = go.Figure(go.Bar(
-        x=counts,
-        y=names,
-        orientation="h",
-        marker=dict(color=_color_list(names)),
-    ))
-    fig.update_layout(
-        **_layout(),
+    vals = _ints(i["count"] for i in items)
+    fig = go.Figure(_count_bar(names, vals, horizontal=True, unit_key="charts.paper_count"))
+    layout = _layout()
+    layout.update(
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
-        xaxis=dict(title=t("charts.oa_bar_x"), gridcolor="rgba(200, 209, 220, 0.1)"),
+        xaxis=_count_axis(x_title or t("charts.paper_count"), vals),
         yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
-        height=max(360, 28 * len(items) + 80),
+        height=max(360, 28 * max(len(items), 1) + 80),
+        bargap=0.28,
+        margin=dict(l=40, r=70, t=50, b=40),
     )
+    fig.update_layout(**layout)
     return fig
 
