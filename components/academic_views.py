@@ -13,9 +13,9 @@ from components.charts import (
     render_academic_trends_chart,
 )
 from components.ui_helpers import (
-    render_mixed_topic_panel,
     render_module_header,
     render_paper_card,
+    render_pub_topic_panel,
     render_source_button,
     render_spec_pub_sources,
     select_section,
@@ -28,12 +28,9 @@ PUB_SECTION_KEYS = ["tt_eu", "doi", "trend", "inst", "country", "papers"]
 
 
 def render_academic_publication_module():
-    summary = AcademicService.get_summary()
-    papers = AcademicService.get_most_cited_papers()
-
     render_module_header(
         t("pub.title"),
-        t("pub.subtitle", source=summary["source"]),
+        t("pub.subtitle", source=AcademicService.get_data_source()),
         accent="#00C2FF",
     )
 
@@ -46,11 +43,10 @@ def render_academic_publication_module():
     )
 
     render_spec_pub_sources()
-    render_mixed_topic_panel("pub")
+    topic = render_pub_topic_panel("pub")
 
-    if not papers:
-        show_empty(t("pub.empty"))
-        return
+    summary = AcademicService.get_summary(topic)
+    papers = AcademicService.get_most_cited_papers(topic)
 
     year_label = summary.get("latest_year") or "—"
     c1, c2, c3, c4 = st.columns(4)
@@ -79,12 +75,20 @@ def render_academic_publication_module():
         PUB_SECTION_KEYS[0],
     )
 
+    if section == "tt_eu":
+        render_tt_europe_pub_section(topic)
+        return
+
+    if not papers:
+        show_empty(t("pub.empty_topic", topic=topic) if topic else t("pub.empty"))
+        return
+
     if section == "doi":
         st.markdown(t("pub.doi_heading"))
         st.caption(t("pub.doi_caption"))
-        year_counts = AcademicService.get_verified_year_counts()
-        topic_counts = AcademicService.get_verified_topic_counts()
-        db_dist = AcademicService.get_database_distribution()
+        year_counts = AcademicService.get_verified_year_counts(topic)
+        topic_counts = AcademicService.get_verified_topic_counts(topic)
+        db_dist = AcademicService.get_database_distribution(topic)
         col_y, col_t = st.columns(2)
         with col_y:
             if year_counts:
@@ -107,7 +111,7 @@ def render_academic_publication_module():
     elif section == "trend":
         st.markdown(t("pub.oa_heading"))
         st.caption(t("pub.oa_caption"))
-        df_acad = AcademicService.get_tech_publication_trends_df()
+        df_acad = AcademicService.get_tech_publication_trends_df(topic)
         if df_acad is None or df_acad.empty:
             show_empty(t("pub.oa_empty"))
             render_source_button("https://openalex.org/works", t("pub.try_oa"))
@@ -117,36 +121,49 @@ def render_academic_publication_module():
 
     elif section == "inst":
         st.markdown(t("pub.inst_heading"))
-        institutions = AcademicService.get_top_institutions()
-        if institutions:
-            st.caption(t("pub.oa_groupby"))
-            show_plotly(render_academic_bar_chart(institutions, t("pub.chart_inst")))
-            render_source_button("https://openalex.org/works", t("pub.open_inst"))
-        else:
-            verified_inst = AcademicService.get_verified_institutions()
+        if topic:
+            verified_inst = AcademicService.get_verified_institutions(topic)
             if verified_inst:
                 st.caption(t("pub.inst_fallback"))
                 show_plotly(render_academic_bar_chart(verified_inst, t("pub.chart_inst_fb")))
             else:
                 show_empty(t("pub.empty_inst"))
+        else:
+            institutions = AcademicService.get_top_institutions()
+            if institutions:
+                st.caption(t("pub.oa_groupby"))
+                show_plotly(render_academic_bar_chart(institutions, t("pub.chart_inst")))
+                render_source_button("https://openalex.org/works", t("pub.open_inst"))
+            else:
+                verified_inst = AcademicService.get_verified_institutions()
+                if verified_inst:
+                    st.caption(t("pub.inst_fallback"))
+                    show_plotly(render_academic_bar_chart(verified_inst, t("pub.chart_inst_fb")))
+                else:
+                    show_empty(t("pub.empty_inst"))
 
     elif section == "country":
         st.markdown(t("pub.cc_heading"))
-        countries = AcademicService.get_top_countries()
-        if countries:
-            st.caption(t("pub.oa_groupby"))
-            show_plotly(render_academic_bar_chart(countries, t("pub.chart_cc")))
-            render_source_button("https://openalex.org/works", t("pub.open_cc"))
-        else:
-            verified_cc = AcademicService.get_verified_countries()
+        if topic:
+            verified_cc = AcademicService.get_verified_countries(topic)
             if verified_cc:
                 st.caption(t("pub.cc_fallback"))
                 show_plotly(render_academic_bar_chart(verified_cc, t("pub.chart_cc_fb")))
             else:
                 show_empty(t("pub.empty_cc"))
-
-    elif section == "tt_eu":
-        render_tt_europe_pub_section()
+        else:
+            countries = AcademicService.get_top_countries()
+            if countries:
+                st.caption(t("pub.oa_groupby"))
+                show_plotly(render_academic_bar_chart(countries, t("pub.chart_cc")))
+                render_source_button("https://openalex.org/works", t("pub.open_cc"))
+            else:
+                verified_cc = AcademicService.get_verified_countries()
+                if verified_cc:
+                    st.caption(t("pub.cc_fallback"))
+                    show_plotly(render_academic_bar_chart(verified_cc, t("pub.chart_cc_fb")))
+                else:
+                    show_empty(t("pub.empty_cc"))
 
     else:
         st.markdown(t("pub.papers_heading"))

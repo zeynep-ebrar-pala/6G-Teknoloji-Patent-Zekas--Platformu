@@ -41,7 +41,12 @@ def render_source_button(url: str, label: str | None = None) -> None:
     st.link_button(label or _t("ui.source"), url, width="stretch", type="primary")
 
 
-def render_link_row(links: list[dict], *, label_prefix: str = "sources.open_") -> None:
+def render_link_row(
+    links: list[dict],
+    *,
+    label_prefix: str = "sources.open_",
+    key_suffix: str = "",
+) -> None:
     """Şartname veritabanı butonları. URL yoksa basılmaz; sayı uydurulmaz."""
     usable = [item for item in links if item.get("url") and item.get("id")]
     if not usable:
@@ -49,10 +54,13 @@ def render_link_row(links: list[dict], *, label_prefix: str = "sources.open_") -
     cols = st.columns(len(usable))
     for col, item in zip(cols, usable):
         with col:
+            kwargs = {"width": "stretch"}
+            if key_suffix:
+                kwargs["key"] = f"lnk_{label_prefix}{item['id']}_{key_suffix}"
             st.link_button(
                 _t(f"{label_prefix}{item['id']}"),
                 item["url"],
-                width="stretch",
+                **kwargs,
             )
 
 
@@ -61,7 +69,7 @@ def render_spec_patent_sources() -> None:
 
     st.markdown(_t("sources.patent_heading"))
     st.caption(_t("sources.patent_caption"))
-    render_link_row(spec_patent_databases())
+    render_link_row(spec_patent_databases(), key_suffix="pat_home")
 
 
 def render_spec_pub_sources() -> None:
@@ -69,33 +77,64 @@ def render_spec_pub_sources() -> None:
 
     st.markdown(_t("sources.pub_heading"))
     st.caption(_t("sources.pub_caption"))
-    render_link_row(spec_pub_databases())
+    render_link_row(spec_pub_databases(), key_suffix="pub_home")
 
 
-def render_mixed_topic_panel(key_suffix: str = "mix") -> None:
-    """PDF mix: yayın siteleri + patent ofisleri. Hit sayısı yazılmaz."""
-    from backend.source_links import SPEC_PUB_TOPICS, topic_patent_searches, topic_pub_searches
+def render_patent_topic_panel(key_suffix: str = "pat") -> str | None:
+    """Konu seçimi kilitli patent kümesini ve ofis aramasını birlikte değiştirir."""
+    from backend.source_links import SPEC_PUB_TOPICS, topic_patent_searches
     from i18n.core import get_lang
 
-    st.markdown(_t("sources.mix_heading"))
-    st.caption(_t("sources.mix_caption"))
+    st.markdown(_t("sources.topic_pat_heading"))
+    st.caption(_t("sources.topic_pat_caption"))
+    options = ["all"] + list(SPEC_PUB_TOPICS.keys())
     topic = st.selectbox(
         _t("sources.topic_search"),
-        list(SPEC_PUB_TOPICS.keys()),
-        key=f"spec_mix_topic_{key_suffix}_{get_lang()}",
+        options,
+        format_func=lambda x: _t("sources.topic_all") if x == "all" else x,
+        key=f"spec_pat_topic_{key_suffix}_{get_lang()}",
     )
-    st.caption(_t("sources.topic_caption", topic=topic, q=SPEC_PUB_TOPICS[topic]))
-    st.caption(_t("sources.mix_pub_row"))
-    render_link_row(topic_pub_searches(topic))
-    st.caption(_t("sources.mix_pat_row"))
-    render_link_row(topic_patent_searches(topic))
+    if topic == "all":
+        st.caption(_t("sources.topic_all_caption"))
+        render_link_row(topic_patent_searches("6G"), key_suffix=f"{key_suffix}_all")
+        return None
+    st.caption(_t("sources.topic_result_caption", topic=topic, q=SPEC_PUB_TOPICS[topic]))
+    render_link_row(topic_patent_searches(topic), key_suffix=f"{key_suffix}_{topic}")
+    return topic
+
+
+def render_pub_topic_panel(key_suffix: str = "pub") -> str | None:
+    """Konu seçimi kilitli makale kümesini ve yayın aramasını birlikte değiştirir."""
+    from backend.source_links import SPEC_PUB_TOPICS, topic_pub_searches
+    from i18n.core import get_lang
+
+    st.markdown(_t("sources.topic_pub_heading"))
+    st.caption(_t("sources.topic_pub_caption"))
+    options = ["all"] + list(SPEC_PUB_TOPICS.keys())
+    topic = st.selectbox(
+        _t("sources.topic_search"),
+        options,
+        format_func=lambda x: _t("sources.topic_all") if x == "all" else x,
+        key=f"spec_pub_topic_{key_suffix}_{get_lang()}",
+    )
+    if topic == "all":
+        st.caption(_t("sources.topic_all_caption_pub"))
+        render_link_row(topic_pub_searches("6G"), key_suffix=f"{key_suffix}_all")
+        return None
+    st.caption(_t("sources.topic_result_caption_pub", topic=topic, q=SPEC_PUB_TOPICS[topic]))
+    render_link_row(topic_pub_searches(topic), key_suffix=f"{key_suffix}_{topic}")
+    return topic
 
 
 def render_patent_card(patent: dict) -> None:
     pub = patent.get("publication_number") or patent.get("id", "")
+    from backend.source_links import google_patents_record_url
+
     url = patent.get("source_url") or patent.get("url") or ""
-    if pub and not url:
-        url = f"https://patents.google.com/patent/{pub}/en"
+    if not url and pub:
+        url = google_patents_record_url(pub)
+    if url and "ppubs.uspto.gov" in url:
+        url = google_patents_record_url(pub)
 
     st.markdown(
         f"""
@@ -115,10 +154,6 @@ def render_patent_card(patent: dict) -> None:
         unsafe_allow_html=True,
     )
     render_source_button(url, _t("patent.open_record", pub=pub))
-    from backend.source_links import patent_record_links
-
-    extra = [item for item in patent_record_links(pub) if item["id"] != "google_patents"]
-    render_link_row(extra)
 
 
 def render_paper_card(paper: dict) -> None:
@@ -128,7 +163,9 @@ def render_paper_card(paper: dict) -> None:
     else:
         cite_label = _t("pub.citations_na")
     doi = paper.get("doi", "")
-    url = paper.get("source_url") or paper.get("url") or (f"https://doi.org/{doi}" if doi else "")
+    from backend.source_links import doi_url as _doi_url
+
+    url = paper.get("source_url") or paper.get("url") or _doi_url(doi)
     st.markdown(
         f"""
         <div class="glass-card" style="margin-bottom: 8px; padding: 16px;">
@@ -145,14 +182,6 @@ def render_paper_card(paper: dict) -> None:
         unsafe_allow_html=True,
     )
     render_source_button(url, _t("pub.open_doi"))
-    from backend.source_links import paper_record_links
-
-    extra = [
-        item
-        for item in paper_record_links(doi, paper.get("source") or paper.get("journal") or "")
-        if item["id"] != "doi"
-    ]
-    render_link_row(extra)
 
 
 def show_empty(message: str) -> None:

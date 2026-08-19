@@ -58,19 +58,34 @@ def _enriched_papers() -> List[Dict[str, Any]]:
     )
 
 
-def _compute_summary() -> Dict[str, Any]:
+def _norm_topic(topic: Optional[str]) -> Optional[str]:
+    if not topic or topic in ("all", "Tümü", "All"):
+        return None
+    return topic
+
+
+def _scoped_papers(topic: Optional[str] = None) -> List[Dict[str, Any]]:
     papers = _enriched_papers()
-    trends = fetch_publication_trends()
+    tpc = _norm_topic(topic)
+    if not tpc:
+        return papers
+    return [p for p in papers if (p.get("topic") or "") == tpc]
+
+
+def _compute_summary(topic: Optional[str] = None) -> Dict[str, Any]:
+    papers = _scoped_papers(topic)
+    tpc = _norm_topic(topic)
+    trends = fetch_topic_yearly_series(tpc) if tpc else fetch_publication_trends()
     total_latest = None
-    top_topic = ("—", 0)
+    top_topic = (tpc or "—", 0)
     latest_year = TREND_YEARS[-1] if TREND_YEARS else None
     if trends and "Years" in trends:
         latest_idx = len(trends["Years"]) - 1
         latest_year = trends["Years"][latest_idx]
         topic_counts = {
-            t: trends[t][latest_idx]
-            for t in trends
-            if t != "Years" and trends[t]
+            name: trends[name][latest_idx]
+            for name in trends
+            if name != "Years" and trends[name]
         }
         if topic_counts:
             total_latest = sum(topic_counts.values())
@@ -105,12 +120,13 @@ class AcademicService:
         return ACADEMIC_DATA_SOURCE
 
     @staticmethod
-    def get_summary() -> Dict[str, Any]:
-        return _compute_summary()
+    def get_summary(topic: Optional[str] = None) -> Dict[str, Any]:
+        return _compute_summary(topic)
 
     @staticmethod
-    def get_tech_publication_trends_df() -> Optional[pd.DataFrame]:
-        trends = fetch_publication_trends()
+    def get_tech_publication_trends_df(topic: Optional[str] = None) -> Optional[pd.DataFrame]:
+        tpc = _norm_topic(topic)
+        trends = fetch_topic_yearly_series(tpc) if tpc else fetch_publication_trends()
         if not trends:
             return None
         return pd.DataFrame(trends)
@@ -123,37 +139,37 @@ class AcademicService:
         return pd.DataFrame(series)
 
     @staticmethod
-    def get_database_distribution() -> Dict[str, int]:
-        return dict(Counter(p.get("source", "Diğer") for p in _enriched_papers()))
+    def get_database_distribution(topic: Optional[str] = None) -> Dict[str, int]:
+        return dict(Counter(p.get("source", "Diğer") for p in _scoped_papers(topic)))
 
     @staticmethod
-    def get_verified_year_counts() -> Dict[str, int]:
-        counts = Counter(str(int(p["year"])) for p in _enriched_papers())
+    def get_verified_year_counts(topic: Optional[str] = None) -> Dict[str, int]:
+        counts = Counter(str(int(p["year"])) for p in _scoped_papers(topic))
         return dict(sorted(counts.items(), key=lambda x: int(x[0])))
 
     @staticmethod
-    def get_verified_topic_counts() -> Dict[str, int]:
-        return dict(Counter(p.get("topic") or "Diğer" for p in _enriched_papers()))
+    def get_verified_topic_counts(topic: Optional[str] = None) -> Dict[str, int]:
+        return dict(Counter(p.get("topic") or "Diğer" for p in _scoped_papers(topic)))
 
     @staticmethod
-    def get_verified_institutions() -> List[Dict[str, Any]]:
+    def get_verified_institutions(topic: Optional[str] = None) -> List[Dict[str, Any]]:
         counter: Counter = Counter()
-        for p in _enriched_papers():
+        for p in _scoped_papers(topic):
             for inst in p.get("institutions") or []:
                 counter[inst] += 1
         return [{"name": n, "count": c} for n, c in counter.most_common(10)]
 
     @staticmethod
-    def get_verified_countries() -> List[Dict[str, Any]]:
+    def get_verified_countries(topic: Optional[str] = None) -> List[Dict[str, Any]]:
         counter: Counter = Counter()
-        for p in _enriched_papers():
+        for p in _scoped_papers(topic):
             for cc in p.get("countries") or []:
                 counter[cc] += 1
         return [{"name": n, "count": c} for n, c in counter.most_common(10)]
 
     @staticmethod
-    def get_most_cited_papers() -> List[Dict[str, Any]]:
-        return _enriched_papers()
+    def get_most_cited_papers(topic: Optional[str] = None) -> List[Dict[str, Any]]:
+        return _scoped_papers(topic)
 
     @staticmethod
     def get_top_institutions() -> Optional[List[Dict[str, Any]]]:

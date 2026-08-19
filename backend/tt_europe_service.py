@@ -338,14 +338,17 @@ class TTEuropeService:
         return kinds
 
     @staticmethod
-    def vendor_sample_vs_tt() -> Dict[str, int]:
+    def vendor_sample_vs_tt(domain: str | None = None) -> Dict[str, int]:
         """Bu platformun kilitli 6G örnek kümesi vs TT-grup USPTO. Küresel SEP payı değildir."""
         from backend.patent_service import PatentService
 
         spec = PatentService.get_spec_companies()
-        counts = PatentService.get_company_counts()
+        counts = PatentService.get_company_counts(domain=domain)
         out = {name: int(counts.get(name, 0)) for name in spec}
-        out["Türk Telekom (Netsia)"] = len(_patents())
+        tt = _patents()
+        if domain:
+            tt = [p for p in tt if (p.get("domain") or "") == domain]
+        out["Türk Telekom (Netsia)"] = len(tt)
         return out
 
     @staticmethod

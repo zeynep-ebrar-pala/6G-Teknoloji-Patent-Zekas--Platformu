@@ -20,9 +20,9 @@ from components.charts import (
 )
 from components.ui_helpers import (
     render_link_row,
-    render_mixed_topic_panel,
     render_module_header,
     render_patent_card,
+    render_patent_topic_panel,
     render_source_button,
     render_spec_patent_sources,
     select_section,
@@ -49,7 +49,7 @@ def render_patent_intelligence_module():
     )
 
     render_spec_patent_sources()
-    render_mixed_topic_panel("patent")
+    topic = render_patent_topic_panel("patent")
     from backend.source_links import assignee_patent_links
 
     spec = PatentService.get_spec_companies()
@@ -63,12 +63,8 @@ def render_patent_intelligence_module():
     )
     company_arg = None if company == "all" else company
 
-    summary = PatentService.get_summary(company_arg)
-    patents = PatentService.get_top_patents(company_arg)
-
-    if not patents:
-        show_empty(t("patent.empty_company", company=company if company != "all" else t("patent.all")))
-        return
+    summary = PatentService.get_summary(company_arg, topic)
+    patents = PatentService.get_top_patents(company_arg, topic)
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -89,7 +85,7 @@ def render_patent_intelligence_module():
         st.metric(t("patent.metric_source"), t("sources.patent_metric"))
     if company_arg:
         st.caption(t("sources.assignee_caption", company=company_arg))
-        render_link_row(assignee_patent_links(company_arg))
+        render_link_row(assignee_patent_links(company_arg), key_suffix=f"asg_{company_arg}")
     else:
         render_source_button("https://patents.google.com", t("patent.open_gp"))
 
@@ -102,17 +98,29 @@ def render_patent_intelligence_module():
         PATENT_SECTION_KEYS[0],
     )
 
+    if section == "tt_eu":
+        render_tt_europe_patent_section(domain=topic)
+        return
+
+    if not patents:
+        show_empty(
+            t("patent.empty_topic", topic=topic)
+            if topic
+            else t("patent.empty_company", company=company if company != "all" else t("patent.all"))
+        )
+        return
+
     if section == "year":
         st.markdown(t("patent.year_heading"))
         st.caption(t("patent.year_caption"))
-        df_trends = PatentService.get_patent_trends_df(company_arg)
+        df_trends = PatentService.get_patent_trends_df(company_arg, topic)
         if df_trends.empty:
             show_empty(t("patent.empty_trend"))
         else:
             show_plotly(render_patent_trends_chart(df_trends))
 
         st.markdown(t("patent.companies_heading"))
-        counts = PatentService.get_company_counts(company_arg)
+        counts = PatentService.get_company_counts(company_arg, topic)
         if not counts:
             show_empty(t("patent.empty_counts"))
         else:
@@ -121,14 +129,14 @@ def render_patent_intelligence_module():
     elif section == "topics":
         col_radar, col_kw = st.columns([1.2, 1])
         with col_radar:
-            df_domains = PatentService.get_all_companies_domain_df(company_arg)
+            df_domains = PatentService.get_all_companies_domain_df(company_arg, topic)
             if df_domains.empty:
                 show_empty(t("patent.empty_domain"))
             else:
                 show_plotly(render_company_patent_domain_chart(df_domains))
 
         with col_kw:
-            kw_dict = PatentService.get_patent_keywords(company_arg)
+            kw_dict = PatentService.get_patent_keywords(company_arg, topic)
             if not kw_dict:
                 show_empty(t("patent.empty_kw"))
             else:
@@ -136,7 +144,7 @@ def render_patent_intelligence_module():
 
         st.markdown(t("patent.wordcloud"))
         st.caption(t("patent.wordcloud_caption"))
-        kw_dict = PatentService.get_patent_keywords(company_arg)
+        kw_dict = PatentService.get_patent_keywords(company_arg, topic)
         wc_fig = render_patent_wordcloud(kw_dict) if kw_dict else None
         if wc_fig is None:
             show_empty(t("patent.empty_wc"))
@@ -145,14 +153,14 @@ def render_patent_intelligence_module():
 
     elif section == "tree":
         st.markdown(t("patent.density"))
-        df_density = PatentService.get_density_df(company_arg)
+        df_density = PatentService.get_density_df(company_arg, topic)
         if df_density.empty:
             show_empty(t("patent.empty_density"))
         else:
             show_plotly(render_patent_density_heatmap(df_density))
 
         st.markdown(t("patent.tree_heading"))
-        df_tree = PatentService.get_sunburst_df(company_arg)
+        df_tree = PatentService.get_sunburst_df(company_arg, topic)
         if df_tree.empty:
             show_empty(t("patent.empty_tree"))
         else:
@@ -161,21 +169,18 @@ def render_patent_intelligence_module():
     elif section == "map":
         st.markdown(t("patent.map_heading"))
         st.caption(t("patent.map_caption"))
-        df_map = PatentService.get_tfidf_map_df(company_arg)
+        df_map = PatentService.get_tfidf_map_df(company_arg, topic)
         if df_map.empty:
             show_empty(t("patent.empty_map"))
         else:
             show_plotly(render_patent_tfidf_map(df_map))
 
         st.markdown(t("patent.network"))
-        edges = PatentService.get_network_edges(company_arg)
+        edges = PatentService.get_network_edges(company_arg, topic)
         if not edges:
             show_empty(t("patent.empty_net"))
         else:
             show_plotly(render_patent_network_graph(edges))
-
-    elif section == "tt_eu":
-        render_tt_europe_patent_section()
 
     else:
         st.markdown(t("patent.list_heading"))

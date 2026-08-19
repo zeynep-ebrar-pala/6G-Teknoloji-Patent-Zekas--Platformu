@@ -62,14 +62,28 @@ def _with_company(patents: List[Dict[str, Any]], company: Optional[str] = None) 
     return [p for p in patents if _normalize_company(p["assignee"]) == company]
 
 
+def _norm_domain(domain: Optional[str]) -> Optional[str]:
+    if not domain or domain in ("all", "Tümü", "All"):
+        return None
+    return domain
+
+
+def _scoped(company: Optional[str] = None, domain: Optional[str] = None) -> List[Dict[str, Any]]:
+    patents = _with_company(_patents(), company)
+    d = _norm_domain(domain)
+    if not d:
+        return patents
+    return [p for p in patents if (p.get("domain") or "") == d]
+
+
 @st.cache_data
 def _companies_with_patents() -> List[str]:
     return sorted({_normalize_company(p["assignee"]) for p in _patents()})
 
 
 @st.cache_data
-def _build_patent_trends(company: Optional[str] = None) -> pd.DataFrame:
-    patents = _with_company(_patents(), company)
+def _build_patent_trends(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
+    patents = _scoped(company, domain)
     if not patents:
         return pd.DataFrame()
     years = sorted({p["year"] for p in patents})
@@ -90,8 +104,8 @@ def _build_patent_trends(company: Optional[str] = None) -> pd.DataFrame:
 
 
 @st.cache_data
-def _build_domain_distribution(company: Optional[str] = None) -> pd.DataFrame:
-    patents = _with_company(_patents(), company)
+def _build_domain_distribution(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
+    patents = _scoped(company, domain)
     records = []
     companies = sorted({_normalize_company(p["assignee"]) for p in patents})
     for comp in companies:
@@ -101,21 +115,21 @@ def _build_domain_distribution(company: Optional[str] = None) -> pd.DataFrame:
         domain_counts = Counter(p["domain"] for p in company_patents)
         total = sum(domain_counts.values())
         row: Dict[str, Any] = {"Company": comp}
-        for domain in TECHNOLOGY_DOMAINS:
-            row[domain] = round(100 * domain_counts.get(domain, 0) / total, 1)
+        for dname in TECHNOLOGY_DOMAINS:
+            row[dname] = round(100 * domain_counts.get(dname, 0) / total, 1)
         records.append(row)
     return pd.DataFrame(records)
 
 
 @st.cache_data
-def _build_keywords(company: Optional[str] = None) -> Dict[str, int]:
+def _build_keywords(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, int]:
     stop = {
         "a", "an", "the", "for", "and", "or", "in", "of", "to", "via", "using",
         "method", "apparatus", "system", "methods", "apparatuses", "based",
         "thereof", "therefor", "with", "from",
     }
     counter: Counter = Counter()
-    for p in _with_company(_patents(), company):
+    for p in _scoped(company, domain):
         words = p["title"].lower().replace("-", " ").replace("(", " ").replace(")", " ").split()
         for w in words:
             w = w.strip(",.")
@@ -125,8 +139,8 @@ def _build_keywords(company: Optional[str] = None) -> Dict[str, int]:
 
 
 @st.cache_data
-def _compute_summary(company: Optional[str] = None) -> Dict[str, Any]:
-    patents = _with_company(_patents(), company)
+def _compute_summary(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, Any]:
+    patents = _scoped(company, domain)
     total = len(patents)
     by_company = Counter(_normalize_company(p["assignee"]) for p in patents)
     leader = by_company.most_common(1)[0] if by_company else ("—", 0)
@@ -144,10 +158,10 @@ def _compute_summary(company: Optional[str] = None) -> Dict[str, Any]:
 
 
 @st.cache_data
-def _build_network_edges(company: Optional[str] = None) -> List[Tuple[str, str]]:
+def _build_network_edges(company: Optional[str] = None, domain: Optional[str] = None) -> List[Tuple[str, str]]:
     seen: set = set()
     edges: List[Tuple[str, str]] = []
-    for p in _with_company(_patents(), company):
+    for p in _scoped(company, domain):
         edge = (_normalize_company(p["assignee"]), p["domain"])
         if edge not in seen:
             seen.add(edge)
@@ -156,26 +170,26 @@ def _build_network_edges(company: Optional[str] = None) -> List[Tuple[str, str]]
 
 
 @st.cache_data
-def _build_density_df(company: Optional[str] = None) -> pd.DataFrame:
-    patents = _with_company(_patents(), company)
+def _build_density_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
+    patents = _scoped(company, domain)
     companies = sorted({_normalize_company(p["assignee"]) for p in patents})
     rows = []
     for comp in companies:
         row = {"Company": comp}
-        for domain in TECHNOLOGY_DOMAINS:
-            row[domain] = sum(
+        for dname in TECHNOLOGY_DOMAINS:
+            row[dname] = sum(
                 1
                 for p in patents
-                if _normalize_company(p["assignee"]) == comp and p["domain"] == domain
+                if _normalize_company(p["assignee"]) == comp and p["domain"] == dname
             )
         rows.append(row)
     return pd.DataFrame(rows)
 
 
 @st.cache_data
-def _build_sunburst_df(company: Optional[str] = None) -> pd.DataFrame:
+def _build_sunburst_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
     records = []
-    for p in _with_company(_patents(), company):
+    for p in _scoped(company, domain):
         records.append(
             {
                 "company": _normalize_company(p["assignee"]),
@@ -187,8 +201,8 @@ def _build_sunburst_df(company: Optional[str] = None) -> pd.DataFrame:
 
 
 @st.cache_data
-def _build_tfidf_map(company: Optional[str] = None) -> pd.DataFrame:
-    patents = _with_company(_patents(), company)
+def _build_tfidf_map(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
+    patents = _scoped(company, domain)
     if len(patents) < 2:
         return pd.DataFrame()
     try:
@@ -244,12 +258,12 @@ class PatentService:
         return PATENT_DATA_SOURCE
 
     @staticmethod
-    def get_summary(company: Optional[str] = None) -> Dict[str, Any]:
-        return _compute_summary(company)
+    def get_summary(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, Any]:
+        return _compute_summary(company, domain)
 
     @staticmethod
-    def get_patent_trends_df(company: Optional[str] = None) -> pd.DataFrame:
-        return _build_patent_trends(company)
+    def get_patent_trends_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
+        return _build_patent_trends(company, domain)
 
     @staticmethod
     def get_company_domain_distribution(company: str) -> Dict[str, float]:
@@ -260,39 +274,41 @@ class PatentService:
         return {col: float(row.iloc[0][col]) for col in TECHNOLOGY_DOMAINS if col in row.columns}
 
     @staticmethod
-    def get_all_companies_domain_df(company: Optional[str] = None) -> pd.DataFrame:
-        return _build_domain_distribution(company)
+    def get_all_companies_domain_df(
+        company: Optional[str] = None, domain: Optional[str] = None
+    ) -> pd.DataFrame:
+        return _build_domain_distribution(company, domain)
 
     @staticmethod
-    def get_patent_keywords(company: Optional[str] = None) -> Dict[str, int]:
-        return _build_keywords(company)
+    def get_patent_keywords(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, int]:
+        return _build_keywords(company, domain)
 
     @staticmethod
-    def get_top_patents(company: Optional[str] = None) -> List[Dict[str, Any]]:
+    def get_top_patents(company: Optional[str] = None, domain: Optional[str] = None) -> List[Dict[str, Any]]:
         return sorted(
-            _with_company(_patents(), company),
+            _scoped(company, domain),
             key=lambda p: (-int(p["year"]), str(p.get("publication_number") or p.get("id") or "")),
         )
 
     @staticmethod
-    def get_network_edges(company: Optional[str] = None) -> List[tuple]:
-        return _build_network_edges(company)
+    def get_network_edges(company: Optional[str] = None, domain: Optional[str] = None) -> List[tuple]:
+        return _build_network_edges(company, domain)
 
     @staticmethod
-    def get_company_counts(company: Optional[str] = None) -> Dict[str, int]:
-        return _compute_summary(company).get("company_counts", {})
+    def get_company_counts(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, int]:
+        return _compute_summary(company, domain).get("company_counts", {})
 
     @staticmethod
-    def get_density_df(company: Optional[str] = None) -> pd.DataFrame:
-        return _build_density_df(company)
+    def get_density_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
+        return _build_density_df(company, domain)
 
     @staticmethod
-    def get_sunburst_df(company: Optional[str] = None) -> pd.DataFrame:
-        return _build_sunburst_df(company)
+    def get_sunburst_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
+        return _build_sunburst_df(company, domain)
 
     @staticmethod
-    def get_tfidf_map_df(company: Optional[str] = None) -> pd.DataFrame:
-        return _build_tfidf_map(company)
+    def get_tfidf_map_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
+        return _build_tfidf_map(company, domain)
 
     @staticmethod
     def get_domain_yearly_df(tech_id: str) -> pd.DataFrame:

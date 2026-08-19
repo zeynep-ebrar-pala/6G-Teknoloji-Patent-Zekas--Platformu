@@ -92,7 +92,19 @@ def _hex_rgba(hex_color: str, alpha: float) -> str:
     return f"rgba({r},{g},{b},{alpha})"
 
 
+TT_BAR = "#E20074"
+OTHER_BAR = "#00C2FF"
+
+
+def _is_tt_name(name: str) -> bool:
+    """Türk Telekom / Netsia. Deutsche Telekom eşleşmez."""
+    s = (name or "").casefold()
+    return "türk telekom" in s or "turk telekom" in s or "netsia" in s
+
+
 def _series_color(name: str, index: int = 0) -> str:
+    if _is_tt_name(name):
+        return TT_BAR
     if name in COMPANY_COLORS:
         return COMPANY_COLORS[name]
     if name in DOMAIN_COLORS:
@@ -105,6 +117,10 @@ def _color_list(names: List[str]) -> List[str]:
     out: List[str] = []
     fallback_i = 0
     for name in names:
+        if _is_tt_name(name):
+            out.append(TT_BAR)
+            used.add(TT_BAR)
+            continue
         color = _series_color(name, fallback_i)
         if color in used:
             while QUALITATIVE_COLORS[fallback_i % len(QUALITATIVE_COLORS)] in used:
@@ -672,7 +688,7 @@ def render_tt_country_rank_chart(
     ordered = sorted(rows, key=lambda r: int(r.get(value_key) or 0), reverse=True)
     names = [r["name"] for r in ordered]
     vals = [int(r.get(value_key) or 0) for r in ordered]
-    colors = ["#E20074" if r.get("is_tt") else "#00C2FF" for r in ordered]
+    colors = [TT_BAR if r.get("is_tt") or _is_tt_name(r.get("name") or "") else OTHER_BAR for r in ordered]
     fig = go.Figure(go.Bar(x=names, y=vals, marker=dict(color=colors)))
     fig.update_layout(
         **_layout(),
@@ -706,12 +722,16 @@ def render_tt_europe_overview_chart(
         extra = r.get(label_key) if label_key else None
         names.append(f"{base} · {extra}" if extra else base)
     vals = [int(r.get(value_key) or 0) for r in ordered]
+    colors = [
+        TT_BAR if _is_tt_name(r.get(label_key) or "") or _is_tt_name(names[i] if i < len(names) else "") else OTHER_BAR
+        for i, r in enumerate(ordered)
+    ]
     fig = go.Figure(
         go.Bar(
             x=vals,
             y=names or ["—"],
             orientation="h",
-            marker=dict(color="#00C2FF"),
+            marker=dict(color=colors or [OTHER_BAR]),
             text=[str(v) for v in (vals or [0])],
             textposition="outside",
         )
@@ -729,16 +749,31 @@ def render_tt_europe_overview_chart(
     return fig
 
 
-def render_tt_vs_leader_chart(rows: List[Dict[str, Any]], name_key: str, title: str, x_title: str) -> go.Figure:
-    """Ülke 1. operatör vs Türk Telekom (OpenAlex). Yalnız 1. sayısı > 0 olan ülkeler."""
-    ordered = [r for r in rows if int(r.get("pub_lead_n") or 0) > 0 or int(r.get("tt_pub_n") or 0) > 0]
-    ordered = sorted(ordered, key=lambda r: int(r.get("pub_lead_n") or 0), reverse=True)
+def render_tt_vs_leader_chart(
+    rows: List[Dict[str, Any]],
+    name_key: str,
+    title: str,
+    x_title: str,
+    *,
+    lead_key: str = "pub_lead_n",
+    tt_key: str = "tt_pub_n",
+    lead_name: str | None = None,
+) -> go.Figure:
+    """Ülke 1. operatör vs Türk Telekom. TT çubuğu her zaman magenta."""
+    ordered = [r for r in rows if int(r.get(lead_key) or 0) > 0 or int(r.get(tt_key) or 0) > 0]
+    ordered = sorted(ordered, key=lambda r: int(r.get(lead_key) or 0), reverse=True)
     names = [r[name_key] for r in ordered]
-    lead = [int(r.get("pub_lead_n") or 0) for r in ordered]
-    tt = [int(r.get("tt_pub_n") or 0) for r in ordered]
+    lead = [int(r.get(lead_key) or 0) for r in ordered]
+    tt = [int(r.get(tt_key) or 0) for r in ordered]
     fig = go.Figure()
-    fig.add_bar(name=t("tt_eu.overview_pub_lead_short"), y=names, x=lead, orientation="h", marker_color="#00C2FF")
-    fig.add_bar(name="Türk Telekom", y=names, x=tt, orientation="h", marker_color="#E20074")
+    fig.add_bar(
+        name=lead_name or t("tt_eu.overview_pub_lead_short"),
+        y=names,
+        x=lead,
+        orientation="h",
+        marker_color=OTHER_BAR,
+    )
+    fig.add_bar(name="Türk Telekom", y=names, x=tt, orientation="h", marker_color=TT_BAR)
     layout = _layout()
     layout.update(
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
