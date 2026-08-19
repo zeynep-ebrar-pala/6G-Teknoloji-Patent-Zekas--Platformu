@@ -41,6 +41,56 @@ def render_source_button(url: str, label: str | None = None) -> None:
     st.link_button(label or _t("ui.source"), url, width="stretch", type="primary")
 
 
+def render_link_row(links: list[dict], *, label_prefix: str = "sources.open_") -> None:
+    """Şartname veritabanı butonları. URL yoksa basılmaz; sayı uydurulmaz."""
+    usable = [item for item in links if item.get("url") and item.get("id")]
+    if not usable:
+        return
+    cols = st.columns(len(usable))
+    for col, item in zip(cols, usable):
+        with col:
+            st.link_button(
+                _t(f"{label_prefix}{item['id']}"),
+                item["url"],
+                width="stretch",
+            )
+
+
+def render_spec_patent_sources() -> None:
+    from backend.source_links import spec_patent_databases
+
+    st.markdown(_t("sources.patent_heading"))
+    st.caption(_t("sources.patent_caption"))
+    render_link_row(spec_patent_databases())
+
+
+def render_spec_pub_sources() -> None:
+    from backend.source_links import spec_pub_databases
+
+    st.markdown(_t("sources.pub_heading"))
+    st.caption(_t("sources.pub_caption"))
+    render_link_row(spec_pub_databases())
+
+
+def render_mixed_topic_panel(key_suffix: str = "mix") -> None:
+    """PDF mix: yayın siteleri + patent ofisleri. Hit sayısı yazılmaz."""
+    from backend.source_links import SPEC_PUB_TOPICS, topic_patent_searches, topic_pub_searches
+    from i18n.core import get_lang
+
+    st.markdown(_t("sources.mix_heading"))
+    st.caption(_t("sources.mix_caption"))
+    topic = st.selectbox(
+        _t("sources.topic_search"),
+        list(SPEC_PUB_TOPICS.keys()),
+        key=f"spec_mix_topic_{key_suffix}_{get_lang()}",
+    )
+    st.caption(_t("sources.topic_caption", topic=topic, q=SPEC_PUB_TOPICS[topic]))
+    st.caption(_t("sources.mix_pub_row"))
+    render_link_row(topic_pub_searches(topic))
+    st.caption(_t("sources.mix_pat_row"))
+    render_link_row(topic_patent_searches(topic))
+
+
 def render_patent_card(patent: dict) -> None:
     pub = patent.get("publication_number") or patent.get("id", "")
     url = patent.get("source_url") or patent.get("url") or ""
@@ -65,6 +115,10 @@ def render_patent_card(patent: dict) -> None:
         unsafe_allow_html=True,
     )
     render_source_button(url, _t("patent.open_record", pub=pub))
+    from backend.source_links import patent_record_links
+
+    extra = [item for item in patent_record_links(pub) if item["id"] != "google_patents"]
+    render_link_row(extra)
 
 
 def render_paper_card(paper: dict) -> None:
@@ -91,6 +145,14 @@ def render_paper_card(paper: dict) -> None:
         unsafe_allow_html=True,
     )
     render_source_button(url, _t("pub.open_doi"))
+    from backend.source_links import paper_record_links
+
+    extra = [
+        item
+        for item in paper_record_links(doi, paper.get("source") or paper.get("journal") or "")
+        if item["id"] != "doi"
+    ]
+    render_link_row(extra)
 
 
 def show_empty(message: str) -> None:

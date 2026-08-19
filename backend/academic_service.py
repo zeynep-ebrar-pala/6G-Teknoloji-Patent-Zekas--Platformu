@@ -49,7 +49,13 @@ def _enriched_papers() -> List[Dict[str, Any]]:
             merged["institutions"] = live.get("institutions") or []
             merged["countries"] = live.get("countries") or []
         enriched.append(merged)
-    return sorted(enriched, key=lambda p: (-int(p.get("year") or 0), -(p.get("citations") or 0)))
+    return sorted(
+        enriched,
+        key=lambda p: (
+            -int(p.get("year") or 0),
+            -(p.get("citations") if isinstance(p.get("citations"), int) else -1),
+        ),
+    )
 
 
 def _compute_summary() -> Dict[str, Any]:

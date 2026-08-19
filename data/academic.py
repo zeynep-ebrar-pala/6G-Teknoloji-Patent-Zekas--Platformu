@@ -4,7 +4,7 @@ Trend, kurum ve ülke sayıları statik değildir; OpenAlex API'den canlı alın
 Atıf sayıları bu dosyada tutulmaz; OpenAlex cited_by_count ile doldurulur.
 """
 
-ACADEMIC_DATA_SOURCE = "OpenAlex API + DOI (IEEE Xplore / Springer / Elsevier / Crossref)"
+ACADEMIC_DATA_SOURCE = "OpenAlex API + DOI (IEEE Xplore / Google Scholar / Springer / Elsevier / WoS)"
 
 ACADEMIC_SOURCES = ["IEEE Xplore", "Springer", "Elsevier"]
 

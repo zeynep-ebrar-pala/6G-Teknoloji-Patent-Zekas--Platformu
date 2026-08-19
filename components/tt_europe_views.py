@@ -18,6 +18,7 @@ from components.charts import (
 )
 from components.ui_helpers import (
     current_view_mode,
+    render_mixed_topic_panel,
     render_paper_card,
     render_patent_card,
     render_source_button,
@@ -85,8 +86,53 @@ def _named_country_chips(rows: list, lang: str) -> None:
     )
 
 
+def _europe_position_banner() -> None:
+    lang = get_lang()
+    pos = TTEuropeService.europe_position()
+    lead_key = "name_tr" if lang == "tr" else "name_en"
+    leaders = pos.get("europe_pub_leaders") or []
+    lead_txt = "; ".join(
+        f"{r[lead_key]} — {r['lead']} ({format_int(r['n'])})"
+        for r in leaders[:8]
+    ) or "—"
+    st.markdown(t("tt_eu.position_heading"))
+    m1, m2, m3, m4 = st.columns(4)
+    with m1:
+        st.metric(
+            t("tt_eu.position_m_pub"),
+            "—" if pos["tr_pub_rank"] is None else format_int(pos["tr_pub_rank"]),
+            help=t("tt_eu.position_m_pub_help", n=format_int(pos["tr_pub_n"])),
+        )
+    with m2:
+        st.metric(
+            t("tt_eu.position_m_pat"),
+            "—" if pos["tr_pat_rank"] is None else format_int(pos["tr_pat_rank"]),
+            help=t("tt_eu.position_m_pat_help", n=format_int(pos["tr_pat_n"])),
+        )
+    with m3:
+        st.metric(t("tt_eu.position_m_ep"), format_int(pos["ep_n"]))
+    with m4:
+        st.metric(t("tt_eu.position_m_out"), format_int(pos["pub_outside_tr"]))
+    st.markdown(
+        t(
+            "tt_eu.position_body",
+            pub_n=format_int(pos["tr_pub_n"]),
+            pub_rank="—" if pos["tr_pub_rank"] is None else format_int(pos["tr_pub_rank"]),
+            pat_n=format_int(pos["tr_pat_n"]),
+            pat_rank="—" if pos["tr_pat_rank"] is None else format_int(pos["tr_pat_rank"]),
+            ep=format_int(pos["ep_n"]),
+            us=format_int(pos["us_n"]),
+            pub_out=format_int(pos["pub_outside_tr"]),
+            pat_out=format_int(pos["pat_outside_tr"]),
+            leaders=lead_txt,
+        ),
+        unsafe_allow_html=True,
+    )
+
+
 def _position_visuals(*, show_vendor_compare: bool) -> None:
     lang = get_lang()
+    _europe_position_banner()
     st.markdown(t("tt_eu.map_heading"))
     st.caption(t("tt_eu.map_caption"))
     rows = TTEuropeService.map_rows()
@@ -112,6 +158,7 @@ def _position_visuals(*, show_vendor_compare: bool) -> None:
         st.caption(t("tt_eu.vs_caption"))
         show_plotly(render_tt_vs_vendors_chart(TTEuropeService.vendor_sample_vs_tt()))
 
+    render_mixed_topic_panel("tt_eu")
     _country_rank()
 
 
@@ -230,11 +277,14 @@ def _country_rank() -> None:
             rows, "pat_n", t("tt_eu.rank_pat_title"), t("tt_eu.rank_pat_x")
         )
     )
+    from backend.source_links import assignee_patent_links
+
     table = []
     for row in sorted(
         rows,
         key=lambda r: (r["pub_rank"] is None, r["pub_rank"] or 99, r["name"]),
     ):
+        pat_links = {item["id"]: item["url"] for item in assignee_patent_links(row["name"])}
         table.append(
             {
                 t("tt_eu.named_col_place"): row["name"],
@@ -243,7 +293,11 @@ def _country_rank() -> None:
                 t("tt_eu.rank_col_rank_pat"): row["pat_rank"] if row["pat_rank"] is not None else "—",
                 t("tt_eu.rank_col_pat"): row["pat_n"] if row["pat_n"] else "—",
                 "OpenAlex": row.get("openalex_url") or payload["openalex_url"],
-                "Google Patents": row["patents_url"],
+                "Google Patents": pat_links.get("google_patents") or row["patents_url"],
+                "Lens": pat_links.get("lens") or "",
+                "Espacenet": pat_links.get("espacenet") or "",
+                "PATENTSCOPE": pat_links.get("wipo") or "",
+                "USPTO": pat_links.get("uspto") or "",
             }
         )
     st.dataframe(
@@ -252,7 +306,11 @@ def _country_rank() -> None:
         width="stretch",
         column_config={
             "OpenAlex": st.column_config.LinkColumn("OpenAlex", display_text="OpenAlex"),
-            "Google Patents": st.column_config.LinkColumn("Google Patents", display_text="Patents"),
+            "Google Patents": st.column_config.LinkColumn("Google Patents", display_text="Google"),
+            "Lens": st.column_config.LinkColumn("Lens", display_text="Lens"),
+            "Espacenet": st.column_config.LinkColumn("Espacenet", display_text="EPO"),
+            "PATENTSCOPE": st.column_config.LinkColumn("PATENTSCOPE", display_text="WIPO"),
+            "USPTO": st.column_config.LinkColumn("USPTO", display_text="USPTO"),
         },
     )
     c_oa, c_wiki = st.columns(2)

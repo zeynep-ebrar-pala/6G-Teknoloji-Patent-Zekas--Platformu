@@ -7,6 +7,8 @@ from __future__ import annotations
 from collections import Counter
 from typing import Any, Dict, List
 
+import streamlit as st
+
 from backend.data_validator import load_validated_papers, load_validated_patents
 from data.eu_operators import (
     EU_MNO_LIST_URL,
@@ -215,64 +217,39 @@ class TTEuropeService:
     @staticmethod
     def europe_overview() -> List[Dict[str, Any]]:
         """Kilitli ülkelerin tamamı. Her satır country_rank; sayı uydurulmaz."""
-        out: List[Dict[str, Any]] = []
-        for country in country_choices():
-            payload = TTEuropeService.country_rank(country["cc"])
-            if not payload.get("ok"):
-                continue
-            rows = payload["rows"]
-            tt_row = next((r for r in rows if r.get("is_tt")), {})
-            wiki_three = [
-                r for r in rows if not (r.get("is_tt") and country["cc"] != "TR")
-            ]
-            pub_ordered = sorted(
-                wiki_three,
-                key=lambda r: (not r.get("pub_resolved"), -int(r.get("pub_n") or 0), r["name"]),
-            )
-            pat_ordered = sorted(
-                wiki_three,
-                key=lambda r: (-int(r.get("pat_n") or 0), r["name"]),
-            )
-            pub_positive = [r for r in rows if int(r.get("pub_n") or 0) > 0]
-            pat_positive = [r for r in rows if int(r.get("pat_n") or 0) > 0]
-            pub_lead = max(pub_positive, key=lambda r: int(r.get("pub_n") or 0)) if pub_positive else None
-            pat_lead = max(pat_positive, key=lambda r: int(r.get("pat_n") or 0)) if pat_positive else None
-            out.append(
-                {
-                    "cc": country["cc"],
-                    "name_tr": country["name_tr"],
-                    "name_en": country["name_en"],
-                    "tt_pub_n": int(tt_row.get("pub_n") or 0),
-                    "tt_pub_resolved": bool(tt_row.get("pub_resolved")),
-                    "tt_pub_rank": tt_row.get("pub_rank"),
-                    "tt_pat_n": int(tt_row.get("pat_n") or 0),
-                    "tt_pat_rank": tt_row.get("pat_rank"),
-                    "field_n": payload.get("field_n") or len(rows),
-                    "pub_lead": None if not pub_lead else pub_lead.get("name"),
-                    "pub_lead_n": 0 if not pub_lead else int(pub_lead.get("pub_n") or 0),
-                    "pat_lead": None if not pat_lead else pat_lead.get("name"),
-                    "pat_lead_n": 0 if not pat_lead else int(pat_lead.get("pat_n") or 0),
-                    "pub_top3": [
-                        {
-                            "name": r["name"],
-                            "n": int(r.get("pub_n") or 0),
-                            "resolved": bool(r.get("pub_resolved")),
-                        }
-                        for r in pub_ordered[:3]
-                    ],
-                    "pat_top3": [
-                        {"name": r["name"], "n": int(r.get("pat_n") or 0)}
-                        for r in pat_ordered[:3]
-                    ],
-                    "openalex_url": payload.get("openalex_url"),
-                    "oa_ok": payload.get("oa_ok"),
-                }
-            )
-        return sorted(
-            out,
-            key=lambda r: (r["pub_lead_n"], r["tt_pub_n"], r["tt_pat_n"], r["cc"]),
-            reverse=True,
-        )
+        return _europe_overview_cached()
+
+    @staticmethod
+    def europe_position() -> Dict[str, Any]:
+        """TT'nin bu platformdaki ölçülen Avrupa yeri. Uydurma sıra yok."""
+        overview = TTEuropeService.europe_overview()
+        tr = next((r for r in overview if r["cc"] == "TR"), {})
+        offices = TTEuropeService.office_counts()
+        pub_out = [r for r in overview if r["cc"] != "TR" and int(r.get("tt_pub_n") or 0) > 0]
+        pat_out = [r for r in overview if r["cc"] != "TR" and int(r.get("tt_pat_n") or 0) > 0]
+        leaders = [
+            {
+                "cc": r["cc"],
+                "name_tr": r["name_tr"],
+                "name_en": r["name_en"],
+                "lead": r.get("pub_lead"),
+                "n": int(r.get("pub_lead_n") or 0),
+            }
+            for r in overview
+            if r["cc"] != "TR" and int(r.get("pub_lead_n") or 0) > 0
+        ]
+        leaders.sort(key=lambda r: (-int(r["n"]), r["cc"]))
+        return {
+            "tr_pub_n": int(tr.get("tt_pub_n") or 0),
+            "tr_pub_rank": tr.get("tt_pub_rank"),
+            "tr_pat_n": int(tr.get("tt_pat_n") or 0),
+            "tr_pat_rank": tr.get("tt_pat_rank"),
+            "ep_n": int(offices.get("EP") or 0),
+            "us_n": int(offices.get("US") or 0),
+            "pub_outside_tr": len(pub_out),
+            "pat_outside_tr": len(pat_out),
+            "europe_pub_leaders": leaders,
+        }
 
     @staticmethod
     def get_touchpoints() -> List[Dict[str, Any]]:
@@ -408,3 +385,67 @@ class TTEuropeService:
             "source": TT_EUROPE_SOURCE,
             "wholesale_named_n": len(TTI_WHOLESALE_FIRST_MOVER),
         }
+
+
+@st.cache_data(ttl=21600, show_spinner=False)
+def _europe_overview_cached() -> List[Dict[str, Any]]:
+    """Kilitli ülkelerin tamamı. Her satır country_rank; sayı uydurulmaz."""
+    out: List[Dict[str, Any]] = []
+    for country in country_choices():
+        payload = TTEuropeService.country_rank(country["cc"])
+        if not payload.get("ok"):
+            continue
+        rows = payload["rows"]
+        tt_row = next((r for r in rows if r.get("is_tt")), {})
+        wiki_three = [
+            r for r in rows if not (r.get("is_tt") and country["cc"] != "TR")
+        ]
+        pub_ordered = sorted(
+            wiki_three,
+            key=lambda r: (not r.get("pub_resolved"), -int(r.get("pub_n") or 0), r["name"]),
+        )
+        pat_ordered = sorted(
+            wiki_three,
+            key=lambda r: (-int(r.get("pat_n") or 0), r["name"]),
+        )
+        pub_positive = [r for r in rows if int(r.get("pub_n") or 0) > 0]
+        pat_positive = [r for r in rows if int(r.get("pat_n") or 0) > 0]
+        pub_lead = max(pub_positive, key=lambda r: int(r.get("pub_n") or 0)) if pub_positive else None
+        pat_lead = max(pat_positive, key=lambda r: int(r.get("pat_n") or 0)) if pat_positive else None
+        out.append(
+            {
+                "cc": country["cc"],
+                "name_tr": country["name_tr"],
+                "name_en": country["name_en"],
+                "tt_pub_n": int(tt_row.get("pub_n") or 0),
+                "tt_pub_resolved": bool(tt_row.get("pub_resolved")),
+                "tt_pub_rank": tt_row.get("pub_rank"),
+                "tt_pat_n": int(tt_row.get("pat_n") or 0),
+                "tt_pat_rank": tt_row.get("pat_rank"),
+                "field_n": payload.get("field_n") or len(rows),
+                "pub_lead": None if not pub_lead else pub_lead.get("name"),
+                "pub_lead_n": 0 if not pub_lead else int(pub_lead.get("pub_n") or 0),
+                "pat_lead": None if not pat_lead else pat_lead.get("name"),
+                "pat_lead_n": 0 if not pat_lead else int(pat_lead.get("pat_n") or 0),
+                "pub_top3": [
+                    {
+                        "name": r["name"],
+                        "n": int(r.get("pub_n") or 0),
+                        "resolved": bool(r.get("pub_resolved")),
+                    }
+                    for r in pub_ordered[:3]
+                ],
+                "pat_top3": [
+                    {"name": r["name"], "n": int(r.get("pat_n") or 0)}
+                    for r in pat_ordered[:3]
+                ],
+                "openalex_url": payload.get("openalex_url"),
+                "oa_ok": payload.get("oa_ok"),
+            }
+        )
+    return sorted(
+        out,
+        key=lambda r: (r["pub_lead_n"], r["tt_pub_n"], r["tt_pat_n"], r["cc"]),
+        reverse=True,
+    )
+

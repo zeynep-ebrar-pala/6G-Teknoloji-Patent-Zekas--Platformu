@@ -13,9 +13,11 @@ from components.charts import (
     render_academic_trends_chart,
 )
 from components.ui_helpers import (
+    render_mixed_topic_panel,
     render_module_header,
     render_paper_card,
     render_source_button,
+    render_spec_pub_sources,
     select_section,
     show_empty,
     show_plotly,
@@ -42,6 +44,9 @@ def render_academic_publication_module():
 </div>""",
         unsafe_allow_html=True,
     )
+
+    render_spec_pub_sources()
+    render_mixed_topic_panel("pub")
 
     if not papers:
         show_empty(t("pub.empty"))

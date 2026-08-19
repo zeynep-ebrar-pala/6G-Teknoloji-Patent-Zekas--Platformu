@@ -19,9 +19,12 @@ from components.charts import (
     render_patent_wordcloud,
 )
 from components.ui_helpers import (
+    render_link_row,
+    render_mixed_topic_panel,
     render_module_header,
     render_patent_card,
     render_source_button,
+    render_spec_patent_sources,
     select_section,
     show_empty,
     show_plotly,
@@ -44,6 +47,10 @@ def render_patent_intelligence_module():
 </div>""",
         unsafe_allow_html=True,
     )
+
+    render_spec_patent_sources()
+    render_mixed_topic_panel("patent")
+    from backend.source_links import assignee_patent_links
 
     spec = PatentService.get_spec_companies()
     filter_options = ["all"] + spec
@@ -79,8 +86,12 @@ def render_patent_intelligence_module():
             t("patent.metric_domain_delta", n=format_int(summary["top_domain_count"])),
         )
     with col4:
-        st.metric(t("patent.metric_source"), "Google Patents")
-    render_source_button("https://patents.google.com", t("patent.open_gp"))
+        st.metric(t("patent.metric_source"), t("sources.patent_metric"))
+    if company_arg:
+        st.caption(t("sources.assignee_caption", company=company_arg))
+        render_link_row(assignee_patent_links(company_arg))
+    else:
+        render_source_button("https://patents.google.com", t("patent.open_gp"))
 
     st.divider()
 
