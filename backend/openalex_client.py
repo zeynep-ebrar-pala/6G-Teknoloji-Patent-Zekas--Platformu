@@ -53,7 +53,7 @@ def _fetch_json(url: str, timeout: int = 6, retries: int = 1) -> Optional[Dict[s
                 return json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             if e.code == 429 and attempt < retries - 1:
-                time.sleep(min(4, 2 ** attempt + 1))
+                time.sleep(min(12, 3 ** attempt + 2))
                 continue
             return None
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
@@ -320,3 +320,130 @@ def country_openalex_url(country_code: str) -> str:
         f"https://openalex.org/works?search={q}"
         f"&filter=publication_year:{year_filter},authorships.institutions.country_code:{cc}"
     )
+
+
+def _topic_year_filter() -> str:
+    return "|".join(str(y) for y in list(TREND_YEARS) + [2026])
+
+
+def operator_openalex_url(
+    *,
+    inst_ids: Tuple[str, ...] = (),
+    affil: str = "",
+    country_code: str = "",
+) -> str:
+    year_filter = _topic_year_filter()
+    q = urllib.parse.quote(COMBINED_SEARCH)
+    extra = ""
+    if inst_ids:
+        joined = "|".join(i if i.startswith("I") else f"I{i}" for i in inst_ids)
+        extra = f",authorships.institutions.id:{joined}"
+    elif affil and country_code:
+        extra = (
+            f",raw_affiliation_strings.search:{urllib.parse.quote(affil)}"
+            f",authorships.institutions.country_code:{country_code.upper()}"
+        )
+    elif country_code:
+        extra = f",authorships.institutions.country_code:{country_code.upper()}"
+    return (
+        f"https://openalex.org/works?search={q}"
+        f"&filter=publication_year:{year_filter}{extra}"
+    )
+
+
+def _works_meta_count(filter_extra: str) -> Optional[int]:
+    year_filter = _topic_year_filter()
+    q = urllib.parse.quote(COMBINED_SEARCH)
+    url = (
+        f"{OPENALEX_BASE}/works?search={q}"
+        f"&filter=publication_year:{year_filter},{filter_extra}"
+        f"&per-page=1"
+    )
+    data = _fetch_json(url, timeout=10, retries=2)
+    if not data or "meta" not in data:
+        return None
+    try:
+        return int(data["meta"].get("count") or 0)
+    except (TypeError, ValueError):
+        return None
+
+
+def fetch_operator_work_count(
+    cache_key: str,
+    *,
+    inst_ids: Tuple[str, ...] = (),
+    affil_terms: Tuple[str, ...] = (),
+    country_code: str = "",
+    live: bool = True,
+) -> Optional[Dict[str, Any]]:
+    """Bir operatör için 6G konu yayını. Kurum ID varsa tek unique sayım; yoksa bağlılık terimi.
+    HTTP başarısız = None (uydurma 0 yok). meta.count 0 = ölçülmüş sıfır.
+    live=False: yalnızca disk önbelleği (sayfa geçişini kilitlemez)."""
+    key = (cache_key or "").strip()
+    if not key:
+        return None
+    cache = _load_disk_cache()
+    stored = cache.get("operator_works") or {}
+    hit = stored.get(key)
+    if isinstance(hit, dict):
+        if hit.get("unavailable"):
+            return None
+        if isinstance(hit.get("count"), int):
+            return hit
+    if not live:
+        return None
+
+    ids = tuple(i.strip().lstrip("https://openalex.org/") for i in inst_ids if i)
+    ids = tuple(i if i.startswith("I") else f"I{i}" for i in ids)
+    cc = (country_code or "").upper().strip()
+    payload: Optional[Dict[str, Any]] = None
+
+    if ids:
+        joined = "|".join(ids)
+        n = _works_meta_count(f"authorships.institutions.id:{joined}")
+        if n is not None:
+            payload = {
+                "count": n,
+                "source": "institution",
+                "ids": list(ids),
+                "affil": "",
+                "url": operator_openalex_url(inst_ids=ids),
+            }
+    if payload is None and affil_terms and len(cc) == 2:
+        best_n = None
+        best_term = ""
+        for term in affil_terms:
+            text = (term or "").strip()
+            if not text:
+                continue
+            n = _works_meta_count(
+                f"raw_affiliation_strings.search:{urllib.parse.quote(text)}"
+                f",authorships.institutions.country_code:{cc}"
+            )
+            if n is None:
+                continue
+            if best_n is None or n > best_n:
+                best_n = n
+                best_term = text
+            time.sleep(0.25)
+        if best_n is not None:
+            payload = {
+                "count": best_n,
+                "source": "affiliation",
+                "ids": [],
+                "affil": best_term,
+                "url": operator_openalex_url(affil=best_term, country_code=cc),
+            }
+
+    if payload is None:
+        return None
+
+    cache = _load_disk_cache()
+    stored = cache.get("operator_works") or {}
+    stored[key] = payload
+    cache["operator_works"] = stored
+    cache["fetched_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    cache["source_url"] = "https://openalex.org/works"
+    _save_disk_cache(cache)
+    time.sleep(0.2)
+    return payload

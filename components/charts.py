@@ -692,19 +692,27 @@ def render_tt_europe_overview_chart(
     name_key: str,
     title: str,
     x_title: str,
+    *,
+    label_key: Optional[str] = None,
 ) -> go.Figure:
-    """Avrupa geneli TT sayısı; sıra etiket. Uydurma yok."""
-    ordered = sorted(rows, key=lambda r: int(r.get(value_key) or 0), reverse=True)
-    names = [r[name_key] for r in ordered]
+    """Avrupa geneli sayı; 0 olan ülke çizilmez. Uydurma yok."""
+    positive = [r for r in rows if int(r.get(value_key) or 0) > 0]
+    ordered = sorted(positive, key=lambda r: int(r.get(value_key) or 0), reverse=True)
+    if not ordered:
+        ordered = []
+    names = []
+    for r in ordered:
+        base = r[name_key]
+        extra = r.get(label_key) if label_key else None
+        names.append(f"{base} · {extra}" if extra else base)
     vals = [int(r.get(value_key) or 0) for r in ordered]
-    ranks = [r.get(rank_key) if r.get(rank_key) is not None else "—" for r in ordered]
     fig = go.Figure(
         go.Bar(
             x=vals,
-            y=names,
+            y=names or ["—"],
             orientation="h",
-            marker=dict(color="#E20074"),
-            text=[f"#{rk}" if rk not in (None, "—") else "—" for rk in ranks],
+            marker=dict(color="#00C2FF"),
+            text=[str(v) for v in (vals or [0])],
             textposition="outside",
         )
     )
@@ -715,6 +723,31 @@ def render_tt_europe_overview_chart(
         yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
         height=max(360, 28 * max(len(ordered), 1) + 80),
         margin=dict(l=40, r=70, t=50, b=40),
+        showlegend=False,
+    )
+    fig.update_layout(**layout)
+    return fig
+
+
+def render_tt_vs_leader_chart(rows: List[Dict[str, Any]], name_key: str, title: str, x_title: str) -> go.Figure:
+    """Ülke 1. operatör vs Türk Telekom (OpenAlex). Yalnız 1. sayısı > 0 olan ülkeler."""
+    ordered = [r for r in rows if int(r.get("pub_lead_n") or 0) > 0 or int(r.get("tt_pub_n") or 0) > 0]
+    ordered = sorted(ordered, key=lambda r: int(r.get("pub_lead_n") or 0), reverse=True)
+    names = [r[name_key] for r in ordered]
+    lead = [int(r.get("pub_lead_n") or 0) for r in ordered]
+    tt = [int(r.get("tt_pub_n") or 0) for r in ordered]
+    fig = go.Figure()
+    fig.add_bar(name=t("tt_eu.overview_pub_lead_short"), y=names, x=lead, orientation="h", marker_color="#00C2FF")
+    fig.add_bar(name="Türk Telekom", y=names, x=tt, orientation="h", marker_color="#E20074")
+    layout = _layout()
+    layout.update(
+        title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=dict(title=x_title, gridcolor="rgba(200, 209, 220, 0.1)"),
+        yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
+        barmode="group",
+        height=max(420, 34 * max(len(ordered), 1) + 90),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0.0),
+        margin=dict(l=40, r=40, t=70, b=40),
     )
     fig.update_layout(**layout)
     return fig

@@ -13,6 +13,7 @@ from components.charts import (
     render_tt_europe_overview_chart,
     render_tt_office_chart,
     render_tt_role_kind_chart,
+    render_tt_vs_leader_chart,
     render_tt_vs_vendors_chart,
 )
 from components.ui_helpers import (
@@ -114,6 +115,23 @@ def _position_visuals(*, show_vendor_compare: bool) -> None:
     _country_rank()
 
 
+def _fmt_firm(item: dict | None) -> str:
+    if not item:
+        return "—"
+    if item.get("resolved") is False:
+        return f"{item['name']} (—)"
+    return f"{item['name']} ({item['n']})"
+
+
+def _fmt_pat_firm(item: dict | None) -> str:
+    if not item:
+        return "—"
+    n = int(item.get("n") or 0)
+    if n <= 0:
+        return f"{item['name']} (—)"
+    return f"{item['name']} ({n})"
+
+
 def _country_rank() -> None:
     lang = get_lang()
     name_key = "name_tr" if lang == "tr" else "name_en"
@@ -122,40 +140,44 @@ def _country_rank() -> None:
     with st.spinner(t("tt_eu.overview_spin")):
         overview = TTEuropeService.europe_overview()
     if overview:
-        col_p, col_a = st.columns(2)
-        with col_p:
-            show_plotly(
-                render_tt_europe_overview_chart(
-                    overview,
-                    "tt_pub_n",
-                    "tt_pub_rank",
-                    name_key,
-                    t("tt_eu.overview_pub_title"),
-                    t("tt_eu.rank_pub_x"),
-                )
+        show_plotly(
+            render_tt_vs_leader_chart(
+                overview,
+                name_key,
+                t("tt_eu.overview_vs_title"),
+                t("tt_eu.rank_pub_x"),
             )
-        with col_a:
-            show_plotly(
-                render_tt_europe_overview_chart(
-                    overview,
-                    "tt_pat_n",
-                    "tt_pat_rank",
-                    name_key,
-                    t("tt_eu.overview_pat_title"),
-                    t("tt_eu.rank_pat_x"),
-                )
+        )
+        show_plotly(
+            render_tt_europe_overview_chart(
+                overview,
+                "pub_lead_n",
+                "tt_pub_rank",
+                name_key,
+                t("tt_eu.overview_pub_title"),
+                t("tt_eu.rank_pub_x"),
+                label_key="pub_lead",
             )
+        )
         table = []
         for row in overview:
+            top = row.get("pub_top3") or []
+            pats = row.get("pat_top3") or []
             table.append(
                 {
                     t("tt_eu.named_col_place"): row[name_key],
+                    t("tt_eu.overview_pub_1"): _fmt_firm(top[0] if len(top) > 0 else None),
+                    t("tt_eu.overview_pub_2"): _fmt_firm(top[1] if len(top) > 1 else None),
+                    t("tt_eu.overview_pub_3"): _fmt_firm(top[2] if len(top) > 2 else None),
+                    t("tt_eu.overview_tt_pub"): (
+                        row["tt_pub_n"] if row.get("tt_pub_resolved") else "—"
+                    ),
                     t("tt_eu.rank_col_rank_pub"): row["tt_pub_rank"] if row["tt_pub_rank"] is not None else "—",
-                    t("tt_eu.overview_tt_pub"): row["tt_pub_n"],
-                    t("tt_eu.overview_pub_lead"): f"{row['pub_lead']} ({row['pub_lead_n']})",
+                    t("tt_eu.overview_pat_1"): _fmt_pat_firm(pats[0] if len(pats) > 0 else None),
+                    t("tt_eu.overview_pat_2"): _fmt_pat_firm(pats[1] if len(pats) > 1 else None),
+                    t("tt_eu.overview_pat_3"): _fmt_pat_firm(pats[2] if len(pats) > 2 else None),
+                    t("tt_eu.overview_tt_pat"): row["tt_pat_n"] if row["tt_pat_n"] else "—",
                     t("tt_eu.rank_col_rank_pat"): row["tt_pat_rank"] if row["tt_pat_rank"] is not None else "—",
-                    t("tt_eu.overview_tt_pat"): row["tt_pat_n"],
-                    t("tt_eu.overview_pat_lead"): f"{row['pat_lead']} ({row['pat_lead_n']})",
                     "OpenAlex": row.get("openalex_url") or "",
                 }
             )
@@ -217,10 +239,10 @@ def _country_rank() -> None:
             {
                 t("tt_eu.named_col_place"): row["name"],
                 t("tt_eu.rank_col_rank_pub"): row["pub_rank"] if row["pub_rank"] is not None else "—",
-                t("tt_eu.rank_col_pub"): row["pub_n"],
+                t("tt_eu.rank_col_pub"): row["pub_n"] if row.get("pub_resolved") else "—",
                 t("tt_eu.rank_col_rank_pat"): row["pat_rank"] if row["pat_rank"] is not None else "—",
-                t("tt_eu.rank_col_pat"): row["pat_n"],
-                "OpenAlex": payload["openalex_url"],
+                t("tt_eu.rank_col_pat"): row["pat_n"] if row["pat_n"] else "—",
+                "OpenAlex": row.get("openalex_url") or payload["openalex_url"],
                 "Google Patents": row["patents_url"],
             }
         )

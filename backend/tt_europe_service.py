@@ -97,29 +97,50 @@ class TTEuropeService:
 
     @staticmethod
     def country_rank(cc: str) -> Dict[str, Any]:
-        """Kilitli 3 MNO + TT. Yayın: OpenAlex. Patent: kilitli örnek küme. Uydurma yok."""
+        """Kilitli 3 MNO + TT. Yayın: OpenAlex kurum ID / bağlılık. Patent: kilitli örnek. Uydurma yok."""
         country = country_by_cc(cc)
         if not country:
             return {"ok": False, "cc": cc}
         ops = operators_with_tt(country)
-        inst_rows = None
-        oa_ok = False
-        from backend.openalex_client import country_openalex_url, fetch_country_institutions
+        from backend.openalex_client import (
+            country_openalex_url,
+            fetch_operator_work_count,
+            operator_openalex_url,
+        )
 
-        inst_rows = fetch_country_institutions(country["cc"])
-        oa_ok = inst_rows is not None
         sample_patents = load_validated_patents(VERIFIED_PATENTS) + _patents()
-
+        oa_any = False
         ranked: List[Dict[str, Any]] = []
         for op in ops:
             patterns = tuple(op["patterns"])
-            pub_n = 0
+            inst_ids = tuple(op.get("oa_ids") or ())
+            affil = tuple(op.get("oa_affil") or ())
+            if op.get("is_tt") and country["cc"] != "TR":
+                inst_ids = ()
+                affil = ()
+            oa = None
+            if inst_ids or affil:
+                oa = fetch_operator_work_count(
+                    f"{country['cc']}:{op['id']}",
+                    inst_ids=inst_ids,
+                    affil_terms=affil,
+                    country_code=country["cc"],
+                    live=False,
+                )
+            pub_resolved = oa is not None and isinstance(oa.get("count"), int)
+            pub_n = int(oa["count"]) if pub_resolved else 0
             pub_hits: List[str] = []
-            if oa_ok:
-                for bucket in inst_rows or []:
-                    if name_matches(bucket.get("name") or "", patterns):
-                        pub_n += int(bucket.get("count") or 0)
-                        pub_hits.append(bucket.get("name") or "")
+            if pub_resolved:
+                oa_any = True
+                if oa.get("source") == "institution":
+                    pub_hits.append(",".join(oa.get("ids") or inst_ids) or "OpenAlex institution")
+                elif oa.get("affil"):
+                    pub_hits.append(str(oa.get("affil")))
+            openalex_op_url = (oa or {}).get("url") or operator_openalex_url(
+                inst_ids=inst_ids,
+                affil=(affil[0] if affil else ""),
+                country_code=country["cc"],
+            )
             pat_n = 0
             pat_ids: List[str] = []
             for pat in sample_patents:
@@ -134,8 +155,13 @@ class TTEuropeService:
                     for p in _papers()
                     if (p.get("affiliation_country") or "").upper() == country["cc"]
                 )
-                if locked_n > pub_n:
+                if country["cc"] != "TR":
                     pub_n = locked_n
+                    pub_resolved = True
+                    pub_hits = ["DOI-locked TT affiliation (this country)"]
+                elif locked_n > pub_n:
+                    pub_n = locked_n
+                    pub_resolved = True
                     pub_hits.append("DOI-locked TT affiliation")
             ranked.append(
                 {
@@ -143,10 +169,12 @@ class TTEuropeService:
                     "name": op["name"],
                     "is_tt": bool(op.get("is_tt")),
                     "pub_n": pub_n,
+                    "pub_resolved": pub_resolved,
                     "pat_n": pat_n,
                     "pub_hits": pub_hits[:3],
                     "pat_ids": pat_ids,
                     "patents_url": op["patents_url"],
+                    "openalex_url": openalex_op_url,
                 }
             )
 
@@ -177,7 +205,7 @@ class TTEuropeService:
             "name_en": country["name_en"],
             "mno_source": EU_MNO_LIST_URL,
             "openalex_url": country_openalex_url(country["cc"]),
-            "oa_ok": oa_ok,
+            "oa_ok": oa_any,
             "rows": ranked,
             "tt_pub_rank": None if not tt_row else tt_row["pub_rank"],
             "tt_pat_rank": None if not tt_row else tt_row["pat_rank"],
@@ -194,29 +222,55 @@ class TTEuropeService:
                 continue
             rows = payload["rows"]
             tt_row = next((r for r in rows if r.get("is_tt")), {})
-            pub_lead = max(rows, key=lambda r: int(r.get("pub_n") or 0))
-            pat_lead = max(rows, key=lambda r: int(r.get("pat_n") or 0))
+            wiki_three = [
+                r for r in rows if not (r.get("is_tt") and country["cc"] != "TR")
+            ]
+            pub_ordered = sorted(
+                wiki_three,
+                key=lambda r: (not r.get("pub_resolved"), -int(r.get("pub_n") or 0), r["name"]),
+            )
+            pat_ordered = sorted(
+                wiki_three,
+                key=lambda r: (-int(r.get("pat_n") or 0), r["name"]),
+            )
+            pub_positive = [r for r in rows if int(r.get("pub_n") or 0) > 0]
+            pat_positive = [r for r in rows if int(r.get("pat_n") or 0) > 0]
+            pub_lead = max(pub_positive, key=lambda r: int(r.get("pub_n") or 0)) if pub_positive else None
+            pat_lead = max(pat_positive, key=lambda r: int(r.get("pat_n") or 0)) if pat_positive else None
             out.append(
                 {
                     "cc": country["cc"],
                     "name_tr": country["name_tr"],
                     "name_en": country["name_en"],
                     "tt_pub_n": int(tt_row.get("pub_n") or 0),
+                    "tt_pub_resolved": bool(tt_row.get("pub_resolved")),
                     "tt_pub_rank": tt_row.get("pub_rank"),
                     "tt_pat_n": int(tt_row.get("pat_n") or 0),
                     "tt_pat_rank": tt_row.get("pat_rank"),
                     "field_n": payload.get("field_n") or len(rows),
-                    "pub_lead": pub_lead.get("name"),
-                    "pub_lead_n": int(pub_lead.get("pub_n") or 0),
-                    "pat_lead": pat_lead.get("name"),
-                    "pat_lead_n": int(pat_lead.get("pat_n") or 0),
+                    "pub_lead": None if not pub_lead else pub_lead.get("name"),
+                    "pub_lead_n": 0 if not pub_lead else int(pub_lead.get("pub_n") or 0),
+                    "pat_lead": None if not pat_lead else pat_lead.get("name"),
+                    "pat_lead_n": 0 if not pat_lead else int(pat_lead.get("pat_n") or 0),
+                    "pub_top3": [
+                        {
+                            "name": r["name"],
+                            "n": int(r.get("pub_n") or 0),
+                            "resolved": bool(r.get("pub_resolved")),
+                        }
+                        for r in pub_ordered[:3]
+                    ],
+                    "pat_top3": [
+                        {"name": r["name"], "n": int(r.get("pat_n") or 0)}
+                        for r in pat_ordered[:3]
+                    ],
                     "openalex_url": payload.get("openalex_url"),
                     "oa_ok": payload.get("oa_ok"),
                 }
             )
         return sorted(
             out,
-            key=lambda r: (r["tt_pub_n"], r["tt_pat_n"], r["cc"]),
+            key=lambda r: (r["pub_lead_n"], r["tt_pub_n"], r["tt_pat_n"], r["cc"]),
             reverse=True,
         )
 

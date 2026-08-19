@@ -57,7 +57,7 @@
       421
     ]
   },
-  "fetched_at": "2026-08-19 06:48 UTC",
+  "fetched_at": "2026-08-19 07:30 UTC",
   "source_url": "https://openalex.org/works",
   "institutions": [
     {
@@ -6864,5 +6864,266 @@
         "key": "https://openalex.org/I4210162755"
       }
     ]
+  },
+  "operator_works": {
+    "FR:orange": {
+      "count": 27,
+      "source": "institution",
+      "ids": [
+        "I19370010"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I19370010"
+    },
+    "DE:dt": {
+      "count": 8,
+      "source": "institution",
+      "ids": [
+        "I4210093367"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I4210093367"
+    },
+    "ES:telefonica": {
+      "count": 28,
+      "source": "institution",
+      "ids": [
+        "I4210134591"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I4210134591"
+    },
+    "GB:bt": {
+      "count": 9,
+      "source": "institution",
+      "ids": [
+        "I1332878012"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I1332878012"
+    },
+    "NL:kpn": {
+      "count": 0,
+      "source": "institution",
+      "ids": [
+        "I4210109701"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I4210109701"
+    },
+    "SE:telia_se": {
+      "count": 0,
+      "source": "institution",
+      "ids": [
+        "I170053871"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I170053871"
+    },
+    "FI:elisa": {
+      "count": 0,
+      "source": "institution",
+      "ids": [
+        "I2801699569"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I2801699569"
+    },
+    "TR:turkcell": {
+      "count": 2,
+      "source": "institution",
+      "ids": [
+        "I4210154164"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I4210154164"
+    },
+    "TR:tt": {
+      "count": 5,
+      "source": "institution",
+      "ids": [
+        "I4210092500"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I4210092500"
+    },
+    "PL:orange_pl": {
+      "count": 15,
+      "source": "institution",
+      "ids": [
+        "I126469861"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I126469861"
+    },
+    "AT:a1_at": {
+      "count": 0,
+      "source": "institution",
+      "ids": [
+        "I53472387"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I53472387"
+    },
+    "DE:vodafone_de": {
+      "count": 8,
+      "source": "institution",
+      "ids": [
+        "I245417339"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I245417339"
+    },
+    "GB:vodafone_uk": {
+      "count": 2,
+      "source": "institution",
+      "ids": [
+        "I74316835"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I74316835"
+    },
+    "ES:vodafone_es": {
+      "count": 1,
+      "source": "institution",
+      "ids": [
+        "I2800993576"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I2800993576"
+    },
+    "IT:vodafone_it": {
+      "count": 1,
+      "source": "institution",
+      "ids": [
+        "I4210094608"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I4210094608"
+    },
+    "DE:telefonica_de": {
+      "count": 4,
+      "source": "institution",
+      "ids": [
+        "I4210099988"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I4210099988"
+    },
+    "FR:bouygues": {
+      "count": 4,
+      "source": "institution",
+      "ids": [
+        "I280199911"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I280199911"
+    },
+    "FI:telia_fi": {
+      "count": 0,
+      "source": "institution",
+      "ids": [
+        "I4210163533"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I4210163533"
+    },
+    "RS:mts": {
+      "count": 1,
+      "source": "institution",
+      "ids": [
+        "I4210128241"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I4210128241"
+    },
+    "AT:magenta": {
+      "count": 2,
+      "source": "institution",
+      "ids": [
+        "I272033418"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I272033418"
+    },
+    "FR:sfr": {
+      "count": 1,
+      "source": "affiliation",
+      "ids": [],
+      "affil": "SFR",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,raw_affiliation_strings.search:SFR,authorships.institutions.country_code:FR"
+    },
+    "IT:windtre": {
+      "count": 1,
+      "source": "affiliation",
+      "ids": [],
+      "affil": "Wind Tre",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,raw_affiliation_strings.search:Wind%20Tre,authorships.institutions.country_code:IT"
+    },
+    "RO:orange_ro": {
+      "count": 4,
+      "source": "affiliation",
+      "ids": [],
+      "affil": "Orange Romania",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,raw_affiliation_strings.search:Orange%20Romania,authorships.institutions.country_code:RO"
+    },
+    "SE:tele2": {
+      "count": 0,
+      "source": "affiliation",
+      "ids": [],
+      "affil": "Tele2",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,raw_affiliation_strings.search:Tele2,authorships.institutions.country_code:SE"
+    },
+    "FI:dna": {
+      "count": 0,
+      "source": "affiliation",
+      "ids": [],
+      "affil": "DNA Oyj",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,raw_affiliation_strings.search:DNA%20Oyj,authorships.institutions.country_code:FI"
+    },
+    "NL:vziggo": {
+      "count": 0,
+      "source": "affiliation",
+      "ids": [],
+      "affil": "VodafoneZiggo",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,raw_affiliation_strings.search:VodafoneZiggo,authorships.institutions.country_code:NL"
+    },
+    "HU:magyar": {
+      "count": 0,
+      "source": "affiliation",
+      "ids": [],
+      "affil": "Magyar Telekom",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,raw_affiliation_strings.search:Magyar%20Telekom,authorships.institutions.country_code:HU"
+    },
+    "RO:vodafone_ro": {
+      "count": 0,
+      "source": "affiliation",
+      "ids": [],
+      "affil": "Vodafone Romania",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,raw_affiliation_strings.search:Vodafone%20Romania,authorships.institutions.country_code:RO"
+    },
+    "TR:vodafone_tr": {
+      "count": 0,
+      "source": "affiliation",
+      "ids": [],
+      "affil": "Vodafone Turkey",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,raw_affiliation_strings.search:Vodafone%20Turkey,authorships.institutions.country_code:TR"
+    },
+    "GB:vmo2": {
+      "count": 1,
+      "source": "affiliation",
+      "ids": [],
+      "affil": "O2 UK",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,raw_affiliation_strings.search:O2%20UK,authorships.institutions.country_code:GB"
+    },
+    "IT:tim": {
+      "count": 8,
+      "source": "institution",
+      "ids": [
+        "I137543953"
+      ],
+      "affil": "",
+      "url": "https://openalex.org/works?search=integrated%20sensing%20communication%20OR%20reconfigurable%20intelligent%20surface%20OR%20non-terrestrial%20network%20satellite%20OR%20terahertz%20communication%20wireless%20OR%20ambient%20IoT%20backscatter%20OR%20O-RAN%20machine%20learning&filter=publication_year:2020|2021|2022|2023|2024|2025|2026,authorships.institutions.id:I137543953"
+    }
   }
 }
