@@ -120,9 +120,11 @@ def render_spec_pub_sources() -> None:
 
 
 def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
-    """Konu seçimi kilitli patent kümesini ve ofis aramasını birlikte değiştirir."""
+    """Konu seçimi kilitli patent kümesini, ofis çubuklarını ve ofis aramasını birlikte değiştirir."""
+    from backend.patent_service import PatentService
     from backend.source_links import SPEC_PUB_TOPICS, topic_patent_searches
-    from i18n.core import get_lang
+    from backend.tt_europe_service import TTEuropeService
+    from i18n.core import format_int, get_lang
 
     st.markdown(_t("sources.topic_pat_heading"))
     st.caption(_t("sources.topic_pat_caption"))
@@ -133,21 +135,40 @@ def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
         format_func=lambda x: _t("sources.topic_all") if x == "all" else x,
         key=f"spec_pat_topic_{key_suffix}_{get_lang()}",
     )
-    if topic == "all":
-        st.caption(_t("sources.topic_all_caption"))
+    picked = None if topic == "all" else topic
+    n = PatentService.get_summary(None, picked)["total"]
+    offices = TTEuropeService.office_counts(picked)
+    live_kwargs = {
+        "n": format_int(n),
+        "ep": format_int(offices.get("EP") or 0),
+        "us": format_int(offices.get("US") or 0),
+        "tr": format_int(offices.get("TR") or 0),
+    }
+    if picked is None:
+        st.info(_t("sources.topic_live_all", **live_kwargs))
+        st.caption(_t("sources.topic_buttons_hint"))
         render_link_row(topic_patent_searches("6G"), key_suffix=f"{key_suffix}_all")
         render_source_totals("patent", None, f"{key_suffix}_all")
         return None
-    st.caption(_t("sources.topic_result_caption", topic=topic, q=SPEC_PUB_TOPICS[topic]))
-    render_link_row(topic_patent_searches(topic), key_suffix=f"{key_suffix}_{topic}")
-    render_source_totals("patent", topic, f"{key_suffix}_{topic}")
-    return topic
+    st.info(
+        _t(
+            "sources.topic_live_one",
+            topic=picked,
+            q=SPEC_PUB_TOPICS[picked],
+            **live_kwargs,
+        )
+    )
+    st.caption(_t("sources.topic_buttons_hint"))
+    render_link_row(topic_patent_searches(picked), key_suffix=f"{key_suffix}_{picked}")
+    render_source_totals("patent", picked, f"{key_suffix}_{picked}")
+    return picked
 
 
 def render_pub_topic_panel(key_suffix: str = "pub") -> Optional[str]:
     """Konu seçimi kilitli makale kümesini ve yayın aramasını birlikte değiştirir."""
+    from backend.academic_service import AcademicService
     from backend.source_links import SPEC_PUB_TOPICS, topic_pub_searches
-    from i18n.core import get_lang
+    from i18n.core import format_int, get_lang
 
     st.markdown(_t("sources.topic_pub_heading"))
     st.caption(_t("sources.topic_pub_caption"))
@@ -158,15 +179,26 @@ def render_pub_topic_panel(key_suffix: str = "pub") -> Optional[str]:
         format_func=lambda x: _t("sources.topic_all") if x == "all" else x,
         key=f"spec_pub_topic_{key_suffix}_{get_lang()}",
     )
-    if topic == "all":
-        st.caption(_t("sources.topic_all_caption_pub"))
+    picked = None if topic == "all" else topic
+    n = AcademicService.get_summary(picked)["verified_paper_count"]
+    if picked is None:
+        st.info(_t("sources.topic_live_all_pub", n=format_int(n)))
+        st.caption(_t("sources.topic_buttons_hint_pub"))
         render_link_row(topic_pub_searches("6G"), key_suffix=f"{key_suffix}_all")
         render_source_totals("pub", None, f"{key_suffix}_all")
         return None
-    st.caption(_t("sources.topic_result_caption_pub", topic=topic, q=SPEC_PUB_TOPICS[topic]))
-    render_link_row(topic_pub_searches(topic), key_suffix=f"{key_suffix}_{topic}")
-    render_source_totals("pub", topic, f"{key_suffix}_{topic}")
-    return topic
+    st.info(
+        _t(
+            "sources.topic_live_one_pub",
+            n=format_int(n),
+            topic=picked,
+            q=SPEC_PUB_TOPICS[picked],
+        )
+    )
+    st.caption(_t("sources.topic_buttons_hint_pub"))
+    render_link_row(topic_pub_searches(picked), key_suffix=f"{key_suffix}_{picked}")
+    render_source_totals("pub", picked, f"{key_suffix}_{picked}")
+    return picked
 
 
 def render_patent_card(patent: dict) -> None:

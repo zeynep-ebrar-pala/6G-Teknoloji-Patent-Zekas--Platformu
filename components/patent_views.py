@@ -51,6 +51,18 @@ def render_patent_intelligence_module():
 
     render_spec_patent_sources()
     topic = render_patent_topic_panel("patent")
+
+    _labels = [t(f"patent.section.{k}") for k in PATENT_SECTION_KEYS]
+    _map = dict(zip(_labels, PATENT_SECTION_KEYS))
+    section = _map.get(
+        select_section(t("patent.view"), _labels, key=f"patent_section_story_{get_lang()}"),
+        PATENT_SECTION_KEYS[0],
+    )
+
+    if section == "tt_eu":
+        render_tt_europe_patent_section(domain=topic)
+        return
+
     from backend.source_links import assignee_patent_links
 
     spec = PatentService.get_spec_companies()
@@ -98,25 +110,9 @@ def render_patent_intelligence_module():
             if topic
             else t("patent.empty_company", company=company if company != "all" else t("patent.all"))
         )
-    else:
-        for pat in patents:
-            render_patent_card(pat)
-
-    st.divider()
-
-    _labels = [t(f"patent.section.{k}") for k in PATENT_SECTION_KEYS]
-    _map = dict(zip(_labels, PATENT_SECTION_KEYS))
-    section = _map.get(
-        select_section(t("patent.view"), _labels, key=f"patent_section_story_{get_lang()}"),
-        PATENT_SECTION_KEYS[0],
-    )
-
-    if section == "tt_eu":
-        render_tt_europe_patent_section(domain=topic)
         return
-
-    if not patents:
-        return
+    for pat in patents:
+        render_patent_card(pat)
 
     if section == "year":
         st.markdown(t("patent.companies_heading"))

@@ -180,7 +180,7 @@ def assignee_patent_links(assignee: str) -> List[Dict[str, str]]:
             "id": "wipo",
             "url": f"https://patentscope.wipo.int/search/en/result.jsf?query={_q('PA:(' + name + ')')}",
         },
-        {"id": "uspto", "url": "https://www.uspto.gov/patents/search"},
+        {"id": "uspto", "url": f"https://patents.google.com/?assignee={_plus(name)}&country=US"},
     ]
 
 
@@ -238,5 +238,5 @@ def topic_patent_searches(topic: str) -> List[Dict[str, str]]:
             "id": "wipo",
             "url": f"https://patentscope.wipo.int/search/en/result.jsf?query={_q(query)}",
         },
-        {"id": "uspto", "url": "https://www.uspto.gov/patents/search"},
+        {"id": "uspto", "url": f"https://patents.google.com/?q={_plus(query)}&country=US"},
     ]

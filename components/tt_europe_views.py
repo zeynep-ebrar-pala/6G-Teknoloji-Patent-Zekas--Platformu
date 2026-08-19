@@ -55,8 +55,8 @@ def _explainer(kind: str) -> None:
         )
 
 
-def _metrics(kind: str) -> None:
-    s = TTEuropeService.summary()
+def _metrics(kind: str, domain: str | None = None) -> None:
+    s = TTEuropeService.summary(domain)
     pos = TTEuropeService.europe_position()
     if kind == "patent":
         c1, c2, c3, c4 = st.columns(4)
@@ -65,9 +65,9 @@ def _metrics(kind: str) -> None:
         with c2:
             st.metric(t("tt_eu.metric_ep"), format_int(s["ep_n"]))
         with c3:
-            st.metric(t("tt_eu.position_m_pat"), "—" if pos["tr_pat_rank"] is None else format_int(pos["tr_pat_rank"]))
+            st.metric(t("tt_eu.metric_us"), format_int(s["us_n"]))
         with c4:
-            st.metric(t("tt_eu.metric_named"), format_int(s["wholesale_named_n"]))
+            st.metric(t("tt_eu.metric_tr"), format_int(s.get("tr_n") or 0))
         return
     c1, c2, c3, c4 = st.columns(4)
     with c1:
@@ -100,9 +100,16 @@ def _named_country_chips(rows: list, lang: str) -> None:
     )
 
 
-def _europe_position_banner(kind: str) -> None:
+def _europe_position_banner(kind: str, domain: str | None = None) -> None:
     lang = get_lang()
     pos = TTEuropeService.europe_position()
+    if kind == "patent" and domain:
+        offices = TTEuropeService.office_counts(domain)
+        pos = {
+            **pos,
+            "ep_n": int(offices.get("EP") or 0),
+            "us_n": int(offices.get("US") or 0),
+        }
     lead_key = "name_tr" if lang == "tr" else "name_en"
     leaders = pos.get("europe_pub_leaders") or []
     lead_txt = "; ".join(
@@ -187,7 +194,6 @@ def _collab_block() -> None:
     st.caption(t("tt_eu.role_caption"))
     show_plotly(render_tt_role_kind_chart(TTEuropeService.role_kind_counts()))
     _rd_touchpoints()
-    _press_note()
 
 
 def _fmt_firm(item: dict | None) -> str:
@@ -426,30 +432,43 @@ def _rd_touchpoints() -> None:
         render_source_button(row["url"], t("tt_eu.open_touch"))
 
 
-def _press_note() -> None:
-    claim = TTEuropeService.get_press_claims()
-    text = claim["attribution_tr"] if get_lang() == "tr" else claim["attribution_en"]
-    st.caption(text)
-    render_source_button(claim["url"], t("tt_eu.open_press"))
-
-
 def render_tt_europe_patent_section(domain: str | None = None) -> None:
     _explainer("patent")
-    _metrics("patent")
+    _metrics("patent", domain)
+    offices = TTEuropeService.office_counts(domain)
     st.markdown(t("tt_eu.office_heading"))
     st.caption(t("tt_eu.office_caption"))
-    show_plotly(render_tt_office_chart(TTEuropeService.office_counts()))
+    if domain:
+        st.info(
+            t(
+                "tt_eu.office_lock_one",
+                topic=domain,
+                ep=format_int(offices.get("EP") or 0),
+                us=format_int(offices.get("US") or 0),
+                tr=format_int(offices.get("TR") or 0),
+            )
+        )
+    else:
+        st.info(
+            t(
+                "tt_eu.office_lock_all",
+                ep=format_int(offices.get("EP") or 0),
+                us=format_int(offices.get("US") or 0),
+                tr=format_int(offices.get("TR") or 0),
+            )
+        )
+    show_plotly(render_tt_office_chart(offices))
     st.markdown(t("tt_eu.pat_list_heading"))
     st.caption(t("tt_eu.pat_list_caption"))
     pats = TTEuropeService.get_patents()
     if domain:
         pats = [p for p in pats if (p.get("domain") or "") == domain]
     if not pats:
-        show_empty(t("patent.empty_topic", topic=domain or "—"))
+        show_empty(t("tt_eu.empty_topic", topic=domain or "—"))
     else:
         for pat in pats:
             render_patent_card(pat)
-    _europe_position_banner("patent")
+    _europe_position_banner("patent", domain)
     st.markdown(t("tt_eu.vs_heading"))
     st.caption(t("tt_eu.vs_caption"))
     show_plotly(render_tt_vs_vendors_chart(TTEuropeService.vendor_sample_vs_tt(domain)))
@@ -460,7 +479,7 @@ def render_tt_europe_patent_section(domain: str | None = None) -> None:
 
 def render_tt_europe_pub_section(topic: str | None = None) -> None:
     _explainer("pub")
-    _metrics("pub")
+    _metrics("pub", topic)
     st.markdown(t("tt_eu.papers_heading"))
     st.caption(t("tt_eu.papers_caption"))
     papers = TTEuropeService.get_papers()

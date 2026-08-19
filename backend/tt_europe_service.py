@@ -5,7 +5,7 @@ Türk Telekom Avrupa izi — doğrulanmış kayıtları UI ve grafik için hazı
 from __future__ import annotations
 
 from collections import Counter
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import streamlit as st
 
@@ -264,19 +264,19 @@ class TTEuropeService:
         return dict(TT_PRESS_CLAIMS)
 
     @staticmethod
-    def office_counts() -> Dict[str, int]:
-        """Doğrulanmış TT-grup patent ofisleri. EP yoksa 0 olarak görünür; uydurulmaz."""
+    def office_counts(domain: Optional[str] = None) -> Dict[str, int]:
+        """Doğrulanmış TT-grup patent ofisleri. Konu seçildiyse yalnız o alan. EP/TR yoksa 0 görünür."""
         counts: Counter = Counter()
         for p in _patents():
+            if domain and (p.get("domain") or "") != domain:
+                continue
             office = next(
                 (raw.get("office") for raw in TT_GROUP_PATENTS if raw["id"] == p.get("id")),
                 "US",
             )
-            counts[office] += 1
-        if "EP" not in counts:
-            counts["EP"] = 0
-        if "TR" not in counts:
-            counts["TR"] = 0
+            counts[str(office)] += 1
+        for key in ("EP", "US", "TR"):
+            counts.setdefault(key, 0)
         return dict(counts)
 
     @staticmethod
@@ -375,16 +375,21 @@ class TTEuropeService:
         return items
 
     @staticmethod
-    def summary() -> Dict[str, Any]:
-        patents = _patents()
-        papers = _papers()
-        offices = TTEuropeService.office_counts()
+    def summary(domain: Optional[str] = None) -> Dict[str, Any]:
+        patents = [
+            p for p in _patents() if not domain or (p.get("domain") or "") == domain
+        ]
+        papers = [
+            p for p in _papers() if not domain or (p.get("topic") or "") == domain
+        ]
+        offices = TTEuropeService.office_counts(domain)
         return {
             "patent_n": len(patents),
             "paper_n": len(papers),
             "touch_n": len(TT_EUROPE_TOUCHPOINTS),
             "ep_n": offices.get("EP", 0),
             "us_n": offices.get("US", 0),
+            "tr_n": offices.get("TR", 0),
             "source": TT_EUROPE_SOURCE,
             "wholesale_named_n": len(TTI_WHOLESALE_FIRST_MOVER),
         }
