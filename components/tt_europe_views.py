@@ -16,15 +16,32 @@ from components.charts import (
     render_tt_vs_leader_chart,
     render_tt_vs_vendors_chart,
 )
-from components.ui_helpers import (
-    current_view_mode,
-    render_paper_card,
-    render_patent_card,
-    render_source_button,
-    show_empty,
-    show_plotly,
-)
+from components import ui_helpers as _uh
 from i18n.core import format_int, get_lang, t
+
+
+def current_view_mode():
+    return _uh.current_view_mode()
+
+
+def render_paper_card(paper):
+    return _uh.render_paper_card(paper)
+
+
+def render_patent_card(patent):
+    return _uh.render_patent_card(patent)
+
+
+def render_source_button(url, label=None):
+    return _uh.render_source_button(url, label)
+
+
+def show_empty(message):
+    return _uh.show_empty(message)
+
+
+def show_plotly(fig):
+    return _uh.show_plotly(fig)
 
 
 def _explainer(kind: str) -> None:

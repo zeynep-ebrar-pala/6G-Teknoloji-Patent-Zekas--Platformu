@@ -19,23 +19,23 @@ from components.charts import (
     render_patent_wordcloud,
 )
 
+from components.ui_helpers import (
+    render_link_row,
+    render_module_header,
+    render_patent_card,
+    render_source_button,
+    render_spec_patent_sources,
+    select_section,
+    show_empty,
+    show_plotly,
+)
+from components.topic_panels import render_patent_topic_panel
+from components.tt_europe_views import render_tt_europe_patent_section
+
 PATENT_SECTION_KEYS = ["year", "topics", "landscape", "tt_eu"]
 
 
 def render_patent_intelligence_module():
-    from components.ui_helpers import (
-        render_link_row,
-        render_module_header,
-        render_patent_card,
-        render_patent_topic_panel,
-        render_source_button,
-        render_spec_patent_sources,
-        select_section,
-        show_empty,
-        show_plotly,
-    )
-    from components.tt_europe_views import render_tt_europe_patent_section
-
     render_module_header(
         t("patent.title"),
         t("patent.subtitle", source=PatentService.get_data_source()),

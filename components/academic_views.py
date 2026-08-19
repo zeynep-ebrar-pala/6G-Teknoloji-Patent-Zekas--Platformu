@@ -12,23 +12,22 @@ from components.charts import (
     render_academic_database_chart,
     render_academic_trends_chart,
 )
+from components.ui_helpers import (
+    render_module_header,
+    render_paper_card,
+    render_source_button,
+    render_spec_pub_sources,
+    select_section,
+    show_empty,
+    show_plotly,
+)
+from components.topic_panels import render_pub_topic_panel
+from components.tt_europe_views import render_tt_europe_pub_section
 
 PUB_SECTION_KEYS = ["doi", "trend", "where", "tt_eu"]
 
 
 def render_academic_publication_module():
-    from components.ui_helpers import (
-        render_module_header,
-        render_paper_card,
-        render_pub_topic_panel,
-        render_source_button,
-        render_spec_pub_sources,
-        select_section,
-        show_empty,
-        show_plotly,
-    )
-    from components.tt_europe_views import render_tt_europe_pub_section
-
     render_module_header(
         t("pub.title"),
         t("pub.subtitle", source=AcademicService.get_data_source()),
