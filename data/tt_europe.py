@@ -9,9 +9,39 @@ from __future__ import annotations
 
 TT_EUROPE_SOURCE = "Google Patents + DOI (OpenAlex/Crossref) + resmi ortak duyuruları"
 
+# Haritada her ülke ayrı renk (katman rengi değil).
+TT_COUNTRY_COLORS = {
+    "TUR": "#E20074",
+    "HUN": "#3B82F6",
+    "ROU": "#22C55E",
+    "BGR": "#F97316",
+    "SRB": "#A855F7",
+    "UKR": "#EAB308",
+    "SWE": "#818CF8",
+    "ESP": "#14B8A6",
+    "FRA": "#FFB020",
+}
+
 # Hukuki assignee Netsia Inc. (Türk Telekom grubu ABD Ar-Ge iştiraki).
 # Verdict.co.uk bu aileleri TT'ye atfeder; Google Patents kaydı Netsia'dır.
+# Liste yeniden eskiye (2025 → 2023).
 TT_GROUP_PATENTS = [
+    {
+        "id": "US12243096B2",
+        "title": "System and method for a RAN exchange",
+        "assignee": "Netsia Inc.",
+        "group": "Türk Telekom",
+        "year": 2025,
+        "office": "US",
+        "office_label": "USPTO",
+        "region": "ABD",
+        "domain": "AI-RAN",
+        "url": "https://patents.google.com/patent/US12243096B2/en",
+        "abstract": (
+            "Kullanılmayan baz istasyonu kapasitesinin dilim olarak ilan/kiralanması (RANxChange); "
+            "programlanabilir RAN (Radio Access Network — radyo erişim ağı)."
+        ),
+    },
     {
         "id": "US12021560B1",
         "title": "Apparatus and method for joint profile-based slicing of mobile access and optical backhaul",
@@ -24,7 +54,8 @@ TT_GROUP_PATENTS = [
         "domain": "AI-RAN",
         "url": "https://patents.google.com/patent/US12021560B1/en",
         "abstract": (
-            "RAN ve PON denetleyicilerini ortak kesit (slice) profiline bağlayan erişim+backhaul dilimleme; "
+            "RAN (Radio Access Network — radyo erişim ağı) ve PON (Passive Optical Network — pasif optik ağ) "
+            "denetleyicilerini ortak kesit (slice) profiline bağlayan erişim+backhaul dilimleme; "
             "5G/ötesi ağ dilimlemesi."
         ),
     },
@@ -41,23 +72,7 @@ TT_GROUP_PATENTS = [
         "url": "https://patents.google.com/patent/US11765049B2/en",
         "abstract": (
             "RIC (RAN Intelligent Controller — RAN zekâ denetleyicisi) altında dilim güvence işlevi; "
-            "SLA sapınca kaynak yeniden dağıtımı."
-        ),
-    },
-    {
-        "id": "US12243096B2",
-        "title": "System and method for a RAN exchange",
-        "assignee": "Netsia Inc.",
-        "group": "Türk Telekom",
-        "year": 2025,
-        "office": "US",
-        "office_label": "USPTO",
-        "region": "ABD",
-        "domain": "AI-RAN",
-        "url": "https://patents.google.com/patent/US12243096B2/en",
-        "abstract": (
-            "Kullanılmayan baz istasyonu kapasitesinin dilim olarak ilan/kiralanması (RANxChange); "
-            "programlanabilir RAN."
+            "SLA (Service Level Agreement — hizmet seviyesi anlaşması) sapınca kaynak yeniden dağıtımı."
         ),
     },
 ]
@@ -237,10 +252,30 @@ TT_IR_WHOLESALE = {
 
 # 6G Ar-Ge dokunuşları — harita ISO-3 (EUREKA ülke değil, boyanmaz)
 TT_MAP_RD = [
-    {"iso3": "TUR", "layer": "hq", "label_tr": "Merkez / operatör Ar-Ge", "label_en": "HQ / operator R&D"},
-    {"iso3": "SWE", "layer": "rd_collab", "label_tr": "6G Ar-Ge ortağı (Net Insight)", "label_en": "6G R&D partner (Net Insight)"},
-    {"iso3": "ESP", "layer": "mou_venue", "label_tr": "MoU imza yeri (MWC Barcelona)", "label_en": "MoU venue (MWC Barcelona)"},
-    {"iso3": "FRA", "layer": "standards", "label_tr": "ETSI merkezi (deneme Ankara’da)", "label_en": "ETSI seat (trial in Ankara)"},
+    {
+        "iso3": "TUR",
+        "layer": "hq",
+        "label_tr": "Merkez; operatör Ar-Ge (Araştırma ve Geliştirme)",
+        "label_en": "HQ; operator R&D (research and development)",
+    },
+    {
+        "iso3": "SWE",
+        "layer": "rd_collab",
+        "label_tr": "6G Ar-Ge (Araştırma ve Geliştirme) ortağı: Net Insight",
+        "label_en": "6G R&D (research and development) partner: Net Insight",
+    },
+    {
+        "iso3": "ESP",
+        "layer": "mou_venue",
+        "label_tr": "MoU (Memorandum of Understanding — mutabakat zaptı) imza yeri: MWC Barcelona",
+        "label_en": "MoU (memorandum of understanding) signing venue: MWC Barcelona",
+    },
+    {
+        "iso3": "FRA",
+        "layer": "standards",
+        "label_tr": "ETSI (European Telecommunications Standards Institute — Avrupa Telekomünikasyon Standartları Enstitüsü) merkezi; deneme Ankara’da",
+        "label_en": "ETSI (European Telecommunications Standards Institute) seat; trial in Ankara",
+    },
 ]
 
 TT_PRESS_CLAIMS = {

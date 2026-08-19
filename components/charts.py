@@ -556,28 +556,24 @@ def render_patent_wordcloud(keywords_dict: Dict[str, int]):
 
 
 def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") -> go.Figure:
-    """Yalnızca adı doğrulanmış ülkeler. 19/24 iddiası boyanmaz."""
+    """Yalnızca adı doğrulanmış ülkeler; her ülke ayrı renk. 19/24 iddiası boyanmaz."""
     df = pd.DataFrame(rows)
     name_col = "name_tr" if lang == "tr" else "name_en"
     label_col = "label_tr" if lang == "tr" else "label_en"
-    df["cat"] = df["layer"].map(lambda k: t(f"tt_eu.layer.{k}"))
-    df["place"] = df[name_col]
-    df["hint"] = df[label_col]
-    color_map = {
-        t("tt_eu.layer.hq"): "#E20074",
-        t("tt_eu.layer.wholesale"): "#00C2FF",
-        t("tt_eu.layer.rd_collab"): "#A855F7",
-        t("tt_eu.layer.standards"): "#FFB020",
-        t("tt_eu.layer.mou_venue"): "#14B8A6",
-    }
+    place_col = t("tt_eu.named_col_place")
+    layer_col = t("tt_eu.map_col_layer")
+    note_col = t("tt_eu.map_col_note")
+    df[place_col] = df[name_col]
+    df[layer_col] = df["layer"].map(lambda k: t(f"tt_eu.layer.{k}"))
+    df[note_col] = df[label_col]
+    color_map = {row[place_col]: (row.get("color") or "#64748B") for _, row in df.iterrows()}
     fig = px.choropleth(
         df,
         locations="iso3",
-        color="cat",
-        hover_name="place",
-        hover_data={"iso3": False, "cat": True, "hint": True, "place": False},
+        color=place_col,
+        hover_name=place_col,
+        hover_data={"iso3": False, place_col: False, layer_col: True, note_col: True},
         color_discrete_map=color_map,
-        category_orders={"cat": list(color_map.keys())},
         locationmode="ISO-3",
     )
     fig.update_geos(
@@ -592,7 +588,6 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
         showframe=False,
         showcountries=True,
         showcoastlines=True,
-        # Plotly «europe» kapsamı Anadolu’yu keser; TR + UA + SE + ES buraya sığmalı.
         projection_type="natural earth",
         center=dict(lat=48.2, lon=19.5),
         lonaxis_range=[-12, 48],
@@ -602,6 +597,7 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
     layout.update(
         title=dict(text=f"<b>{t('charts.tt_map')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         height=520,
+        legend_title_text=place_col,
         legend=dict(
             orientation="v",
             yanchor="top",
@@ -614,7 +610,18 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
         margin=dict(l=10, r=10, t=50, b=10),
     )
     fig.update_layout(**layout)
-    fig.update_traces(marker_line_width=0.6, marker_line_color="rgba(200,209,220,0.35)")
+    fig.update_traces(
+        marker_line_width=0.6,
+        marker_line_color="rgba(200,209,220,0.35)",
+        customdata=df[[layer_col, note_col]].to_numpy(),
+        hovertemplate=(
+            "<b>%{hovertext}</b><br>"
+            + layer_col
+            + ": %{customdata[0]}<br>"
+            + note_col
+            + ": %{customdata[1]}<extra></extra>"
+        ),
+    )
     return fig
 
 
@@ -697,7 +704,7 @@ def render_tt_europe_overview_chart(
             y=names,
             orientation="h",
             marker=dict(color="#E20074"),
-            text=[f"#{rk}" for rk in ranks],
+            text=[f"#{rk}" if rk not in (None, "—") else "—" for rk in ranks],
             textposition="outside",
         )
     )
@@ -719,6 +726,8 @@ def render_tt_office_chart(counts: Dict[str, int]) -> go.Figure:
     fig = go.Figure(go.Bar(
         x=names,
         y=[counts[k] for k in names],
+        text=[str(counts[k]) for k in names],
+        textposition="outside",
         marker=dict(color="#E20074"),
     ))
     fig.update_layout(

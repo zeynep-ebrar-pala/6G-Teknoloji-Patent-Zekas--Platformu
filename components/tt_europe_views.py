@@ -67,18 +67,21 @@ def _metrics() -> None:
 def _named_country_chips(rows: list, lang: str) -> None:
     st.markdown(t("tt_eu.named_heading"))
     st.caption(t("tt_eu.named_caption"))
-    order = ("hq", "wholesale", "rd_collab", "standards", "mou_venue")
-    ranked = sorted(rows, key=lambda r: (order.index(r["layer"]) if r["layer"] in order else 99, r["iso3"]))
-    table = []
+    chips = []
+    ranked = sorted(rows, key=lambda r: (r.get("name_tr") or r.get("iso3") or ""))
     for row in ranked:
-        table.append(
-            {
-                t("tt_eu.named_col_place"): row["name_tr"] if lang == "tr" else row["name_en"],
-                "ISO": row["iso3"],
-                t("tt_eu.named_col_layer"): t(f"tt_eu.layer.{row['layer']}"),
-            }
+        name = row["name_tr"] if lang == "tr" else row["name_en"]
+        layer = t(f"tt_eu.layer.{row['layer']}")
+        hex_c = row.get("color") or "#64748B"
+        chips.append(
+            f'<span style="display:inline-block;margin:0 8px 8px 0;padding:7px 12px;'
+            f'border-radius:999px;border:1px solid {hex_c};background:{hex_c}22;'
+            f'color:#F8FAFC;font-size:0.82rem;">{name} · {layer}</span>'
         )
-    st.dataframe(table, hide_index=True, width="stretch")
+    st.markdown(
+        f'<div style="margin:4px 0 12px 0;">{"".join(chips)}</div>',
+        unsafe_allow_html=True,
+    )
 
 
 def _position_visuals(*, show_vendor_compare: bool) -> None:
@@ -147,10 +150,10 @@ def _country_rank() -> None:
             table.append(
                 {
                     t("tt_eu.named_col_place"): row[name_key],
-                    t("tt_eu.rank_col_rank_pub"): row["tt_pub_rank"],
+                    t("tt_eu.rank_col_rank_pub"): row["tt_pub_rank"] if row["tt_pub_rank"] is not None else "—",
                     t("tt_eu.overview_tt_pub"): row["tt_pub_n"],
                     t("tt_eu.overview_pub_lead"): f"{row['pub_lead']} ({row['pub_lead_n']})",
-                    t("tt_eu.rank_col_rank_pat"): row["tt_pat_rank"],
+                    t("tt_eu.rank_col_rank_pat"): row["tt_pat_rank"] if row["tt_pat_rank"] is not None else "—",
                     t("tt_eu.overview_tt_pat"): row["tt_pat_n"],
                     t("tt_eu.overview_pat_lead"): f"{row['pat_lead']} ({row['pat_lead_n']})",
                     "OpenAlex": row.get("openalex_url") or "",
@@ -180,11 +183,13 @@ def _country_rank() -> None:
         return
     rows = payload["rows"]
     tt_row = next((r for r in rows if r.get("is_tt")), {})
+    pub_rank = payload.get("tt_pub_rank")
+    pat_rank = payload.get("tt_pat_rank")
     st.markdown(
         t(
             "tt_eu.rank_tt",
-            pub=format_int(payload.get("tt_pub_rank") or 0),
-            pat=format_int(payload.get("tt_pat_rank") or 0),
+            pub="—" if pub_rank is None else format_int(pub_rank),
+            pat="—" if pat_rank is None else format_int(pat_rank),
             pub_n=format_int(tt_row.get("pub_n") or 0),
             pat_n=format_int(tt_row.get("pat_n") or 0),
             n=format_int(payload.get("field_n") or 0),
@@ -204,13 +209,16 @@ def _country_rank() -> None:
         )
     )
     table = []
-    for row in sorted(rows, key=lambda r: (r["pub_rank"], r["name"])):
+    for row in sorted(
+        rows,
+        key=lambda r: (r["pub_rank"] is None, r["pub_rank"] or 99, r["name"]),
+    ):
         table.append(
             {
                 t("tt_eu.named_col_place"): row["name"],
-                t("tt_eu.rank_col_rank_pub"): row["pub_rank"],
+                t("tt_eu.rank_col_rank_pub"): row["pub_rank"] if row["pub_rank"] is not None else "—",
                 t("tt_eu.rank_col_pub"): row["pub_n"],
-                t("tt_eu.rank_col_rank_pat"): row["pat_rank"],
+                t("tt_eu.rank_col_rank_pat"): row["pat_rank"] if row["pat_rank"] is not None else "—",
                 t("tt_eu.rank_col_pat"): row["pat_n"],
                 "OpenAlex": payload["openalex_url"],
                 "Google Patents": row["patents_url"],

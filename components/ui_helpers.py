@@ -51,7 +51,7 @@ def render_patent_card(patent: dict) -> None:
         f"""
         <div class="glass-card" style="margin-bottom: 8px; padding: 18px;">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-                <span style="color:#00E5FF;font-weight:700;font-family:'JetBrains Mono',monospace;">{pub}</span>
+                <span style="color:#00E5FF;font-weight:700;font-family:'JetBrains Mono',monospace;">{patent.get('year','')} · {pub}</span>
                 <span class="trl-pill trl-mid">{patent.get('domain','')}</span>
             </div>
             <h4 style="color:#FFFFFF;margin-top:8px;margin-bottom:6px;overflow-wrap:anywhere;">{patent['title']}</h4>

@@ -18,6 +18,7 @@ from data.eu_operators import (
 from data.patents import VERIFIED_PATENTS
 from data.tt_europe import (
     TT_AFFILIATED_PAPERS,
+    TT_COUNTRY_COLORS,
     TT_EUROPE_SOURCE,
     TT_EUROPE_TOUCHPOINTS,
     TT_GROUP_PATENTS,
@@ -150,13 +151,20 @@ class TTEuropeService:
             )
 
         def _with_rank(rows: List[Dict[str, Any]], key: str, dest: str) -> None:
-            ordered = sorted(rows, key=lambda r: r[key], reverse=True)
+            ordered = sorted(rows, key=lambda r: int(r[key] or 0), reverse=True)
+            n_pos = sum(1 for r in rows if int(r[key] or 0) > 0)
             rank = 0
             prev = None
-            for i, row in enumerate(ordered):
-                if prev is None or row[key] != prev:
-                    rank = i + 1
-                    prev = row[key]
+            seen = 0
+            for row in ordered:
+                val = int(row[key] or 0)
+                if val == 0:
+                    row[dest] = None if n_pos == 0 else n_pos + 1
+                    continue
+                seen += 1
+                if prev is None or val != prev:
+                    rank = seen
+                    prev = val
                 row[dest] = rank
 
         _with_rank(ranked, "pub_n", "pub_rank")
@@ -257,8 +265,9 @@ class TTEuropeService:
                 "layer": "wholesale",
                 "name_tr": row["name_tr"],
                 "name_en": row["name_en"],
-                "label_tr": "TTI toptan first-mover (resmi About)",
-                "label_en": "TTI wholesale first-mover (official About)",
+                "label_tr": "TTI (Türk Telekom International) toptan; first-mover (ilk giren pazar, resmi About)",
+                "label_en": "TTI (Türk Telekom International) wholesale; first-mover (official About)",
+                "color": TT_COUNTRY_COLORS.get(row["iso3"], "#64748B"),
             }
         for row in TT_MAP_RD:
             prev = by_iso.get(row["iso3"])
@@ -280,6 +289,7 @@ class TTEuropeService:
                 "name_en": name_en or (prev or {}).get("name_en", row["iso3"]),
                 "label_tr": row["label_tr"],
                 "label_en": row["label_en"],
+                "color": TT_COUNTRY_COLORS.get(row["iso3"], "#64748B"),
             }
         return list(by_iso.values())
 
