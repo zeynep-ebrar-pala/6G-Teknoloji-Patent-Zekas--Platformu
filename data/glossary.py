@@ -310,7 +310,7 @@ GLOSSARY: dict[str, dict[str, str]] = {
         "en": "Application Programming Interface",
         "tr": "Uygulama Programlama Arayüzü",
         "definition": "Bir yazılımın başka yazılımlara sunduğu kurallı çağrı yüzüdür.",
-        "why": "OpenAlex ve isteğe bağlı LLM sağlayıcıları bu platforma API ile bağlanır.",
+        "why": "IEEE, Springer, Elsevier, WoS ve isteğe bağlı LLM sağlayıcıları bu platforma API ile bağlanır.",
     },
     "SDK": {
         "abbr": "SDK",

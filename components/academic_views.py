@@ -15,17 +15,6 @@ from components.charts import (
     render_academic_database_chart,
     render_academic_trends_chart,
 )
-from components.ui_helpers import (
-    render_link_row,
-    render_module_header,
-    render_paper_card,
-    render_spec_pub_sources,
-    select_section,
-    show_empty,
-    show_plotly,
-)
-from components.topic_panels import render_pub_topic_panel
-from components.tt_europe_views import render_tt_europe_pub_section
 
 PUB_SECTION_KEYS = ["year", "inst", "country", "cited", "trend", "tt_eu"]
 
@@ -54,6 +43,19 @@ def _with_source(paper: dict) -> dict:
 
 
 def render_academic_publication_module():
+    from components.topic_panels import render_pub_topic_panel
+    from components.tt_europe_views import render_tt_europe_pub_section
+    from components.ui_helpers import (
+        current_view_mode,
+        render_link_row,
+        render_module_header,
+        render_paper_card,
+        render_spec_pub_sources,
+        select_section,
+        show_empty,
+        show_plotly,
+    )
+
     render_module_header(
         t("pub.title"),
         t("pub.subtitle", source=AcademicService.get_data_source()),
@@ -67,6 +69,21 @@ def render_academic_publication_module():
 </div>""",
         unsafe_allow_html=True,
     )
+    st.markdown(
+        f"""<div class="glass-card">
+<div class="teach-label">{t("pub.access_title")}</div>
+{t("pub.access_body")}
+</div>""",
+        unsafe_allow_html=True,
+    )
+    if current_view_mode() == "expert":
+        st.markdown(
+            f"""<div class="glass-card">
+<div class="teach-label">{t("pub.expert_title")}</div>
+{t("pub.expert_body")}
+</div>""",
+            unsafe_allow_html=True,
+        )
 
     render_spec_pub_sources()
     topic, region = render_pub_topic_panel("pub")
@@ -77,14 +94,28 @@ def render_academic_publication_module():
     with c1:
         st.metric(t("pub.metric_ieee"), _fmt(pubs.get("ieee")))
     with c2:
-        st.metric(t("pub.metric_scholar"), "—")
+        st.metric(t("pub.metric_scholar"), _fmt(pubs.get("scholar")))
     with c3:
         st.metric(t("pub.metric_springer"), _fmt(pubs.get("springer")))
     with c4:
         st.metric(t("pub.metric_elsevier"), _fmt(pubs.get("elsevier")))
     with c5:
-        st.metric(t("pub.metric_wos"), "—")
+        st.metric(t("pub.metric_wos"), _fmt(pubs.get("wos")))
     st.caption(t("pub.source_metric_caption"))
+    if current_view_mode() == "expert":
+        from backend.publisher_apis import REGISTER
+
+        k1, k2, k3, k4, k5 = st.columns(5)
+        with k1:
+            st.link_button(t("pub.key_ieee"), REGISTER["ieee"])
+        with k2:
+            st.link_button(t("pub.key_springer"), REGISTER["springer"])
+        with k3:
+            st.link_button(t("pub.key_elsevier"), REGISTER["elsevier"])
+        with k4:
+            st.link_button(t("pub.key_wos"), REGISTER["wos"])
+        with k5:
+            st.link_button(t("pub.key_scholar"), REGISTER["scholar"])
 
     tr_n = bundle.get("total_tr")
     col_a, col_b, col_c = st.columns(3)

@@ -245,19 +245,37 @@ ticarileşme tarihi değildir.
         },
         "pub": {
             "title": "Yayın Trendleri",
-            "subtitle": "Türkiye ve Avrupa 6G literatürü: IEEE Xplore, Google Scholar, Springer, Elsevier, WoS. Grafikler yıl, kurum, ülke, en çok atıf ve trend. Scholar ve WoS sayım API’si yok — hit uydurulmaz. Kaynak: {source}",
+            "subtitle": "Türkiye ve Avrupa 6G literatürü. Üst hücreler IEEE Xplore, Google Scholar, Springer, Elsevier, WoS. Anahtar yoksa —. Kaynak: {source}",
             "what_title": "Bu sayfa neyi sayıyor?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Problem:</strong> 6G yayın hacmi ülke ve konuya göre değişir. Kilitli 8 kart bu külliyat değildir ve bu sayfada çizilmez.
+<strong>Problem:</strong> 6G yayın hacmi ülke ve konuya göre değişir. Kilitli 8 kart bu külliyat değildir.
 <strong>Kapsam:</strong> Türkiye ve Avrupa. Konular: ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT.
-<strong>Kaynaklar:</strong> IEEE Xplore, Google Scholar, Springer, Elsevier; WoS kullanılabilir.
+<strong>Kaynaklar:</strong> IEEE Xplore, Google Scholar, Springer, Elsevier, WoS — başka indeksten vekil yok.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-IEEE / Springer / Elsevier sayısı, o yayınevinin DOI öneki + yazar bağlılığında ülke adı + başlıkta 6G
-(2020–2026, dergi ve bildiri) ile ölçülür. Bu, IEEE Xplore oturumundaki yerli hit değildir.
-<strong>Google Scholar</strong> ve <strong>WoS</strong> herkese açık sayım API’si vermez; düğme aramayı açar, hücre <strong>—</strong> kalır.
-Ülke çubukları toplanmaz: ortak yazarlı kayıt birden fazla ülkede görünür.
+Bu beş sitenin programlı sayımı resmi API anahtarı ister. Anahtar yoksa hücre <strong>—</strong> kalır; sayı uydurulmaz.
+<strong>Google Scholar</strong> resmi API vermez; HTML kazınmaz. Ülke çubukları toplanmaz.
 </p>""",
+            "expert_title": "API adı, filtre, sınır",
+            "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
+<strong>IEEE Xplore Metadata API:</strong> <code>ieeexploreapi.ieee.org</code> + <code>affiliation=Turkey</code>, 2020–2026.
+<strong>Springer Nature Meta API:</strong> Basic planda <code>affiliation:</code> 403. Metin <code>6G Turkey</code> + tarih; bağlılık süzgeci değildir.
+<strong>Elsevier Scopus:</strong> <code>AFFILCOUNTRY(turkey)</code>; kurum token yoksa sonuç boş kalabilir.
+<strong>WoS Starter (Clarivate):</strong> <code>TS</code> + <code>OG=Turkey</code> (Starter’da CU yok).
+<strong>Google Scholar:</strong> resmi uç yok. Siteden çekilmez.
+Avrupa için tek kıta toplamı uydurulmaz.
+</p>""",
+            "access_title": "Kim bireysel mail, kim kurumsal?",
+            "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
+Anahtarsız resmi sayım uç noktası yok. Anahtar gelince uygulama çeker.
+</p>
+<ul style="color:#CBD5E1;font-size:0.86rem;line-height:1.65;margin:8px 0 0 1.1rem;padding:0;">
+<li><strong>Springer</strong> — bireysel e-posta yeterli.</li>
+<li><strong>IEEE Xplore</strong> — hesap bireysel mail ile açılır; anahtar onayı kurum web sitesi ister. Kurumsal mail daha sorunsuz.</li>
+<li><strong>Elsevier</strong> — hesap bireysel olabilir. Scopus ülke sayımı için kurum aboneliği / inst token; pratikte kurumsal mail.</li>
+<li><strong>WoS (Clarivate)</strong> — kurumsal / kütüphane. Bireysel Gmail pratikte yetmez.</li>
+<li><strong>Google Scholar</strong> — Google anahtar vermez. HTML çekilmez.</li>
+</ul>""",
             "empty": "Yayın kaydı yok.",
             "empty_topic": "«{topic}» için ölçülen kayıt yok. Sayı uydurulmaz. Düğmeler aynı konuyu dış sitede arar.",
             "metric_doi": "Türkiye 6G (başlık)",
@@ -268,15 +286,21 @@ IEEE / Springer / Elsevier sayısı, o yayınevinin DOI öneki + yazar bağlıl�
             "metric_wos": "WoS",
             "metric_tr": "Türkiye 6G başlık",
             "metric_top_cc": "En çok yayın (bağlılık)",
-            "metric_oa_year": "OpenAlex {year} (6 konu)",
+            "metric_oa_year": "{year} (6 konu)",
             "metric_peak_year": "Türkiye — en çok makale yılı",
             "metric_peak_delta": "{n} makale",
             "metric_topic": "Konu",
             "metric_topic_delta": "{n} makale",
             "metric_cites": "Atıf (DOI kaydı)",
-            "source_metric_caption": "IEEE / Springer / Elsevier: DOI öneki + Türkiye bağlılığı + başlık 6G. Scholar ve WoS: API yok, sayı uydurulmaz. Avrupa ülke çubukları toplanmaz.",
+            "source_metric_caption": "Sayı o sitenin resmi API’sidir. Anahtar yoksa —. Google Scholar resmi API yok; HTML çekilmez.",
+            "keys_help": "IEEE / Springer / Elsevier / WoS sayımı resmi geliştirici anahtarı ister. Scholar resmi anahtar vermez.",
+            "key_ieee": "IEEE API ↗",
+            "key_springer": "Springer API ↗",
+            "key_elsevier": "Elsevier API ↗",
+            "key_wos": "WoS (Clarivate) API ↗",
+            "key_scholar": "Google Scholar’ı aç ↗",
             "scholar_metric_caption": "Google Scholar herkese açık sayım API’si vermez; hit uydurulmaz.",
-            "open_oa": "OpenAlex kaynak sayfasını aç ↗",
+            "open_oa": "IEEE Xplore’u aç ↗",
             "snapshot": "Son başarılı önbellek: {ts}",
             "view": "Grafik",
             "region_label": "Bölge",
@@ -314,8 +338,8 @@ IEEE / Springer / Elsevier sayısı, o yayınevinin DOI öneki + yazar bağlıl�
             "oa_heading": "### 6G konularına göre yayın",
             "oa_caption": "Konu çubuğu Türkiye 6G + konu token. Avrupa ülke grafiği ayrı sekmededir.",
             "oa_empty": "Sayım yok; uydurulmaz.",
-            "try_oa": "OpenAlex’i tarayıcıda dene ↗",
-            "open_oa_counts": "OpenAlex’te aç ↗",
+            "try_oa": "IEEE Xplore’da dene ↗",
+            "open_oa_counts": "IEEE Xplore’da aç ↗",
             "scholar_heading": "### Trend + dış arama",
             "scholar_caption": "Scholar düğmesi sorguyu yeni sekmede açar; sonuç sayısını buraya yazmayız.",
             "inst_heading": "### En çok yayın yapan kurumlar",
@@ -390,7 +414,7 @@ Firma filtresindeki Nokia–ZTE kümesi rakip örneklemdir; burası TT grubu ör
 Google Patents’te bu platformun kilitlediği TT-grup 6G-komşu tesciller <strong>Netsia Inc.</strong> (USPTO) altındadır.
 Netsia, Argela/Türk Telekom ABD Ar-Ge iştirakidir; hukuki assignee Netsia’dır.
 <strong>EP yayın numarası bu örnekte 0’dır</strong> — gizlenmez, uydurulmaz.
-Yayınlarda ham bağlılık «Türk Telekom, Ankara/İstanbul, Türkiye». OpenAlex kurum grafı
+Yayınlarda ham bağlılık «Türk Telekom, Ankara/İstanbul, Türkiye». Kurum grafı
 bazı kaydı DE/MY/CZ şirketine yanlış düşürebilir; ülke çubuğu o hatayı TT Avrupa yayını diye okumaz.
 </p>""",
             "metric_pat": "TT-grup doğrulanmış patent",
@@ -428,17 +452,17 @@ bu platformda o ülke adı kilitlenmedi.
             "named_col_layer": "Katman",
             "presence_heading": "### 6G dokunuşları — işbirliği / standart / proje",
             "presence_caption": "Kart resmi duyurudur. Eşit yükseklikli «ülke başına 1» çubuk pazar payı gibi okunduğu için çizilmez.",
-            "oa_heading": "### OpenAlex ülke grafını TT Avrupa’sı sanmayın",
+            "oa_heading": "### Ülke grafını TT Avrupa’sı sanmayın",
             "oa_caption": "Üstteki «Ülkeler» sekmesi küresel 6G konu aramasıdır, TT portföyü değildir. Aşağıdaki makalelerin ham bağlılığı TR’dir.",
             "papers_heading": "### Türk Telekom Ar-Ge bağlılıklı makaleler",
-            "papers_caption": "DOI kilitlidir. Sıra: yıl yeniden eskiye; aynı yılda OpenAlex atıf (cited_by_count) yüksekten düşüğe.",
+            "papers_caption": "DOI kilitlidir. Sıra: yıl yeniden eskiye; aynı yılda atıf (cited_by_count) yüksekten düşüğe.",
             "open_touch": "Kaynak duyuruyu aç ↗",
             "open_press": "Milli başvuru açıklamasını aç ↗",
             "open_ir": "2024 entegre raporu PDF ↗",
             "open_tti": "TTI About sayfasını aç ↗",
             "position_heading": "### Türk Telekom Avrupa’da nerededir? (bu platformun ölçümü)",
             "position_m_pub": "TR yayın sırası",
-            "position_m_pub_help": "OpenAlex 6G konu + 3 MNO ve TT; {n} kayıt",
+            "position_m_pub_help": "6G konu + 3 MNO ve TT; {n} kayıt",
             "position_m_pat": "TR patent sırası",
             "position_m_pat_help": "Kilitli ABD Patent ve Marka Ofisi örnek kümesi; {n} Netsia kaydı",
             "position_m_ep": "Avrupa Patent Ofisi tescili",
@@ -447,7 +471,7 @@ bu platformda o ülke adı kilitlenmedi.
             "position_m_pat_out": "TR dışı TT patent ülkesi",
             "position_body": """<div class="glass-card" style="border-left:6px solid #E20074;margin-bottom:12px;">
 <p style="color:#F8FAFC;font-size:0.95rem;line-height:1.65;margin:0;">
-<strong>Türkiye:</strong> 6G-bitişik yayında <em>{pub_rank}. sıra</em> ({pub_n} OpenAlex kaydı; 3 MNO + TT).
+<strong>Türkiye:</strong> 6G-bitişik yayında <em>{pub_rank}. sıra</em> ({pub_n} yayın kaydı; 3 MNO + TT).
 Örnek USPTO patentte <em>{pat_rank}. sıra</em> ({pat_n} Netsia kaydı).
 </p>
 <p style="color:#F8FAFC;font-size:0.95rem;line-height:1.65;margin:8px 0 0 0;">
@@ -458,7 +482,7 @@ TR dışı örnek patent ülkesi: {pat_out}.
 Ülkeler ayrı ligdir; tek bir «Avrupa kaçıncısı» sayısı üretilmez.
 </p>
 <p style="color:#C8D1DC;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-<strong>Aynı ülkelerin yayın 1.’leri (OpenAlex, yüksekten düşüğe):</strong> {leaders}
+<strong>Aynı ülkelerin yayın 1.’leri (yüksekten düşüğe):</strong> {leaders}
 </p>
 <p style="color:#94A3B8;font-size:0.82rem;margin:8px 0 0 0;">
 Bu abone/gelir payı veya EPO PATSTAT tam taraması değildir. 0 kayıt sıra almaz (—).
@@ -477,12 +501,12 @@ Bu EPO PATSTAT taraması veya abone payı değildir. 0 kayıt sıra almaz (—).
 </div>""",
             "position_body_pub": """<div class="glass-card" style="border-left:6px solid #E20074;margin-bottom:12px;">
 <p style="color:#F8FAFC;font-size:0.95rem;line-height:1.65;margin:0;">
-<strong>Türkiye:</strong> 6G-bitişik OpenAlex yayında <em>{pub_rank}. sıra</em> ({pub_n} kayıt; 3 MNO + TT).
+<strong>Türkiye:</strong> 6G-bitişik yayında <em>{pub_rank}. sıra</em> ({pub_n} kayıt; 3 MNO + TT).
 <strong>Avrupa:</strong> yayın lideri değildir. TR dışı kilitli ülkede TT bağlılıklı yayın &gt;0 olan ülke: {pub_out}.
 Ülkeler ayrı ligdir; tek bir Avrupa sıra sayısı üretilmez.
 </p>
 <p style="color:#C8D1DC;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-<strong>Aynı ülkelerin yayın 1.’leri (OpenAlex, yüksekten düşüğe):</strong> {leaders}
+<strong>Aynı ülkelerin yayın 1.’leri (yüksekten düşüğe):</strong> {leaders}
 </p>
 <p style="color:#94A3B8;font-size:0.82rem;margin:8px 0 0 0;">
 Bu abone/gelir payı değildir. 0 kayıt sıra almaz (—). Patent tabloları Patent Zekası sayfasındadır.
@@ -490,24 +514,24 @@ Bu abone/gelir payı değildir. 0 kayıt sıra almaz (—). Patent tabloları Pa
 </div>""",
             "what_title_pub": "Yayın bağlılığı ülke sırasını nasıl kurar?",
             "what_body_pub": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>OpenAlex</strong> kurum kimliği veya bağlılık dizesiyle 6G konu yayınlarını sayar.
+<strong>DOI / bağlılık</strong> kurum kimliği veya bağlılık dizesiyle 6G konu yayınlarını sayar.
 Türk Telekom satırı TR dışı ülkede TR kurum ID’si ile şişirilmez; o ülkede DOI-kilitli bağlılık yoksa sayı 0’dır.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
 1./2./3. Wikipedia Avrupa MNO listesindeki üç işletmecinin kendi iç sıralamasıdır; abone payı değildir.
 Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndadır.
 </p>""",
-            "overview_heading": "### Avrupa geneli — 3 operatör + Türk Telekom (OpenAlex)",
+            "overview_heading": "### Avrupa geneli — 3 operatör + Türk Telekom",
             "overview_heading_pat": "### Avrupa geneli — patent (kilitli örnek küme)",
-            "overview_heading_pub": "### Avrupa geneli — yayın (OpenAlex)",
-            "overview_caption": "Her ülkede Wikipedia MNO listesindeki 3 işletmeci, OpenAlex 6G konu aramasında kurum kimliği (veya bağlılık dizesi) ile sayıldı. 1./2./3. bu üç firmanın kendi iç sıralamasıdır; abone payı değildir. TT ayrı sütundadır. Ölçülmüş 0 (kurum bulundu, konu kaydı yok) 0’dır. Sorgulanamayan sayı — olarak kalır, uydurulmaz. Patent sütunu bu platformun kilitli örnek kümesidir (EPO PATSTAT taraması değil).",
-            "overview_caption_pat": "Kilitli örnek kümede en az bir patenti olan ülkeler. 0’lık 2./3. operatör sütunu yok; yayın (OpenAlex) bu sayfada yok. TT için EP=0; Netsia USPTO yalnız TR. 0 kayıt sıra almaz (—).",
-            "overview_caption_pub": "Her ülkede Wikipedia MNO listesindeki 3 işletmeci, OpenAlex 6G konu aramasında kurum kimliği (veya bağlılık dizesi) ile sayıldı. 1./2./3. bu üç firmanın kendi iç sıralamasıdır; abone payı değildir. TT ayrı sütundadır. Ölçülmüş 0, 0’dır. Sorgulanamayan sayı — olarak kalır.",
-            "overview_spin": "Operatör yayın sayıları OpenAlex’ten yükleniyor (önbellek varsa beklenmez)",
+            "overview_heading_pub": "### Avrupa geneli — yayın",
+            "overview_caption": "Her ülkede Wikipedia MNO listesindeki 3 işletmeci, 6G konu aramasında kurum kimliği (veya bağlılık dizesi) ile sayıldı. 1./2./3. bu üç firmanın kendi iç sıralamasıdır; abone payı değildir. TT ayrı sütundadır. Ölçülmüş 0 (kurum bulundu, konu kaydı yok) 0’dır. Sorgulanamayan sayı — olarak kalır, uydurulmaz. Patent sütunu bu platformun kilitli örnek kümesidir (EPO PATSTAT taraması değil).",
+            "overview_caption_pat": "Kilitli örnek kümede en az bir patenti olan ülkeler. 0’lık 2./3. operatör sütunu yok; yayın sütunu bu sayfada yok. TT için EP=0; Netsia USPTO yalnız TR. 0 kayıt sıra almaz (—).",
+            "overview_caption_pub": "Her ülkede Wikipedia MNO listesindeki 3 işletmeci, 6G konu aramasında kurum kimliği (veya bağlılık dizesi) ile sayıldı. 1./2./3. bu üç firmanın kendi iç sıralamasıdır; abone payı değildir. TT ayrı sütundadır. Ölçülmüş 0, 0’dır. Sorgulanamayan sayı — olarak kalır.",
+            "overview_spin": "Operatör yayın sayıları yükleniyor (önbellek varsa beklenmez)",
             "overview_spin_pat": "Kilitli patent örnek kümesi yükleniyor",
             "overview_empty_pat": "Kilitli örnek kümede Avrupa satırında patent yok. Sayı uydurulmaz.",
             "overview_hits_pat": "Kayıtlı firma (örnek küme)",
-            "overview_pub_title": "Ülkede yayın 1. operatör (OpenAlex, >0)",
+            "overview_pub_title": "Ülkede yayın 1. operatör (>0)",
             "overview_pat_title": "Ülkede patent 1. (kilitli örnek, >0)",
             "overview_vs_title": "Yayın: ülkede 1. operatör vs Türk Telekom",
             "overview_vs_title_pat": "Patent: ülkede 1. (örnek) vs Türk Telekom",
@@ -526,25 +550,25 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "rank_heading": "### Ülke detayı: 3 MNO (Mobile Network Operator — mobil şebeke işletmecisi) + Türk Telekom",
             "rank_heading_pat": "### Ülke detayı — patent (3 MNO + Türk Telekom)",
             "rank_heading_pub": "### Ülke detayı — yayın (3 MNO + Türk Telekom)",
-            "rank_caption": "Üç operatör Wikipedia Avrupa MNO listesindeki bu ülke satırından kilitlendi; abone/gelir «en yüksek 3» bu platformda ölçülmedi. Yayın = OpenAlex 6G konu + kurum ID (yoksa bağlılık dizesi). Patent = kilitli örnek küme (TT için EP=0; Netsia USPTO yalnız TR). 0 kayıt sıra almaz (—). Küresel SEP veya pazar payı değildir.",
-            "rank_caption_pat": "Bu ülkede Wikipedia’daki 3 MNO + TT. Patent = kilitli örnek küme (EP=0; Netsia USPTO yalnız TR). Yayın ve OpenAlex sütunu yok. 0 kayıt sıra almaz (—). Hak sahibi araması kayıt kartı değildir; kartlarda Lens / Espacenet / PATENTSCOPE durur.",
-            "rank_caption_pub": "Üç operatör Wikipedia Avrupa MNO listesinden kilitlendi. Yayın = OpenAlex 6G konu + kurum ID. 0 kayıt sıra almaz (—). Patent ofis sütunu bu sayfada yok.",
+            "rank_caption": "Üç operatör Wikipedia Avrupa MNO listesindeki bu ülke satırından kilitlendi; abone/gelir «en yüksek 3» bu platformda ölçülmedi. Yayın = 6G konu + kurum ID (yoksa bağlılık dizesi). Patent = kilitli örnek küme (TT için EP=0; Netsia USPTO yalnız TR). 0 kayıt sıra almaz (—). Küresel SEP veya pazar payı değildir.",
+            "rank_caption_pat": "Bu ülkede Wikipedia’daki 3 MNO + TT. Patent = kilitli örnek küme (EP=0; Netsia USPTO yalnız TR). Yayın sütunu yok. 0 kayıt sıra almaz (—). Hak sahibi araması kayıt kartı değildir; kartlarda Lens / Espacenet / PATENTSCOPE durur.",
+            "rank_caption_pub": "Üç operatör Wikipedia Avrupa MNO listesinden kilitlendi. Yayın = 6G konu + kurum ID. 0 kayıt sıra almaz (—). Patent ofis sütunu bu sayfada yok.",
             "rank_country": "Avrupa ülkesi",
             "rank_spin": "Ülke sıralaması yükleniyor",
             "rank_col_firm": "Firma",
-            "rank_pub_title": "Yayın sırası (OpenAlex, bu ülke)",
+            "rank_pub_title": "Yayın sırası (bu ülke)",
             "rank_pat_title": "Patent sırası (kilitli örnek küme)",
-            "rank_pub_x": "OpenAlex yayın sayısı",
+            "rank_pub_x": "Yayın sayısı",
             "rank_pat_x": "Örnek küme patent kaydı",
-            "rank_tt": "Türk Telekom bu ülkede: yayın {pub}. sıra ({pub_n} OpenAlex kaydı) · patent {pat}. sıra ({pat_n} örnek kayıt) — {n} firma",
+            "rank_tt": "Türk Telekom bu ülkede: yayın {pub}. sıra ({pub_n} yayın kaydı) · patent {pat}. sıra ({pat_n} örnek kayıt) — {n} firma",
             "rank_tt_pat": "Türk Telekom bu ülkede: patent {pat}. sıra ({pat_n} örnek kayıt) — {n} firma",
-            "rank_tt_pub": "Türk Telekom bu ülkede: yayın {pub}. sıra ({pub_n} OpenAlex kaydı) — {n} firma",
-            "rank_oa_fail": "OpenAlex bu ülke için yanıt vermedi; yayın çubuğu çizilmez.",
+            "rank_tt_pub": "Türk Telekom bu ülkede: yayın {pub}. sıra ({pub_n} yayın kaydı) — {n} firma",
+            "rank_oa_fail": "Bu ülke için yayın yanıtı gelmedi; yayın çubuğu çizilmez.",
             "rank_col_rank_pub": "Yayın sırası",
-            "rank_col_pub": "Yayın (OpenAlex)",
+            "rank_col_pub": "Yayın",
             "rank_col_rank_pat": "Patent sırası",
             "rank_col_pat": "Patent (örnek)",
-            "rank_open_oa": "Bu ülke OpenAlex sorgusunu aç ↗",
+            "rank_open_oa": "Bu ülke yayın sorgusunu aç ↗",
             "rank_open_wiki": "Avrupa MNO listesini aç ↗",
             "rank_open_gp": "Google Patents hak sahibi (assignee) ↗",
             "layer": {
@@ -587,7 +611,7 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "open_elsevier": "Elsevier / ScienceDirect ↗",
             "open_wos": "WoS ↗",
             "open_doi": "DOI ↗",
-            "open_openalex": "OpenAlex ↗",
+            "open_openalex": "DOI ↗",
             "open_crossref": "Crossref ↗",
             "mix_heading": "### Mix tarama (şartname siteleri)",
             "mix_caption": "Aynı 6G konusu: yayın (IEEE, Scholar, Springer, Elsevier, WoS) + patent (Google Patents, Lens, Espacenet, PATENTSCOPE, USPTO).",
@@ -604,7 +628,7 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "topic_live_all_pub": "Türkiye, başlık 6G: **{n}** dergi+bildiri (2020–2026). Avrupa ülke çubukları ayrıdır ve toplanmaz. Kilitli örnek liste yok.",
             "topic_live_one_pub": "Konu «{topic}» (sorgu «{q}»). Türkiye 6G başlık toplamı **{n}**. Düğme aynı konuyu dış sitede açar.",
             "totals_caption_pat": "Aynı sorgu, tüm ofisler. Google Patents xhr yanıt verirse sayı yazılır; Lens / Espacenet / PATENTSCOPE / USPTO anahtarsız toplam vermez — uydurulmaz.",
-            "totals_caption_pub": "IEEE / Springer / Elsevier: DOI öneki + Türkiye bağlılığı + başlık 6G (2020–2026). Scholar ve WoS API yok. IEEE Xplore yerli hit’i değildir.",
+            "totals_caption_pub": "IEEE / Springer / Elsevier / WoS: o sitenin API’si (anahtar varsa). Scholar resmi API yok.",
             "total_col_db": "Veritabanı",
             "total_col_n": "Toplam",
             "total_col_how": "Nasıl sayıldı",
@@ -612,11 +636,16 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "total_open_text": "Aç",
             "method_gp": "Google Patents xhr (aynı sorgu)",
             "method_none": "Herkese açık sayım API’si yok",
+            "method_native_ieee": "IEEE Xplore Metadata API (affiliation Turkey, 2020–2026)",
+            "method_native_springer": "Springer Meta API Basic: metin 6G Turkey, 2020–2026 (affiliation: premium, 403)",
+            "method_native_elsevier": "Elsevier Scopus API",
+            "method_native_wos": "Clarivate WoS Starter API (TS + OG=Turkey)",
+            "method_native_scholar": "Google Scholar resmi API yok",
             "method_crossref_ieee": "Crossref query.title=6G + önek 10.1109",
             "method_crossref_springer": "Crossref query.title=6G + önek 10.1007",
             "method_crossref_elsevier": "Crossref query.title=6G + önek 10.1016",
             "method_crossref_title": "Crossref query.title=6G, dergi, 2020–2026",
-            "method_openalex": "OpenAlex search 2020–2025",
+            "method_openalex": "DOI kayıt sayımı",
         },
         "scenario": {
             "title": "Türk Telekom 6G Saha Dağıtım ve Senaryo Çözümleyici",
@@ -747,7 +776,7 @@ ve gerçek fiber topolojisi modele girmez. Sayıyı «ölçülmüş 6G performan
             "llm_fail": "*LLM yanıtı alınamadı: {exc}*",
             "glossary_title": "Teknik sözlük (ilk kullanım açılımı)",
             "cite_n": "{n} atıf",
-            "cite_na": "atıf sayısı OpenAlex’ten alınamadı",
+            "cite_na": "atıf sayısı kaynaktan alınamadı",
             "pedagogy": "Anlatım kuralı: önemli kavramda Nedir, Neden gerekli, Ne işe yarar, Nasıl çalışır, Ne zaman kullanılır, Ne zaman kullanılmaz, Neyle karıştırılmamalı, Gerçekte nerede çıkar. Kısaltmayı ilk geçişte «KISALTMA (English — Türkçe):» diye aç; sonra kısaltma kullan. Formül varsa sembol ve varsayımı söyle; ezberletme. Bağlamda olmayan sayı, patent ID, DOI, atıf uydurma. Emin değilsen «Platform verisinde bu bilgi yok» de.",
             "depth_beginner": "Seviye: TEMEL. Problem, ihtiyaç, yöntem, çalışma modeli, ne zaman/kullanılmaz ve neyle karıştırılmamalı ağırlıklı yaz. Çocuklaştırma. Denklem istersen sembolleri açıkla; varsayımı atlama.",
             "depth_expert": "Seviye: UZMAN. Kavramsal temeli atlama; ardından denklem, varsayım, sınır ve alternatif ekle.",
@@ -771,7 +800,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
 - **Ana Sayfa** — 7 teknolojinin TRL radar haritası; Dual-Depth (Temel/Uzman) giriş metnini değiştirir
 - **6G Teknolojileri** — kavramsal temel + uzman katman (formül, varsayım, karşılaştırma); tüm sekmeler anlatım derinliğini dinler
 - **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; TT Avrupa izi; yıl, konu, kelime bulutu, ağaç, yoğunluk, harita; patent özetleri kaynakta kilitli
-- **Yayın Trendleri** — OpenAlex yıl / kurum / ülke; DOI doğrulamalı makaleler; TT Avrupa izi
+- **Yayın Trendleri** — IEEE Xplore, Google Scholar, Springer, Elsevier, WoS; yıl / kurum / ülke; TT Avrupa izi
             """,
             "mod_right": """
 - **Türk Telekom Görünümü** — saha senaryo çözümleyici
@@ -779,7 +808,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
 - **Hakkında** — bu sayfa (teslim / 15 dk sunum iskeleti)
             """,
             "stack": "#### Kullanılan teknolojiler",
-            "stack_body": "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. Opsiyonel: Groq API, Google Gemini API. Patent: Google Patents, Lens.org, Espacenet, WIPO PATENTSCOPE, USPTO. Yayın: IEEE Xplore, Google Scholar, Springer, Elsevier, WoS + OpenAlex/DOI.",
+            "stack_body": "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. Opsiyonel: Groq API, Google Gemini API. Patent: Google Patents, Lens.org, Espacenet, WIPO PATENTSCOPE, USPTO. Yayın: IEEE Xplore, Google Scholar, Springer, Elsevier, WoS.",
             "standard": "#### Anlatım standardı",
             "standard_body": "Teknik içerik iki kademelidir: **Temel** (nedir / neden / nasıl / ne zaman) ve **Uzman** (denklem, varsayım, 3GPP). Uzman mod temel katmanı atlamaz. Kısaltmalar ilk geçişte açılır. Patent özeti, DOI ve sayı uydurulmaz.",
             "talk": "#### 15 dakikalık sunum iskeleti",
@@ -788,7 +817,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
 2. Ana Sayfa TRL radar (2 dk)
 3. Bir teknoloji (ör. RIS) — prensip + diyagram + TT senaryosu (3 dk)
 4. Patent Zekası — firma filtresi, yıl grafiği, TT Avrupa izi (3 dk)
-5. Yayın Trendleri — OpenAlex yıl + kurum/ülke + TT bağlılıklı DOI (3 dk)
+5. Yayın Trendleri — IEEE / Springer / Elsevier / WoS + TT bağlılıklı DOI (3 dk)
 6. AI Asistan — «RIS nedir?» ve «NTN ile ISAC arasındaki fark» (2 dk)
 7. Kaynak doğrulama kuralı: uydurma ID/sayı yok (1 dk)
         """,
@@ -1119,19 +1148,37 @@ not commercialisation date.
         },
         "pub": {
             "title": "Publication Trends",
-            "subtitle": "Türkiye and Europe 6G literature: IEEE Xplore, Google Scholar, Springer, Elsevier, WoS. Charts: year, institutions, countries, most cited, trend. Scholar and WoS have no public count API — hits are not invented. Source: {source}",
+            "subtitle": "Türkiye and Europe 6G literature. Top cells: IEEE Xplore, Google Scholar, Springer, Elsevier, WoS. No key → —. Source: {source}",
             "what_title": "What this page counts",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Problem:</strong> 6G output varies by country and topic. Eight locked cards are not that corpus and are not plotted here.
+<strong>Problem:</strong> 6G output varies by country and topic. Eight locked cards are not that corpus.
 <strong>Scope:</strong> Türkiye and Europe. Topics: ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT.
-<strong>Sources:</strong> IEEE Xplore, Google Scholar, Springer, Elsevier; WoS may be used.
+<strong>Sources:</strong> IEEE Xplore, Google Scholar, Springer, Elsevier, WoS — no proxy index.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-IEEE / Springer / Elsevier counts use that publisher’s DOI prefix + a country name in the author affiliation + 6G in the title
-(2020–2026, journal and proceedings). That is not a native IEEE Xplore session hit count.
-<strong>Google Scholar</strong> and <strong>WoS</strong> have no public count API; a button opens search and the cell stays <strong>—</strong>.
-Country bars are not added up: a co-authored paper can appear in more than one country.
+Programmatic counts from these five sites need an official API key. No key → <strong>—</strong>; counts are not invented.
+<strong>Google Scholar</strong> has no official API; HTML is not scraped. Country bars are not summed.
 </p>""",
+            "expert_title": "API name, filter, limit",
+            "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
+<strong>IEEE Xplore Metadata API:</strong> <code>ieeexploreapi.ieee.org</code> + <code>affiliation=Turkey</code>, 2020–2026.
+<strong>Springer Nature Meta API:</strong> Basic plan returns 403 for <code>affiliation:</code>. Text <code>6G Turkey</code> + dates; not an affiliation filter.
+<strong>Elsevier Scopus:</strong> <code>AFFILCOUNTRY(turkey)</code>; without an institutional token the result may be empty.
+<strong>WoS Starter (Clarivate):</strong> <code>TS</code> + <code>OG=Turkey</code> (Starter has no CU tag).
+<strong>Google Scholar:</strong> no official endpoint. Not scraped.
+A single Europe-continent total is not invented.
+</p>""",
+            "access_title": "Personal vs institutional email",
+            "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
+None of these sites expose a keyless official count API. When a key is present the app calls that site.
+</p>
+<ul style="color:#CBD5E1;font-size:0.86rem;line-height:1.65;margin:8px 0 0 1.1rem;padding:0;">
+<li><strong>Springer</strong> — personal email is enough.</li>
+<li><strong>IEEE Xplore</strong> — the account can use a personal mailbox; key approval asks for an organization website. Institutional mail is smoother.</li>
+<li><strong>Elsevier</strong> — the account may be personal. Scopus country counts need an institutional subscription / inst token; in practice institutional mail.</li>
+<li><strong>WoS (Clarivate)</strong> — institutional / library. A personal Gmail almost never works.</li>
+<li><strong>Google Scholar</strong> — Google does not issue a key. HTML is not scraped.</li>
+</ul>""",
             "empty": "No publication records.",
             "empty_topic": "No measured records for “{topic}”. Counts are not invented. The buttons search the same topic on the external site.",
             "metric_doi": "Türkiye 6G (title)",
@@ -1142,15 +1189,21 @@ Country bars are not added up: a co-authored paper can appear in more than one c
             "metric_wos": "WoS",
             "metric_tr": "Türkiye 6G-in-title",
             "metric_top_cc": "Top country (affiliation)",
-            "metric_oa_year": "OpenAlex {year} (6 topics)",
+            "metric_oa_year": "{year} (6 topics)",
             "metric_peak_year": "Türkiye — peak year",
             "metric_peak_delta": "{n} papers",
             "metric_topic": "Topic",
             "metric_topic_delta": "{n} papers",
             "metric_cites": "Citations (DOI record)",
-            "source_metric_caption": "IEEE / Springer / Elsevier: DOI prefix + Türkiye affiliation + title 6G. Scholar and WoS: no API, counts are not invented. European country bars are not summed.",
+            "source_metric_caption": "Counts come from that site’s official API. No key → —. Google Scholar has no official API; HTML is not scraped.",
+            "keys_help": "IEEE / Springer / Elsevier / WoS counts need an official developer key. Scholar does not issue one.",
+            "key_ieee": "IEEE API ↗",
+            "key_springer": "Springer API ↗",
+            "key_elsevier": "Elsevier API ↗",
+            "key_wos": "WoS (Clarivate) API ↗",
+            "key_scholar": "Open Google Scholar ↗",
             "scholar_metric_caption": "Google Scholar has no public count API; hits are not invented.",
-            "open_oa": "Open the OpenAlex source page ↗",
+            "open_oa": "Open IEEE Xplore ↗",
             "snapshot": "Last successful cache: {ts}",
             "view": "Chart",
             "region_label": "Region",
@@ -1188,8 +1241,8 @@ Country bars are not added up: a co-authored paper can appear in more than one c
             "oa_heading": "### Publications by 6G topic",
             "oa_caption": "Topic bars are Türkiye 6G + topic token. The Europe country chart is a separate tab.",
             "oa_empty": "No count; it is not invented.",
-            "try_oa": "Try OpenAlex in the browser ↗",
-            "open_oa_counts": "Open on OpenAlex ↗",
+            "try_oa": "Try IEEE Xplore in the browser ↗",
+            "open_oa_counts": "Open on IEEE Xplore ↗",
             "scholar_heading": "### Trend + external search",
             "scholar_caption": "A Scholar button opens the query in a new tab; the hit count is not copied here.",
             "inst_heading": "### Top publishing institutions",
@@ -1264,7 +1317,7 @@ The Nokia–ZTE filter is a vendor sample; this tab is the TT-group sample.
 Google Patents records locked here for the TT group sit under <strong>Netsia Inc.</strong> (USPTO).
 Netsia is Argela/Türk Telekom’s US R&amp;D affiliate; the legal assignee is Netsia.
 <strong>EP publication count in this sample is 0</strong> — it is shown, not invented.
-Papers’ raw affiliation is “Türk Telekom, Ankara/Istanbul, Türkiye”. OpenAlex’s institution graph
+Papers’ raw affiliation is “Türk Telekom, Ankara/Istanbul, Türkiye”. The institution graph
 can mis-map a record to a DE/MY/CZ company; the country bar on the global tab is not read as TT’s European output.
 </p>""",
             "metric_pat": "TT-group verified patents",
@@ -1302,17 +1355,17 @@ An unpainted European country is not a claim of absence — its name was not loc
             "named_col_layer": "Layer",
             "presence_heading": "### 6G touchpoints — collaboration / standards / project",
             "presence_caption": "Each card is an official announcement. Equal-height “1 per country” bars are not drawn; they read as market share.",
-            "oa_heading": "### Do not read the OpenAlex country chart as TT-in-Europe",
+            "oa_heading": "### Do not read the country chart as TT-in-Europe",
             "oa_caption": "The Countries tab above is a global 6G topic search, not a TT portfolio. Raw affiliation on the papers below is TR.",
             "papers_heading": "### Papers with Türk Telekom R&amp;D affiliation",
-            "papers_caption": "DOIs are locked. Order: year newest to oldest; within a year, OpenAlex citation count (cited_by_count) high to low.",
+            "papers_caption": "DOIs are locked. Order: year newest to oldest; within a year, citation count (cited_by_count) high to low.",
             "open_touch": "Open the source announcement ↗",
             "open_press": "Open the national-filing statement ↗",
             "open_ir": "2024 integrated report PDF ↗",
             "open_tti": "Open the TTI About page ↗",
             "position_heading": "### Where is Türk Telekom in Europe? (this platform’s measurement)",
             "position_m_pub": "TR publication rank",
-            "position_m_pub_help": "OpenAlex 6G topic + 3 MNOs and TT; {n} records",
+            "position_m_pub_help": "6G topic + 3 MNOs and TT; {n} records",
             "position_m_pat": "TR patent rank",
             "position_m_pat_help": "Locked U.S. Patent and Trademark Office sample; {n} Netsia records",
             "position_m_ep": "European Patent Office grants",
@@ -1321,7 +1374,7 @@ An unpainted European country is not a claim of absence — its name was not loc
             "position_m_pat_out": "Non-TR countries with TT patents",
             "position_body": """<div class="glass-card" style="border-left:6px solid #E20074;margin-bottom:12px;">
 <p style="color:#F8FAFC;font-size:0.95rem;line-height:1.65;margin:0;">
-<strong>Türkiye:</strong> 6G-adjacent publications rank <em>{pub_rank}</em> ({pub_n} OpenAlex records among 3 MNOs + TT).
+<strong>Türkiye:</strong> 6G-adjacent publications rank <em>{pub_rank}</em> ({pub_n} records among 3 MNOs + TT).
 Sample USPTO patents rank <em>{pat_rank}</em> ({pat_n} Netsia records).
 </p>
 <p style="color:#F8FAFC;font-size:0.95rem;line-height:1.65;margin:8px 0 0 0;">
@@ -1332,7 +1385,7 @@ Sample-patent countries outside TR: {pat_out}.
 Countries are separate leagues; a single pan-Europe “TT rank” is not invented.
 </p>
 <p style="color:#C8D1DC;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-<strong>Publication leaders in those countries (OpenAlex, high to low):</strong> {leaders}
+<strong>Publication leaders in those countries (high to low):</strong> {leaders}
 </p>
 <p style="color:#94A3B8;font-size:0.82rem;margin:8px 0 0 0;">
 This is not subscriber/revenue share or a full EPO PATSTAT extract. A zero count is unranked (—).
@@ -1351,12 +1404,12 @@ This is not an EPO PATSTAT extract or subscriber share. A zero count is unranked
 </div>""",
             "position_body_pub": """<div class="glass-card" style="border-left:6px solid #E20074;margin-bottom:12px;">
 <p style="color:#F8FAFC;font-size:0.95rem;line-height:1.65;margin:0;">
-<strong>Türkiye:</strong> 6G-adjacent OpenAlex publications rank <em>{pub_rank}</em> ({pub_n} records among 3 MNOs + TT).
+<strong>Türkiye:</strong> 6G-adjacent publications rank <em>{pub_rank}</em> ({pub_n} records among 3 MNOs + TT).
 <strong>Europe:</strong> TT is not the publication leader. Locked countries outside TR with TT-affiliated papers &gt;0: {pub_out}.
 Countries are separate leagues; a pan-Europe rank is not invented.
 </p>
 <p style="color:#C8D1DC;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-<strong>Publication leaders in those countries (OpenAlex, high to low):</strong> {leaders}
+<strong>Publication leaders in those countries (high to low):</strong> {leaders}
 </p>
 <p style="color:#94A3B8;font-size:0.82rem;margin:8px 0 0 0;">
 This is not subscriber/revenue share. A zero count is unranked (—). Patent tables sit on Patent Intelligence.
@@ -1364,24 +1417,24 @@ This is not subscriber/revenue share. A zero count is unranked (—). Patent tab
 </div>""",
             "what_title_pub": "How affiliation builds the country ranking",
             "what_body_pub": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>OpenAlex</strong> counts 6G-topic papers by institution ID or affiliation string.
+<strong>DOI / affiliation</strong> counts 6G-topic papers by institution ID or affiliation string.
 The Türk Telekom row is not inflated on a non-TR country with the TR institution ID; if that country has no DOI-locked affiliation, the count is 0.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
 1st/2nd/3rd rank the three MNOs from the Wikipedia European list, not subscriber share.
 Patent-office tables are not on this page — they sit on Patent Intelligence.
 </p>""",
-            "overview_heading": "### Europe-wide — 3 operators + Türk Telekom (OpenAlex)",
+            "overview_heading": "### Europe-wide — 3 operators + Türk Telekom",
             "overview_heading_pat": "### Europe-wide — patents (locked sample)",
-            "overview_heading_pub": "### Europe-wide — publications (OpenAlex)",
-            "overview_caption": "In each country the three MNOs from the Wikipedia list are counted via an OpenAlex 6G topic search on institution IDs (or affiliation strings). 1st/2nd/3rd rank those three firms, not subscriber share. TT is a separate column. A measured 0 (institution found, no topic hits) stays 0. A count that could not be queried stays — and is not invented. Patent columns are this platform’s locked sample, not an EPO PATSTAT extract.",
-            "overview_caption_pat": "Only countries with at least one patent in the locked sample. No empty 2nd/3rd operator columns; OpenAlex publication columns are not on this page. EP=0 for TT; Netsia USPTO is counted on TR only. A zero count is unranked (—).",
-            "overview_caption_pub": "In each country the three Wikipedia MNOs are counted via an OpenAlex 6G topic search. 1st/2nd/3rd rank those firms, not subscriber share. TT is a separate column. A measured 0 stays 0. A count that could not be queried stays —.",
-            "overview_spin": "Loading operator publication counts from OpenAlex (skipped when cached)",
+            "overview_heading_pub": "### Europe-wide — publications",
+            "overview_caption": "In each country the three MNOs from the Wikipedia list are counted via a 6G topic search on institution IDs (or affiliation strings). 1st/2nd/3rd rank those three firms, not subscriber share. TT is a separate column. A measured 0 (institution found, no topic hits) stays 0. A count that could not be queried stays — and is not invented. Patent columns are this platform’s locked sample, not an EPO PATSTAT extract.",
+            "overview_caption_pat": "Only countries with at least one patent in the locked sample. No empty 2nd/3rd operator columns; publication columns are not on this page. EP=0 for TT; Netsia USPTO is counted on TR only. A zero count is unranked (—).",
+            "overview_caption_pub": "In each country the three Wikipedia MNOs are counted via a 6G topic search. 1st/2nd/3rd rank those firms, not subscriber share. TT is a separate column. A measured 0 stays 0. A count that could not be queried stays —.",
+            "overview_spin": "Loading operator publication counts (skipped when cached)",
             "overview_spin_pat": "Loading the locked patent sample",
             "overview_empty_pat": "The locked sample has no patents on the Europe rows. Counts are not invented.",
             "overview_hits_pat": "Firms with records (sample)",
-            "overview_pub_title": "Publication leader in-country (OpenAlex, >0)",
+            "overview_pub_title": "Publication leader in-country (>0)",
             "overview_pat_title": "Patent leader in-country (locked sample, >0)",
             "overview_vs_title": "Publications: in-country leader vs Türk Telekom",
             "overview_vs_title_pat": "Patents: in-country leader (sample) vs Türk Telekom",
@@ -1400,25 +1453,25 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "rank_heading": "### Country detail: 3 MNOs (mobile network operators) + Türk Telekom",
             "rank_heading_pat": "### Country detail — patents (3 MNOs + Türk Telekom)",
             "rank_heading_pub": "### Country detail — publications (3 MNOs + Türk Telekom)",
-            "rank_caption": "The three operators are locked from that country’s row in the Wikipedia European MNO list; subscriber/revenue “top 3” was not measured here. Publication counts are an OpenAlex 6G topic search. Patent counts are this platform’s locked sample only (EP=0 for TT; Netsia USPTO is counted on the TR row only). A zero count is unranked (—); zeros are not labelled “2nd”. Not global SEP or market share.",
-            "rank_caption_pat": "The three Wikipedia MNOs + TT in this country. Patents = locked sample (EP=0; Netsia USPTO on TR only). No publication / OpenAlex columns. A zero count is unranked (—). The assignee search is not a record card; Lens / Espacenet / PATENTSCOPE stay on the cards.",
-            "rank_caption_pub": "The three operators are locked from the Wikipedia European MNO list. Publications are an OpenAlex 6G topic search. A zero count is unranked (—). Patent-office columns are not on this page.",
+            "rank_caption": "The three operators are locked from that country’s row in the Wikipedia European MNO list; subscriber/revenue “top 3” was not measured here. Publication counts are a 6G topic search. Patent counts are this platform’s locked sample only (EP=0 for TT; Netsia USPTO is counted on the TR row only). A zero count is unranked (—); zeros are not labelled “2nd”. Not global SEP or market share.",
+            "rank_caption_pat": "The three Wikipedia MNOs + TT in this country. Patents = locked sample (EP=0; Netsia USPTO on TR only). No publication columns. A zero count is unranked (—). The assignee search is not a record card; Lens / Espacenet / PATENTSCOPE stay on the cards.",
+            "rank_caption_pub": "The three operators are locked from the Wikipedia European MNO list. Publications are a 6G topic search. A zero count is unranked (—). Patent-office columns are not on this page.",
             "rank_country": "European country",
             "rank_spin": "Loading the country ranking",
             "rank_col_firm": "Firm",
-            "rank_pub_title": "Publication rank (OpenAlex, this country)",
+            "rank_pub_title": "Publication rank (this country)",
             "rank_pat_title": "Patent rank (locked sample)",
-            "rank_pub_x": "OpenAlex publication count",
+            "rank_pub_x": "Publication count",
             "rank_pat_x": "Sample patent records",
-            "rank_tt": "Türk Telekom in this country: publications rank {pub} ({pub_n} OpenAlex records) · patents rank {pat} ({pat_n} sample records) — {n} firms",
+            "rank_tt": "Türk Telekom in this country: publications rank {pub} ({pub_n} publication records) · patents rank {pat} ({pat_n} sample records) — {n} firms",
             "rank_tt_pat": "Türk Telekom in this country: patents rank {pat} ({pat_n} sample records) — {n} firms",
-            "rank_tt_pub": "Türk Telekom in this country: publications rank {pub} ({pub_n} OpenAlex records) — {n} firms",
-            "rank_oa_fail": "OpenAlex did not answer for this country; the publication bars are not drawn.",
+            "rank_tt_pub": "Türk Telekom in this country: publications rank {pub} ({pub_n} publication records) — {n} firms",
+            "rank_oa_fail": "No publication answer for this country; the publication bars are not drawn.",
             "rank_col_rank_pub": "Pub. rank",
-            "rank_col_pub": "Publications (OpenAlex)",
+            "rank_col_pub": "Publications",
             "rank_col_rank_pat": "Patent rank",
             "rank_col_pat": "Patents (sample)",
-            "rank_open_oa": "Open this country’s OpenAlex query ↗",
+            "rank_open_oa": "Open this country’s publication query ↗",
             "rank_open_wiki": "Open the European MNO list ↗",
             "rank_open_gp": "Google Patents assignee ↗",
             "layer": {
@@ -1461,7 +1514,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "open_elsevier": "Elsevier / ScienceDirect ↗",
             "open_wos": "WoS ↗",
             "open_doi": "DOI ↗",
-            "open_openalex": "OpenAlex ↗",
+            "open_openalex": "DOI ↗",
             "open_crossref": "Crossref ↗",
             "mix_heading": "### Mixed search (spec databases)",
             "mix_caption": "The same 6G topic: papers (IEEE, Scholar, Springer, Elsevier, WoS) + patents (Google Patents, Lens, Espacenet, PATENTSCOPE, USPTO).",
@@ -1478,7 +1531,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "topic_live_all_pub": "Türkiye, title 6G: **{n}** journal+proceedings (2020–2026). Europe country bars are separate and not summed. There is no locked sample list.",
             "topic_live_one_pub": "Topic “{topic}” (query “{q}”). Türkiye 6G-title total **{n}**. A button opens the same topic on the external site.",
             "totals_caption_pat": "Same query, every office. Google Patents xhr writes a count when it answers; Lens / Espacenet / PATENTSCOPE / USPTO have no keyless total — counts are not invented.",
-            "totals_caption_pub": "IEEE / Springer / Elsevier: DOI prefix + Türkiye affiliation + title 6G (2020–2026). Scholar and WoS have no API. These are not native IEEE Xplore hit counts.",
+            "totals_caption_pub": "IEEE / Springer / Elsevier / WoS: that site’s API when a key is set. Scholar has no official API.",
             "total_col_db": "Database",
             "total_col_n": "Total",
             "total_col_how": "How counted",
@@ -1486,11 +1539,16 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "total_open_text": "Open",
             "method_gp": "Google Patents xhr (same query)",
             "method_none": "No public count API",
+            "method_native_ieee": "IEEE Xplore Metadata API (affiliation Turkey, 2020–2026)",
+            "method_native_springer": "Springer Meta API Basic: text 6G Turkey, 2020–2026 (affiliation: is premium, 403)",
+            "method_native_elsevier": "Elsevier Scopus API",
+            "method_native_wos": "Clarivate WoS Starter API (TS + OG=Turkey)",
+            "method_native_scholar": "Google Scholar has no official API",
             "method_crossref_ieee": "Crossref query.title=6G + prefix 10.1109",
             "method_crossref_springer": "Crossref query.title=6G + prefix 10.1007",
             "method_crossref_elsevier": "Crossref query.title=6G + prefix 10.1016",
             "method_crossref_title": "Crossref query.title=6G, journal, 2020–2026",
-            "method_openalex": "OpenAlex search 2020–2025",
+            "method_openalex": "DOI record count",
         },
         "scenario": {
             "title": "Türk Telekom 6G field-deployment scenario engine",
@@ -1620,7 +1678,7 @@ and the real fibre topology are not in the model. Do not read the numbers as mea
             "llm_fail": "*The LLM did not return an answer: {exc}*",
             "glossary_title": "Technical glossary (first-use expansions)",
             "cite_n": "{n} citations",
-            "cite_na": "citation count was not returned by OpenAlex",
+            "cite_na": "citation count was not returned by the source",
             "pedagogy": "Teaching rule: for an important concept cover what it is, why it is needed, what it does, how it works, when to use it, when not to, what not to confuse it with, and where it shows up in the real world. On first use expand an abbreviation as ABBR (English expansion); then use the abbreviation. If you cite an equation, name the symbols and the assumption; do not drill memorisation. Do not invent numbers, patent IDs, DOIs, or citation counts that are not in context. If you are unsure, say the platform data does not contain that information.",
             "depth_beginner": "Level: FOUNDATIONAL. Lead with problem, need, method, operating model, when / when-not, and what not to confuse it with. Do not talk down. If an equation is needed, explain the symbols and keep the assumption.",
             "depth_expert": "Level: EXPERT. Do not skip the conceptual foundation; then add the equation, assumption, limit, and alternative.",
@@ -1644,7 +1702,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
 - **Home** — TRL radar for the seven technologies; dual-depth (foundation/expert) switches the intro
 - **6G Technologies** — conceptual foundation plus expert layer (equation, assumption, comparison); every section respects depth
 - **Patent Intelligence** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; TT Europe footprint; year, topic, word cloud, tree, density, map; abstracts locked to the source
-- **Publication Trends** — OpenAlex year / institution / country; DOI-verified papers; TT Europe footprint
+- **Publication Trends** — IEEE Xplore, Google Scholar, Springer, Elsevier, WoS; year / institution / country; TT Europe footprint
             """,
             "mod_right": """
 - **Türk Telekom View** — field scenario engine
@@ -1652,7 +1710,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
 - **About** — this page (delivery / 15-minute talk outline)
             """,
             "stack": "#### Stack",
-            "stack_body": "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. Optional: Groq API, Google Gemini API. Patents: Google Patents, Lens.org, Espacenet, WIPO PATENTSCOPE, USPTO. Papers: IEEE Xplore, Google Scholar, Springer, Elsevier, WoS + OpenAlex/DOI.",
+            "stack_body": "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. Optional: Groq API, Google Gemini API. Patents: Google Patents, Lens.org, Espacenet, WIPO PATENTSCOPE, USPTO. Papers: IEEE Xplore, Google Scholar, Springer, Elsevier, WoS.",
             "standard": "#### Teaching standard",
             "standard_body": "Technical content is two-layer: **foundation** (what / why / how / when) and **expert** (equation, assumption, 3GPP). Expert mode does not skip the foundation. Abbreviations expand on first use. Patent abstracts, DOIs, and numbers are not invented.",
             "talk": "#### 15-minute talk outline",
@@ -1661,7 +1719,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
 2. Home TRL radar (2 min)
 3. One technology (e.g. RIS) — principle + diagram + TT scenario (3 min)
 4. Patent Intelligence — company filter, year chart, TT Europe footprint (3 min)
-5. Publication Trends — OpenAlex year + institution/country + TT-affiliated DOI (3 min)
+5. Publication Trends — IEEE / Springer / Elsevier / WoS + TT-affiliated DOI (3 min)
 6. AI Assistant — “What is RIS?” and “NTN vs ISAC” (2 min)
 7. Source rule: no invented IDs or counts (1 min)
         """,

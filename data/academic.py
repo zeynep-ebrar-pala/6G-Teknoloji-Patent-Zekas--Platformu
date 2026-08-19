@@ -1,12 +1,10 @@
 """
 Akademik yayın veri kümesi — DOI ile doğrulanabilir kayıtlar.
-Trend, kurum ve ülke sayıları statik değildir; OpenAlex API'den canlı alınır.
-Atıf sayıları bu dosyada tutulmaz; OpenAlex cited_by_count ile doldurulur.
+Kaynak hücreleri IEEE / Springer / Elsevier / (isteğe bağlı) SerpAPI Scholar.
 """
 
 ACADEMIC_DATA_SOURCE = (
-    "IEEE / Springer / Elsevier: DOI öneki + Türkiye/Avrupa bağlılığı, başlık 6G, "
-    "2020–2026 dergi ve bildiri. Scholar ve WoS herkese açık sayım API’si yok."
+    "IEEE Xplore, Springer, Elsevier, WoS (anahtar varsa). Google Scholar resmi API yok."
 )
 
 ACADEMIC_SOURCES = ["IEEE Xplore", "Springer", "Elsevier"]

@@ -1,6 +1,7 @@
 """
 Modül 3 literatür sayımı — Türkiye ve Avrupa, başlık 6G, 2020–2026.
-IEEE / Springer / Elsevier: DOI öneki. Scholar ve WoS: API yok.
+Üst hücreler: IEEE / Springer / Elsevier / WoS / Scholar native API.
+OpenAlex vekil yok.
 """
 
 from __future__ import annotations
@@ -11,6 +12,8 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 import streamlit as st
+
+from backend.publisher_apis import fetch_native_counts, key_fingerprint, key_status
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "tr_eu_6g.json"
 TREND_YEARS = list(range(2020, 2027))
@@ -93,7 +96,11 @@ def snapshot_meta() -> Dict[str, str]:
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
-def literature_bundle(region: str = "both", topic: Optional[str] = None) -> Dict[str, Any]:
+def literature_bundle(
+    region: str = "both",
+    topic: Optional[str] = None,
+    _keys: str = "",
+) -> Dict[str, Any]:
     """Türkiye / Avrupa / ikisi. Konu TR konu önbelleğindedir; ülke çubukları 6G başlıktır."""
     cache = _load_disk()
     region = region if region in ("tr", "eu", "both") else "both"
@@ -106,7 +113,6 @@ def literature_bundle(region: str = "both", topic: Optional[str] = None) -> Dict
 
     tr_total = tr.get("total") if isinstance(tr.get("total"), int) else None
     tr_years = _ordered_years(tr.get("years") or {})
-    publishers = tr.get("publishers") if isinstance(tr.get("publishers"), dict) else {}
     topics = tr.get("topics") if isinstance(tr.get("topics"), dict) else {}
     tr_cited = tr.get("top_cited") if isinstance(tr.get("top_cited"), list) else []
     eu_cited = cache.get("EU_top_cited") if isinstance(cache.get("EU_top_cited"), list) else []
@@ -136,19 +142,30 @@ def literature_bundle(region: str = "both", topic: Optional[str] = None) -> Dict
     if tpc:
         topic_counts = {tpc: topic_counts[tpc]} if tpc in topic_counts else {}
 
+    native = fetch_native_counts(
+        "tr" if region != "eu" else "eu",
+        tpc,
+        _keys or key_fingerprint(),
+    )
+    pub = {
+        "ieee": native.get("ieee"),
+        "springer": native.get("springer"),
+        "elsevier": native.get("elsevier"),
+        "wos": native.get("wos"),
+        "scholar": native.get("scholar"),
+    }
+
     if region == "tr":
         cited = list(tr_cited)
         year_counts = tr_years
         country_rows = [r for r in countries if r["cc"] == "TR"]
         inst_rows = inst
-        pub = {k: publishers.get(k) for k in PUBLISHER_PREFIXES}
         total = tr_total
     elif region == "eu":
         cited = list(eu_cited)
         year_counts = {}
         country_rows = [r for r in countries if r["cc"] != "TR"]
         inst_rows = []
-        pub = {"ieee": None, "springer": None, "elsevier": None}
         total = None
         if not tpc:
             topic_counts = {}
@@ -165,7 +182,6 @@ def literature_bundle(region: str = "both", topic: Optional[str] = None) -> Dict
         year_counts = tr_years
         country_rows = countries
         inst_rows = inst
-        pub = {k: publishers.get(k) for k in PUBLISHER_PREFIXES}
         total = tr_total
 
     return {
@@ -179,10 +195,11 @@ def literature_bundle(region: str = "both", topic: Optional[str] = None) -> Dict
         "institutions": inst_rows,
         "topics": topic_counts,
         "publishers": pub,
+        "keys": key_status(),
         "cited": cited,
         "source": (
-            "IEEE / Springer / Elsevier: DOI öneki + bağlılık ülkesi, başlık 6G, "
-            "2020–2026 dergi ve bildiri. Scholar ve WoS sayım API’si yok."
+            "IEEE Xplore Metadata API, Springer Nature Meta API, Elsevier Scopus API, "
+            "Clarivate WoS Starter API (anahtar varsa). Google Scholar resmi API yok; HTML çekilmez."
         ),
         **snapshot_meta(),
     }

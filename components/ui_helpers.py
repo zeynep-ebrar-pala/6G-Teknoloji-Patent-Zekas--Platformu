@@ -77,13 +77,14 @@ def _link_key(text: str) -> str:
 
 def render_source_totals(kind: str, topic: Optional[str], key_suffix: str) -> None:
     """Konu seçimine göre şartname DB toplamı. API yoksa —."""
+    from backend.publisher_apis import key_fingerprint
     from backend.source_totals import fetch_patent_source_totals, fetch_pub_source_totals
     from i18n.core import format_int
 
     rows = (
         fetch_patent_source_totals(topic)
         if kind == "patent"
-        else fetch_pub_source_totals(topic)
+        else fetch_pub_source_totals(topic, key_fingerprint())
     )
     st.caption(_t("sources.totals_caption_pat" if kind == "patent" else "sources.totals_caption_pub"))
     table = []
@@ -192,6 +193,19 @@ def current_view_mode() -> str:
     if mode in ("beginner", "expert"):
         return mode
     return "expert" if "Uzman" in str(mode) else "beginner"
+
+
+def render_pub_topic_panel(*args, **kwargs):
+    """Python 3.14: eski from ui_helpers import render_pub_topic_panel yolu."""
+    from components.topic_panels import render_pub_topic_panel as _impl
+
+    return _impl(*args, **kwargs)
+
+
+def render_patent_topic_panel(*args, **kwargs):
+    from components.topic_panels import render_patent_topic_panel as _impl
+
+    return _impl(*args, **kwargs)
 
 
 def first_text(*vals) -> str:

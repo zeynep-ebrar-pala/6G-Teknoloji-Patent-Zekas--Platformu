@@ -13,15 +13,55 @@ load_dotenv(_ROOT / ".env")
 
 Provider = Literal["groq", "gemini"]
 
+def _secret(name: str) -> Optional[str]:
+    value = (os.getenv(name) or "").strip()
+    if value:
+        return value
+    try:
+        import streamlit as st
+
+        raw = st.secrets.get(name)
+        if raw is None:
+            return None
+        text = str(raw).strip()
+        return text or None
+    except Exception:
+        return None
+
+
+def get_ieee_api_key() -> Optional[str]:
+    return _secret("IEEE_API_KEY")
+
+
+def get_springer_api_key() -> Optional[str]:
+    return _secret("SPRINGER_API_KEY")
+
+
+def get_elsevier_api_key() -> Optional[str]:
+    return _secret("ELSEVIER_API_KEY")
+
+
+def get_elsevier_inst_token() -> Optional[str]:
+    """Scopus kurum aboneliği. Yoksa ülke süzgeçli arama boş kalabilir."""
+    return _secret("ELSEVIER_INST_TOKEN")
+
+
+def get_wos_api_key() -> Optional[str]:
+    """Clarivate Web of Science Starter API."""
+    return _secret("WOS_API_KEY")
+
+
+def get_serpapi_key() -> Optional[str]:
+    """Google Scholar resmi API yoktur. SerpAPI üçüncü taraf, isteğe bağlı."""
+    return _secret("SERPAPI_KEY")
+
 
 def get_groq_api_key() -> Optional[str]:
-    value = (os.getenv("GROQ_API_KEY") or "").strip()
-    return value or None
+    return _secret("GROQ_API_KEY")
 
 
 def get_gemini_api_key() -> Optional[str]:
-    value = (os.getenv("GEMINI_API_KEY") or "").strip()
-    return value or None
+    return _secret("GEMINI_API_KEY")
 
 
 def get_default_ai_provider() -> Provider:

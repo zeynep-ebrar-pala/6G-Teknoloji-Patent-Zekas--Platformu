@@ -14,6 +14,7 @@ from backend.literature_client import (
     literature_bundle,
     snapshot_meta,
 )
+from backend.publisher_apis import key_fingerprint
 from data.academic import ACADEMIC_DATA_SOURCE, ACADEMIC_SOURCES
 
 
@@ -36,11 +37,11 @@ class AcademicService:
 
     @staticmethod
     def get_bundle(region: str = "both", topic: Optional[str] = None) -> Dict[str, Any]:
-        return literature_bundle(region, _norm_topic(topic))
+        return literature_bundle(region, _norm_topic(topic), key_fingerprint())
 
     @staticmethod
     def get_summary(topic: Optional[str] = None) -> Dict[str, Any]:
-        bundle = literature_bundle("both", _norm_topic(topic))
+        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint())
         meta = snapshot_meta()
         years = bundle.get("year_counts") or {}
         peak_year, peak_n = "—", None
@@ -78,7 +79,7 @@ class AcademicService:
 
     @staticmethod
     def get_most_cited_papers(topic: Optional[str] = None) -> List[Dict[str, Any]]:
-        return list(literature_bundle("both", _norm_topic(topic)).get("cited") or [])
+        return list(literature_bundle("both", _norm_topic(topic), key_fingerprint()).get("cited") or [])
 
     @staticmethod
     def get_trend_df(region: str = "both") -> Optional[pd.DataFrame]:

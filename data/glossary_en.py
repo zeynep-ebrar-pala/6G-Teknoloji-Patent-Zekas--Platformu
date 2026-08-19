@@ -192,7 +192,7 @@ GLOSSARY_EN: dict[str, dict[str, str]] = {
     },
     "API": {
         "definition": "A ruled call interface that one piece of software exposes to others.",
-        "why": "OpenAlex and optional LLM providers attach to this platform through APIs.",
+        "why": "IEEE, Springer, Elsevier, WoS and optional LLM providers attach to this platform through APIs.",
     },
     "SDK": {
         "definition": "A package of libraries, tools, and docs for building on a platform.",

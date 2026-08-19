@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional
 import streamlit as st
 
 from backend.literature_client import literature_bundle
+from backend.publisher_apis import key_fingerprint
 from backend.source_links import topic_patent_searches, topic_pub_searches, topic_query
 
 GP_UA = (
@@ -119,11 +120,11 @@ def fetch_patent_source_totals(topic: Optional[str]) -> List[Dict[str, Any]]:
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
-def fetch_pub_source_totals(topic: Optional[str]) -> List[Dict[str, Any]]:
-    """IEEE/Springer/Elsevier: TR bağlılık + DOI öneki. Scholar/WoS API yok."""
+def fetch_pub_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[str, Any]]:
+    """IEEE / Springer / Elsevier / WoS / Scholar native API. Anahtar yoksa None."""
     label = topic or "6G"
     links = topic_pub_searches(label, "tr")
-    bundle = literature_bundle("tr", topic)
+    bundle = literature_bundle("tr", topic, _keys or key_fingerprint())
     pubs = bundle.get("publishers") or {}
     rows: List[Dict[str, Any]] = []
     for source_id in ("ieee", "springer", "elsevier"):
@@ -133,9 +134,25 @@ def fetch_pub_source_totals(topic: Optional[str]) -> List[Dict[str, Any]]:
                 source_id,
                 _search_url(links, source_id),
                 n if isinstance(n, int) else None,
-                f"crossref_{source_id}",
+                f"native_{source_id}",
             )
         )
-    rows.append(_row("scholar", _search_url(links, "scholar"), None, "none"))
-    rows.append(_row("wos", _search_url(links, "wos"), None, "none"))
+    scholar_n = pubs.get("scholar")
+    rows.append(
+        _row(
+            "scholar",
+            _search_url(links, "scholar"),
+            scholar_n if isinstance(scholar_n, int) else None,
+            "native_scholar" if isinstance(scholar_n, int) else "none",
+        )
+    )
+    wos_n = pubs.get("wos")
+    rows.append(
+        _row(
+            "wos",
+            _search_url(links, "wos"),
+            wos_n if isinstance(wos_n, int) else None,
+            "native_wos" if isinstance(wos_n, int) else "none",
+        )
+    )
     return rows

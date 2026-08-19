@@ -309,7 +309,7 @@ def _country_rank(kind: str) -> None:
                             row["tt_pub_n"] if row.get("tt_pub_resolved") else "—"
                         ),
                         t("tt_eu.rank_col_rank_pub"): row["tt_pub_rank"] if row["tt_pub_rank"] is not None else "—",
-                        "OpenAlex": row.get("openalex_url") or "",
+                        "Kaynak": row.get("openalex_url") or "",
                     }
                 )
             st.dataframe(
@@ -317,7 +317,7 @@ def _country_rank(kind: str) -> None:
                 hide_index=True,
                 width="stretch",
                 column_config={
-                    "OpenAlex": st.column_config.LinkColumn("OpenAlex", display_text="OpenAlex"),
+                    "Kaynak": st.column_config.LinkColumn("Kaynak", display_text="Aç"),
                 },
             )
 
@@ -412,7 +412,7 @@ def _country_rank(kind: str) -> None:
                 t("tt_eu.rank_col_firm"): row["name"],
                 t("tt_eu.rank_col_rank_pub"): row["pub_rank"] if row["pub_rank"] is not None else "—",
                 t("tt_eu.rank_col_pub"): row["pub_n"] if row.get("pub_resolved") else "—",
-                "OpenAlex": row.get("openalex_url") or payload["openalex_url"],
+                "Kaynak": row.get("openalex_url") or payload["openalex_url"],
             }
         )
     st.dataframe(
@@ -420,7 +420,7 @@ def _country_rank(kind: str) -> None:
         hide_index=True,
         width="stretch",
         column_config={
-            "OpenAlex": st.column_config.LinkColumn("OpenAlex", display_text="OpenAlex"),
+            "Kaynak": st.column_config.LinkColumn("Kaynak", display_text="Aç"),
         },
     )
     c_oa, c_wiki = st.columns(2)
