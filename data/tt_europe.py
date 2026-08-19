@@ -79,42 +79,8 @@ TT_GROUP_PATENTS = [
 
 # Ham bağlılık metni Türk Telekom / Türkiye. OpenAlex kurum grafı bu kayıtlarda
 # DE/MY/CZ gibi yanlış ülkeye düşebilir; ülke kodu burada raw affiliation'dan TR.
+# Liste yeniden eskiye (2026 → 2025).
 TT_AFFILIATED_PAPERS = [
-    {
-        "title": (
-            "Independent Time Transfer in 5G Technology Over IP Core Networks Using PTN Overlay "
-            "and Comparison With GPS/GNSS-Based Synchronization"
-        ),
-        "authors": "M. S. Osmanca, U. Keten, Y. İ. Demır, K. Zaim",
-        "journal": "IEEE Access",
-        "year": 2025,
-        "doi": "10.1109/access.2025.3611321",
-        "topic": "AI-RAN",
-        "source": "IEEE Xplore",
-        "source_url": "https://doi.org/10.1109/access.2025.3611321",
-        "url": "https://doi.org/10.1109/access.2025.3611321",
-        "affiliation_country": "TR",
-        "note": (
-            "OpenAlex bu kaydı X-Fab (DE) / Telekom Malaysia diye eşleyebilir; "
-            "yazar bağlılığı Ankara, Türk Telekom Ar-Ge'dir."
-        ),
-    },
-    {
-        "title": (
-            "Realistic Performance Assessment of Machine Learning Algorithms for 6G Network Slicing: "
-            "A Dual-Methodology Approach with Explainable AI Integration"
-        ),
-        "authors": "S. N. Karahan, M. Güllü, D. Karhan, S. Çimen, M. S. Osmanca, N. Barışçı",
-        "journal": "Electronics",
-        "year": 2025,
-        "doi": "10.3390/electronics14193841",
-        "topic": "AI-RAN",
-        "source": "MDPI / DOI",
-        "source_url": "https://doi.org/10.3390/electronics14193841",
-        "url": "https://doi.org/10.3390/electronics14193841",
-        "affiliation_country": "TR",
-        "note": "",
-    },
     {
         "title": "Artificial intelligence for next-generation 6G technologies and networks",
         "authors": "Y. E. Tok, A. G. Toprak, S. N. Karahan, Ö. B. Mercan, H. M. Aydin, M. Altintas",
@@ -143,6 +109,41 @@ TT_AFFILIATED_PAPERS = [
         "url": "https://doi.org/10.1109/ojcoms.2026.3679199",
         "affiliation_country": "TR",
         "note": "",
+    },
+    {
+        "title": (
+            "Realistic Performance Assessment of Machine Learning Algorithms for 6G Network Slicing: "
+            "A Dual-Methodology Approach with Explainable AI Integration"
+        ),
+        "authors": "S. N. Karahan, M. Güllü, D. Karhan, S. Çimen, M. S. Osmanca, N. Barışçı",
+        "journal": "Electronics",
+        "year": 2025,
+        "doi": "10.3390/electronics14193841",
+        "topic": "AI-RAN",
+        "source": "MDPI / DOI",
+        "source_url": "https://doi.org/10.3390/electronics14193841",
+        "url": "https://doi.org/10.3390/electronics14193841",
+        "affiliation_country": "TR",
+        "note": "",
+    },
+    {
+        "title": (
+            "Independent Time Transfer in 5G Technology Over IP Core Networks Using PTN Overlay "
+            "and Comparison With GPS/GNSS-Based Synchronization"
+        ),
+        "authors": "M. S. Osmanca, U. Keten, Y. İ. Demır, K. Zaim",
+        "journal": "IEEE Access",
+        "year": 2025,
+        "doi": "10.1109/access.2025.3611321",
+        "topic": "AI-RAN",
+        "source": "IEEE Xplore",
+        "source_url": "https://doi.org/10.1109/access.2025.3611321",
+        "url": "https://doi.org/10.1109/access.2025.3611321",
+        "affiliation_country": "TR",
+        "note": (
+            "OpenAlex bu kaydı X-Fab (DE) / Telekom Malaysia diye eşleyebilir; "
+            "yazar bağlılığı Ankara, Türk Telekom Ar-Ge'dir."
+        ),
     },
 ]
 

@@ -151,15 +151,15 @@ class TTEuropeService:
             )
 
         def _with_rank(rows: List[Dict[str, Any]], key: str, dest: str) -> None:
+            # 0 kayıt = sıra yok. 0 ile «2. sıra» yazmak Fransa/İspanya’da yanıltır.
             ordered = sorted(rows, key=lambda r: int(r[key] or 0), reverse=True)
-            n_pos = sum(1 for r in rows if int(r[key] or 0) > 0)
             rank = 0
             prev = None
             seen = 0
             for row in ordered:
                 val = int(row[key] or 0)
                 if val == 0:
-                    row[dest] = None if n_pos == 0 else n_pos + 1
+                    row[dest] = None
                     continue
                 seen += 1
                 if prev is None or val != prev:
