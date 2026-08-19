@@ -658,6 +658,60 @@ def render_tt_vs_vendors_chart(counts: Dict[str, int]) -> go.Figure:
     return fig
 
 
+def render_tt_country_rank_chart(
+    rows: List[Dict[str, Any]], value_key: str, title: str, x_title: str
+) -> go.Figure:
+    """Kilitli 3 MNO + TT. Değer OpenAlex veya örnek küme; uydurma yok."""
+    ordered = sorted(rows, key=lambda r: int(r.get(value_key) or 0), reverse=True)
+    names = [r["name"] for r in ordered]
+    vals = [int(r.get(value_key) or 0) for r in ordered]
+    colors = ["#E20074" if r.get("is_tt") else "#00C2FF" for r in ordered]
+    fig = go.Figure(go.Bar(x=names, y=vals, marker=dict(color=colors)))
+    fig.update_layout(
+        **_layout(),
+        title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)", tickangle=-20),
+        yaxis=_count_axis(x_title),
+        height=360,
+        bargap=0.28,
+    )
+    return fig
+
+
+def render_tt_europe_overview_chart(
+    rows: List[Dict[str, Any]],
+    value_key: str,
+    rank_key: str,
+    name_key: str,
+    title: str,
+    x_title: str,
+) -> go.Figure:
+    """Avrupa geneli TT sayısı; sıra etiket. Uydurma yok."""
+    ordered = sorted(rows, key=lambda r: int(r.get(value_key) or 0), reverse=True)
+    names = [r[name_key] for r in ordered]
+    vals = [int(r.get(value_key) or 0) for r in ordered]
+    ranks = [r.get(rank_key) if r.get(rank_key) is not None else "—" for r in ordered]
+    fig = go.Figure(
+        go.Bar(
+            x=vals,
+            y=names,
+            orientation="h",
+            marker=dict(color="#E20074"),
+            text=[f"#{rk}" for rk in ranks],
+            textposition="outside",
+        )
+    )
+    fig.update_layout(
+        **_layout(),
+        title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=dict(title=x_title, gridcolor="rgba(200, 209, 220, 0.1)"),
+        yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
+        height=max(360, 28 * max(len(ordered), 1) + 80),
+        margin=dict(l=40, r=70, t=50, b=40),
+    )
+    return fig
+
+
 def render_tt_office_chart(counts: Dict[str, int]) -> go.Figure:
     """TT-grup doğrulanmış patentlerin ofis kodu — EP 0 ise 0 basılır."""
     order = ["EP", "US", "TR"]

@@ -8,7 +8,9 @@ import streamlit as st
 
 from backend.tt_europe_service import TTEuropeService
 from components.charts import (
+    render_tt_country_rank_chart,
     render_tt_europe_choropleth,
+    render_tt_europe_overview_chart,
     render_tt_office_chart,
     render_tt_role_kind_chart,
     render_tt_vs_vendors_chart,
@@ -21,15 +23,6 @@ from components.ui_helpers import (
     show_plotly,
 )
 from i18n.core import format_int, get_lang, t
-
-_LAYER_HEX = {
-    "hq": "#E20074",
-    "wholesale": "#00C2FF",
-    "rd_collab": "#A855F7",
-    "standards": "#FFB020",
-    "mou_venue": "#14B8A6",
-    "ep_grant": "#64748B",
-}
 
 
 def _explainer() -> None:
@@ -74,22 +67,18 @@ def _metrics() -> None:
 def _named_country_chips(rows: list, lang: str) -> None:
     st.markdown(t("tt_eu.named_heading"))
     st.caption(t("tt_eu.named_caption"))
-    chips = []
     order = ("hq", "wholesale", "rd_collab", "standards", "mou_venue")
     ranked = sorted(rows, key=lambda r: (order.index(r["layer"]) if r["layer"] in order else 99, r["iso3"]))
+    table = []
     for row in ranked:
-        name = row["name_tr"] if lang == "tr" else row["name_en"]
-        layer = t(f"tt_eu.layer.{row['layer']}")
-        hex_c = _LAYER_HEX.get(row["layer"], "#64748B")
-        chips.append(
-            f'<span style="display:inline-block;margin:0 8px 8px 0;padding:7px 12px;'
-            f'border-radius:999px;border:1px solid {hex_c};background:{hex_c}22;'
-            f'color:#F8FAFC;font-size:0.82rem;">{name} · {layer}</span>'
+        table.append(
+            {
+                t("tt_eu.named_col_place"): row["name_tr"] if lang == "tr" else row["name_en"],
+                "ISO": row["iso3"],
+                t("tt_eu.named_col_layer"): t(f"tt_eu.layer.{row['layer']}"),
+            }
         )
-    st.markdown(
-        f'<div style="margin:4px 0 12px 0;">{"".join(chips)}</div>',
-        unsafe_allow_html=True,
-    )
+    st.dataframe(table, hide_index=True, width="stretch")
 
 
 def _position_visuals(*, show_vendor_compare: bool) -> None:
@@ -118,6 +107,129 @@ def _position_visuals(*, show_vendor_compare: bool) -> None:
         st.markdown(t("tt_eu.vs_heading"))
         st.caption(t("tt_eu.vs_caption"))
         show_plotly(render_tt_vs_vendors_chart(TTEuropeService.vendor_sample_vs_tt()))
+
+    _country_rank()
+
+
+def _country_rank() -> None:
+    lang = get_lang()
+    name_key = "name_tr" if lang == "tr" else "name_en"
+    st.markdown(t("tt_eu.overview_heading"))
+    st.caption(t("tt_eu.overview_caption"))
+    with st.spinner(t("tt_eu.overview_spin")):
+        overview = TTEuropeService.europe_overview()
+    if overview:
+        col_p, col_a = st.columns(2)
+        with col_p:
+            show_plotly(
+                render_tt_europe_overview_chart(
+                    overview,
+                    "tt_pub_n",
+                    "tt_pub_rank",
+                    name_key,
+                    t("tt_eu.overview_pub_title"),
+                    t("tt_eu.rank_pub_x"),
+                )
+            )
+        with col_a:
+            show_plotly(
+                render_tt_europe_overview_chart(
+                    overview,
+                    "tt_pat_n",
+                    "tt_pat_rank",
+                    name_key,
+                    t("tt_eu.overview_pat_title"),
+                    t("tt_eu.rank_pat_x"),
+                )
+            )
+        table = []
+        for row in overview:
+            table.append(
+                {
+                    t("tt_eu.named_col_place"): row[name_key],
+                    t("tt_eu.rank_col_rank_pub"): row["tt_pub_rank"],
+                    t("tt_eu.overview_tt_pub"): row["tt_pub_n"],
+                    t("tt_eu.overview_pub_lead"): f"{row['pub_lead']} ({row['pub_lead_n']})",
+                    t("tt_eu.rank_col_rank_pat"): row["tt_pat_rank"],
+                    t("tt_eu.overview_tt_pat"): row["tt_pat_n"],
+                    t("tt_eu.overview_pat_lead"): f"{row['pat_lead']} ({row['pat_lead_n']})",
+                    "OpenAlex": row.get("openalex_url") or "",
+                }
+            )
+        st.dataframe(
+            table,
+            hide_index=True,
+            width="stretch",
+            column_config={
+                "OpenAlex": st.column_config.LinkColumn("OpenAlex", display_text="OpenAlex"),
+            },
+        )
+
+    st.markdown(t("tt_eu.rank_heading"))
+    st.caption(t("tt_eu.rank_caption"))
+    countries = TTEuropeService.ranked_countries()
+    lang = get_lang()
+    labels = [row["name_tr"] if lang == "tr" else row["name_en"] for row in countries]
+    by_label = {labels[i]: countries[i]["cc"] for i in range(len(countries))}
+    default_ix = next((i for i, row in enumerate(countries) if row["cc"] == "TR"), 0)
+    picked = st.selectbox(t("tt_eu.rank_country"), labels, index=default_ix, key=f"tt_eu_rank_cc_{lang}")
+    cc = by_label.get(picked) or "TR"
+    with st.spinner(t("tt_eu.rank_heading").replace("#", "").strip()):
+        payload = TTEuropeService.country_rank(cc)
+    if not payload.get("ok"):
+        return
+    rows = payload["rows"]
+    tt_row = next((r for r in rows if r.get("is_tt")), {})
+    st.markdown(
+        t(
+            "tt_eu.rank_tt",
+            pub=format_int(payload.get("tt_pub_rank") or 0),
+            pat=format_int(payload.get("tt_pat_rank") or 0),
+            pub_n=format_int(tt_row.get("pub_n") or 0),
+            pat_n=format_int(tt_row.get("pat_n") or 0),
+            n=format_int(payload.get("field_n") or 0),
+        )
+    )
+    if payload.get("oa_ok"):
+        show_plotly(
+            render_tt_country_rank_chart(
+                rows, "pub_n", t("tt_eu.rank_pub_title"), t("tt_eu.rank_pub_x")
+            )
+        )
+    else:
+        st.info(t("tt_eu.rank_oa_fail"))
+    show_plotly(
+        render_tt_country_rank_chart(
+            rows, "pat_n", t("tt_eu.rank_pat_title"), t("tt_eu.rank_pat_x")
+        )
+    )
+    table = []
+    for row in sorted(rows, key=lambda r: (r["pub_rank"], r["name"])):
+        table.append(
+            {
+                t("tt_eu.named_col_place"): row["name"],
+                t("tt_eu.rank_col_rank_pub"): row["pub_rank"],
+                t("tt_eu.rank_col_pub"): row["pub_n"],
+                t("tt_eu.rank_col_rank_pat"): row["pat_rank"],
+                t("tt_eu.rank_col_pat"): row["pat_n"],
+                "OpenAlex": payload["openalex_url"],
+                "Google Patents": row["patents_url"],
+            }
+        )
+    st.dataframe(
+        table,
+        hide_index=True,
+        width="stretch",
+        column_config={
+            "OpenAlex": st.column_config.LinkColumn("OpenAlex", display_text="OpenAlex"),
+            "Google Patents": st.column_config.LinkColumn("Google Patents", display_text="Patents"),
+        },
+    )
+    c_oa, c_wiki = st.columns(2)
+    with c_oa:
+        render_source_button(payload["openalex_url"], t("tt_eu.rank_open_oa"))
+    with c_wiki:
+        render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
 
 
 def _rd_touchpoints() -> None:

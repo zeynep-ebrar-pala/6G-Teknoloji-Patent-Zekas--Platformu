@@ -57,7 +57,7 @@
       421
     ]
   },
-  "fetched_at": "2026-08-16 14:09 UTC",
+  "fetched_at": "2026-08-19 06:25 UTC",
   "source_url": "https://openalex.org/works",
   "institutions": [
     {
@@ -341,6 +341,498 @@
         "CN"
       ],
       "year": 2025
+    },
+    "10.3390/electronics14193841": {
+      "title": "Realistic Performance Assessment of Machine Learning Algorithms for 6G Network Slicing: A Dual-Methodology Approach with Explainable AI Integration",
+      "citations": 4,
+      "source_url": "https://doi.org/10.3390/electronics14193841",
+      "institutions": [
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Gazi University"
+      ],
+      "countries": [
+        "TR",
+        "TR",
+        "TR",
+        "TR",
+        "TR",
+        "TR"
+      ],
+      "year": 2025
+    },
+    "10.1007/s44354-026-00016-3": {
+      "title": "Artificial intelligence for next-generation 6G technologies and networks",
+      "citations": 3,
+      "source_url": "https://doi.org/10.1007/s44354-026-00016-3",
+      "institutions": [
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)"
+      ],
+      "countries": [
+        "TR",
+        "TR",
+        "TR",
+        "TR",
+        "TR",
+        "TR"
+      ],
+      "year": 2026
+    },
+    "10.1109/access.2025.3611321": {
+      "title": "Independent Time Transfer in 5G Technology Over IP Core Networks Using PTN Overlay and Comparison With GPS/GNSS-Based Synchronization",
+      "citations": 1,
+      "source_url": "https://doi.org/10.1109/access.2025.3611321",
+      "institutions": [
+        "X-Fab (Germany)",
+        "Telekom Malaysia Berhad (Malaysia)",
+        "Network Group (Czechia)",
+        "X-Fab (Germany)",
+        "Telekom Malaysia Berhad (Malaysia)",
+        "X-Fab (Germany)",
+        "Xinjiang Uygur Autonomous Region Institute of Metrology and Measurement"
+      ],
+      "countries": [
+        "DE",
+        "MY",
+        "CZ",
+        "DE",
+        "MY",
+        "DE",
+        "CN"
+      ],
+      "year": 2025
+    },
+    "10.1109/ojcoms.2026.3679199": {
+      "title": "AI-Driven Network Slicing for F5G-A Networks: A Framework With Unsupervised Discovery, Temporal Dynamics, and Explainable AI",
+      "citations": 0,
+      "source_url": "https://doi.org/10.1109/ojcoms.2026.3679199",
+      "institutions": [
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)",
+        "Türk Telekom (Turkey)"
+      ],
+      "countries": [
+        "TR",
+        "TR",
+        "TR",
+        "TR",
+        "TR"
+      ],
+      "year": 2026
     }
+  },
+  "country_institutions": {
+    "TR": [
+      {
+        "name": "Istanbul Technical University",
+        "count": 89,
+        "key": "https://openalex.org/I48912391"
+      },
+      {
+        "name": "Gazi University",
+        "count": 29,
+        "key": "https://openalex.org/I95634034"
+      },
+      {
+        "name": "Sakarya University",
+        "count": 24,
+        "key": "https://openalex.org/I103703290"
+      },
+      {
+        "name": "Middle East Technical University",
+        "count": 23,
+        "key": "https://openalex.org/I201799495"
+      },
+      {
+        "name": "Istinye University",
+        "count": 23,
+        "key": "https://openalex.org/I4210121333"
+      },
+      {
+        "name": "Selçuk University",
+        "count": 22,
+        "key": "https://openalex.org/I137996928"
+      },
+      {
+        "name": "İstanbul Nişantaşı Üniversitesi",
+        "count": 22,
+        "key": "https://openalex.org/I282159120"
+      },
+      {
+        "name": "Istanbul Medipol University",
+        "count": 22,
+        "key": "https://openalex.org/I3125470973"
+      },
+      {
+        "name": "Istanbul University",
+        "count": 22,
+        "key": "https://openalex.org/I67581229"
+      },
+      {
+        "name": "Yıldız Technical University",
+        "count": 20,
+        "key": "https://openalex.org/I4101805"
+      },
+      {
+        "name": "Fırat University",
+        "count": 19,
+        "key": "https://openalex.org/I143396566"
+      },
+      {
+        "name": "Karabük University",
+        "count": 19,
+        "key": "https://openalex.org/I173761726"
+      },
+      {
+        "name": "Marmara University",
+        "count": 19,
+        "key": "https://openalex.org/I74897591"
+      },
+      {
+        "name": "Altınbaş University",
+        "count": 18,
+        "key": "https://openalex.org/I42317466"
+      },
+      {
+        "name": "Boğaziçi University",
+        "count": 18,
+        "key": "https://openalex.org/I4405392"
+      },
+      {
+        "name": "Ankara University",
+        "count": 16,
+        "key": "https://openalex.org/I149218525"
+      },
+      {
+        "name": "İstanbul Gelişim Üniversitesi",
+        "count": 16,
+        "key": "https://openalex.org/I4210091267"
+      },
+      {
+        "name": "Istanbul University-Cerrahpaşa",
+        "count": 16,
+        "key": "https://openalex.org/I4210112471"
+      },
+      {
+        "name": "Ankara Yıldırım Beyazıt University",
+        "count": 16,
+        "key": "https://openalex.org/I4210150808"
+      },
+      {
+        "name": "Akdeniz University",
+        "count": 15,
+        "key": "https://openalex.org/I197907453"
+      },
+      {
+        "name": "Ege University",
+        "count": 15,
+        "key": "https://openalex.org/I41641357"
+      },
+      {
+        "name": "Kadir Has University",
+        "count": 14,
+        "key": "https://openalex.org/I132286405"
+      },
+      {
+        "name": "Karadeniz Technical University",
+        "count": 14,
+        "key": "https://openalex.org/I162720556"
+      },
+      {
+        "name": "Manisa Celal Bayar University",
+        "count": 14,
+        "key": "https://openalex.org/I16748637"
+      },
+      {
+        "name": "Dokuz Eylül University",
+        "count": 14,
+        "key": "https://openalex.org/I193615760"
+      },
+      {
+        "name": "Kocaeli Üniversitesi",
+        "count": 14,
+        "key": "https://openalex.org/I51826884"
+      },
+      {
+        "name": "Atatürk University",
+        "count": 14,
+        "key": "https://openalex.org/I64134780"
+      },
+      {
+        "name": "Gebze Technical University",
+        "count": 13,
+        "key": "https://openalex.org/I109297418"
+      },
+      {
+        "name": "Istanbul Aydın University",
+        "count": 13,
+        "key": "https://openalex.org/I179948855"
+      },
+      {
+        "name": "Mersin Üniversitesi",
+        "count": 13,
+        "key": "https://openalex.org/I51780484"
+      },
+      {
+        "name": "Yaşar University",
+        "count": 13,
+        "key": "https://openalex.org/I59944920"
+      },
+      {
+        "name": "Koç University",
+        "count": 12,
+        "key": "https://openalex.org/I1351752"
+      },
+      {
+        "name": "Naval Academy",
+        "count": 12,
+        "key": "https://openalex.org/I157637111"
+      },
+      {
+        "name": "Haliç University",
+        "count": 12,
+        "key": "https://openalex.org/I25010766"
+      },
+      {
+        "name": "Atilim University",
+        "count": 12,
+        "key": "https://openalex.org/I45542416"
+      },
+      {
+        "name": "University of Technology Malaysia",
+        "count": 12,
+        "key": "https://openalex.org/I4576418"
+      },
+      {
+        "name": "Doğuş University",
+        "count": 11,
+        "key": "https://openalex.org/I129994210"
+      },
+      {
+        "name": "Bursa Technical University",
+        "count": 11,
+        "key": "https://openalex.org/I192257213"
+      },
+      {
+        "name": "Adnan Menderes University",
+        "count": 11,
+        "key": "https://openalex.org/I76806599"
+      },
+      {
+        "name": "Islamic Azad University of Tabriz",
+        "count": 10,
+        "key": "https://openalex.org/I1293555014"
+      },
+      {
+        "name": "Prince Sattam Bin Abdulaziz University",
+        "count": 10,
+        "key": "https://openalex.org/I142608572"
+      },
+      {
+        "name": "Norwegian University of Science and Technology",
+        "count": 10,
+        "key": "https://openalex.org/I204778367"
+      },
+      {
+        "name": "Cukurova University",
+        "count": 10,
+        "key": "https://openalex.org/I55931168"
+      },
+      {
+        "name": "Universitatea Națională de Știință și Tehnologie Politehnica București",
+        "count": 10,
+        "key": "https://openalex.org/I61641377"
+      },
+      {
+        "name": "Yeditepe University",
+        "count": 9,
+        "key": "https://openalex.org/I100072489"
+      },
+      {
+        "name": "Bursa Uludağ Üni̇versi̇tesi̇",
+        "count": 9,
+        "key": "https://openalex.org/I131835042"
+      },
+      {
+        "name": "Izmir University",
+        "count": 9,
+        "key": "https://openalex.org/I132257509"
+      },
+      {
+        "name": "Ondokuz Mayıs University",
+        "count": 9,
+        "key": "https://openalex.org/I227306068"
+      },
+      {
+        "name": "Erzurum Technical University",
+        "count": 9,
+        "key": "https://openalex.org/I265519392"
+      },
+      {
+        "name": "Bandırma Onyedi Eylül University",
+        "count": 9,
+        "key": "https://openalex.org/I3133171086"
+      },
+      {
+        "name": "University College London",
+        "count": 9,
+        "key": "https://openalex.org/I45129253"
+      },
+      {
+        "name": "Pamukkale University",
+        "count": 9,
+        "key": "https://openalex.org/I48843708"
+      },
+      {
+        "name": "Istanbul Arel University",
+        "count": 9,
+        "key": "https://openalex.org/I50627504"
+      },
+      {
+        "name": "Eskişehir Osmangazi University",
+        "count": 9,
+        "key": "https://openalex.org/I51209816"
+      },
+      {
+        "name": "Istanbul Commerce University",
+        "count": 9,
+        "key": "https://openalex.org/I53210213"
+      },
+      {
+        "name": "Hacettepe University",
+        "count": 9,
+        "key": "https://openalex.org/I66514158"
+      },
+      {
+        "name": "National Yunlin University of Science and Technology",
+        "count": 9,
+        "key": "https://openalex.org/I75357094"
+      },
+      {
+        "name": "Çanakkale Onsekiz Mart Üniversitesi",
+        "count": 8,
+        "key": "https://openalex.org/I115953327"
+      },
+      {
+        "name": "Sivas Cumhuriyet Üniversitesi",
+        "count": 8,
+        "key": "https://openalex.org/I12700597"
+      },
+      {
+        "name": "Bahçeşehir University",
+        "count": 8,
+        "key": "https://openalex.org/I128277893"
+      },
+      {
+        "name": "University of South Florida",
+        "count": 8,
+        "key": "https://openalex.org/I2613432"
+      },
+      {
+        "name": "Zonguldak Bülent Ecevit University",
+        "count": 8,
+        "key": "https://openalex.org/I3017902709"
+      },
+      {
+        "name": "Kütahya Dumlupınar Üniversitesi",
+        "count": 8,
+        "key": "https://openalex.org/I3018710136"
+      },
+      {
+        "name": "Necmettin Erbakan University",
+        "count": 8,
+        "key": "https://openalex.org/I4210107659"
+      },
+      {
+        "name": "Isparta University of Applied Sciences",
+        "count": 8,
+        "key": "https://openalex.org/I4210118295"
+      },
+      {
+        "name": "National Research Council",
+        "count": 8,
+        "key": "https://openalex.org/I4210155236"
+      },
+      {
+        "name": "University of Glasgow",
+        "count": 8,
+        "key": "https://openalex.org/I7882870"
+      },
+      {
+        "name": "Kastamonu University",
+        "count": 8,
+        "key": "https://openalex.org/I98905743"
+      },
+      {
+        "name": "Çankaya University",
+        "count": 7,
+        "key": "https://openalex.org/I106245021"
+      },
+      {
+        "name": "Khazar University",
+        "count": 7,
+        "key": "https://openalex.org/I113330528"
+      },
+      {
+        "name": "Istanbul Bilgi University",
+        "count": 7,
+        "key": "https://openalex.org/I118036225"
+      },
+      {
+        "name": "VSB - Technical University of Ostrava",
+        "count": 7,
+        "key": "https://openalex.org/I142208455"
+      },
+      {
+        "name": "Giresun University",
+        "count": 7,
+        "key": "https://openalex.org/I148202161"
+      },
+      {
+        "name": "Tokat Gaziosmanpaşa Üniversitesi",
+        "count": 7,
+        "key": "https://openalex.org/I238144855"
+      },
+      {
+        "name": "Izmir Kâtip Çelebi University",
+        "count": 7,
+        "key": "https://openalex.org/I250383648"
+      },
+      {
+        "name": "Iraqi University",
+        "count": 7,
+        "key": "https://openalex.org/I3131779051"
+      },
+      {
+        "name": "Institut National de Recherche pour l'Agriculture, l'Alimentation et l'Environnement",
+        "count": 7,
+        "key": "https://openalex.org/I4210088668"
+      },
+      {
+        "name": "Gazi Hastanesi",
+        "count": 7,
+        "key": "https://openalex.org/I4210123976"
+      },
+      {
+        "name": "Düzce Üniversitesi",
+        "count": 7,
+        "key": "https://openalex.org/I54001450"
+      },
+      {
+        "name": "Istanbul Medeniyet University",
+        "count": 7,
+        "key": "https://openalex.org/I57913696"
+      }
+    ]
   }
 }

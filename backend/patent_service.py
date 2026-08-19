@@ -269,7 +269,10 @@ class PatentService:
 
     @staticmethod
     def get_top_patents(company: Optional[str] = None) -> List[Dict[str, Any]]:
-        return sorted(_with_company(_patents(), company), key=lambda p: p["year"], reverse=True)
+        return sorted(
+            _with_company(_patents(), company),
+            key=lambda p: (-int(p["year"]), str(p.get("publication_number") or p.get("id") or "")),
+        )
 
     @staticmethod
     def get_network_edges(company: Optional[str] = None) -> List[tuple]:

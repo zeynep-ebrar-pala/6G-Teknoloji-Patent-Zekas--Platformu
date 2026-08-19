@@ -8,6 +8,14 @@ from collections import Counter
 from typing import Any, Dict, List
 
 from backend.data_validator import load_validated_papers, load_validated_patents
+from data.eu_operators import (
+    EU_MNO_LIST_URL,
+    country_by_cc,
+    country_choices,
+    name_matches,
+    operators_with_tt,
+)
+from data.patents import VERIFIED_PATENTS
 from data.tt_europe import (
     TT_AFFILIATED_PAPERS,
     TT_EUROPE_SOURCE,
@@ -46,15 +54,171 @@ class TTEuropeService:
 
     @staticmethod
     def get_patents() -> List[Dict[str, Any]]:
-        return _patents()
+        patents = _patents()
+        return sorted(
+            patents,
+            key=lambda p: (
+                -int(p.get("year") or 0),
+                str(p.get("publication_number") or p.get("id") or ""),
+            ),
+        )
 
     @staticmethod
     def get_papers() -> List[Dict[str, Any]]:
-        return _papers()
+        papers = _papers()
+        dois = tuple(p["doi"] for p in papers if p.get("doi"))
+        live_map: Dict[str, Any] = {}
+        if dois:
+            from backend.openalex_client import fetch_works_by_dois
+
+            live_map = fetch_works_by_dois(dois) or {}
+        enriched = []
+        for paper in papers:
+            merged = dict(paper)
+            live = live_map.get((paper.get("doi") or "").lower())
+            if live and isinstance(live.get("citations"), int):
+                merged["citations"] = live["citations"]
+                merged["citations_live"] = True
+            else:
+                merged["citations"] = None
+                merged["citations_live"] = False
+            enriched.append(merged)
+
+        def _paper_sort(p: Dict[str, Any]) -> tuple:
+            cites = p.get("citations")
+            return (-int(p.get("year") or 0), -(cites if isinstance(cites, int) else -1))
+
+        return sorted(enriched, key=_paper_sort)
+
+    @staticmethod
+    def ranked_countries() -> List[Dict[str, Any]]:
+        return country_choices()
+
+    @staticmethod
+    def country_rank(cc: str) -> Dict[str, Any]:
+        """Kilitli 3 MNO + TT. Yayın: OpenAlex. Patent: kilitli örnek küme. Uydurma yok."""
+        country = country_by_cc(cc)
+        if not country:
+            return {"ok": False, "cc": cc}
+        ops = operators_with_tt(country)
+        inst_rows = None
+        oa_ok = False
+        from backend.openalex_client import country_openalex_url, fetch_country_institutions
+
+        inst_rows = fetch_country_institutions(country["cc"])
+        oa_ok = inst_rows is not None
+        sample_patents = load_validated_patents(VERIFIED_PATENTS) + _patents()
+
+        ranked: List[Dict[str, Any]] = []
+        for op in ops:
+            patterns = tuple(op["patterns"])
+            pub_n = 0
+            pub_hits: List[str] = []
+            if oa_ok:
+                for bucket in inst_rows or []:
+                    if name_matches(bucket.get("name") or "", patterns):
+                        pub_n += int(bucket.get("count") or 0)
+                        pub_hits.append(bucket.get("name") or "")
+            pat_n = 0
+            pat_ids: List[str] = []
+            for pat in sample_patents:
+                if name_matches(pat.get("assignee") or "", patterns):
+                    if op.get("is_tt") and country["cc"] != "TR":
+                        continue
+                    pat_n += 1
+                    pat_ids.append(pat.get("publication_number") or pat.get("id") or "")
+            if op.get("is_tt"):
+                locked_n = sum(
+                    1
+                    for p in _papers()
+                    if (p.get("affiliation_country") or "").upper() == country["cc"]
+                )
+                if locked_n > pub_n:
+                    pub_n = locked_n
+                    pub_hits.append("DOI-locked TT affiliation")
+            ranked.append(
+                {
+                    "id": op["id"],
+                    "name": op["name"],
+                    "is_tt": bool(op.get("is_tt")),
+                    "pub_n": pub_n,
+                    "pat_n": pat_n,
+                    "pub_hits": pub_hits[:3],
+                    "pat_ids": pat_ids,
+                    "patents_url": op["patents_url"],
+                }
+            )
+
+        def _with_rank(rows: List[Dict[str, Any]], key: str, dest: str) -> None:
+            ordered = sorted(rows, key=lambda r: r[key], reverse=True)
+            rank = 0
+            prev = None
+            for i, row in enumerate(ordered):
+                if prev is None or row[key] != prev:
+                    rank = i + 1
+                    prev = row[key]
+                row[dest] = rank
+
+        _with_rank(ranked, "pub_n", "pub_rank")
+        _with_rank(ranked, "pat_n", "pat_rank")
+        tt_row = next((r for r in ranked if r["is_tt"]), None)
+        return {
+            "ok": True,
+            "cc": country["cc"],
+            "name_tr": country["name_tr"],
+            "name_en": country["name_en"],
+            "mno_source": EU_MNO_LIST_URL,
+            "openalex_url": country_openalex_url(country["cc"]),
+            "oa_ok": oa_ok,
+            "rows": ranked,
+            "tt_pub_rank": None if not tt_row else tt_row["pub_rank"],
+            "tt_pat_rank": None if not tt_row else tt_row["pat_rank"],
+            "field_n": len(ranked),
+        }
+
+    @staticmethod
+    def europe_overview() -> List[Dict[str, Any]]:
+        """Kilitli ülkelerin tamamı. Her satır country_rank; sayı uydurulmaz."""
+        out: List[Dict[str, Any]] = []
+        for country in country_choices():
+            payload = TTEuropeService.country_rank(country["cc"])
+            if not payload.get("ok"):
+                continue
+            rows = payload["rows"]
+            tt_row = next((r for r in rows if r.get("is_tt")), {})
+            pub_lead = max(rows, key=lambda r: int(r.get("pub_n") or 0))
+            pat_lead = max(rows, key=lambda r: int(r.get("pat_n") or 0))
+            out.append(
+                {
+                    "cc": country["cc"],
+                    "name_tr": country["name_tr"],
+                    "name_en": country["name_en"],
+                    "tt_pub_n": int(tt_row.get("pub_n") or 0),
+                    "tt_pub_rank": tt_row.get("pub_rank"),
+                    "tt_pat_n": int(tt_row.get("pat_n") or 0),
+                    "tt_pat_rank": tt_row.get("pat_rank"),
+                    "field_n": payload.get("field_n") or len(rows),
+                    "pub_lead": pub_lead.get("name"),
+                    "pub_lead_n": int(pub_lead.get("pub_n") or 0),
+                    "pat_lead": pat_lead.get("name"),
+                    "pat_lead_n": int(pat_lead.get("pat_n") or 0),
+                    "openalex_url": payload.get("openalex_url"),
+                    "oa_ok": payload.get("oa_ok"),
+                }
+            )
+        return sorted(
+            out,
+            key=lambda r: (r["tt_pub_n"], r["tt_pat_n"], r["cc"]),
+            reverse=True,
+        )
 
     @staticmethod
     def get_touchpoints() -> List[Dict[str, Any]]:
-        return list(TT_EUROPE_TOUCHPOINTS)
+        return sorted(
+            TT_EUROPE_TOUCHPOINTS,
+            key=lambda r: int(r.get("year") or 0),
+            reverse=True,
+        )
 
     @staticmethod
     def get_press_claims() -> Dict[str, Any]:

@@ -280,3 +280,43 @@ def fetch_top_countries(limit: int = 10) -> Optional[List[Dict[str, Any]]]:
         _save_disk_cache(cache)
         return rows
     return None
+
+
+@st.cache_data(ttl=21600, show_spinner=False)
+def fetch_country_institutions(country_code: str, limit: int = 80) -> Optional[List[Dict[str, Any]]]:
+    """Bir ülke + 6G konu araması, kurum group_by. Sayı uydurulmaz."""
+    cc = (country_code or "").upper().strip()
+    if len(cc) != 2:
+        return None
+    cache = _load_disk_cache()
+    by_cc = cache.get("country_institutions") or {}
+    if cc in by_cc:
+        return by_cc[cc][:limit]
+    year_filter = "|".join(str(y) for y in list(TREND_YEARS) + [2026])
+    q = urllib.parse.quote(COMBINED_SEARCH)
+    url = (
+        f"{OPENALEX_BASE}/works?search={q}"
+        f"&filter=publication_year:{year_filter},authorships.institutions.country_code:{cc}"
+        f"&group_by=authorships.institutions.id&per-page=200"
+    )
+    rows = _parse_group_by(_fetch_json(url), limit)
+    if rows is None:
+        return None
+    cache = _load_disk_cache()
+    stored = cache.get("country_institutions") or {}
+    stored[cc] = rows
+    cache["country_institutions"] = stored
+    cache["fetched_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    cache["source_url"] = "https://openalex.org/works"
+    _save_disk_cache(cache)
+    return rows
+
+
+def country_openalex_url(country_code: str) -> str:
+    cc = (country_code or "").upper().strip()
+    year_filter = "|".join(str(y) for y in list(TREND_YEARS) + [2026])
+    q = urllib.parse.quote(COMBINED_SEARCH)
+    return (
+        f"https://openalex.org/works?search={q}"
+        f"&filter=publication_year:{year_filter},authorships.institutions.country_code:{cc}"
+    )
