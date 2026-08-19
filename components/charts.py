@@ -708,14 +708,15 @@ def render_tt_europe_overview_chart(
             textposition="outside",
         )
     )
-    fig.update_layout(
-        **_layout(),
+    layout = _layout()
+    layout.update(
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         xaxis=dict(title=x_title, gridcolor="rgba(200, 209, 220, 0.1)"),
         yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
         height=max(360, 28 * max(len(ordered), 1) + 80),
         margin=dict(l=40, r=70, t=50, b=40),
     )
+    fig.update_layout(**layout)
     return fig
 
 
