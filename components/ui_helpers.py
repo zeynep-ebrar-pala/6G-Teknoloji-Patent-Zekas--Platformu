@@ -6,6 +6,9 @@ yüklemesinde `from components.ui_helpers import ...` ImportError üretmesin.
 
 from __future__ import annotations
 
+import re
+from typing import Optional
+
 import streamlit as st
 
 
@@ -64,6 +67,42 @@ def render_link_row(
             )
 
 
+def _source_label(source_id: str) -> str:
+    return _t(f"sources.open_{source_id}").replace(" ↗", "")
+
+
+def _link_key(text: str) -> str:
+    return re.sub(r"[^A-Za-z0-9]+", "_", text or "")[:48]
+
+
+def render_source_totals(kind: str, topic: Optional[str], key_suffix: str) -> None:
+    """Konu seçimine göre şartname DB toplamı. API yoksa —."""
+    from backend.source_totals import fetch_patent_source_totals, fetch_pub_source_totals
+    from i18n.core import format_int
+
+    rows = (
+        fetch_patent_source_totals(topic)
+        if kind == "patent"
+        else fetch_pub_source_totals(topic)
+    )
+    st.caption(_t("sources.totals_caption_pat" if kind == "patent" else "sources.totals_caption_pub"))
+    table = []
+    config = {}
+    open_col = _t("sources.total_col_open")
+    for row in rows:
+        n = row.get("count")
+        table.append(
+            {
+                _t("sources.total_col_db"): _source_label(row["id"]),
+                _t("sources.total_col_n"): format_int(n) if isinstance(n, int) else "—",
+                _t("sources.total_col_how"): _t(f"sources.method_{row.get('method') or 'none'}"),
+                open_col: row.get("url") or "",
+            }
+        )
+    config[open_col] = st.column_config.LinkColumn(open_col, display_text=_t("sources.total_open_text"))
+    st.dataframe(table, hide_index=True, width="stretch", column_config=config, key=f"tot_{kind}_{key_suffix}")
+
+
 def render_spec_patent_sources() -> None:
     from backend.source_links import spec_patent_databases
 
@@ -80,7 +119,7 @@ def render_spec_pub_sources() -> None:
     render_link_row(spec_pub_databases(), key_suffix="pub_home")
 
 
-def render_patent_topic_panel(key_suffix: str = "pat") -> str | None:
+def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
     """Konu seçimi kilitli patent kümesini ve ofis aramasını birlikte değiştirir."""
     from backend.source_links import SPEC_PUB_TOPICS, topic_patent_searches
     from i18n.core import get_lang
@@ -97,13 +136,15 @@ def render_patent_topic_panel(key_suffix: str = "pat") -> str | None:
     if topic == "all":
         st.caption(_t("sources.topic_all_caption"))
         render_link_row(topic_patent_searches("6G"), key_suffix=f"{key_suffix}_all")
+        render_source_totals("patent", None, f"{key_suffix}_all")
         return None
     st.caption(_t("sources.topic_result_caption", topic=topic, q=SPEC_PUB_TOPICS[topic]))
     render_link_row(topic_patent_searches(topic), key_suffix=f"{key_suffix}_{topic}")
+    render_source_totals("patent", topic, f"{key_suffix}_{topic}")
     return topic
 
 
-def render_pub_topic_panel(key_suffix: str = "pub") -> str | None:
+def render_pub_topic_panel(key_suffix: str = "pub") -> Optional[str]:
     """Konu seçimi kilitli makale kümesini ve yayın aramasını birlikte değiştirir."""
     from backend.source_links import SPEC_PUB_TOPICS, topic_pub_searches
     from i18n.core import get_lang
@@ -120,15 +161,17 @@ def render_pub_topic_panel(key_suffix: str = "pub") -> str | None:
     if topic == "all":
         st.caption(_t("sources.topic_all_caption_pub"))
         render_link_row(topic_pub_searches("6G"), key_suffix=f"{key_suffix}_all")
+        render_source_totals("pub", None, f"{key_suffix}_all")
         return None
     st.caption(_t("sources.topic_result_caption_pub", topic=topic, q=SPEC_PUB_TOPICS[topic]))
     render_link_row(topic_pub_searches(topic), key_suffix=f"{key_suffix}_{topic}")
+    render_source_totals("pub", topic, f"{key_suffix}_{topic}")
     return topic
 
 
 def render_patent_card(patent: dict) -> None:
     pub = patent.get("publication_number") or patent.get("id", "")
-    from backend.source_links import google_patents_record_url
+    from backend.source_links import google_patents_record_url, patent_record_links
 
     url = patent.get("source_url") or patent.get("url") or ""
     if not url and pub:
@@ -153,7 +196,7 @@ def render_patent_card(patent: dict) -> None:
         """,
         unsafe_allow_html=True,
     )
-    render_source_button(url, _t("patent.open_record", pub=pub))
+    render_link_row(patent_record_links(pub), key_suffix=_link_key(str(pub)))
 
 
 def render_paper_card(paper: dict) -> None:
@@ -163,9 +206,8 @@ def render_paper_card(paper: dict) -> None:
     else:
         cite_label = _t("pub.citations_na")
     doi = paper.get("doi", "")
-    from backend.source_links import doi_url as _doi_url
+    from backend.source_links import paper_record_links
 
-    url = paper.get("source_url") or paper.get("url") or _doi_url(doi)
     st.markdown(
         f"""
         <div class="glass-card" style="margin-bottom: 8px; padding: 16px;">
@@ -181,7 +223,10 @@ def render_paper_card(paper: dict) -> None:
         """,
         unsafe_allow_html=True,
     )
-    render_source_button(url, _t("pub.open_doi"))
+    render_link_row(
+        paper_record_links(doi, str(paper.get("source") or "")),
+        key_suffix=_link_key(str(doi)),
+    )
 
 
 def show_empty(message: str) -> None:

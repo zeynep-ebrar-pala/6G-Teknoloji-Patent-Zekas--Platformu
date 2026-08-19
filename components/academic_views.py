@@ -12,22 +12,23 @@ from components.charts import (
     render_academic_database_chart,
     render_academic_trends_chart,
 )
-from components.ui_helpers import (
-    render_module_header,
-    render_paper_card,
-    render_pub_topic_panel,
-    render_source_button,
-    render_spec_pub_sources,
-    select_section,
-    show_empty,
-    show_plotly,
-)
-from components.tt_europe_views import render_tt_europe_pub_section
 
-PUB_SECTION_KEYS = ["tt_eu", "doi", "trend", "inst", "country", "papers"]
+PUB_SECTION_KEYS = ["doi", "trend", "where", "tt_eu"]
 
 
 def render_academic_publication_module():
+    from components.ui_helpers import (
+        render_module_header,
+        render_paper_card,
+        render_pub_topic_panel,
+        render_source_button,
+        render_spec_pub_sources,
+        select_section,
+        show_empty,
+        show_plotly,
+    )
+    from components.tt_europe_views import render_tt_europe_pub_section
+
     render_module_header(
         t("pub.title"),
         t("pub.subtitle", source=AcademicService.get_data_source()),
@@ -66,12 +67,20 @@ def render_academic_publication_module():
     if summary.get("snapshot_at"):
         st.caption(t("pub.snapshot", ts=summary["snapshot_at"]))
 
+    st.markdown(t("pub.papers_heading"))
+    st.caption(t("pub.papers_caption"))
+    if not papers:
+        show_empty(t("pub.empty_topic", topic=topic) if topic else t("pub.empty"))
+    else:
+        for paper in papers:
+            render_paper_card(paper)
+
     st.divider()
 
     _labels = [t(f"pub.section.{k}") for k in PUB_SECTION_KEYS]
     _map = dict(zip(_labels, PUB_SECTION_KEYS))
     section = _map.get(
-        select_section(t("pub.view"), _labels, key=f"academic_section_eu1_{get_lang()}"),
+        select_section(t("pub.view"), _labels, key=f"academic_section_story_{get_lang()}"),
         PUB_SECTION_KEYS[0],
     )
 
@@ -80,7 +89,6 @@ def render_academic_publication_module():
         return
 
     if not papers:
-        show_empty(t("pub.empty_topic", topic=topic) if topic else t("pub.empty"))
         return
 
     if section == "doi":
@@ -119,7 +127,7 @@ def render_academic_publication_module():
             show_plotly(render_academic_trends_chart(df_acad))
             render_source_button("https://openalex.org/works", t("pub.open_oa_counts"))
 
-    elif section == "inst":
+    else:
         st.markdown(t("pub.inst_heading"))
         if topic:
             verified_inst = AcademicService.get_verified_institutions(topic)
@@ -142,7 +150,6 @@ def render_academic_publication_module():
                 else:
                     show_empty(t("pub.empty_inst"))
 
-    elif section == "country":
         st.markdown(t("pub.cc_heading"))
         if topic:
             verified_cc = AcademicService.get_verified_countries(topic)
@@ -164,9 +171,3 @@ def render_academic_publication_module():
                     show_plotly(render_academic_bar_chart(verified_cc, t("pub.chart_cc_fb")))
                 else:
                     show_empty(t("pub.empty_cc"))
-
-    else:
-        st.markdown(t("pub.papers_heading"))
-        st.caption(t("pub.papers_caption"))
-        for paper in papers:
-            render_paper_card(paper)
