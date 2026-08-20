@@ -44,7 +44,7 @@ def _lens_token_box() -> None:
     if entered.strip():
         st.session_state["lens_token"] = entered.strip()
         st.rerun()
-    st.link_button(t("patent.key_lens"), "https://docs.api.lens.org/getting-started.html")
+    st.link_button(t("patent.key_lens"), "https://www.lens.org/lens/user/subscriptions")
 
 
 def render_patent_intelligence_module():
@@ -75,7 +75,7 @@ def render_patent_intelligence_module():
 </div>""",
             unsafe_allow_html=True,
         )
-        st.link_button(t("patent.key_lens"), "https://docs.api.lens.org/getting-started.html")
+        st.link_button(t("patent.key_lens"), "https://www.lens.org/lens/user/subscriptions")
 
     _lens_token_box()
     render_spec_patent_sources()

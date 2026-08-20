@@ -52,7 +52,7 @@ def _gp_get(url: str, timeout: int = 18) -> Optional[Dict[str, Any]]:
 
 REGISTER = {
     "google_patents": "https://patents.google.com/",
-    "lens": "https://docs.api.lens.org/getting-started.html",
+    "lens": "https://www.lens.org/lens/user/subscriptions",
     "espacenet": "https://developers.epo.org/",
     "wipo": "https://www.wipo.int/patentscope/en/",
     "uspto": "https://patentsview.org/apis/api-registration",
