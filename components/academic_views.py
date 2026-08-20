@@ -13,7 +13,6 @@ from i18n.core import format_int, get_lang, t
 from components.charts import (
     render_academic_bar_chart,
     render_academic_database_chart,
-    render_academic_grouped_bar,
     render_academic_trends_chart,
     render_wos_springer_totals_chart,
 )
@@ -42,6 +41,56 @@ def _with_source(paper: dict) -> dict:
     elif not out.get("source"):
         out["source"] = "WoS"
     return out
+
+
+def _as_bar_rows(kind: str, rows: list) -> list:
+    if kind == "countries":
+        return [{"name": _cc_name(r["cc"]), "count": int(r["count"])} for r in rows]
+    return [{"name": r["name"], "count": int(r["count"])} for r in rows]
+
+
+def _render_wos_breakdown(kind: str, topic: str | None, wos: bool) -> None:
+    """Ülke/kurum: WoS Analyze Results önbelleği. Bundle önbelleğine bağlı değil."""
+    from backend.wos_topic_cache import TOPIC_ORDER, wos_overlay
+    from components.ui_helpers import show_empty, show_plotly
+
+    overlay = wos_overlay(topic)
+    by_key = "countries_by_topic" if kind == "countries" else "institutions_by_topic"
+    single_key = "countries" if kind == "countries" else "institutions"
+    cap_one = t("pub.cc_caption_wos") if kind == "countries" else t("pub.inst_caption_wos")
+    cap_all = t("pub.cc_caption_wos_all") if kind == "countries" else t("pub.inst_caption_wos_all")
+    title_one = t("pub.chart_cc_wos") if kind == "countries" else t("pub.chart_inst_wos")
+    empty = t("pub.empty_cc_wos") if kind == "countries" else t("pub.empty_inst_wos")
+    if not wos:
+        cap_one = t("pub.cc_caption") if kind == "countries" else t("pub.inst_caption")
+        empty = t("pub.empty_cc") if kind == "countries" else t("pub.empty_inst")
+
+    if not overlay:
+        st.caption(cap_one)
+        show_empty(empty)
+        return
+
+    if topic:
+        rows = _as_bar_rows(kind, overlay.get(single_key) or [])
+        st.caption(cap_one)
+        if rows:
+            show_plotly(render_academic_bar_chart(rows, f"{title_one} — {topic}"))
+        else:
+            show_empty(empty)
+        return
+
+    by_topic = overlay.get(by_key) or {}
+    st.caption(cap_all)
+    drawn = False
+    for name in TOPIC_ORDER:
+        rows = _as_bar_rows(kind, by_topic.get(name) or [])
+        if not rows:
+            continue
+        drawn = True
+        st.markdown(f"#### {name}")
+        show_plotly(render_academic_bar_chart(rows, f"{title_one} — {name}"))
+    if not drawn:
+        show_empty(empty)
 
 
 def _source_total_rows(bundle: dict) -> list:
@@ -162,8 +211,11 @@ def render_academic_publication_module():
     with col_d:
         countries = bundle.get("countries") or []
         if not countries:
+            from backend.wos_topic_cache import wos_overlay as _wos_ov
+
             best = None
-            for tname, rows in (bundle.get("countries_by_topic") or {}).items():
+            overlay = _wos_ov(topic)
+            for tname, rows in ((overlay or {}).get("countries_by_topic") or {}).items():
                 for row in rows:
                     cand = (int(row["count"]), str(tname), str(row.get("cc") or ""))
                     if best is None or cand[0] > best[0]:
@@ -245,53 +297,11 @@ def render_academic_publication_module():
 
     elif section == "inst":
         st.markdown(t("pub.inst_heading"))
-        inst = bundle.get("institutions") or []
-        by_topic = bundle.get("institutions_by_topic") or {}
-        if inst and topic:
-            st.caption(t("pub.inst_caption_wos") if wos else t("pub.inst_caption"))
-            show_plotly(
-                render_academic_bar_chart(
-                    inst,
-                    t("pub.chart_inst_wos") if wos else t("pub.chart_inst"),
-                )
-            )
-        elif by_topic:
-            st.caption(t("pub.inst_caption_wos_all") if wos else t("pub.inst_caption"))
-            show_plotly(
-                render_academic_grouped_bar(by_topic, t("pub.chart_inst_wos_all"))
-            )
-        else:
-            st.caption(t("pub.inst_caption_wos") if wos else t("pub.inst_caption"))
-            show_empty(t("pub.empty_inst_wos") if wos else t("pub.empty_inst"))
+        _render_wos_breakdown("institutions", topic, wos)
 
     elif section == "country":
         st.markdown(t("pub.cc_heading"))
-        rows = [
-            {"name": _cc_name(r["cc"]), "count": r["count"]}
-            for r in (bundle.get("countries") or [])
-        ]
-        by_topic_raw = bundle.get("countries_by_topic") or {}
-        by_topic = {
-            tname: [{"name": _cc_name(r["cc"]), "count": r["count"]} for r in rows_t]
-            for tname, rows_t in by_topic_raw.items()
-            if rows_t
-        }
-        if rows and topic:
-            st.caption(t("pub.cc_caption_wos") if wos else t("pub.cc_caption"))
-            show_plotly(
-                render_academic_bar_chart(
-                    rows,
-                    t("pub.chart_cc_wos") if wos else t("pub.chart_cc"),
-                )
-            )
-        elif by_topic:
-            st.caption(t("pub.cc_caption_wos_all") if wos else t("pub.cc_caption"))
-            show_plotly(
-                render_academic_grouped_bar(by_topic, t("pub.chart_cc_wos_all"))
-            )
-        else:
-            st.caption(t("pub.cc_caption_wos") if wos else t("pub.cc_caption"))
-            show_empty(t("pub.empty_cc_wos") if wos else t("pub.empty_cc"))
+        _render_wos_breakdown("countries", topic, wos)
 
     elif section == "cited":
         st.markdown(t("pub.cited_heading"))

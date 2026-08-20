@@ -106,6 +106,7 @@ def literature_bundle(
     topic: Optional[str] = None,
     _keys: str = "",
     _wos: str = "",
+    _v: str = "cc2",
 ) -> Dict[str, Any]:
     """Türkiye / Avrupa / ikisi. Konu TR konu önbelleğindedir; ülke çubukları 6G başlıktır."""
     cache = _load_disk()
