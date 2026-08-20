@@ -207,6 +207,8 @@ def literature_bundle(
         "wos_total": None,
         "wos_query": "",
         "wos_fetched_at": "",
+        "institutions_by_topic": {},
+        "countries_by_topic": {},
         "source": (
             "WoS Core Collection ve Springer Nature Meta API (anahtar varsa). "
             "İki kaynak toplanmaz."
@@ -225,6 +227,8 @@ def literature_bundle(
         payload["year_series"] = overlay.get("year_series") or {}
         payload["institutions"] = overlay.get("institutions") or []
         payload["countries"] = overlay.get("countries") or []
+        payload["institutions_by_topic"] = overlay.get("institutions_by_topic") or {}
+        payload["countries_by_topic"] = overlay.get("countries_by_topic") or {}
         payload["cited"] = overlay.get("cited") or []
         payload["total"] = overlay.get("wos_total")
         payload["source"] = (

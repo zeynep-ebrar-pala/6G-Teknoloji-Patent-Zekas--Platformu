@@ -13,6 +13,7 @@ from i18n.core import format_int, get_lang, t
 from components.charts import (
     render_academic_bar_chart,
     render_academic_database_chart,
+    render_academic_grouped_bar,
     render_academic_trends_chart,
     render_wos_springer_totals_chart,
 )
@@ -160,15 +161,28 @@ def render_academic_publication_module():
                 st.metric(peak_label, "—")
     with col_d:
         countries = bundle.get("countries") or []
-        if countries:
+        if not countries:
+            best = None
+            for tname, rows in (bundle.get("countries_by_topic") or {}).items():
+                for row in rows:
+                    cand = (int(row["count"]), str(tname), str(row.get("cc") or ""))
+                    if best is None or cand[0] > best[0]:
+                        best = cand
+            if best:
+                st.metric(
+                    t("pub.metric_top_cc"),
+                    f"{_cc_name(best[2])} · {best[1]}",
+                    t("pub.metric_topic_delta", n=_fmt(best[0])),
+                )
+            else:
+                st.metric(t("pub.metric_top_cc"), "—")
+        else:
             top = countries[0]
             st.metric(
                 t("pub.metric_top_cc"),
                 _cc_name(top["cc"]),
                 t("pub.metric_topic_delta", n=_fmt(top["count"])),
             )
-        else:
-            st.metric(t("pub.metric_top_cc"), "—")
     if wos and bundle.get("wos_fetched_at"):
         st.caption(t("pub.snapshot", ts=bundle["wos_fetched_at"]))
 
@@ -231,33 +245,52 @@ def render_academic_publication_module():
 
     elif section == "inst":
         st.markdown(t("pub.inst_heading"))
-        st.caption(t("pub.inst_caption_wos") if wos else t("pub.inst_caption"))
         inst = bundle.get("institutions") or []
-        if inst:
+        by_topic = bundle.get("institutions_by_topic") or {}
+        if inst and topic:
+            st.caption(t("pub.inst_caption_wos") if wos else t("pub.inst_caption"))
             show_plotly(
                 render_academic_bar_chart(
                     inst,
                     t("pub.chart_inst_wos") if wos else t("pub.chart_inst"),
                 )
             )
+        elif by_topic:
+            st.caption(t("pub.inst_caption_wos_all") if wos else t("pub.inst_caption"))
+            show_plotly(
+                render_academic_grouped_bar(by_topic, t("pub.chart_inst_wos_all"))
+            )
         else:
+            st.caption(t("pub.inst_caption_wos") if wos else t("pub.inst_caption"))
             show_empty(t("pub.empty_inst_wos") if wos else t("pub.empty_inst"))
 
     elif section == "country":
         st.markdown(t("pub.cc_heading"))
-        st.caption(t("pub.cc_caption_wos") if wos else t("pub.cc_caption"))
         rows = [
             {"name": _cc_name(r["cc"]), "count": r["count"]}
             for r in (bundle.get("countries") or [])
         ]
-        if rows:
+        by_topic_raw = bundle.get("countries_by_topic") or {}
+        by_topic = {
+            tname: [{"name": _cc_name(r["cc"]), "count": r["count"]} for r in rows_t]
+            for tname, rows_t in by_topic_raw.items()
+            if rows_t
+        }
+        if rows and topic:
+            st.caption(t("pub.cc_caption_wos") if wos else t("pub.cc_caption"))
             show_plotly(
                 render_academic_bar_chart(
                     rows,
                     t("pub.chart_cc_wos") if wos else t("pub.chart_cc"),
                 )
             )
+        elif by_topic:
+            st.caption(t("pub.cc_caption_wos_all") if wos else t("pub.cc_caption"))
+            show_plotly(
+                render_academic_grouped_bar(by_topic, t("pub.chart_cc_wos_all"))
+            )
         else:
+            st.caption(t("pub.cc_caption_wos") if wos else t("pub.cc_caption"))
             show_empty(t("pub.empty_cc_wos") if wos else t("pub.empty_cc"))
 
     elif section == "cited":

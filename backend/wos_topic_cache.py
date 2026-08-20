@@ -72,6 +72,7 @@ def _institutions(row: Dict[str, Any]) -> List[Dict[str, Any]]:
             continue
         if name and count >= 0:
             out.append({"name": name, "count": count})
+    out.sort(key=lambda r: (-int(r["count"]), str(r["name"])))
     return out
 
 
@@ -89,6 +90,7 @@ def _countries(row: Dict[str, Any]) -> List[Dict[str, Any]]:
         except (TypeError, ValueError):
             continue
         out.append({"cc": cc, "count": count})
+    out.sort(key=lambda r: (-int(r["count"]), str(r["cc"])))
     return out
 
 
@@ -167,6 +169,19 @@ def wos_overlay(topic: Optional[str]) -> Optional[Dict[str, Any]]:
         "wos_fetched_at": str(cache.get("fetched_at") or ""),
         "wos_filter": str(cache.get("filter") or ""),
     }
+    by_inst: Dict[str, List[Dict[str, Any]]] = {}
+    by_cc: Dict[str, List[Dict[str, Any]]] = {}
+    for name in TOPIC_ORDER:
+        row = topics.get(name)
+        if not isinstance(row, dict):
+            continue
+        inst = _institutions(row)
+        cc = _countries(row)
+        if inst:
+            by_inst[name] = inst
+        if cc:
+            by_cc[name] = cc
+
     tpc = (topic or "").strip() or None
     if tpc and tpc in topics and isinstance(topics[tpc], dict):
         row = topics[tpc]
@@ -179,6 +194,8 @@ def wos_overlay(topic: Optional[str]) -> Optional[Dict[str, Any]]:
             "year_series": {tpc: series[tpc]} if tpc in series else {},
             "institutions": _institutions(row),
             "countries": _countries(row),
+            "institutions_by_topic": {tpc: by_inst[tpc]} if tpc in by_inst else {},
+            "countries_by_topic": {tpc: by_cc[tpc]} if tpc in by_cc else {},
             "cited": _cited(row, tpc),
         }
 
@@ -191,5 +208,7 @@ def wos_overlay(topic: Optional[str]) -> Optional[Dict[str, Any]]:
         "year_series": series,
         "institutions": [],
         "countries": [],
+        "institutions_by_topic": by_inst,
+        "countries_by_topic": by_cc,
         "cited": _merge_cited(topics),
     }

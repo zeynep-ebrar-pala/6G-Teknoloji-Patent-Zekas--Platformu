@@ -1032,3 +1032,59 @@ def render_academic_bar_chart(
     fig.update_layout(**layout)
     return fig
 
+
+def render_academic_grouped_bar(
+    by_topic: Dict[str, List[Dict[str, Any]]],
+    title: str,
+    *,
+    name_key: str = "name",
+) -> go.Figure:
+    """Konu başına tamsayı çubuk. Konular toplanmaz; listede yoksa 0 basılmaz."""
+    max_by: Dict[str, int] = {}
+    for items in by_topic.values():
+        for item in items:
+            label = str(item.get(name_key) or "").strip()
+            if not label:
+                continue
+            try:
+                n = int(item["count"])
+            except (TypeError, ValueError, KeyError):
+                continue
+            max_by[label] = max(max_by.get(label, 0), n)
+    labels = sorted(max_by, key=lambda n: (-max_by[n], n))
+    fig = go.Figure()
+    shown: List[int] = []
+    unit = t("charts.paper_count")
+    hover = t("charts.hover_h", unit=unit)
+    for idx, (topic, items) in enumerate(by_topic.items()):
+        lookup = {
+            str(item.get(name_key) or "").strip(): int(item["count"])
+            for item in items
+            if item.get(name_key) and isinstance(item.get("count"), int)
+        }
+        xs = [lookup.get(lab) for lab in labels]
+        shown.extend(v for v in xs if isinstance(v, int))
+        fig.add_trace(
+            go.Bar(
+                name=str(topic),
+                x=xs,
+                y=labels,
+                orientation="h",
+                marker=dict(color=QUALITATIVE_COLORS[idx % len(QUALITATIVE_COLORS)]),
+                hovertemplate=hover,
+            )
+        )
+    layout = _layout()
+    layout.update(
+        title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=_count_axis(t("charts.paper_count"), shown),
+        yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
+        barmode="group",
+        bargap=0.22,
+        height=max(420, 22 * max(len(labels), 1) + 110),
+        legend=dict(orientation="h", y=1.12, font=dict(size=11)),
+        margin=dict(l=40, r=40, t=70, b=40),
+    )
+    fig.update_layout(**layout)
+    return fig
+
