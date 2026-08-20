@@ -2,7 +2,7 @@
 Şartname yayın kaynakları — yalnız bu sitelerin resmi API’si.
 IEEE Xplore, Springer Nature, Elsevier Scopus, Clarivate WoS.
 Google Scholar resmi API yok; HTML kazınmaz. SERPAPI_KEY varsa üçüncü taraf.
-Anahtar yoksa None (UI —). OpenAlex / Crossref vekil yok.
+Anahtar yoksa None (UI —).
 """
 
 from __future__ import annotations
@@ -303,7 +303,7 @@ def fetch_native_counts(
     topic: Optional[str] = None,
     _keys: str = "",
 ) -> Dict[str, Optional[int]]:
-    """IEEE / Springer / Elsevier / WoS / Scholar. Anahtar yoksa None. OpenAlex yok."""
+    """IEEE / Springer / Elsevier / WoS / Scholar. Anahtar yoksa None."""
     q = _q6g(topic)
     empty = {"ieee": None, "springer": None, "elsevier": None, "wos": None, "scholar": None}
     if region == "eu":

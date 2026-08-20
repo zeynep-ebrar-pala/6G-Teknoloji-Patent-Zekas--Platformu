@@ -1,0 +1,15 @@
+---
+description: Her görev sonunda main’e commit ve GitHub’a push.
+alwaysApply: true
+---
+
+# GitHub main
+
+Kullanıcı her seferinde söylemese de, iş bitince:
+
+1. `git add` ilgili dosyalar (`.env` ve sırlar yok)
+2. Anlamlı commit (`neden`)
+3. `git push origin HEAD` — dal `main` ise GitHub `main`
+
+Force push yok. Hook reddederse düzeltip **yeni** commit.
+---

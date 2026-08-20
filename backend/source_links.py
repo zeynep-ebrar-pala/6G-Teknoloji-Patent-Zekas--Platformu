@@ -194,6 +194,14 @@ def paper_record_links(doi: str, source: str = "", wos_ut: str = "") -> List[Dic
     return links
 
 
+def ieee_text_search_url(query: str) -> str:
+    q = (query or "6G").strip() or "6G"
+    return (
+        "https://ieeexplore.ieee.org/search/searchresult.jsp"
+        f"?newsearch=true&queryText={_q(q)}"
+    )
+
+
 def assignee_patent_links(assignee: str) -> List[Dict[str, str]]:
     """Hak sahibi araması — tüm şartname patent ofisleri."""
     name = (assignee or "").strip()

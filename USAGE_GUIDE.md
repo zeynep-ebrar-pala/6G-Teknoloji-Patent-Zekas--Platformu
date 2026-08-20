@@ -25,7 +25,7 @@ Tarayıcıda `http://localhost:8501` açılır.
 | Ana Sayfa | 7 teknolojinin TRL radar haritası ve özet kartları |
 | 6G Teknolojileri | Tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL, kayıt sayımı grafikleri, referanslar |
 | Patent Zekası | Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE filtreli patent analitiği |
-| Yayın Trendleri | OpenAlex yıl / kurum / ülke grafikleri ve DOI doğrulamalı makaleler |
+| Yayın Trendleri | WoS Core Collection + Springer Meta API; DOI kartları |
 | Türk Telekom Görünümü | Saha senaryo çözümleyici |
 | AI Asistan | «RIS nedir?» ve «NTN ile ISAC arasındaki fark» dahil sorular; TF-IDF + isteğe bağlı LLM |
 | Hakkında | Amaç, yığın, 15 dakikalık sunum iskeleti |
@@ -42,15 +42,15 @@ Patent özetleri ve DOI kayıtları kaynakta kilitlidir (yeniden yazılmaz).
 4. Her karttaki **Kaynakta Aç** Google Patents sayfasını açar.
 5. **TT Avrupa izi:** TT Avrupa’da RAN satıcısı değil, Türkiye operatörü + TTI toptandır. Harita yalnızca adı kaynakta geçen ülkeleri boyar (TTI first-mover 6 ülke; 19/24 iddiası boyanmaz). Netsia Inc. USPTO; EP=0 gizlenmez. 921 milli başvuru çubuğa işlenmez. Örnek küme çubuğu küresel SEP payı değildir.
 
-Bu küme tam küresel portföy değildir; yalnızca Google Patents’ten doğrulanmış örnek kayıtlardır.
+Bu küme tam küresel portföy değildir. Grafikler Google Patents xhr (firma başı en fazla 20, assignee süzülür) + kilitli örnektir. Ofis tablosu xhr toplamıdır; toplanmaz.
 
 ## 4. Yayın Trendleri
 
-- Yıllık sayılar, kurumlar ve ülkeler OpenAlex API’den canlı gelir.
-- API yanıt vermezse grafik gizlenir; statik tablo gösterilmez.
-- Makale atıfları yalnızca OpenAlex `cited_by_count` alanındandır; yoksa «—» yazılır.
-- OpenAlex, IEEE / Springer / Elsevier ve Google Scholar indeksli literatürü kapsar. Google Scholar ayrı bir API sunmaz.
-- **TT Avrupa izi** sekmesi: aynı harita + kanıt türü; DOI’ler TR bağlılıklıdır. OpenAlex küresel ülke grafı TT portföyü değildir.
+- Toplam adet: WoS Core Collection + Springer Meta API (örtüşme düşülmez).
+- Yıl / kurum / ülke / atıf: WoS Analyze Results önbelleği.
+- Üst hücreler IEEE / Springer / Elsevier / WoS API; anahtar yoksa —.
+- Google Scholar resmi API yok; HTML çekilmez.
+- **TT Avrupa izi** sekmesi: kilitli DOI (TT bağlılığı) + resmi harita; operatör yayın API’si yoktur.
 
 ## 5. AI Asistan
 

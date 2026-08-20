@@ -31,8 +31,8 @@
 ## 3. Projenin Kapsamı
 
 - 7 temel 6G teknolojisinin TRL haritası ve detaylı keşif modülü
-- Google Patents üzerinden doğrulanmış patent analitiği
-- OpenAlex + DOI ile doğrulanmış akademik yayın analizi
+- Google Patents xhr + kilitli örnek patent analitiği
+- WoS / Springer / IEEE / Elsevier API ile akademik yayın sayımı (anahtar yoksa —)
 - Türk Telekom saha dağıtım senaryo çözümleyici
 - Groq / Gemini ile isteğe bağlı AI asistan (yalnızca doğrulanmış veri üzerinde yorum; uygulama anahtarsız açılır)
 
@@ -42,14 +42,14 @@
 |---------|----------|
 | Dual-Depth görünüm | Temel (nedir/neden/nasıl) + Uzman (denklem, varsayım); uzman temel katmanı atlamaz |
 | Source-locked veri | Patent ve makale kayıtları gerçek source_url ile bağlı |
-| Canlı OpenAlex trendleri | Statik uydurma sayı yok |
+| Canlı ofis toplamı | Google Patents xhr; Lens/EPO/USPTO bireysel anahtar |
 | Kaynakta Aç ↗ | Patent ve makaleler tarayıcıda gerçek kaynağa açılır |
 | Groq / Gemini | Yalnızca AI Asistan; anahtar `.env` veya oturumda, frontend'e sızmaz |
 
 ## 5. Sistem Mimarisi
 
 ```text
-Gerçek External Source (Google Patents, OpenAlex, DOI)
+Gerçek External Source (Google Patents, IEEE, Springer, WoS, DOI)
         ↓
 Raw Data (data/patents.py, data/academic.py)
         ↓
@@ -73,7 +73,7 @@ Streamlit Frontend (components/*, app.py)
 | Ana Sayfa | TRL radar, 7 teknoloji KPI kartları |
 | 6G Teknolojileri | Kavramsal temel, formül kartları, karşılaştırma, TT senaryoları, kayıt sayımı |
 | Patent Zekası | Yıl, konu, kelime bulutu, ağaç, yoğunluk, TF-IDF harita, Google Patents listesi |
-| Yayın Trendleri | OpenAlex yıl / kurum / ülke; DOI-doğrulamalı makaleler |
+| Yayın Trendleri | WoS Core Collection + Springer Meta API; DOI kartları |
 | Türk Telekom Görünümü | Avrupa’daki yer (doğrulanmış harita) + bölge/yoğunluk/önceliğe göre mimari önerisi |
 | AI Asistan | TF-IDF yerel geri getirme + isteğe bağlı Groq/Gemini |
 | Hakkında | Amaç, yığın, sunum iskeleti |
@@ -82,7 +82,7 @@ Streamlit Frontend (components/*, app.py)
 
 - **Python 3.9+**, **Streamlit**, **Plotly**, **Pandas**, **Matplotlib**, **NetworkX**, **WordCloud**, **scikit-learn**
 - **python-dotenv**, **groq**, **google-genai** (AI Asistan, isteğe bağlı)
-- **OpenAlex REST API**, **Google Patents**, **DOI (IEEE / Springer / Elsevier)**
+- **Google Patents xhr**, **Lens / EPO OPS / PatentsView** (bireysel anahtar), **DOI (IEEE / Springer / Elsevier)**, **WoS**
 
 ## 8. Frontend
 
@@ -108,7 +108,7 @@ Adım adım kullanım: [USAGE_GUIDE.md](USAGE_GUIDE.md).
 | `config.py` | `.env` yükleme |
 | `auth_service.py` | Groq/Gemini API doğrulama |
 | `data_validator.py` | Source-locked kayıt filtresi |
-| `openalex_client.py` | Canlı OpenAlex sorguları |
+| `patent_apis.py` | Google Patents xhr + Lens / EPO / PatentsView |
 | `patent_service.py` | Patent metrikleri (gerçek kayıtlardan) |
 | `academic_service.py` | Akademik metrikler + DOI zenginleştirme |
 | `scenario_engine.py` | TT saha senaryo motoru |
@@ -173,7 +173,7 @@ Bu proje ayrı bir HTTP API sunucusu kullanmaz. Backend, Streamlit uygulaması i
 | Auth | `AuthService.validate_groq()` / `validate_gemini()` |
 | Patent | `PatentService.get_summary()`, `get_top_patents()`, `get_network_edges()` |
 | Akademik | `AcademicService.get_tech_publication_trends_df()`, `get_most_cited_papers()` |
-| OpenAlex | `fetch_publication_trends()`, `fetch_work_by_doi()` |
+| Patent ofisleri | `fetch_office_counts()`, `google_patents_records()` |
 | Senaryo | `ScenarioEngine.recommend()` |
 
 ## 18. Veri Doğrulama Yaklaşımı
@@ -190,15 +190,15 @@ Bu proje ayrı bir HTTP API sunucusu kullanmaz. Backend, Streamlit uygulaması i
 
 ## 20. Akademik Veri Kaynakları
 
-- [OpenAlex](https://openalex.org) — trend sayıları ve atıf güncellemesi
-- DOI → IEEE Xplore / Crossref yayıncı sayfaları
+- [Web of Science](https://www.webofscience.com) — konu grafikleri (Analyze Results önbelleği)
+- DOI → IEEE Xplore / Springer / Elsevier
 
 ## 21. Halüsinasyon Önleme Yaklaşımı
 
 - LLM patent/makale/DOI/URL **icat etmez**
 - LLM görevi: analiz, özetleme, sınıflandırma, karşılaştırma
 - Tüm metrikler doğrulanmış kayıt kümesinden hesaplanır
-- OpenAlex erişilemezse trend grafiği gizlenir; statik sayı kullanılmaz
+- Ofis API’si yanıt vermezse hücre —; statik sayı uydurulmaz
 
 ## 22. Proje Klasör Yapısı
 
@@ -213,7 +213,7 @@ MODUL1/
 │   ├── config.py
 │   ├── auth_service.py
 │   ├── data_validator.py
-│   ├── openalex_client.py
+│   ├── patent_apis.py
 │   ├── patent_service.py
 │   ├── academic_service.py
 │   ├── scenario_engine.py

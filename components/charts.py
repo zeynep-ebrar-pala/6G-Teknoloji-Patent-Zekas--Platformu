@@ -811,7 +811,7 @@ def render_tt_vs_vendors_chart(counts: Dict[str, int]) -> go.Figure:
 def render_tt_country_rank_chart(
     rows: List[Dict[str, Any]], value_key: str, title: str, x_title: str
 ) -> go.Figure:
-    """Kilitli 3 MNO + TT. Değer OpenAlex veya örnek küme; uydurma yok."""
+    """Kilitli 3 MNO + TT. Yayın: kilitli DOI (TT). Patent: kilitli örnek."""
     ordered = sorted(rows, key=lambda r: int(r.get(value_key) or 0), reverse=True)
     names = [r["name"] for r in ordered]
     vals = [int(r.get(value_key) or 0) for r in ordered]

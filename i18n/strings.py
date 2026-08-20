@@ -175,33 +175,69 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknolojileri</strong> uz
             "perf_heading": "### Performans — doğrulanmış kayıt sayımı",
             "perf_caption": "Temsili 5G/6G hedef barı yok. Aşağıdaki grafikler bu teknolojinin doğrulanmış patent kayıt sayısı ve (varsa) Crossref 6G başlık yayın trendidir.",
             "empty_patents": "«{domain}» için doğrulanmış patent kaydı yok.",
-            "openalex_fail": "Crossref bu konu için sayım vermedi; yayın trendi gizlendi.",
-            "cell_free_oa": "Cell-Free, şartnamedeki akademik konu listesinde yoktur; Crossref konu serisi gösterilmez.",
+            "pub_fail": "Bu konu için yayın yılı serisi yok; grafik gizlenir.",
+            "cell_free_pub": "Cell-Free, şartnamedeki akademik konu listesinde yoktur; konu serisi gösterilmez.",
             "refs": "### Referans Makaleler & Yayınlar",
             "refs_caption": "Bağlantılar DOI veya resmi 3GPP / proje sayfalarına gider.",
         },
         "patent": {
             "title": "Patent Zekası",
-            "subtitle": "Küresel telekom firmalarının 6G patent kayıtları — tüm kayıtlar Google Patents üzerinden doğrulanabilir. Bu küme tam portföy değildir; yalnızca doğrulanmış örnek kayıtlardır. Kaynak: {source}",
+            "subtitle": "IEEE patent sunmaz. Grafikler Google Patents xhr kayıtları + kilitli örnek. Ofis tablosu canlı toplam (anahtar yoksa —). Tam portföy değildir. Kaynak: {source}",
             "filter": "Firma (şartname listesi: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE):",
             "all": "Tümü",
             "what_title": "Bu sayfa ne işe yarar?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Patent</strong>, bir buluşun kamuya açıklanması karşılığında sınırlı süre tekel hakkıdır.
-Burada baktığımız şey hukuki tavsiye değil; hangi firmanın hangi 6G konusunda koruma talebinde
-bulunduğunun <em>örnek</em> haritasıdır. <strong>Assignee</strong> (hak sahibi) kaydı kimin
-başvurduğunu söyler; o firmanın sahada ürünü olduğu anlamına gelmez.
+<strong>Problem:</strong> 6G patent hacmi ofise ve sorguya göre değişir.
+<strong>IEEE Xplore patent sunmaz</strong> — yalnızca akademik yayın verir.
+<strong>Uygun ofisler:</strong> Google Patents, Lens.org, Espacenet (EPO — European Patent Office, Avrupa Patent Ofisi),
+WIPO <strong>PATENTSCOPE</strong> (Patent Cooperation Treaty — Patent İşbirliği Anlaşması arama), USPTO (United States Patent and Trademark Office — ABD Patent ve Marka Ofisi).
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-<strong>TF-IDF (Term Frequency–Inverse Document Frequency — terim sıklığı–ters belge sıklığı):</strong>
-özet metindeki sözcükleri, derlemede ne kadar ayırt edici olduklarına göre puanlar.
-Harita anlam çıkarmaz; hangi kaydın hangi sözcüklere yakın durduğunu gösterir.
-Özetler kaynakta kilitlidir — yeniden yazılmaz, uydurulmaz.
+<strong>İki katman karıştırılmaz.</strong>
+Grafikler ve kartlar Google Patents xhr kayıtlarıdır (firma başı en fazla 20; assignee süzülür) artı kilitli örnek.
+Tam portföy değildir. Üst ofis tablosu aynı konunun xhr <em>toplamı</em>dır; ilk 20 ile toplanmaz.
+Lens / Espacenet / USPTO bireysel API — yoksa —. WIPO JSON toplam yok.
 </p>
 <p style="color:#94A3B8;font-size:0.84rem;margin:10px 0 0 0;">
-Ne zaman yorumlanmaz: tek patent = pazar liderliği değildir. Yıl çubuğu başvuru/yayın yılıdır,
-ticarileşme tarihi değildir.
+<strong>Assignee</strong> (hak sahibi) kimin başvurduğunu söyler; sahada ürün anlamına gelmez.
+Tek patent = pazar liderliği değildir. Yıl çubuğu yayın/başvuru yılıdır, ticarileşme tarihi değildir.
 </p>""",
+            "access_title": "Kim bireysel anahtar, kim anahtarsız?",
+            "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
+Kurumsal patent API’si yok. Anahtar bireysel kayıttan gelir; yoksa hücre —.
+</p>
+<ul style="color:#CBD5E1;font-size:0.86rem;line-height:1.65;margin:8px 0 0 1.1rem;padding:0;">
+<li><strong>Google Patents</strong> — resmi sayım API’si yok. Bu platform xhr toplamını yazar; HTML kazınmaz.</li>
+<li><strong>Lens.org</strong> — bireysel Bearer token (<code>LENS_TOKEN</code>).</li>
+<li><strong>Espacenet / EPO OPS</strong> — bireysel consumer key + secret.</li>
+<li><strong>USPTO PatentsView</strong> — bireysel <code>X-Api-Key</code>.</li>
+<li><strong>WIPO PATENTSCOPE</strong> — herkese açık JSON toplam uç noktası yok; arama düğmesi siteyi açar, sayı uydurulmaz.</li>
+</ul>""",
+            "expert_title": "API adı, örnek küme, sınır",
+            "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
+<strong>Grafik katmanı:</strong> <code>data/patents.py</code> kilitli örnek. Özet/başlık yeniden yazılmaz.
+<strong>TF-IDF (Term Frequency–Inverse Document Frequency — terim sıklığı–ters belge sıklığı):</strong>
+harita anlam çıkarmaz; hangi kaydın hangi sözcüklere yakın durduğunu gösterir.
+<strong>Google Patents xhr:</strong> <code>patents.google.com/xhr/query</code> — resmi sözleşme değil; yanıt yoksa —.
+<strong>Lens:</strong> <code>POST api.lens.org/patent/search</code>, Bearer.
+<strong>EPO OPS:</strong> OAuth client credentials + <code>published-data/search</code>.
+<strong>PatentsView:</strong> <code>search.patentsview.org/api/v1/patent/</code>.
+<strong>WIPO:</strong> JSON toplam yok.
+Firma xhr sayısı örnek çubukla toplanmaz; IEEE bu tabloya girmez.
+</p>""",
+            "key_gp": "Google Patents ↗",
+            "key_lens": "Lens API ↗",
+            "key_espacenet": "EPO OPS ↗",
+            "key_wipo": "PATENTSCOPE ↗",
+            "key_uspto": "PatentsView API ↗",
+            "live_gp_heading": "### Google Patents xhr — hak sahibi (örnek küme değil)",
+            "live_gp_spin": "Google Patents xhr soruluyor (önbellek varsa atlanır)",
+            "live_gp_caption": "Aynı konu sorgusu + assignee. Yanıt yoksa —. Bu sayılar kilitli örnek çubuklarla toplanmaz.",
+            "live_gp_metric": "Google Patents xhr (hak sahibi)",
+            "live_gp_empty": "xhr bu sorgu için toplam vermedi; sayı uydurulmaz.",
+            "live_col_firm": "Firma",
+            "live_col_n": "xhr toplam",
+            "live_col_sample": "Örnek küme",
             "empty_company": "«{company}» için doğrulanmış patent kaydı yok. Sayı uydurulmaz; Google Patents’te teyitli kayıt eklenene kadar grafik gizlenir.",
             "empty_topic": "Kilitli örnek kümede «{topic}» kaydı yok. Sayı uydurulmaz. Aşağıdaki ofis butonları aynı konuyu sitede arar.",
             "metric_total": "Doğrulanmış Patent Kaydı",
@@ -213,15 +249,15 @@ ticarileşme tarihi değildir.
             "open_gp": "Google Patents ana sayfasını aç ↗",
             "view": "Bölüm",
             "section": {
-                "year": "Kim ve ne zaman",
-                "topics": "Hangi 6G alanı",
-                "landscape": "Peyzaj (ağaç, yoğunluk, harita, ağ)",
+                "year": "Sayı, yıl, firmalar",
+                "topics": "Konular, kelimeler, radar",
+                "landscape": "Ağaç, yoğunluk, harita",
                 "tt_eu": "TT Avrupa izi",
             },
-            "year_heading": "### Yıllara Göre Dağılım",
+            "year_heading": "### Patent sayısı / yıl",
             "year_caption": "Her çubuk bir takvim yılıdır (ör. 2024, 2025). Kayıtlarda ay bilgisi olmadığı için 2024.2 gibi ara değer veya uydurma «2. Ay» dilimi yok.",
             "empty_trend": "Trend grafiği için yeterli patent verisi yok.",
-            "companies_heading": "### En Çok Kayıtlı Firmalar",
+            "companies_heading": "### En çok çalışan firmalar (örnek küme)",
             "empty_counts": "Firma sayımı için veri yok.",
             "empty_domain": "Domain dağılımı hesaplanamadı.",
             "empty_kw": "Anahtar kelime analizi için veri yok.",
@@ -560,7 +596,7 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "overview_heading_pat": "### Avrupa geneli — patent (kilitli örnek küme)",
             "overview_heading_pub": "### Avrupa geneli — yayın",
             "overview_caption": "Her ülkede Wikipedia MNO listesindeki 3 işletmeci, 6G konu aramasında kurum kimliği (veya bağlılık dizesi) ile sayıldı. 1./2./3. bu üç firmanın kendi iç sıralamasıdır; abone payı değildir. TT ayrı sütundadır. Ölçülmüş 0 (kurum bulundu, konu kaydı yok) 0’dır. Sorgulanamayan sayı — olarak kalır, uydurulmaz. Patent sütunu bu platformun kilitli örnek kümesidir (EPO PATSTAT taraması değil).",
-            "overview_caption_pat": "Kilitli örnek kümede en az bir patenti olan ülkeler. 0’lık 2./3. operatör sütunu yok; yayın sütunu bu sayfada yok. TT için EP=0; Netsia USPTO yalnız TR. 0 kayıt sıra almaz (—).",
+            "overview_caption_pat": "Kilitli örnek kümede en az bir patenti olan ülkeler. IEEE bu sayfada yok (patent sunmaz). 0’lık 2./3. operatör sütunu yok; yayın sütunu bu sayfada yok. TT için EP=0; Netsia USPTO yalnız TR. 0 kayıt sıra almaz (—).",
             "overview_caption_pub": "Her ülkede Wikipedia MNO listesindeki 3 işletmeci, 6G konu aramasında kurum kimliği (veya bağlılık dizesi) ile sayıldı. 1./2./3. bu üç firmanın kendi iç sıralamasıdır; abone payı değildir. TT ayrı sütundadır. Ölçülmüş 0, 0’dır. Sorgulanamayan sayı — olarak kalır.",
             "overview_spin": "Operatör yayın sayıları yükleniyor (önbellek varsa beklenmez)",
             "overview_spin_pat": "Kilitli patent örnek kümesi yükleniyor",
@@ -586,7 +622,7 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "rank_heading_pat": "### Ülke detayı — patent (3 MNO + Türk Telekom)",
             "rank_heading_pub": "### Ülke detayı — yayın (3 MNO + Türk Telekom)",
             "rank_caption": "Üç operatör Wikipedia Avrupa MNO listesindeki bu ülke satırından kilitlendi; abone/gelir «en yüksek 3» bu platformda ölçülmedi. Yayın = 6G konu + kurum ID (yoksa bağlılık dizesi). Patent = kilitli örnek küme (TT için EP=0; Netsia USPTO yalnız TR). 0 kayıt sıra almaz (—). Küresel SEP veya pazar payı değildir.",
-            "rank_caption_pat": "Bu ülkede Wikipedia’daki 3 MNO + TT. Patent = kilitli örnek küme (EP=0; Netsia USPTO yalnız TR). Yayın sütunu yok. 0 kayıt sıra almaz (—). Hak sahibi araması kayıt kartı değildir; kartlarda Lens / Espacenet / PATENTSCOPE durur.",
+            "rank_caption_pat": "Bu ülkede Wikipedia’daki 3 MNO + TT. Patent = kilitli örnek küme (EP=0; Netsia USPTO yalnız TR). Operatör yayın API’si yok. 0 kayıt sıra almaz (—). Hak sahibi araması kayıt kartı değildir; kartlarda Lens / Espacenet / PATENTSCOPE durur.",
             "rank_caption_pub": "Üç operatör Wikipedia Avrupa MNO listesinden kilitlendi. Yayın = 6G konu + kurum ID. 0 kayıt sıra almaz (—). Patent ofis sütunu bu sayfada yok.",
             "rank_country": "Avrupa ülkesi",
             "rank_spin": "Ülke sıralaması yükleniyor",
@@ -603,7 +639,7 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "rank_col_pub": "Yayın",
             "rank_col_rank_pat": "Patent sırası",
             "rank_col_pat": "Patent (örnek)",
-            "rank_open_oa": "Bu ülke yayın sorgusunu aç ↗",
+            "rank_open_oa": "IEEE Xplore’da bu ülke 6G aramasını aç ↗",
             "rank_open_wiki": "Avrupa MNO listesini aç ↗",
             "rank_open_gp": "Google Patents hak sahibi (assignee) ↗",
             "layer": {
@@ -623,7 +659,7 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
         },
         "sources": {
             "patent_heading": "### Şartname patent veritabanları",
-            "patent_caption": "Kilitli kayıtlar Google Patents’ten alındı; kartta aynı yayın no varsa Lens, Espacenet, PATENTSCOPE ve US tescil PDF de listelenir. Boş USPTO ppubs SPA yok.",
+            "patent_caption": "IEEE patent sunmaz. Kilitli kayıtlar Google Patents’ten alındı; kartta aynı yayın no varsa Lens, Espacenet, PATENTSCOPE ve US tescil PDF de listelenir. Boş USPTO ppubs SPA yok.",
             "pub_heading": "### Şartname yayın veritabanları",
             "pub_caption": "Makaleler DOI ile kilitlidir. Kartta DOI + o kaydın bulunduğu yayınevi (IEEE / Springer / Elsevier) + Scholar + WoS (UT tam kayıt veya DOI OpenURL) listelenir. WoS üst hücre sayısı Clarivate API anahtarı ister; HTML kazınmaz.",
             "patent_metric": "Google Patents",
@@ -646,7 +682,6 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "open_elsevier": "Elsevier / ScienceDirect ↗",
             "open_wos": "WoS ↗",
             "open_doi": "DOI ↗",
-            "open_openalex": "DOI ↗",
             "open_crossref": "Crossref ↗",
             "mix_heading": "### Mix tarama (şartname siteleri)",
             "mix_caption": "Aynı 6G konusu: yayın (IEEE, Scholar, Springer, Elsevier, WoS) + patent (Google Patents, Lens, Espacenet, PATENTSCOPE, USPTO).",
@@ -662,7 +697,7 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "topic_live_one": "Rakip örnek kümede «{topic}»: **{n}** kayıt. TT-grup ofis çubukları: Avrupa Patent Ofisi {ep} · ABD Patent ve Marka Ofisi {us} · Türkiye Patent ve Marka Kurumu {tr}. Düğme yeni sekmede «{q}» aramasını açar.",
             "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND konu, PY=2020-2026. Altı konu çubuğu ayrıdır; toplanmaz. Türkiye başlık-6G önbelleği: **{n}** (küresel WoS değildir).",
             "topic_live_one_pub": "WoS Core Collection «{topic}»: **{n}** kayıt. Sorgu: `{q}`. Türkiye başlık-6G: {tr} (Crossref önbelleği; WoS küresel sayım değildir).",
-            "totals_caption_pat": "Aynı sorgu, tüm ofisler. Google Patents xhr yanıt verirse sayı yazılır; Lens / Espacenet / PATENTSCOPE / USPTO anahtarsız toplam vermez — uydurulmaz.",
+            "totals_caption_pat": "Aynı sorgu, tüm ofisler. IEEE yok (patent sunmaz). Google Patents xhr anahtarsız. Lens / Espacenet / USPTO: bireysel anahtar yoksa —. WIPO JSON toplam yok. Ofis sayısı örnek grafiklerle toplanmaz.",
             "totals_caption_pub": "IEEE / Springer / Elsevier / WoS: o sitenin API’si (anahtar varsa). Scholar resmi API yok.",
             "total_col_db": "Veritabanı",
             "total_col_n": "Toplam",
@@ -670,7 +705,12 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "total_col_open": "Aramayı aç",
             "total_open_text": "Aç",
             "method_gp": "Google Patents xhr (aynı sorgu)",
-            "method_none": "Herkese açık sayım API’si yok",
+            "method_none": "Herkese açık JSON sayım API’si yok",
+            "method_need_key": "Bireysel API anahtarı yok (hücre —)",
+            "method_api_empty": "Anahtar var; ofis toplam vermedi — uydurulmaz",
+            "method_native_lens": "Lens.org patent API (Bearer, bireysel token)",
+            "method_native_espacenet": "EPO OPS published-data/search (bireysel key+secret)",
+            "method_native_uspto": "USPTO PatentsView v1 (X-Api-Key)",
             "method_native_ieee": "IEEE Xplore Metadata API (affiliation Turkey, 2020–2026)",
             "method_native_springer": "Springer Meta API Basic: metin 6G Turkey, 2020–2026 (affiliation: premium, 403)",
             "method_native_elsevier": "Elsevier Scopus API",
@@ -680,7 +720,6 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "method_crossref_springer": "Crossref query.title=6G + önek 10.1007",
             "method_crossref_elsevier": "Crossref query.title=6G + önek 10.1016",
             "method_crossref_title": "Crossref query.title=6G, dergi, 2020–2026",
-            "method_openalex": "DOI kayıt sayımı",
         },
         "scenario": {
             "title": "Türk Telekom 6G Saha Dağıtım ve Senaryo Çözümleyici",
@@ -1114,32 +1153,68 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
             "perf_heading": "### Performance — verified record counts",
             "perf_caption": "There is no representative 5G/6G target bar. The charts below are this technology’s verified patent-record count and, when available, the Crossref 6G-title publication trend.",
             "empty_patents": "No verified patent records for “{domain}”.",
-            "openalex_fail": "Crossref did not return a count for this topic; the publication trend is hidden.",
-            "cell_free_oa": "Cell-free MIMO is not on the specification’s academic topic list; no Crossref topic series is shown.",
+            "pub_fail": "No publication-year series for this topic; the chart is hidden.",
+            "cell_free_pub": "Cell-free MIMO is not on the specification’s academic topic list; no topic series is shown.",
             "refs": "### Reference Papers & Publications",
             "refs_caption": "Links go to a DOI or an official 3GPP / project page.",
         },
         "patent": {
             "title": "Patent Intelligence",
-            "subtitle": "6G patent records from global telecom vendors — every record is checkable on Google Patents. This set is not a full portfolio; it is a verified sample. Source: {source}",
+            "subtitle": "IEEE does not host patents. Charts are Google Patents xhr records + the locked sample. The office table is a live total (no key → —). Not a full portfolio. Source: {source}",
             "filter": "Company (specification list: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE):",
             "all": "All",
             "what_title": "What this page is for",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-A <strong>patent</strong> is a time-limited exclusive right in exchange for public disclosure of an invention.
-This page is not legal advice. It is a <em>sample</em> map of which firms have filed in which 6G topics.
-The <strong>assignee</strong> names who filed; it does not mean that firm has a product in the field.
+<strong>Problem:</strong> 6G patent volume depends on the office and the query.
+<strong>IEEE Xplore does not host patents</strong> — it is academic publications only.
+<strong>Offices used here:</strong> Google Patents, Lens.org, Espacenet (EPO — European Patent Office),
+WIPO <strong>PATENTSCOPE</strong> (Patent Cooperation Treaty search), USPTO (United States Patent and Trademark Office).
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-<strong>TF-IDF (term frequency–inverse document frequency):</strong>
-scores words in the abstract by how distinctive they are in the corpus.
-The map does not extract meaning; it shows which records sit near which terms.
-Abstracts are locked to the source — they are not rewritten or invented.
+<strong>Two layers are not mixed.</strong> Charts and cards are Google Patents xhr records (at most 20 per firm; assignee-filtered) plus the locked sample.
+Not a full portfolio. The office table is the xhr total for the same query; it is not summed with the first 20.
+No key → —. WIPO has no keyless JSON total. Office totals and sample bars are not summed.
 </p>
 <p style="color:#94A3B8;font-size:0.84rem;margin:10px 0 0 0;">
-Do not over-read: one patent is not market leadership. The year bar is filing/publication year,
-not commercialisation date.
+The <strong>assignee</strong> names who filed; it is not a fielded product. One patent is not market leadership.
+The year bar is filing/publication year, not commercialisation date.
 </p>""",
+            "access_title": "Personal keys vs keyless",
+            "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
+There is no institutional patent API. Keys come from personal registration; missing key → —.
+</p>
+<ul style="color:#CBD5E1;font-size:0.86rem;line-height:1.65;margin:8px 0 0 1.1rem;padding:0;">
+<li><strong>Google Patents</strong> — no official count API. This app writes the xhr total; HTML is not scraped.</li>
+<li><strong>Lens.org</strong> — personal Bearer token (<code>LENS_TOKEN</code>).</li>
+<li><strong>Espacenet / EPO OPS</strong> — personal consumer key + secret.</li>
+<li><strong>USPTO PatentsView</strong> — personal <code>X-Api-Key</code>.</li>
+<li><strong>WIPO PATENTSCOPE</strong> — no public JSON total; the button opens the site; the count is not invented.</li>
+</ul>""",
+            "expert_title": "API name, sample, limit",
+            "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
+<strong>Chart layer:</strong> locked sample in <code>data/patents.py</code>. Abstracts/titles are not rewritten.
+<strong>TF-IDF (term frequency–inverse document frequency):</strong>
+the map does not extract meaning; it shows which records sit near which terms.
+<strong>Google Patents xhr:</strong> <code>patents.google.com/xhr/query</code> — not a contract API; no answer → —.
+<strong>Lens:</strong> <code>POST api.lens.org/patent/search</code>, Bearer.
+<strong>EPO OPS:</strong> OAuth client credentials + <code>published-data/search</code>.
+<strong>PatentsView:</strong> <code>search.patentsview.org/api/v1/patent/</code>.
+<strong>WIPO:</strong> no JSON total.
+Assignee xhr counts are not summed with sample bars. IEEE is not in this table.
+</p>""",
+            "key_gp": "Google Patents ↗",
+            "key_lens": "Lens API ↗",
+            "key_espacenet": "EPO OPS ↗",
+            "key_wipo": "PATENTSCOPE ↗",
+            "key_uspto": "PatentsView API ↗",
+            "live_gp_heading": "### Google Patents xhr — assignee (not the sample)",
+            "live_gp_spin": "Asking Google Patents xhr (skipped when cached)",
+            "live_gp_caption": "Same topic query + assignee. No answer → —. These numbers are not summed with the locked sample bars.",
+            "live_gp_metric": "Google Patents xhr (assignee)",
+            "live_gp_empty": "xhr did not return a total for this query; the count is not invented.",
+            "live_col_firm": "Firm",
+            "live_col_n": "xhr total",
+            "live_col_sample": "Locked sample",
             "empty_company": "No verified patent records for “{company}”. Counts are not invented; charts stay hidden until a Google Patents-confirmed record is added.",
             "empty_topic": "The locked sample has no “{topic}” records. Counts are not invented. The office buttons below search the same topic on the site.",
             "metric_total": "Verified patent records",
@@ -1151,15 +1226,15 @@ not commercialisation date.
             "open_gp": "Open the Google Patents homepage ↗",
             "view": "Section",
             "section": {
-                "year": "Who and when",
-                "topics": "Which 6G domain",
-                "landscape": "Landscape (tree, density, map, network)",
+                "year": "Counts, years, firms",
+                "topics": "Topics, keywords, radar",
+                "landscape": "Tree, density, map",
                 "tt_eu": "TT Europe footprint",
             },
-            "year_heading": "### Distribution by year",
+            "year_heading": "### Patent count / year",
             "year_caption": "Each bar is a calendar year (e.g. 2024, 2025). Records have no month field, so there is no 2024.2 tick and no invented “Month 2” slice.",
             "empty_trend": "Not enough patent data for a trend chart.",
-            "companies_heading": "### Companies with the most records",
+            "companies_heading": "### Firms with the most filings (locked sample)",
             "empty_counts": "No data for a company count.",
             "empty_domain": "Domain mix could not be computed.",
             "empty_kw": "No data for keyword analysis.",
@@ -1498,7 +1573,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "overview_heading_pat": "### Europe-wide — patents (locked sample)",
             "overview_heading_pub": "### Europe-wide — publications",
             "overview_caption": "In each country the three MNOs from the Wikipedia list are counted via a 6G topic search on institution IDs (or affiliation strings). 1st/2nd/3rd rank those three firms, not subscriber share. TT is a separate column. A measured 0 (institution found, no topic hits) stays 0. A count that could not be queried stays — and is not invented. Patent columns are this platform’s locked sample, not an EPO PATSTAT extract.",
-            "overview_caption_pat": "Only countries with at least one patent in the locked sample. No empty 2nd/3rd operator columns; publication columns are not on this page. EP=0 for TT; Netsia USPTO is counted on TR only. A zero count is unranked (—).",
+            "overview_caption_pat": "Only countries with at least one patent in the locked sample. IEEE is not on this page (it does not host patents). No empty 2nd/3rd operator columns; publication columns are not on this page. EP=0 for TT; Netsia USPTO is counted on TR only. A zero count is unranked (—).",
             "overview_caption_pub": "In each country the three Wikipedia MNOs are counted via a 6G topic search. 1st/2nd/3rd rank those firms, not subscriber share. TT is a separate column. A measured 0 stays 0. A count that could not be queried stays —.",
             "overview_spin": "Loading operator publication counts (skipped when cached)",
             "overview_spin_pat": "Loading the locked patent sample",
@@ -1524,7 +1599,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "rank_heading_pat": "### Country detail — patents (3 MNOs + Türk Telekom)",
             "rank_heading_pub": "### Country detail — publications (3 MNOs + Türk Telekom)",
             "rank_caption": "The three operators are locked from that country’s row in the Wikipedia European MNO list; subscriber/revenue “top 3” was not measured here. Publication counts are a 6G topic search. Patent counts are this platform’s locked sample only (EP=0 for TT; Netsia USPTO is counted on the TR row only). A zero count is unranked (—); zeros are not labelled “2nd”. Not global SEP or market share.",
-            "rank_caption_pat": "The three Wikipedia MNOs + TT in this country. Patents = locked sample (EP=0; Netsia USPTO on TR only). No publication columns. A zero count is unranked (—). The assignee search is not a record card; Lens / Espacenet / PATENTSCOPE stay on the cards.",
+            "rank_caption_pat": "The three Wikipedia MNOs + TT in this country. Patents = locked sample (EP=0; Netsia USPTO on TR only). There is no operator publication API on this tab. A zero count is unranked (—). The assignee search is not a record card; Lens / Espacenet / PATENTSCOPE stay on the cards.",
             "rank_caption_pub": "The three operators are locked from the Wikipedia European MNO list. Publications are a 6G topic search. A zero count is unranked (—). Patent-office columns are not on this page.",
             "rank_country": "European country",
             "rank_spin": "Loading the country ranking",
@@ -1541,7 +1616,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "rank_col_pub": "Publications",
             "rank_col_rank_pat": "Patent rank",
             "rank_col_pat": "Patents (sample)",
-            "rank_open_oa": "Open this country’s publication query ↗",
+            "rank_open_oa": "Open this country’s 6G search on IEEE Xplore ↗",
             "rank_open_wiki": "Open the European MNO list ↗",
             "rank_open_gp": "Google Patents assignee ↗",
             "layer": {
@@ -1561,7 +1636,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
         },
         "sources": {
             "patent_heading": "### Spec patent databases",
-            "patent_caption": "Locked records were taken from Google Patents; if the same publication number exists, the card also lists Lens, Espacenet, PATENTSCOPE, and the US grant PDF. No blank USPTO ppubs SPA.",
+            "patent_caption": "IEEE does not host patents. Locked records were taken from Google Patents; if the same publication number exists, the card also lists Lens, Espacenet, PATENTSCOPE, and the US grant PDF. No blank USPTO ppubs SPA.",
             "pub_heading": "### Spec publication databases",
             "pub_caption": "Papers are locked by DOI. Each card lists DOI + the publisher that actually hosts that DOI (IEEE / Springer / Elsevier) + Scholar + WoS (UT full record or DOI OpenURL). The WoS headline count still needs a Clarivate API key; HTML is not scraped.",
             "patent_metric": "Google Patents",
@@ -1584,7 +1659,6 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "open_elsevier": "Elsevier / ScienceDirect ↗",
             "open_wos": "WoS ↗",
             "open_doi": "DOI ↗",
-            "open_openalex": "DOI ↗",
             "open_crossref": "Crossref ↗",
             "mix_heading": "### Mixed search (spec databases)",
             "mix_caption": "The same 6G topic: papers (IEEE, Scholar, Springer, Elsevier, WoS) + patents (Google Patents, Lens, Espacenet, PATENTSCOPE, USPTO).",
@@ -1600,7 +1674,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "topic_live_one": "Vendor sample “{topic}”: **{n}** records. TT-group office bars: European Patent Office {ep} · U.S. Patent and Trademark Office {us} · Turkish Patent and Trademark Office {tr}. A button opens a “{q}” search in a new tab.",
             "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND topic, PY=2020-2026. The six topic bars are separate and not summed. Türkiye title-6G cache: **{n}** (not the global WoS count).",
             "topic_live_one_pub": "WoS Core Collection “{topic}”: **{n}** records. Query: `{q}`. Türkiye title-6G: {tr} (Crossref cache; not the global WoS count).",
-            "totals_caption_pat": "Same query, every office. Google Patents xhr writes a count when it answers; Lens / Espacenet / PATENTSCOPE / USPTO have no keyless total — counts are not invented.",
+            "totals_caption_pat": "Same query, every office. No IEEE (it does not host patents). Google Patents xhr is keyless. Lens / Espacenet / USPTO: — without a personal key. WIPO has no JSON total. Office totals are not summed with sample charts.",
             "totals_caption_pub": "IEEE / Springer / Elsevier / WoS: that site’s API when a key is set. Scholar has no official API.",
             "total_col_db": "Database",
             "total_col_n": "Total",
@@ -1608,7 +1682,12 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "total_col_open": "Open search",
             "total_open_text": "Open",
             "method_gp": "Google Patents xhr (same query)",
-            "method_none": "No public count API",
+            "method_none": "No public JSON count API",
+            "method_need_key": "No personal API key (cell —)",
+            "method_api_empty": "Key present; office returned no total — not invented",
+            "method_native_lens": "Lens.org patent API (Bearer, personal token)",
+            "method_native_espacenet": "EPO OPS published-data/search (personal key+secret)",
+            "method_native_uspto": "USPTO PatentsView v1 (X-Api-Key)",
             "method_native_ieee": "IEEE Xplore Metadata API (affiliation Turkey, 2020–2026)",
             "method_native_springer": "Springer Meta API Basic: text 6G Turkey, 2020–2026 (affiliation: is premium, 403)",
             "method_native_elsevier": "Elsevier Scopus API",
@@ -1618,7 +1697,6 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "method_crossref_springer": "Crossref query.title=6G + prefix 10.1007",
             "method_crossref_elsevier": "Crossref query.title=6G + prefix 10.1016",
             "method_crossref_title": "Crossref query.title=6G, journal, 2020–2026",
-            "method_openalex": "DOI record count",
         },
         "scenario": {
             "title": "Türk Telekom 6G field-deployment scenario engine",

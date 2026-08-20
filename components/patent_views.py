@@ -20,6 +20,7 @@ from components.charts import (
 )
 
 from components.ui_helpers import (
+    current_view_mode,
     render_link_row,
     render_module_header,
     render_patent_card,
@@ -48,6 +49,34 @@ def render_patent_intelligence_module():
 </div>""",
         unsafe_allow_html=True,
     )
+    st.markdown(
+        f"""<div class="glass-card">
+<div class="teach-label">{t("patent.access_title")}</div>
+{t("patent.access_body")}
+</div>""",
+        unsafe_allow_html=True,
+    )
+    if current_view_mode() == "expert":
+        st.markdown(
+            f"""<div class="glass-card">
+<div class="teach-label">{t("patent.expert_title")}</div>
+{t("patent.expert_body")}
+</div>""",
+            unsafe_allow_html=True,
+        )
+        from backend.patent_apis import REGISTER
+
+        k1, k2, k3, k4, k5 = st.columns(5)
+        with k1:
+            st.link_button(t("patent.key_gp"), REGISTER["google_patents"])
+        with k2:
+            st.link_button(t("patent.key_lens"), REGISTER["lens"])
+        with k3:
+            st.link_button(t("patent.key_espacenet"), REGISTER["espacenet"])
+        with k4:
+            st.link_button(t("patent.key_wipo"), REGISTER["wipo"])
+        with k5:
+            st.link_button(t("patent.key_uspto"), REGISTER["uspto"])
 
     render_spec_patent_sources()
     topic = render_patent_topic_panel("patent")
@@ -110,11 +139,13 @@ def render_patent_intelligence_module():
             if topic
             else t("patent.empty_company", company=company if company != "all" else t("patent.all"))
         )
-        return
-    for pat in patents:
-        render_patent_card(pat)
+    else:
+        for pat in patents:
+            render_patent_card(pat)
 
     if section == "year":
+        _render_live_assignee_layer(company_arg, topic)
+
         st.markdown(t("patent.companies_heading"))
         counts = PatentService.get_company_counts(company_arg, topic)
         if not company_arg:
@@ -187,3 +218,42 @@ def render_patent_intelligence_module():
             show_empty(t("patent.empty_net"))
         else:
             show_plotly(render_patent_network_graph(edges))
+
+
+def _render_live_assignee_layer(company: str | None, topic: str | None) -> None:
+    """Google Patents xhr hak sahibi sayısı. Örnek küme çubuklarıyla toplanmaz."""
+    from backend.patent_apis import live_assignee_counts
+    from backend.source_links import topic_query
+
+    spec = tuple(PatentService.get_spec_companies())
+    names = (company,) if company else spec
+    query = topic_query(topic or "6G")
+    st.markdown(t("patent.live_gp_heading"))
+    st.caption(t("patent.live_gp_caption"))
+    with st.spinner(t("patent.live_gp_spin")):
+        live = live_assignee_counts(query, names)
+    if company:
+        n = live.get(company)
+        if isinstance(n, int):
+            st.metric(t("patent.live_gp_metric"), format_int(n))
+        else:
+            show_empty(t("patent.live_gp_empty"))
+        return
+    sample = PatentService.get_company_counts(None, topic)
+    rows = []
+    any_live = False
+    for name in spec:
+        xhr_n = live.get(name)
+        if isinstance(xhr_n, int):
+            any_live = True
+        rows.append(
+            {
+                t("patent.live_col_firm"): name,
+                t("patent.live_col_n"): format_int(xhr_n) if isinstance(xhr_n, int) else "—",
+                t("patent.live_col_sample"): format_int(int(sample.get(name, 0) or 0)),
+            }
+        )
+    if not any_live:
+        show_empty(t("patent.live_gp_empty"))
+        return
+    st.dataframe(rows, hide_index=True, width="stretch")

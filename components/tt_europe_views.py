@@ -74,7 +74,6 @@ def _explainer(kind: str) -> None:
 
 def _metrics(kind: str, domain: str | None = None) -> None:
     s = TTEuropeService.summary(domain)
-    pos = TTEuropeService.europe_position()
     if kind == "patent":
         c1, c2, c3, c4 = st.columns(4)
         with c1:
@@ -86,6 +85,7 @@ def _metrics(kind: str, domain: str | None = None) -> None:
         with c4:
             st.metric(t("tt_eu.metric_tr"), format_int(s.get("tr_n") or 0))
         return
+    pos = TTEuropeService.europe_position(include_pubs=True)
     c1, c2, c3, c4 = st.columns(4)
     with c1:
         st.metric(t("tt_eu.metric_papers"), format_int(s["paper_n"]))
@@ -119,7 +119,7 @@ def _named_country_chips(rows: list, lang: str) -> None:
 
 def _europe_position_banner(kind: str, domain: str | None = None) -> None:
     lang = get_lang()
-    pos = TTEuropeService.europe_position()
+    pos = TTEuropeService.europe_position(include_pubs=(kind != "patent"))
     if kind == "patent" and domain:
         offices = TTEuropeService.office_counts(domain)
         pos = {
@@ -237,7 +237,7 @@ def _country_rank(kind: str) -> None:
     st.caption(t("tt_eu.overview_caption_pat" if is_pat else "tt_eu.overview_caption_pub"))
     spin = t("tt_eu.overview_spin_pat" if is_pat else "tt_eu.overview_spin")
     with st.spinner(spin):
-        overview = TTEuropeService.europe_overview()
+        overview = TTEuropeService.europe_overview(include_pubs=not is_pat)
     if overview:
         if is_pat:
             pat_rows = [
@@ -309,15 +309,16 @@ def _country_rank(kind: str) -> None:
                             row["tt_pub_n"] if row.get("tt_pub_resolved") else "—"
                         ),
                         t("tt_eu.rank_col_rank_pub"): row["tt_pub_rank"] if row["tt_pub_rank"] is not None else "—",
-                        "Kaynak": row.get("openalex_url") or "",
+                        t("ui.source").replace(" ↗", ""): row.get("pub_search_url") or "",
                     }
                 )
+            src_col = t("ui.source").replace(" ↗", "")
             st.dataframe(
                 table,
                 hide_index=True,
                 width="stretch",
                 column_config={
-                    "Kaynak": st.column_config.LinkColumn("Kaynak", display_text="Aç"),
+                    src_col: st.column_config.LinkColumn(src_col, display_text="IEEE"),
                 },
             )
 
@@ -335,7 +336,7 @@ def _country_rank(kind: str) -> None:
     )
     cc = by_label.get(picked) or "TR"
     with st.spinner(t("tt_eu.rank_spin")):
-        payload = TTEuropeService.country_rank(cc)
+        payload = TTEuropeService.country_rank(cc, include_pubs=not is_pat)
     if not payload.get("ok"):
         return
     rows = payload["rows"]
@@ -394,7 +395,7 @@ def _country_rank(kind: str) -> None:
             n=format_int(payload.get("field_n") or 0),
         )
     )
-    if payload.get("oa_ok"):
+    if payload.get("pub_ok"):
         show_plotly(
             render_tt_country_rank_chart(
                 rows, "pub_n", t("tt_eu.rank_pub_title"), t("tt_eu.rank_pub_x")
@@ -402,6 +403,7 @@ def _country_rank(kind: str) -> None:
         )
     else:
         st.info(t("tt_eu.rank_oa_fail"))
+    src_col = t("ui.source").replace(" ↗", "")
     table = []
     for row in sorted(
         rows,
@@ -412,7 +414,7 @@ def _country_rank(kind: str) -> None:
                 t("tt_eu.rank_col_firm"): row["name"],
                 t("tt_eu.rank_col_rank_pub"): row["pub_rank"] if row["pub_rank"] is not None else "—",
                 t("tt_eu.rank_col_pub"): row["pub_n"] if row.get("pub_resolved") else "—",
-                "Kaynak": row.get("openalex_url") or payload["openalex_url"],
+                src_col: row.get("pub_search_url") or payload.get("pub_search_url") or "",
             }
         )
     st.dataframe(
@@ -420,12 +422,12 @@ def _country_rank(kind: str) -> None:
         hide_index=True,
         width="stretch",
         column_config={
-            "Kaynak": st.column_config.LinkColumn("Kaynak", display_text="Aç"),
+            src_col: st.column_config.LinkColumn(src_col, display_text="IEEE"),
         },
     )
-    c_oa, c_wiki = st.columns(2)
-    with c_oa:
-        render_source_button(payload["openalex_url"], t("tt_eu.rank_open_oa"))
+    c_ieee, c_wiki = st.columns(2)
+    with c_ieee:
+        render_source_button(payload.get("pub_search_url") or "", t("tt_eu.rank_open_oa"))
     with c_wiki:
         render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
 

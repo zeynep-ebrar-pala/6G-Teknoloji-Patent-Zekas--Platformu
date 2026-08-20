@@ -180,7 +180,7 @@ else:
     else:
         show_plotly(render_technology_record_counts_chart(df_pat, domain or tech["acronym"]))
 
-    openalex_topic = {
+    pub_topic = {
         "isac": "ISAC",
         "ris": "RIS",
         "thz": "THz",
@@ -188,14 +188,14 @@ else:
         "ntn": "NTN",
         "ambient_iot": "Ambient IoT",
     }.get(tech["id"])
-    if openalex_topic:
-        df_pub = AcademicService.get_topic_yearly_df(openalex_topic)
+    if pub_topic:
+        df_pub = AcademicService.get_topic_yearly_df(pub_topic)
         if df_pub is None or df_pub.empty:
-            show_error(t("tech.openalex_fail"))
+            show_error(t("tech.pub_fail"))
         else:
             show_plotly(render_academic_trends_chart(df_pub))
     else:
-        _teach_note(t("tech.cell_free_oa"))
+        _teach_note(t("tech.cell_free_pub"))
 
     st.divider()
     _section_label("tech.refs")

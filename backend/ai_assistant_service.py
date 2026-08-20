@@ -110,7 +110,7 @@ def _corpus() -> List[Dict[str, str]]:
                     f"EP {tt_sum['ep_n']} USPTO {tt_sum['us_n']} papers {tt_sum['paper_n']}",
                     (
                         f"Türk Telekom Europe position: Türkiye publication rank {pos['tr_pub_rank']} "
-                        f"({pos['tr_pub_n']} OpenAlex), patent rank {pos['tr_pat_rank']} ({pos['tr_pat_n']} Netsia USPTO). "
+                        f"({pos['tr_pub_n']} locked DOI), patent rank {pos['tr_pat_rank']} ({pos['tr_pat_n']} Netsia USPTO). "
                         f"Not Europe-wide publication or EP leader. EP grants {pos['ep_n']}. "
                         f"Non-TR countries with TT papers {pos['pub_outside_tr']}. "
                         f"In-country publication leaders: {lead_txt}. "

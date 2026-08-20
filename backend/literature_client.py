@@ -1,7 +1,6 @@
 """
 Modül 3 literatür sayımı — Türkiye ve Avrupa, başlık 6G, 2020–2026.
 Üst hücreler: IEEE / Springer / Elsevier / WoS / Scholar native API.
-OpenAlex vekil yok.
 """
 
 from __future__ import annotations

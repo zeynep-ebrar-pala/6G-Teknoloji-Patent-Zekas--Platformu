@@ -70,22 +70,11 @@ class TTEuropeService:
     @staticmethod
     def get_papers() -> List[Dict[str, Any]]:
         papers = _papers()
-        dois = tuple(p["doi"] for p in papers if p.get("doi"))
-        live_map: Dict[str, Any] = {}
-        if dois:
-            from backend.openalex_client import fetch_works_by_dois
-
-            live_map = fetch_works_by_dois(dois) or {}
         enriched = []
         for paper in papers:
             merged = dict(paper)
-            live = live_map.get((paper.get("doi") or "").lower())
-            if live and isinstance(live.get("citations"), int):
-                merged["citations"] = live["citations"]
-                merged["citations_live"] = True
-            else:
-                merged["citations"] = None
-                merged["citations_live"] = False
+            merged["citations"] = paper.get("citations")
+            merged["citations_live"] = False
             enriched.append(merged)
 
         def _paper_sort(p: Dict[str, Any]) -> tuple:
@@ -99,51 +88,32 @@ class TTEuropeService:
         return country_choices()
 
     @staticmethod
-    def country_rank(cc: str) -> Dict[str, Any]:
-        """Kilitli 3 MNO + TT. Yayın: OpenAlex kurum ID / bağlılık. Patent: kilitli örnek. Uydurma yok."""
+    def country_rank(cc: str, include_pubs: bool = True) -> Dict[str, Any]:
+        """Kilitli 3 MNO + TT. Yayın: kilitli DOI (TT bağlılığı). Patent: kilitli örnek."""
+        from backend.source_links import ieee_text_search_url
+
         country = country_by_cc(cc)
         if not country:
             return {"ok": False, "cc": cc}
         ops = operators_with_tt(country)
-        from backend.openalex_client import (
-            country_openalex_url,
-            fetch_operator_work_count,
-            operator_openalex_url,
-        )
-
         sample_patents = load_validated_patents(VERIFIED_PATENTS) + _patents()
-        oa_any = False
         ranked: List[Dict[str, Any]] = []
+        pub_any = False
         for op in ops:
             patterns = tuple(op["patterns"])
-            inst_ids = tuple(op.get("oa_ids") or ())
-            affil = tuple(op.get("oa_affil") or ())
-            if op.get("is_tt") and country["cc"] != "TR":
-                inst_ids = ()
-                affil = ()
-            oa = None
-            if inst_ids or affil:
-                oa = fetch_operator_work_count(
-                    f"{country['cc']}:{op['id']}",
-                    inst_ids=inst_ids,
-                    affil_terms=affil,
-                    country_code=country["cc"],
-                    live=False,
-                )
-            pub_resolved = oa is not None and isinstance(oa.get("count"), int)
-            pub_n = int(oa["count"]) if pub_resolved else 0
+            pub_n = 0
+            pub_resolved = False
             pub_hits: List[str] = []
-            if pub_resolved:
-                oa_any = True
-                if oa.get("source") == "institution":
-                    pub_hits.append(",".join(oa.get("ids") or inst_ids) or "OpenAlex institution")
-                elif oa.get("affil"):
-                    pub_hits.append(str(oa.get("affil")))
-            openalex_op_url = (oa or {}).get("url") or operator_openalex_url(
-                inst_ids=inst_ids,
-                affil=(affil[0] if affil else ""),
-                country_code=country["cc"],
-            )
+            if include_pubs and op.get("is_tt"):
+                pub_n = sum(
+                    1
+                    for p in _papers()
+                    if (p.get("affiliation_country") or "").upper() == country["cc"]
+                )
+                pub_resolved = True
+                pub_any = pub_any or pub_n > 0
+                if pub_n:
+                    pub_hits = ["DOI-locked TT affiliation (this country)"]
             pat_n = 0
             pat_ids: List[str] = []
             for pat in sample_patents:
@@ -152,20 +122,6 @@ class TTEuropeService:
                         continue
                     pat_n += 1
                     pat_ids.append(pat.get("publication_number") or pat.get("id") or "")
-            if op.get("is_tt"):
-                locked_n = sum(
-                    1
-                    for p in _papers()
-                    if (p.get("affiliation_country") or "").upper() == country["cc"]
-                )
-                if country["cc"] != "TR":
-                    pub_n = locked_n
-                    pub_resolved = True
-                    pub_hits = ["DOI-locked TT affiliation (this country)"]
-                elif locked_n > pub_n:
-                    pub_n = locked_n
-                    pub_resolved = True
-                    pub_hits.append("DOI-locked TT affiliation")
             ranked.append(
                 {
                     "id": op["id"],
@@ -177,7 +133,7 @@ class TTEuropeService:
                     "pub_hits": pub_hits[:3],
                     "pat_ids": pat_ids,
                     "patents_url": op["patents_url"],
-                    "openalex_url": openalex_op_url,
+                    "pub_search_url": ieee_text_search_url(f"6G {op['name']} {country['name_en']}"),
                 }
             )
 
@@ -207,8 +163,8 @@ class TTEuropeService:
             "name_tr": country["name_tr"],
             "name_en": country["name_en"],
             "mno_source": EU_MNO_LIST_URL,
-            "openalex_url": country_openalex_url(country["cc"]),
-            "oa_ok": oa_any,
+            "pub_search_url": ieee_text_search_url(f"6G {country['name_en']}"),
+            "pub_ok": pub_any,
             "rows": ranked,
             "tt_pub_rank": None if not tt_row else tt_row["pub_rank"],
             "tt_pat_rank": None if not tt_row else tt_row["pat_rank"],
@@ -216,14 +172,14 @@ class TTEuropeService:
         }
 
     @staticmethod
-    def europe_overview() -> List[Dict[str, Any]]:
-        """Kilitli ülkelerin tamamı. Her satır country_rank; sayı uydurulmaz."""
-        return _europe_overview_cached()
+    def europe_overview(include_pubs: bool = True) -> List[Dict[str, Any]]:
+        """Kilitli ülkelerin tamamı. Patent sekmesi include_pubs=False."""
+        return _europe_overview_cached(include_pubs)
 
     @staticmethod
-    def europe_position() -> Dict[str, Any]:
+    def europe_position(include_pubs: bool = True) -> Dict[str, Any]:
         """TT'nin bu platformdaki ölçülen Avrupa yeri. Uydurma sıra yok."""
-        overview = TTEuropeService.europe_overview()
+        overview = TTEuropeService.europe_overview(include_pubs=include_pubs)
         tr = next((r for r in overview if r["cc"] == "TR"), {})
         offices = TTEuropeService.office_counts()
         pub_out = [r for r in overview if r["cc"] != "TR" and int(r.get("tt_pub_n") or 0) > 0]
@@ -397,11 +353,11 @@ class TTEuropeService:
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
-def _europe_overview_cached() -> List[Dict[str, Any]]:
+def _europe_overview_cached(include_pubs: bool = True) -> List[Dict[str, Any]]:
     """Kilitli ülkelerin tamamı. Her satır country_rank; sayı uydurulmaz."""
     out: List[Dict[str, Any]] = []
     for country in country_choices():
-        payload = TTEuropeService.country_rank(country["cc"])
+        payload = TTEuropeService.country_rank(country["cc"], include_pubs=include_pubs)
         if not payload.get("ok"):
             continue
         rows = payload["rows"]
@@ -448,8 +404,8 @@ def _europe_overview_cached() -> List[Dict[str, Any]]:
                     {"name": r["name"], "n": int(r.get("pat_n") or 0)}
                     for r in pat_ordered[:3]
                 ],
-                "openalex_url": payload.get("openalex_url"),
-                "oa_ok": payload.get("oa_ok"),
+                "pub_search_url": payload.get("pub_search_url"),
+                "pub_ok": payload.get("pub_ok"),
             }
         )
     return sorted(

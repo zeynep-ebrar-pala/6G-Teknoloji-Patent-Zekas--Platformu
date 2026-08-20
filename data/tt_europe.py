@@ -8,7 +8,7 @@ EPO (EP) 6G yayın numarası bu kümede doğrulanmadı; boş ofis gizlenmez, uyd
 from __future__ import annotations
 
 TT_EUROPE_SOURCE = (
-    "Google Patents + DOI (OpenAlex/Crossref) + WoS Core Collection UT "
+    "Google Patents + DOI + WoS Core Collection UT "
     "(oturumda açılan tam kayıt) + resmi ortak duyuruları"
 )
 
@@ -80,8 +80,8 @@ TT_GROUP_PATENTS = [
     },
 ]
 
-# Ham bağlılık metni Türk Telekom / Türkiye. OpenAlex kurum grafı bu kayıtlarda
-# DE/MY/CZ gibi yanlış ülkeye düşebilir; ülke kodu burada raw affiliation'dan TR.
+# Ham bağlılık metni Türk Telekom / Türkiye.
+# Ülke kodu raw affiliation'dan TR (indeks grafı başka ülkeye düşmesin).
 # Liste yeniden eskiye (2026 → 2025).
 TT_AFFILIATED_PAPERS = [
     {
@@ -98,8 +98,7 @@ TT_AFFILIATED_PAPERS = [
         "wos_ut": "WOS:001767283200006",
         "note": (
             "WoS Core Collection tam kayıt: WOS:001767283200006. "
-            "OpenAlex kurumu Telekom Malaysia diye eşleyebilir; "
-            "yazar bağlılığı Türk Telekom Ar-Ge (Ankara) + Boğaziçi Üniversitesi’dir."
+            "Yazar bağlılığı Türk Telekom Ar-Ge (Ankara) + Boğaziçi Üniversitesi’dir."
         ),
     },
     {
@@ -162,8 +161,7 @@ TT_AFFILIATED_PAPERS = [
         "url": "https://doi.org/10.1109/access.2025.3611321",
         "affiliation_country": "TR",
         "note": (
-            "OpenAlex bu kaydı X-Fab (DE) / Telekom Malaysia diye eşleyebilir; "
-            "yazar bağlılığı Ankara, Türk Telekom Ar-Ge'dir."
+            "Yazar bağlılığı Ankara, Türk Telekom Ar-Ge'dir."
         ),
     },
 ]
