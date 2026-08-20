@@ -39,10 +39,10 @@ Patent özetleri ve DOI kayıtları kaynakta kilitlidir (yeniden yazılmaz).
 1. Üstteki firmayı seçin (`Tümü` veya şartnamedeki 6 firmadan biri).
 2. Kayıt yoksa grafik çizilmez; sayı uydurulmaz.
 3. Altı grafik: en çok çalışan firmalar, patent sayısı / yıl, konu dağılımı, radar, kelime bulutu, teknoloji haritası; ayrıca **Türk Telekom patent izi**.
-4. Her karttaki **Kaynakta Aç** Google Patents sayfasını açar.
+4. Her karttaki **Kaynakta Aç** Lens.org kayıt sayfasını açar.
 5. **Türk Telekom patent izi:** TT Avrupa’da RAN satıcısı değil, Türkiye operatörü + TTI toptandır. Harita yalnızca adı kaynakta geçen ülkeleri boyar (TTI first-mover 6 ülke; 19/24 iddiası boyanmaz). Netsia Inc. Google Patents; 921 milli başvuru çubuğa işlenmez.
 
-Bu küme tam küresel portföy değildir. Grafikler Google Patents xhr (firma başı en fazla 30, assignee süzülür). Ofis tablosu xhr toplamıdır; çekilen kayıtlarla toplanmaz.
+Bu küme tam küresel portföy değildir. Grafikler Lens.org API (firma başı en fazla 25, applicant süzülür). Ofis tablosu API toplamıdır; çekilen kayıtlarla toplanmaz.
 
 ## 4. Akademik Yayın Analizi
 

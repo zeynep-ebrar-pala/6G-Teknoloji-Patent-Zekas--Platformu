@@ -123,13 +123,11 @@ def render_spec_pub_sources() -> None:
 
 def render_patent_card(patent: dict) -> None:
     pub = patent.get("publication_number") or patent.get("id", "")
-    from backend.source_links import google_patents_record_url, patent_record_links
+    from backend.source_links import lens_patent_url, patent_record_links
 
     url = patent.get("source_url") or patent.get("url") or ""
     if not url and pub:
-        url = google_patents_record_url(pub)
-    if url and "patents.google.com" not in url and pub:
-        url = google_patents_record_url(pub)
+        url = lens_patent_url(str(pub), str(patent.get("lens_id") or ""))
 
     st.markdown(
         f"""
@@ -148,7 +146,10 @@ def render_patent_card(patent: dict) -> None:
         """,
         unsafe_allow_html=True,
     )
-    render_link_row(patent_record_links(pub), key_suffix=_link_key(str(pub)))
+    render_link_row(
+        patent_record_links(str(pub), source_url=url, lens_id=str(patent.get("lens_id") or "")),
+        key_suffix=_link_key(str(pub)),
+    )
 
 
 def render_paper_card(paper: dict) -> None:

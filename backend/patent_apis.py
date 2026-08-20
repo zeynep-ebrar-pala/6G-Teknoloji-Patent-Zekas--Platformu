@@ -1,6 +1,6 @@
 """
-Patent ofisi — Google Patents xhr.
-Anahtar yoksa None (UI —). HTML kazınmaz.
+Patent ofisi — Lens.org patent/search (Bearer token).
+Token yoksa None (UI —). HTML kazınmaz. Google Patents xhr yedek kalır, sayfa Lens kullanır.
 """
 
 from __future__ import annotations
@@ -52,7 +52,7 @@ def _gp_get(url: str, timeout: int = 18) -> Optional[Dict[str, Any]]:
 
 REGISTER = {
     "google_patents": "https://patents.google.com/",
-    "lens": "https://www.lens.org/lens/user/subscriptions",
+    "lens": "https://docs.api.lens.org/getting-started.html",
     "espacenet": "https://developers.epo.org/",
     "wipo": "https://www.wipo.int/patentscope/en/",
     "uspto": "https://patentsview.org/apis/api-registration",
@@ -147,6 +147,210 @@ def google_patents_count(query: str) -> Optional[int]:
     return total
 
 
+def lens_topic_dsl(topic: str) -> str:
+    """Lens query_string: başlık / özet / istem. HTML değil."""
+    text = (topic or "6G").replace('"', " ").strip() or "6G"
+    return f'(title:("{text}") OR abstract:("{text}") OR claim:("{text}"))'
+
+
+def lens_assignee_dsl(topic: str, company: str) -> str:
+    name = (company or "").replace('"', " ").strip()
+    if not name:
+        return lens_topic_dsl(topic)
+    return f"{lens_topic_dsl(topic)} AND applicant.name:({name})"
+
+
+def _as_list(value: Any) -> List[Any]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return value
+    return [value]
+
+
+def _lens_post(payload: Dict[str, Any], timeout: int = 30) -> Optional[Dict[str, Any]]:
+    token = get_lens_token()
+    if not token:
+        return None
+    body = json.dumps(payload).encode("utf-8")
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "User-Agent": UA,
+    }
+    req = urllib.request.Request(
+        "https://api.lens.org/patent/search",
+        data=body,
+        headers=headers,
+        method="POST",
+    )
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            return data if isinstance(data, dict) else None
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                return {"total": 0, "data": []}
+            if exc.code == 429 and attempt < 2:
+                wait = 2.0
+                retry = exc.headers.get("x-rate-limit-retry-after-seconds") if exc.headers else None
+                try:
+                    wait = max(wait, float(retry))
+                except (TypeError, ValueError):
+                    pass
+                time.sleep(min(wait, 45))
+                continue
+            return None
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError):
+            return None
+    return None
+
+
+def _lens_total(data: Dict[str, Any]) -> Optional[int]:
+    total = data.get("total")
+    if total is None:
+        total = (data.get("results") or {}).get("total")
+    try:
+        return int(total)
+    except (TypeError, ValueError):
+        return None
+
+
+def _pick_title(titles: Any) -> str:
+    english = ""
+    first = ""
+    for item in _as_list(titles):
+        if not isinstance(item, dict):
+            continue
+        text = str(item.get("text") or "").strip()
+        if not text:
+            continue
+        if not first:
+            first = text
+        lang = str(item.get("lang") or "").lower()
+        if lang.startswith("en"):
+            english = text
+            break
+    return english or first
+
+
+def _applicant_names(biblio: Dict[str, Any]) -> str:
+    parties = biblio.get("parties") if isinstance(biblio.get("parties"), dict) else {}
+    names: List[str] = []
+    for item in _as_list(parties.get("applicants")):
+        if not isinstance(item, dict):
+            continue
+        extracted = item.get("extracted_name")
+        if isinstance(extracted, dict) and extracted.get("value"):
+            names.append(str(extracted["value"]).strip())
+            continue
+        raw = item.get("applicant_name") or item.get("name")
+        if isinstance(raw, str) and raw.strip():
+            names.append(raw.strip())
+            continue
+        if isinstance(raw, dict):
+            parts = [raw.get("name"), raw.get("first_name"), raw.get("last_name")]
+            joined = " ".join(str(p).strip() for p in parts if p)
+            if joined:
+                names.append(joined)
+    seen: set = set()
+    unique: List[str] = []
+    for name in names:
+        key = name.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(name)
+    return "; ".join(unique)
+
+
+def _pub_ref(biblio: Dict[str, Any], rec: Dict[str, Any]) -> Dict[str, Any]:
+    refs = _as_list(biblio.get("publication_reference"))
+    if refs and isinstance(refs[0], dict):
+        return refs[0]
+    return {
+        "country": rec.get("country") or rec.get("jurisdiction"),
+        "doc_number": rec.get("doc_number"),
+        "kind": rec.get("kind"),
+        "date": rec.get("date_published") or rec.get("date_publ"),
+    }
+
+
+def _year_from(text: Any) -> Optional[int]:
+    token = str(text or "").strip()
+    if len(token) >= 4 and token[:4].isdigit():
+        year = int(token[:4])
+        if 1980 <= year <= 2035:
+            return year
+    return None
+
+
+def _rows_from_lens(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
+    for rec in _as_list(payload.get("data")):
+        if not isinstance(rec, dict):
+            continue
+        biblio = rec.get("biblio") if isinstance(rec.get("biblio"), dict) else {}
+        ref = _pub_ref(biblio, rec)
+        country = str(ref.get("country") or rec.get("country") or "").strip().upper()
+        number = str(ref.get("doc_number") or rec.get("doc_number") or "").strip()
+        kind = str(ref.get("kind") or rec.get("kind") or "").strip().upper()
+        pub = f"{country}{number}{kind}" if country and number else str(rec.get("doc_key") or "").replace("_", "")
+        title = _pick_title(biblio.get("invention_title"))
+        year = _year_from(ref.get("date")) or _year_from(rec.get("date_published") or rec.get("date_publ"))
+        lens_id = str(rec.get("lens_id") or "").strip()
+        assignee = _applicant_names(biblio)
+        abstracts = biblio.get("abstract") or biblio.get("abstracts")
+        abstract = ""
+        for item in _as_list(abstracts):
+            if isinstance(item, dict) and item.get("text"):
+                abstract = str(item["text"]).strip()
+                lang = str(item.get("lang") or "").lower()
+                if lang.startswith("en") or not abstract:
+                    if lang.startswith("en"):
+                        break
+        if not pub or not title or year is None:
+            continue
+        source_url = f"https://www.lens.org/lens/patent/{lens_id}" if lens_id else ""
+        rows.append(
+            {
+                "publication_number": pub,
+                "title": title,
+                "assignee": assignee,
+                "year": year,
+                "abstract": abstract,
+                "lens_id": lens_id,
+                "source": "Lens.org",
+                "source_url": source_url,
+            }
+        )
+    return rows
+
+
+def lens_search(query: str, size: int = 25) -> Optional[Dict[str, Any]]:
+    """POST api.lens.org/patent/search. HTML kazınmaz."""
+    q = (query or "").strip()
+    if not q or not get_lens_token():
+        return None
+    n = max(0, min(int(size or 0), 100))
+    payload: Dict[str, Any] = {
+        "query": q,
+        "size": n,
+        "include": ["lens_id", "biblio", "date_published"],
+    }
+    data = _lens_post(payload)
+    if not isinstance(data, dict):
+        return None
+    return data
+
+
+def lens_topic_count(topic: str) -> Optional[int]:
+    """Konu taraması toplamı (firma süzülmeden). Token yoksa None."""
+    return _lens_count(lens_topic_dsl(topic))
+
+
 def _lens_count(query: str) -> Optional[int]:
     token = get_lens_token()
     if not token:
@@ -155,26 +359,27 @@ def _lens_count(query: str) -> Optional[int]:
     hit = _cache_get(cache_key)
     if hit is not None:
         return hit
-    payload = json.dumps({"query": query, "size": 0}).encode("utf-8")
-    data = _json(
-        "https://api.lens.org/patent/search",
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json",
-        },
-        data=payload,
-    )
-    if not isinstance(data, dict):
+    data = lens_search(query, size=0)
+    if not data:
         return None
-    total = data.get("total")
-    if total is None:
-        total = (data.get("results") or {}).get("total")
-    try:
-        n = int(total)
-    except (TypeError, ValueError):
+    n = _lens_total(data)
+    if n is None:
         return None
     _cache_put(cache_key, n)
     return n
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def lens_assignee_bundle(topic: str, company: str, _keys: str = "") -> Dict[str, Any]:
+    """Bir firma: API toplamı + çekilen kayıt. İkisi toplanmaz."""
+    name = (company or "").strip()
+    if not name or not get_lens_token():
+        return {"total": None, "rows": []}
+    data = lens_search(lens_assignee_dsl(topic, name), size=25)
+    time.sleep(0.4)
+    if not data:
+        return {"total": None, "rows": []}
+    return {"total": _lens_total(data), "rows": _rows_from_lens(data)}
 
 
 def _patentsview_count(query: str) -> Optional[int]:
@@ -350,21 +555,22 @@ def fetch_office_counts(query: str, _keys: str = "") -> Dict[str, Optional[int]]
     q = (query or "6G").strip() or "6G"
     return {
         "google_patents": google_patents_count(q),
-        "lens": _lens_count(q),
+        "lens": _lens_count(lens_topic_dsl(q)),
         "espacenet": _epo_ops_count(q),
         "wipo": None,
         "uspto": _patentsview_count(q),
     }
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
-def live_assignee_counts(query: str, companies: tuple) -> Dict[str, Optional[int]]:
-    """Google Patents xhr — hak sahibi + konu. Örnek küme ile toplanmaz."""
+@st.cache_data(ttl=3600, show_spinner=False)
+def live_assignee_counts(query: str, companies: tuple, _keys: str = "") -> Dict[str, Optional[int]]:
+    """Lens.org — hak sahibi + konu. Çekilen kayıt ile toplanmaz."""
     q = (query or "6G").strip() or "6G"
     out: Dict[str, Optional[int]] = {}
     for name in companies:
         a = (name or "").strip()
         if not a:
             continue
-        out[a] = google_patents_count(f'{q} assignee:"{a}"')
+        total = lens_assignee_bundle(q, a, _keys).get("total")
+        out[a] = int(total) if isinstance(total, int) else None
     return out

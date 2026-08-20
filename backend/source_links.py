@@ -1,6 +1,6 @@
 """
 Kaynak bağlantıları — sayfada yalnızca kullanılan siteler:
-patent: Google Patents; yayın: DOI, Springer, WoS.
+patent: Lens.org; yayın: DOI, Springer, WoS.
 """
 
 from __future__ import annotations
@@ -55,19 +55,27 @@ def doi_url(doi: str) -> str:
     return f"https://doi.org/{doi_clean}"
 
 
-def lens_patent_url(pub: str) -> str:
-    """Lens ayrıntı sayfası — doğrulanmış ID biçimi; olmazsa yayın no araması."""
+def lens_patent_url(pub: str, lens_id: str = "") -> str:
+    """Lens kayıt sayfası — lens_id varsa onu kullan; yoksa yayın no araması."""
+    lid = (lens_id or "").strip()
+    if lid:
+        return f"https://www.lens.org/lens/patent/{lid}"
     parsed = parse_publication_number(pub)
     if not parsed:
         return f"https://www.lens.org/lens/search/patent/list?q={_q(pub or '')}"
     cc, num, kind = parsed
     if cc == "WO" and len(num) >= 8 and num.startswith("20"):
-        lens_id = f"WO_{num[:4]}_{num[4:]}_{kind}"
+        reconstructed = f"WO_{num[:4]}_{num[4:]}_{kind}"
     elif cc == "US" and kind.startswith("A") and len(num) >= 10 and num.startswith("20"):
-        lens_id = f"US_{num[:4]}_{num[4:]}_{kind}"
+        reconstructed = f"US_{num[:4]}_{num[4:]}_{kind}"
     else:
-        lens_id = f"{cc}_{num}_{kind}"
-    return f"https://www.lens.org/lens/patent/{lens_id}"
+        reconstructed = f"{cc}_{num}_{kind}"
+    return f"https://www.lens.org/lens/patent/{reconstructed}"
+
+
+def lens_search_url(query: str) -> str:
+    q = (query or "6G").strip() or "6G"
+    return f"https://www.lens.org/lens/search/patent/list?q={_q(q)}"
 
 
 def espacenet_record_url(pub: str) -> str:
@@ -105,12 +113,15 @@ def uspto_grant_pdf_url(pub: str) -> str:
     return f"https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/{num}"
 
 
-def patent_record_links(pub: str) -> List[Dict[str, str]]:
-    """Kartta yalnızca Google Patents kaydı."""
+def patent_record_links(pub: str, source_url: str = "", lens_id: str = "") -> List[Dict[str, str]]:
+    """Kartta Lens.org kaydı."""
+    url = (source_url or "").strip()
+    if url and "lens.org" in url.lower():
+        return [{"id": "lens", "url": url}]
     token = (pub or "").strip()
-    if not token:
+    if not token and not lens_id:
         return []
-    return [{"id": "google_patents", "url": google_patents_record_url(token)}]
+    return [{"id": "lens", "url": lens_patent_url(token, lens_id)}]
 
 
 def wos_full_record_url(ut: str) -> str:
@@ -170,17 +181,15 @@ def wos_text_search_url(query: str) -> str:
 
 
 def assignee_patent_links(assignee: str) -> List[Dict[str, str]]:
-    """Hak sahibi araması — Google Patents."""
+    """Hak sahibi araması — Lens.org applicant.name."""
     name = (assignee or "").strip()
     if not name:
         return []
-    return [
-        {"id": "google_patents", "url": f"https://patents.google.com/?assignee={_plus(name)}"},
-    ]
+    return [{"id": "lens", "url": lens_search_url(f"applicant.name:({name})")}]
 
 
 def spec_patent_databases() -> List[Dict[str, str]]:
-    return [{"id": "google_patents", "url": "https://patents.google.com/"}]
+    return [{"id": "lens", "url": "https://www.lens.org/lens/search/patent/list"}]
 
 
 def spec_pub_databases() -> List[Dict[str, str]]:
@@ -212,6 +221,4 @@ def topic_pub_searches(topic: str, region: str = "both") -> List[Dict[str, str]]
 
 def topic_patent_searches(topic: str) -> List[Dict[str, str]]:
     query = topic_query(topic)
-    return [
-        {"id": "google_patents", "url": f"https://patents.google.com/?q={_plus(query)}"},
-    ]
+    return [{"id": "lens", "url": lens_search_url(query)}]

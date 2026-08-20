@@ -182,71 +182,76 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
         },
         "patent": {
             "title": "Patent Zekası",
-            "subtitle": "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE — Google Patents. Altı grafik: en çok çalışan firmalar, patent sayısı / yıl, konu dağılımı, radar, kelime bulutu, teknoloji haritası. Kaynak: {source}",
+            "subtitle": "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE — Lens.org. Altı grafik: en çok çalışan firmalar, patent sayısı / yıl, konu dağılımı, radar, kelime bulutu, teknoloji haritası. Kaynak: {source}",
             "filter": "Firma (şartname listesi: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE):",
             "all": "Tümü",
             "what_title": "Bu sayfa ne işe yarar?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Patent Zekası</strong> rakip 6G patentlerini Google Patents’ten çeker:
+<strong>Patent Zekası</strong> rakip 6G patentlerini Lens.org API’sinden çeker:
 Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE.
 <strong>Altı grafik:</strong> en çok çalışan firmalar, patent sayısı / yıl, patent konusu dağılımı, radar, kelime bulutu, patent teknoloji haritası.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Firma çubuğu Google Patents toplamıdır (tam sayı). Diğer beş grafik çekilen kayıtlardır (başlık + yayın no + yıl).
+Firma çubuğu Lens <code>total</code> değeridir (tam sayı). Diğer beş grafik çekilen kayıtlardır (başlık + yayın no + yıl).
 İki katman toplanmaz. Yüzde / yuvarlanmış oran yok. Yanıt yoksa grafik gizlenir; sayı uydurulmaz.
 </p>
 <p style="color:#94A3B8;font-size:0.84rem;margin:10px 0 0 0;">
-<strong>Assignee</strong> (hak sahibi) kimin başvurduğunu söyler; sahada ürün anlamına gelmez.
+<strong>Applicant</strong> (başvuru sahibi) kimin başvurduğunu söyler; sahada ürün anlamına gelmez.
 Tek patent = pazar liderliği değildir. Yıl çubuğu yayın yılıdır, ticarileşme tarihi değildir.
 </p>""",
             "access_title": "Veri nereden geliyor?",
             "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
-Bu sayfa yalnızca <strong>Google Patents</strong> kullanır. Anahtar gerekmez.
-Toplam: xhr <code>total_num_results</code>. Kartlar ve diğer grafikler xhr sonuç satırıdır.
+Bu sayfa yalnızca <strong>Lens.org</strong> patent API’sini kullanır (<code>POST /patent/search</code>).
+Siteye giriş yetmez; profildeki Access Token gerekir (<code>LENS_TOKEN</code> veya bu sayfadaki kutu).
+Toplam: JSON <code>total</code>. Kartlar ve diğer grafikler <code>data</code> satırıdır.
 HTML kazınmaz. Yanıt yoksa hücre —.
 </p>""",
             "expert_title": "Çekilen kayıt ve sınır",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
-Firma çubuğu xhr <code>total_num_results</code>.
-Yıl / konu / radar / bulut / harita: xhr sonuç satırları (sayfa 1–3, assignee süzülür).
-Çekilen kayıt xhr toplamı değildir. Radar ekseni kayıt sayısıdır (yüzde değil). Başlık/snippet yeniden yazılmaz.
+Firma çubuğu Lens <code>total</code>.
+Yıl / konu / radar / bulut / harita: aynı yanıttaki <code>data</code> (firma başı en fazla 25, applicant süzülür).
+Çekilen kayıt API toplamı değildir. Radar ekseni kayıt sayısıdır (yüzde değil). Başlık yeniden yazılmaz.
+429 olursa <code>x-rate-limit-retry-after-seconds</code> kadar beklenir.
 </p>""",
-            "key_gp": "Google Patents ↗",
-            "key_lens": "Google Patents ↗",
-            "key_espacenet": "Google Patents ↗",
-            "key_wipo": "Google Patents ↗",
-            "key_uspto": "Google Patents ↗",
-            "live_gp_heading": "### Google Patents xhr — hak sahibi (örnek küme değil)",
-            "live_gp_spin": "Google Patents xhr soruluyor (önbellek varsa atlanır)",
-            "live_gp_caption": "Aynı konu sorgusu + assignee. Yanıt yoksa —. Bu sayılar kilitli örnek çubuklarla toplanmaz.",
-            "live_gp_metric": "Google Patents xhr (hak sahibi)",
-            "live_gp_empty": "xhr bu sorgu için toplam vermedi; sayı uydurulmaz.",
+            "key_gp": "Lens.org ↗",
+            "key_lens": "Lens API belgesi ↗",
+            "key_espacenet": "Lens.org ↗",
+            "key_wipo": "Lens.org ↗",
+            "key_uspto": "Lens.org ↗",
+            "token_label": "Lens Access Token",
+            "token_missing": "Lens.org web oturumu API değildir. Profilinizde Access Token oluşturup buraya veya .env içine LENS_TOKEN= olarak yapıştırın. Token sohbete yazılmasın.",
+            "token_help": "docs.api.lens.org → Granted access + Create Access Token. HTML kazınmaz.",
+            "live_gp_heading": "### Lens.org — hak sahibi (örnek küme değil)",
+            "live_gp_spin": "Lens.org patent/search soruluyor (önbellek varsa atlanır)",
+            "live_gp_caption": "Aynı konu sorgusu + applicant.name. Yanıt yoksa —. Bu sayılar kilitli örnek çubuklarla toplanmaz.",
+            "live_gp_metric": "Lens.org (hak sahibi)",
+            "live_gp_empty": "Lens bu sorgu için toplam vermedi; sayı uydurulmaz.",
             "live_col_firm": "Firma",
-            "live_col_n": "xhr toplam",
+            "live_col_n": "API toplam",
             "live_col_sample": "Örnek küme",
-            "empty_company": "«{company}» için Google Patents xhr kayıt döndürmedi. Sayı uydurulmaz.",
-            "empty_topic": "Bu konuda xhr kayıt yok. Sayı uydurulmaz. Ofis düğmeleri aynı sorguyu sitede açar.",
+            "empty_company": "«{company}» için Lens.org kayıt döndürmedi. Sayı uydurulmaz.",
+            "empty_topic": "Bu konuda Lens kayıt yok. Sayı uydurulmaz. Ofis düğmeleri aynı sorguyu sitede açar.",
             "metric_total": "Çekilen kayıt",
-            "metric_pulled": "Çekilen xhr kayıt",
-            "pulled_caption": "Çekilen kayıt = xhr sonuç satırı. Firma çubuğu xhr toplamıdır; bu metrikle toplanmaz.",
-            "metric_leader": "En Fazla Kayıt (Assignee)",
+            "metric_pulled": "Çekilen kayıt",
+            "pulled_caption": "Çekilen kayıt = Lens data satırı. Firma çubuğu API total değeridir; bu metrikle toplanmaz.",
+            "metric_leader": "En Fazla Kayıt (Applicant)",
             "metric_leader_delta": "{n} patent",
             "metric_domain": "Öne Çıkan Teknoloji Alanı",
             "metric_domain_delta": "{n} kayıt",
             "metric_source": "Kaynak",
-            "open_gp": "Google Patents ana sayfasını aç ↗",
+            "open_gp": "Lens.org patent aramasını aç ↗",
             "view": "Bölüm",
             "section": {
                 "charts": "Rakip patent grafikleri",
                 "tt_eu": "Türk Telekom patent izi",
             },
             "year_heading": "### Patent sayısı / yıl",
-            "year_caption": "Çekilen xhr kayıtlarının yayın yılı. Tam sayı. xhr toplamı bu çubukların toplamı değildir.",
+            "year_caption": "Çekilen Lens kayıtlarının yayın yılı. Tam sayı. API toplamı bu çubukların toplamı değildir.",
             "empty_trend": "Trend grafiği için yeterli patent verisi yok.",
             "companies_heading": "### En çok çalışan firmalar",
-            "companies_caption": "Google Patents xhr total_num_results (tam sayı). Assignee süzülür. 0 veya yanıt yok = çubuk yok.",
+            "companies_caption": "Lens.org total (tam sayı). applicant.name süzülür. 0 veya yanıt yok = çubuk yok.",
             "topic_mix_heading": "### Patent konusu dağılımı",
-            "topic_mix_caption": "Çekilen kayıtlarda başlık/snippet’den eşleşen konu. Eşleşmeyen Unclassified. Yüzde yok.",
+            "topic_mix_caption": "Çekilen kayıtlarda başlık/özetten eşleşen konu. Eşleşmeyen Unclassified. Yüzde yok.",
             "radar_heading": "### Radar grafiği",
             "radar_caption": "Firma × konu, çekilen kayıt sayısı. Eksen yüzde değil.",
             "empty_counts": "Firma sayımı için veri yok.",
@@ -265,10 +270,10 @@ Yıl / konu / radar / bulut / harita: xhr sonuç satırları (sayfa 1–3, assig
             "network": "### Assignee ↔ Alan Ağ Analizi",
             "empty_net": "Ağ grafiği için bağlantı verisi yok.",
             "list_heading": "### Çekilen 6G patent listesi",
-            "list_caption": "Kartlar xhr sonuç satırıdır, yıla göre yeniden eskiye. Aynı yayın no ofis sitelerinde açılır.",
-            "assignee": "Hak sahibi (assignee)",
+            "list_caption": "Kartlar Lens data satırıdır, yıla göre yeniden eskiye. Aynı yayın no Lens.org’da açılır.",
+            "assignee": "Applicant (başvuru sahibi)",
             "year": "Yıl",
-            "open_record": "{pub} — Google Patents'te Aç ↗",
+            "open_record": "{pub} — Lens.org’da Aç ↗",
         },
         "pub": {
             "title": "Akademik Yayın Analizi",
@@ -642,23 +647,23 @@ Patent ofisleri bu sayfada yoktur — Patent Zekası’ndadır.
         },
         "sources": {
             "patent_heading": "### Patent kaynağı",
-            "patent_caption": "Bu sayfa Google Patents kullanır. Kart ve grafikler xhr kaydıdır. Aynı yayın no Google Patents’te açılır.",
+            "patent_caption": "Bu sayfa Lens.org patent API’sini kullanır. Kart ve grafikler JSON kaydıdır. Aynı yayın no Lens.org’da açılır.",
             "pub_heading": "### Yayın kaynağı",
             "pub_caption": "Bu sayfa WoS Core Collection ve Springer kullanır. Kartta DOI + (varsa) Springer + WoS tam kayıt açılır.",
-            "patent_metric": "Google Patents",
-            "assignee_caption": "«{company}» hak sahibi (assignee) araması — sonuç sayısını buraya yazmayız; sitede doğrulayın.",
+            "patent_metric": "Lens.org",
+            "assignee_caption": "«{company}» başvuru sahibi (applicant) araması — sonuç sayısını buraya yazmayız; sitede doğrulayın.",
             "topic_search": "Konu taraması (şartname: ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT)",
             "topic_all": "Tümü",
-            "topic_all_caption": "Kartlar ve grafikler Google Patents xhr’dır. Konu seçince sorgu o alana iner.",
+            "topic_all_caption": "Kartlar ve grafikler Lens.org kaydıdır. Konu seçince sorgu o alana iner.",
             "topic_all_caption_pub": "Kartlar kilitli DOI setinin tamamıdır. Bir konu seçince bu sayfadaki sayılar o alana iner.",
             "topic_caption": "Sorgu: «{q}». Bağlantı arama sayfasını açar.",
             "topic_result_caption": "Bu sayfadaki kartlar ve çubuklar kilitli kümede «{topic}» kayıtlarıdır. Ofis butonları aynı sorguyu («{q}») sitede açar.",
             "topic_result_caption_pub": "Bu sayfadaki kartlar kilitli DOI setinde «{topic}» kayıtlarıdır. Yayın butonları aynı sorguyu («{q}») sitede açar.",
-            "open_google_patents": "Google Patents ↗",
-            "open_lens": "Google Patents ↗",
-            "open_espacenet": "Google Patents ↗",
-            "open_wipo": "Google Patents ↗",
-            "open_uspto": "Google Patents ↗",
+            "open_google_patents": "Lens.org ↗",
+            "open_lens": "Lens.org ↗",
+            "open_espacenet": "Lens.org ↗",
+            "open_wipo": "Lens.org ↗",
+            "open_uspto": "Lens.org ↗",
             "open_ieee": "WoS ↗",
             "open_scholar": "Springer ↗",
             "open_springer": "Springer ↗",
@@ -667,33 +672,33 @@ Patent ofisleri bu sayfada yoktur — Patent Zekası’ndadır.
             "open_doi": "DOI ↗",
             "open_crossref": "Crossref ↗",
             "mix_heading": "### Mix tarama (şartname siteleri)",
-            "mix_caption": "Aynı 6G konusu: yayın (WoS, Springer) + patent (Google Patents).",
+            "mix_caption": "Aynı 6G konusu: yayın (WoS, Springer) + patent (Lens.org).",
             "mix_pub_row": "Yayın taraması",
-            "mix_pat_row": "Patent taraması (Google Patents)",
-            "topic_pat_heading": "### Konu taraması — bu sayfa + Google Patents",
-            "topic_pat_caption": "Açılır kutu sorguyu kilitler. Kartlar ve altı grafik Google Patents xhr’dır. Düğme aynı sorguyu Google Patents’te açar.",
+            "mix_pat_row": "Patent taraması (Lens.org)",
+            "topic_pat_heading": "### Konu taraması — bu sayfa + Lens.org",
+            "topic_pat_caption": "Açılır kutu sorguyu kilitler. Kartlar ve altı grafik Lens.org kaydıdır. Düğme aynı sorguyu Lens.org’da açar.",
             "topic_pub_heading": "### Konu taraması — bu sayfa + WoS / Springer",
             "topic_pub_caption": "Açılır kutu ISAC–Ambient IoT konusunu kilitler. Grafikler WoS Core Collection (küresel). Düğmeler WoS ve Springer aramasını yeni sekmede açar.",
             "topic_buttons_hint": "Bu düğmeler dış aramadır (yeni sekme). Sayfa içi sayılar yalnızca üstteki açılır kutudan değişir.",
             "topic_buttons_hint_pub": "Bu düğmeler dış aramadır (yeni sekme). Sayfa içi makale sayıları yalnızca üstteki açılır kutudan değişir.",
-            "topic_live_all": "Google Patents xhr (tüm konular): **{n}**. Çekilen kayıt: **{pulled}**. Toplanmaz.",
-            "topic_live_one": "Google Patents xhr «{topic}» (`{q}`): **{n}**. Çekilen kayıt: **{pulled}**. Toplanmaz.",
+            "topic_live_all": "Lens.org (tüm konular): **{n}**. Çekilen kayıt: **{pulled}**. Toplanmaz.",
+            "topic_live_one": "Lens.org «{topic}» (`{q}`): **{n}**. Çekilen kayıt: **{pulled}**. Toplanmaz.",
             "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND konu, PY=2020-2026. Altı konu çubuğu ayrıdır; toplanmaz. Türkiye başlık-6G önbelleği: **{n}** (küresel WoS değildir).",
             "topic_live_one_pub": "WoS Core Collection «{topic}»: **{n}** kayıt. Sorgu: `{q}`. Türkiye başlık-6G: {tr} (Crossref önbelleği; WoS küresel sayım değildir).",
-            "totals_caption_pat": "Aynı sorgu, Google Patents xhr. Yanıt yoksa —. Toplam, çekilen kayıtlarla toplanmaz.",
+            "totals_caption_pat": "Aynı sorgu, Lens.org patent/search. Yanıt yoksa —. Toplam, çekilen kayıtlarla toplanmaz.",
             "totals_caption_pub": "WoS ve Springer: o sitenin API’si (anahtar varsa). Anahtar yoksa —.",
             "total_col_db": "Veritabanı",
             "total_col_n": "Toplam",
             "total_col_how": "Nasıl sayıldı",
             "total_col_open": "Aramayı aç",
             "total_open_text": "Aç",
-            "method_gp": "Google Patents xhr (aynı sorgu)",
+            "method_gp": "Google Patents xhr (bu sayfada kullanılmıyor)",
             "method_none": "Herkese açık JSON sayım API’si yok",
             "method_need_key": "Bireysel API anahtarı yok (hücre —)",
             "method_api_empty": "Anahtar var; ofis toplam vermedi — uydurulmaz",
-            "method_native_lens": "Google Patents xhr",
-            "method_native_espacenet": "Google Patents xhr",
-            "method_native_uspto": "Google Patents xhr",
+            "method_native_lens": "Lens.org patent/search (aynı sorgu)",
+            "method_native_espacenet": "EPO OPS (bu sayfada kullanılmıyor)",
+            "method_native_uspto": "PatentsView (bu sayfada kullanılmıyor)",
             "method_native_ieee": "WoS Core Collection",
             "method_native_springer": "Springer Meta API: metin 6G, 2020–2026",
             "method_native_elsevier": "Springer Meta API",
@@ -856,7 +861,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "mod_left": """
 - **Ana Sayfa** — 7 teknolojinin TRL radar haritası; Dual-Depth (Temel/Uzman) giriş metnini değiştirir
 - **6G Teknoloji Rehberi** — tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL
-- **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; Google Patents; altı grafik (firma, yıl, konu, radar, kelime bulutu, harita)
+- **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; Lens.org; altı grafik (firma, yıl, konu, radar, kelime bulutu, harita)
 - **Akademik Yayın Analizi** — WoS Core Collection + Springer; yıl / kurum / ülke / atıf / trend
             """,
             "mod_right": """
@@ -865,7 +870,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
 - **Hakkında** — bu sayfa (teslim / 15 dk sunum iskeleti)
             """,
             "stack": "#### Kullanılan teknolojiler",
-            "stack_body": "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. Opsiyonel: Groq API, Google Gemini API. Patent: Google Patents. Yayın: WoS, Springer.",
+            "stack_body": "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. Opsiyonel: Groq API, Google Gemini API. Patent: Lens.org. Yayın: WoS, Springer.",
             "standard": "#### Anlatım standardı",
             "standard_body": "Teknik içerik iki kademelidir: **Temel** (nedir / neden / nasıl / ne zaman) ve **Uzman** (denklem, varsayım, 3GPP). Uzman mod temel katmanı atlamaz. Kısaltmalar ilk geçişte açılır. Patent özeti, DOI ve sayı uydurulmaz.",
             "talk": "#### 15 dakikalık sunum iskeleti",
@@ -887,7 +892,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "trl_hover": "%{theta}<br>TRL %{r}<br>%{customdata}<extra></extra>",
             "tech_counts": "Doğrulanmış {label} patent kayıt sayısı / yıl",
             "count": "Kayıt sayısı",
-            "patent_year": "Yıllara göre 6G patent kayıt sayısı (çekilen xhr satırları)",
+            "patent_year": "Yıllara göre 6G patent kayıt sayısı (çekilen Lens satırları)",
             "patent_count": "Patent kayıt sayısı",
             "domain_radar": "Firma × 6G konu — çekilen kayıt sayısı",
             "topic_mix": "Patent konusu dağılımı (çekilen kayıt)",
@@ -903,7 +908,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "hover_h": "%{{y}}<br><b>%{{x}}</b> {unit}<extra></extra>",
             "network": "Assignee ↔ teknoloji alanı ağ grafiği",
             "nx_missing": "NetworkX yüklü değil; ağ grafiği gösterilemiyor.",
-            "company_counts": "En çok çalışan firmalar (Google Patents xhr toplam)",
+            "company_counts": "En çok çalışan firmalar (Lens.org total)",
             "company": "Firma",
             "density": "Patent yoğunluğu (firma × alan, kayıt sayısı)",
             "sunburst": "Patent ağacı (firma → alan → kayıt)",
@@ -1145,69 +1150,74 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
         },
         "patent": {
             "title": "Patent Intelligence",
-            "subtitle": "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE — Google Patents. Six charts: top firms, count / year, topic mix, radar, word cloud, technology map. Source: {source}",
+            "subtitle": "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE — Lens.org. Six charts: top firms, count / year, topic mix, radar, word cloud, technology map. Source: {source}",
             "filter": "Company (specification list: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE):",
             "all": "All",
             "what_title": "What this page is for",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Patent Intelligence</strong> pulls rival 6G patents from Google Patents:
+<strong>Patent Intelligence</strong> pulls rival 6G patents from the Lens.org API:
 Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE.
 <strong>Six charts:</strong> top firms, patent count / year, topic mix, radar, word cloud, technology map.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Firm bars are Google Patents totals (integers). The other five charts use pulled rows (title + publication number + year).
+Firm bars are the Lens <code>total</code> (integers). The other five charts use pulled rows (title + publication number + year).
 The two layers are not summed. No percentages. If there is no answer, the chart is hidden; counts are not invented.
 </p>
 <p style="color:#94A3B8;font-size:0.84rem;margin:10px 0 0 0;">
-The <strong>assignee</strong> names who filed; it is not a fielded product. One patent is not market leadership.
+The <strong>applicant</strong> names who filed; it is not a fielded product. One patent is not market leadership.
 The year bar is publication year, not commercialisation date.
 </p>""",
             "access_title": "Where the data comes from",
             "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
-This page uses <strong>Google Patents</strong> only. No key is required.
-Totals: xhr <code>total_num_results</code>. Cards and the other charts are xhr result rows.
+This page uses the <strong>Lens.org</strong> patent API only (<code>POST /patent/search</code>).
+A website login is not enough; you need an Access Token from your profile (<code>LENS_TOKEN</code> or the box on this page).
+Totals: JSON <code>total</code>. Cards and the other charts are <code>data</code> rows.
 HTML is not scraped. No answer → —.
 </p>""",
             "expert_title": "Pulled rows and limit",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
-Firm bars are xhr <code>total_num_results</code>.
-Year / topic / radar / cloud / map: xhr result rows (pages 1–3, assignee-filtered).
-Pulled rows are not the xhr total. The radar axis is a record count, not a percent. Titles/snippets are not rewritten.
+Firm bars are Lens <code>total</code>.
+Year / topic / radar / cloud / map: <code>data</code> from the same response (up to 25 per firm, applicant-filtered).
+Pulled rows are not the API total. The radar axis is a record count, not a percent. Titles are not rewritten.
+On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
 </p>""",
-            "key_gp": "Google Patents ↗",
-            "key_lens": "Google Patents ↗",
-            "key_espacenet": "Google Patents ↗",
-            "key_wipo": "Google Patents ↗",
-            "key_uspto": "Google Patents ↗",
-            "live_gp_heading": "### Google Patents xhr — assignee (not the sample)",
-            "live_gp_spin": "Asking Google Patents xhr (skipped when cached)",
-            "live_gp_caption": "Same topic query + assignee. No answer → —. These numbers are not summed with the locked sample bars.",
-            "live_gp_metric": "Google Patents xhr (assignee)",
-            "live_gp_empty": "xhr did not return a total for this query; the count is not invented.",
+            "key_gp": "Lens.org ↗",
+            "key_lens": "Lens API docs ↗",
+            "key_espacenet": "Lens.org ↗",
+            "key_wipo": "Lens.org ↗",
+            "key_uspto": "Lens.org ↗",
+            "token_label": "Lens Access Token",
+            "token_missing": "A Lens.org website session is not the API. Create an Access Token on your profile and paste it here or as LENS_TOKEN= in .env. Do not paste the token in chat.",
+            "token_help": "docs.api.lens.org → Granted access + Create Access Token. HTML is not scraped.",
+            "live_gp_heading": "### Lens.org — applicant (not the sample)",
+            "live_gp_spin": "Asking Lens.org patent/search (skipped when cached)",
+            "live_gp_caption": "Same topic query + applicant.name. No answer → —. These numbers are not summed with locked sample bars.",
+            "live_gp_metric": "Lens.org (applicant)",
+            "live_gp_empty": "Lens did not return a total for this query; the count is not invented.",
             "live_col_firm": "Firm",
-            "live_col_n": "xhr total",
+            "live_col_n": "API total",
             "live_col_sample": "Locked sample",
-            "empty_company": "Google Patents xhr returned no rows for “{company}”. Counts are not invented.",
-            "empty_topic": "xhr returned no rows for this topic. Counts are not invented. Office buttons open the same query on the site.",
+            "empty_company": "Lens.org returned no rows for “{company}”. Counts are not invented.",
+            "empty_topic": "Lens returned no rows for this topic. Counts are not invented. Office buttons open the same query on the site.",
             "metric_total": "Pulled records",
-            "metric_pulled": "Pulled xhr rows",
-            "pulled_caption": "Pulled rows = xhr result lines. Firm bars are xhr totals; the two are not summed.",
-            "metric_leader": "Most records (assignee)",
+            "metric_pulled": "Pulled records",
+            "pulled_caption": "Pulled rows = Lens data lines. Firm bars are API totals; the two are not summed.",
+            "metric_leader": "Most records (applicant)",
             "metric_leader_delta": "{n} patents",
             "metric_domain": "Leading technology domain",
             "metric_domain_delta": "{n} records",
             "metric_source": "Source",
-            "open_gp": "Open the Google Patents homepage ↗",
+            "open_gp": "Open Lens.org patent search ↗",
             "view": "Section",
             "section": {
                 "charts": "Rival patent charts",
                 "tt_eu": "Türk Telekom patent footprint",
             },
             "year_heading": "### Patent count / year",
-            "year_caption": "Publication year of pulled xhr rows. Integers. The xhr total is not the sum of these bars.",
+            "year_caption": "Publication year of pulled Lens rows. Integers. The API total is not the sum of these bars.",
             "empty_trend": "Not enough patent data for a trend chart.",
             "companies_heading": "### Firms with the most filings",
-            "companies_caption": "Google Patents xhr total_num_results (integer). Assignee-filtered. Zero or no answer = no bar.",
+            "companies_caption": "Lens.org total (integer). Filtered by applicant.name. Zero or no answer = no bar.",
             "topic_mix_heading": "### Patent topic mix",
             "topic_mix_caption": "Topic matched from title/snippet of pulled rows. No match → Unclassified. No percents.",
             "radar_heading": "### Radar chart",
@@ -1228,10 +1238,10 @@ Pulled rows are not the xhr total. The radar axis is a record count, not a perce
             "network": "### Assignee ↔ domain network",
             "empty_net": "No edge data for a network graph.",
             "list_heading": "### Pulled 6G patent list",
-            "list_caption": "Cards are xhr result rows, newest year first. The same publication number opens on the office sites.",
-            "assignee": "Assignee (rights holder)",
+            "list_caption": "Cards are Lens data rows, newest year first. The same publication number opens on Lens.org.",
+            "assignee": "Applicant (rights holder)",
             "year": "Year",
-            "open_record": "{pub} — open on Google Patents ↗",
+            "open_record": "{pub} — open on Lens.org ↗",
         },
         "pub": {
             "title": "Academic Publication Analysis",
@@ -1605,23 +1615,23 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
         },
         "sources": {
             "patent_heading": "### Patent source",
-            "patent_caption": "This page uses Google Patents. Cards and charts are xhr records. The same publication number opens on Google Patents.",
+            "patent_caption": "This page uses the Lens.org patent API. Cards and charts are JSON records. The same publication number opens on Lens.org.",
             "pub_heading": "### Publication source",
             "pub_caption": "This page uses WoS Core Collection and Springer. Each card opens DOI + (if any) Springer + the WoS full record.",
-            "patent_metric": "Google Patents",
-            "assignee_caption": "Assignee search for “{company}” — we do not copy the hit count here; verify on the site.",
+            "patent_metric": "Lens.org",
+            "assignee_caption": "Applicant search for “{company}” — we do not copy the hit count here; verify on the site.",
             "topic_search": "Topic search (spec: ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT)",
             "topic_all": "All",
-            "topic_all_caption": "Cards and charts are Google Patents xhr. Pick a topic and the query drops to that domain.",
+            "topic_all_caption": "Cards and charts are Lens.org records. Pick a topic and the query drops to that domain.",
             "topic_all_caption_pub": "Cards are the full locked DOI set. Pick a topic and the counts on this page drop to that topic.",
             "topic_caption": "Query: “{q}”. The link opens the search page.",
             "topic_result_caption": "Cards and bars on this page are locked-sample “{topic}” records. The office buttons open the same query (“{q}”).",
             "topic_result_caption_pub": "Cards on this page are locked DOI-set “{topic}” records. The publication buttons open the same query (“{q}”).",
-            "open_google_patents": "Google Patents ↗",
-            "open_lens": "Google Patents ↗",
-            "open_espacenet": "Google Patents ↗",
-            "open_wipo": "Google Patents ↗",
-            "open_uspto": "Google Patents ↗",
+            "open_google_patents": "Lens.org ↗",
+            "open_lens": "Lens.org ↗",
+            "open_espacenet": "Lens.org ↗",
+            "open_wipo": "Lens.org ↗",
+            "open_uspto": "Lens.org ↗",
             "open_ieee": "WoS ↗",
             "open_scholar": "Springer ↗",
             "open_springer": "Springer ↗",
@@ -1630,33 +1640,33 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "open_doi": "DOI ↗",
             "open_crossref": "Crossref ↗",
             "mix_heading": "### Mixed search (spec databases)",
-            "mix_caption": "The same 6G topic: papers (WoS, Springer) + patents (Google Patents).",
+            "mix_caption": "The same 6G topic: papers (WoS, Springer) + patents (Lens.org).",
             "mix_pub_row": "Publication search",
-            "mix_pat_row": "Patent search (Google Patents)",
-            "topic_pat_heading": "### Topic search — this page + Google Patents",
-            "topic_pat_caption": "The drop-down locks the query. Cards and the six charts are Google Patents xhr. The button opens the same query on Google Patents.",
+            "mix_pat_row": "Patent search (Lens.org)",
+            "topic_pat_heading": "### Topic search — this page + Lens.org",
+            "topic_pat_caption": "The drop-down locks the query. Cards and the six charts are Lens.org records. The button opens the same query on Lens.org.",
             "topic_pub_heading": "### Topic search — this page + WoS / Springer",
             "topic_pub_caption": "The drop-down locks ISAC–Ambient IoT. Charts are WoS Core Collection (global). Buttons open WoS and Springer in a new tab.",
             "topic_buttons_hint": "These buttons are external search (new tab). On-page counts change only from the drop-down above.",
             "topic_buttons_hint_pub": "These buttons are external search (new tab). On-page paper counts change only from the drop-down above.",
-            "topic_live_all": "Google Patents xhr (all topics): **{n}**. Pulled rows: **{pulled}**. Not summed.",
-            "topic_live_one": "Google Patents xhr “{topic}” (`{q}`): **{n}**. Pulled rows: **{pulled}**. Not summed.",
+            "topic_live_all": "Lens.org (all topics): **{n}**. Pulled rows: **{pulled}**. Not summed.",
+            "topic_live_one": "Lens.org “{topic}” (`{q}`): **{n}**. Pulled rows: **{pulled}**. Not summed.",
             "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND topic, PY=2020-2026. The six topic bars are separate and not summed. Türkiye title-6G cache: **{n}** (not the global WoS count).",
             "topic_live_one_pub": "WoS Core Collection “{topic}”: **{n}** records. Query: `{q}`. Türkiye title-6G: {tr} (Crossref cache; not the global WoS count).",
-            "totals_caption_pat": "Same query, Google Patents xhr. No answer → —. The total is not summed with pulled rows.",
+            "totals_caption_pat": "Same query, Lens.org patent/search. No answer → —. The total is not summed with pulled rows.",
             "totals_caption_pub": "WoS and Springer: that site’s API when a key is set. No key → —.",
             "total_col_db": "Database",
             "total_col_n": "Total",
             "total_col_how": "How counted",
             "total_col_open": "Open search",
             "total_open_text": "Open",
-            "method_gp": "Google Patents xhr (same query)",
+            "method_gp": "Google Patents xhr (not used on this page)",
             "method_none": "No public JSON count API",
             "method_need_key": "No personal API key (cell —)",
             "method_api_empty": "Key present; office returned no total — not invented",
-            "method_native_lens": "Google Patents xhr",
-            "method_native_espacenet": "Google Patents xhr",
-            "method_native_uspto": "Google Patents xhr",
+            "method_native_lens": "Lens.org patent/search (same query)",
+            "method_native_espacenet": "EPO OPS (not used on this page)",
+            "method_native_uspto": "PatentsView (not used on this page)",
             "method_native_ieee": "WoS Core Collection",
             "method_native_springer": "Springer Meta API: text 6G, 2020–2026",
             "method_native_elsevier": "Springer Meta API",
@@ -1818,7 +1828,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "mod_left": """
 - **Home** — TRL radar for the seven technologies; dual-depth (foundation/expert) switches the intro
 - **6G Technology Explorer** — definition, operating principle, block diagram, architecture, use cases, advantages/disadvantages, global work, TT scenarios, TRL
-- **Patent Intelligence** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; Google Patents; six charts (firms, year, topic, radar, word cloud, map)
+- **Patent Intelligence** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; Lens.org; six charts (firms, year, topic, radar, word cloud, map)
 - **Academic Publication Analysis** — WoS Core Collection + Springer; year / institution / country / cited / trend
             """,
             "mod_right": """
@@ -1827,7 +1837,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
 - **About** — this page (delivery / 15-minute talk outline)
             """,
             "stack": "#### Stack",
-            "stack_body": "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. Optional: Groq API, Google Gemini API. Patents: Google Patents. Papers: WoS, Springer.",
+            "stack_body": "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. Optional: Groq API, Google Gemini API. Patents: Lens.org. Papers: WoS, Springer.",
             "standard": "#### Teaching standard",
             "standard_body": "Technical content is two-layer: **foundation** (what / why / how / when) and **expert** (equation, assumption, 3GPP). Expert mode does not skip the foundation. Abbreviations expand on first use. Patent abstracts, DOIs, and numbers are not invented.",
             "talk": "#### 15-minute talk outline",
@@ -1849,7 +1859,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "trl_hover": "%{theta}<br>TRL %{r}<br>%{customdata}<extra></extra>",
             "tech_counts": "Verified {label} patent records / year",
             "count": "Record count",
-            "patent_year": "6G patent records by publication year (pulled xhr rows)",
+            "patent_year": "6G patent records by publication year (pulled Lens rows)",
             "patent_count": "Patent record count",
             "domain_radar": "Firm × 6G topic — pulled record count",
             "topic_mix": "Patent topic mix (pulled rows)",
@@ -1865,7 +1875,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "hover_h": "%{{y}}<br><b>%{{x}}</b> {unit}<extra></extra>",
             "network": "Assignee ↔ technology-domain network",
             "nx_missing": "NetworkX is not installed; the network graph cannot be shown.",
-            "company_counts": "Firms with the most filings (Google Patents xhr total)",
+            "company_counts": "Firms with the most filings (Lens.org total)",
             "company": "Company",
             "density": "Patent density (company × domain, record count)",
             "sunburst": "Patent tree (company → domain → record)",

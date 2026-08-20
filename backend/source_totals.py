@@ -40,19 +40,19 @@ def _patent_method(source_id: str, n: Optional[int], keys: Dict[str, bool]) -> s
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def fetch_patent_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[str, Any]]:
-    """Yalnızca Google Patents xhr. Yanıt yoksa None (UI —)."""
+    """Yalnızca Lens.org patent/search. Yanıt yoksa None (UI —)."""
     label = topic or "6G"
     query = topic_query(label)
     links = topic_patent_searches(label)
     counts = fetch_office_counts(query, _keys or patent_key_fingerprint())
     keys = patent_key_status()
-    n = counts.get("google_patents")
+    n = counts.get("lens")
     return [
         _row(
-            "google_patents",
-            _search_url(links, "google_patents"),
+            "lens",
+            _search_url(links, "lens"),
             n,
-            _patent_method("google_patents", n, keys),
+            _patent_method("lens", n, keys),
         )
     ]
 

@@ -31,7 +31,7 @@
 ## 3. Projenin Kapsamı
 
 - 7 temel 6G teknolojisinin TRL haritası ve detaylı keşif modülü
-- Google Patents xhr patent analitiği (kilitli örnek yok)
+- Lens.org patent analitiği (Access Token; kilitli örnek yok)
 - WoS / Springer ile akademik yayın sayımı (anahtar yoksa —)
 - Türk Telekom saha dağıtım senaryo çözümleyici
 - Groq / Gemini ile isteğe bağlı AI asistan (yalnızca doğrulanmış veri üzerinde yorum; uygulama anahtarsız açılır)
@@ -42,14 +42,14 @@
 |---------|----------|
 | Dual-Depth görünüm | Temel (nedir/neden/nasıl) + Uzman (denklem, varsayım); uzman temel katmanı atlamaz |
 | Source-locked veri | Patent ve makale kayıtları gerçek source_url ile bağlı |
-| Canlı ofis toplamı | Google Patents xhr |
-| Kaynakta Aç ↗ | Patent Google Patents; makale DOI / WoS / Springer |
+| Canlı ofis toplamı | Lens.org patent/search |
+| Kaynakta Aç ↗ | Patent Lens.org; makale DOI / WoS / Springer |
 | Groq / Gemini | Yalnızca AI Asistan; anahtar `.env` veya oturumda, frontend'e sızmaz |
 
 ## 5. Sistem Mimarisi
 
 ```text
-Gerçek External Source (Google Patents, Springer, WoS, DOI)
+Gerçek External Source (Lens.org, Springer, WoS, DOI)
         ↓
 Raw Data (data/patents.py, data/academic.py)
         ↓
@@ -72,7 +72,7 @@ Streamlit Frontend (components/*, app.py)
 |-------|--------|
 | Ana Sayfa | TRL radar, 7 teknoloji KPI kartları |
 | 6G Teknolojileri | Kavramsal temel, formül kartları, karşılaştırma, TT senaryoları, kayıt sayımı |
-| Patent Zekası | Yıl, konu, kelime bulutu, ağaç, yoğunluk, TF-IDF harita, Google Patents listesi |
+| Patent Zekası | Yıl, konu, kelime bulutu, ağaç, yoğunluk, TF-IDF harita, Lens.org listesi |
 | Yayın Trendleri | WoS Core Collection + Springer Meta API; DOI kartları |
 | Türk Telekom Görünümü | Avrupa’daki yer (doğrulanmış harita) + bölge/yoğunluk/önceliğe göre mimari önerisi |
 | AI Asistan | TF-IDF yerel geri getirme + isteğe bağlı Groq/Gemini |
@@ -82,7 +82,7 @@ Streamlit Frontend (components/*, app.py)
 
 - **Python 3.9+**, **Streamlit**, **Plotly**, **Pandas**, **Matplotlib**, **NetworkX**, **WordCloud**, **scikit-learn**
 - **python-dotenv**, **groq**, **google-genai** (AI Asistan, isteğe bağlı)
-- **Google Patents xhr**, **DOI**, **Springer**, **WoS**
+- **Lens.org patent API**, **DOI**, **Springer**, **WoS**
 
 ## 8. Frontend
 
@@ -108,7 +108,7 @@ Adım adım kullanım: [USAGE_GUIDE.md](USAGE_GUIDE.md).
 | `config.py` | `.env` yükleme |
 | `auth_service.py` | Groq/Gemini API doğrulama |
 | `data_validator.py` | Source-locked kayıt filtresi |
-| `patent_apis.py` | Google Patents xhr |
+| `patent_apis.py` | Lens.org patent/search |
 | `patent_service.py` | Patent metrikleri (gerçek kayıtlardan) |
 | `academic_service.py` | Akademik metrikler + DOI zenginleştirme |
 | `scenario_engine.py` | TT saha senaryo motoru |
@@ -185,7 +185,7 @@ Bu proje ayrı bir HTTP API sunucusu kullanmaz. Backend, Streamlit uygulaması i
 
 ## 19. Patent Veri Kaynakları
 
-- [Google Patents](https://patents.google.com) — her patent kartında doğrudan patent sayfası
+- [Lens.org](https://www.lens.org) — her patent kartında doğrudan kayıt sayfası
 
 ## 20. Akademik Veri Kaynakları
 

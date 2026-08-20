@@ -57,8 +57,17 @@ def get_serpapi_key() -> Optional[str]:
 
 
 def get_lens_token() -> Optional[str]:
-    """Lens.org patent API — bireysel token. Kurumsal abonelik gerekmez."""
-    return _secret("LENS_TOKEN") or _secret("LENS_API_TOKEN")
+    """Lens.org patent API — .env veya oturum. Site girişi tek başına yetmez."""
+    env = _secret("LENS_TOKEN") or _secret("LENS_API_TOKEN")
+    if env:
+        return env
+    try:
+        import streamlit as st
+
+        sess = str(st.session_state.get("lens_token") or "").strip()
+        return sess or None
+    except Exception:
+        return None
 
 
 def get_patentsview_api_key() -> Optional[str]:

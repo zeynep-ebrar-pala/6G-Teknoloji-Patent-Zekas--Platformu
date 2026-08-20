@@ -1,5 +1,5 @@
 """
-Patent analitik servisi — Google Patents xhr kayıtlarından metrik üretir.
+Patent analitik servisi — Lens.org kayıtlarından metrik üretir.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ import pandas as pd
 import streamlit as st
 
 from backend.data_validator import normalize_patent
-from backend.source_links import google_patents_record_url, topic_query
+from backend.source_links import lens_patent_url, topic_query
 from data.patents import SPEC_COMPANIES, TECHNOLOGY_DOMAINS
 
 TECH_ID_TO_DOMAIN = {
@@ -79,8 +79,10 @@ def _infer_domain(title: str, snippet: str) -> str:
     return "Unclassified"
 
 
-def _from_xhr(raw: Dict[str, Any], domain: str) -> Optional[Dict[str, Any]]:
+def _from_lens(raw: Dict[str, Any], domain: str) -> Optional[Dict[str, Any]]:
     pub = raw.get("publication_number") or ""
+    lens_id = str(raw.get("lens_id") or "").strip()
+    source_url = str(raw.get("source_url") or "").strip() or lens_patent_url(str(pub), lens_id)
     return normalize_patent(
         {
             "publication_number": pub,
@@ -89,29 +91,37 @@ def _from_xhr(raw: Dict[str, Any], domain: str) -> Optional[Dict[str, Any]]:
             "year": raw.get("year"),
             "domain": domain,
             "abstract": raw.get("abstract") or "",
-            "source": "Google Patents xhr",
-            "source_url": google_patents_record_url(str(pub)),
+            "source": "Lens.org",
+            "source_url": source_url,
         }
     )
 
 
 def _fetch_live_vendor_patents(domain: Optional[str] = None) -> List[Dict[str, Any]]:
-    """Şartname firmaları — Google Patents xhr. Assignee süzülür. Boş sonuç önbelleğe alınmaz."""
-    from backend.patent_apis import google_patents_records
+    """Şartname firmaları — Lens.org. Applicant süzülür. Boş sonuç kilitli örnek değildir."""
+    from backend.config import get_lens_token
+    from backend.patent_apis import key_fingerprint, lens_assignee_bundle
 
+    if not get_lens_token():
+        return []
     topic = _norm_domain(domain)
     query = topic_query(topic or "6G")
+    keys = key_fingerprint()
     out: List[Dict[str, Any]] = []
     seen: set = set()
     for name in SPEC_COMPANIES:
-        for raw in google_patents_records(f'{query} assignee:"{name}"', num=10, pages=3):
-            if name.lower() not in (raw.get("assignee") or "").lower():
+        bundle = lens_assignee_bundle(query, name, keys)
+        for raw in bundle.get("rows") or []:
+            payload = dict(raw)
+            assignee = payload.get("assignee") or name
+            if name.lower() not in assignee.lower():
                 continue
-            pub = raw.get("publication_number") or ""
+            payload["assignee"] = assignee
+            pub = payload.get("publication_number") or ""
             if not pub or pub in seen:
                 continue
-            inferred = topic if topic else _infer_domain(raw.get("title") or "", raw.get("abstract") or "")
-            rec = _from_xhr(raw, inferred)
+            inferred = topic if topic else _infer_domain(payload.get("title") or "", payload.get("abstract") or "")
+            rec = _from_lens(payload, inferred)
             if not rec:
                 continue
             seen.add(pub)
@@ -119,8 +129,15 @@ def _fetch_live_vendor_patents(domain: Optional[str] = None) -> List[Dict[str, A
     return out
 
 
-def _live_vendor_patents(domain: Optional[str] = None) -> List[Dict[str, Any]]:
+@st.cache_data(ttl=3600, show_spinner=False)
+def _cached_vendor_patents(domain: Optional[str], _keys: str) -> List[Dict[str, Any]]:
     return _fetch_live_vendor_patents(domain)
+
+
+def _live_vendor_patents(domain: Optional[str] = None) -> List[Dict[str, Any]]:
+    from backend.patent_apis import key_fingerprint
+
+    return _cached_vendor_patents(_norm_domain(domain), key_fingerprint())
 
 
 def _patents(domain: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -147,12 +164,10 @@ def _scoped(company: Optional[str] = None, domain: Optional[str] = None) -> List
     return [p for p in patents if (p.get("domain") or "") == d]
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def _companies_with_patents() -> List[str]:
     return sorted({_normalize_company(p["assignee"]) for p in _patents()})
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def _build_patent_trends(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
     patents = _scoped(company, domain)
     if not patents:
@@ -174,7 +189,6 @@ def _build_patent_trends(company: Optional[str] = None, domain: Optional[str] = 
     return pd.DataFrame(rows)
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def _build_domain_distribution(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
     patents = _scoped(company, domain)
     records = []
@@ -194,7 +208,6 @@ def _build_domain_distribution(company: Optional[str] = None, domain: Optional[s
     return pd.DataFrame(records)
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def _build_keywords(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, int]:
     stop = {
         "a", "an", "the", "for", "and", "or", "in", "of", "to", "via", "using",
@@ -211,7 +224,6 @@ def _build_keywords(company: Optional[str] = None, domain: Optional[str] = None)
     return dict(counter.most_common(20))
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def _compute_summary(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, Any]:
     patents = _scoped(company, domain)
     total = len(patents)
@@ -225,13 +237,12 @@ def _compute_summary(company: Optional[str] = None, domain: Optional[str] = None
         "leader_count": leader[1],
         "top_domain": top_domain[0],
         "top_domain_count": top_domain[1],
-        "source": "Google Patents xhr",
+        "source": "Lens.org",
         "company_counts": dict(by_company),
         "topic_counts": {k: int(v) for k, v in by_domain.items()},
     }
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def _build_network_edges(company: Optional[str] = None, domain: Optional[str] = None) -> List[Tuple[str, str]]:
     seen: set = set()
     edges: List[Tuple[str, str]] = []
@@ -243,7 +254,6 @@ def _build_network_edges(company: Optional[str] = None, domain: Optional[str] = 
     return edges
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def _build_density_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
     patents = _scoped(company, domain)
     companies = sorted({_normalize_company(p["assignee"]) for p in patents})
@@ -260,7 +270,6 @@ def _build_density_df(company: Optional[str] = None, domain: Optional[str] = Non
     return pd.DataFrame(rows)
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def _build_sunburst_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
     records = []
     for p in _scoped(company, domain):
@@ -274,7 +283,6 @@ def _build_sunburst_df(company: Optional[str] = None, domain: Optional[str] = No
     return pd.DataFrame(records)
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def _build_tfidf_map(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
     patents = _scoped(company, domain)
     if len(patents) < 2:
@@ -306,7 +314,6 @@ def _build_tfidf_map(company: Optional[str] = None, domain: Optional[str] = None
     return pd.DataFrame(rows)
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def _domain_yearly_counts(domain: str) -> pd.DataFrame:
     patents = [p for p in _patents(domain) if p["domain"] == domain]
     if not patents:
@@ -329,10 +336,14 @@ class PatentService:
 
     @staticmethod
     def get_data_source() -> str:
+        from backend.config import get_lens_token
+
+        if not get_lens_token():
+            return "Lens.org (token yok)"
         live_n = len(_live_vendor_patents(None))
         if live_n:
-            return f"Google Patents xhr ({live_n} çekilen kayıt)"
-        return "Google Patents xhr (yanıt yok)"
+            return f"Lens.org ({live_n} çekilen kayıt)"
+        return "Lens.org (yanıt yok)"
 
     @staticmethod
     def get_summary(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, Any]:

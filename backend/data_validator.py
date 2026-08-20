@@ -28,7 +28,7 @@ REQUIRED_PAPER_FIELDS = (
     "source_url",
 )
 
-ALLOWED_PATENT_HOSTS = ("patents.google.com",)
+ALLOWED_PATENT_HOSTS = ("patents.google.com", "lens.org")
 ALLOWED_PAPER_HOSTS = ("doi.org", "ieeexplore.ieee.org", "link.springer.com", "sciencedirect.com")
 
 

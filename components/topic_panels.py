@@ -8,8 +8,8 @@ import streamlit as st
 
 
 def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
-    """Konu seçimi xhr toplamını, çekilen kayıtları ve ofis aramasını birlikte değiştirir."""
-    from backend.patent_apis import google_patents_count
+    """Konu seçimi Lens toplamını, çekilen kayıtları ve ofis aramasını birlikte değiştirir."""
+    from backend.patent_apis import lens_topic_count
     from backend.patent_service import PatentService
     from backend.source_links import SPEC_PUB_TOPICS, topic_patent_searches, topic_query
     from components.ui_helpers import render_link_row, render_source_totals
@@ -25,7 +25,7 @@ def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
         key=f"spec_pat_topic_{key_suffix}_{get_lang()}",
     )
     picked = None if topic == "all" else topic
-    xhr_n = google_patents_count(topic_query(picked or "6G"))
+    xhr_n = lens_topic_count(topic_query(picked or "6G"))
     pulled_n = PatentService.get_summary(None, picked)["total"]
     live_kwargs = {
         "n": format_int(xhr_n) if isinstance(xhr_n, int) else "—",

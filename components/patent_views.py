@@ -1,6 +1,6 @@
 """
 Modül 2 — Patent Zekası ve Rakip Analizi arayüzü.
-Grafikler Google Patents xhr kayıtları / xhr toplamıdır. Kilitli örnek yok.
+Grafikler Lens.org toplamı / çekilen kayıttır. Kilitli örnek yok.
 """
 
 import streamlit as st
@@ -33,6 +33,20 @@ from components.tt_europe_views import render_tt_europe_patent_section
 PATENT_SECTION_KEYS = ["charts", "tt_eu"]
 
 
+def _lens_token_box() -> None:
+    from backend.config import get_lens_token
+
+    if get_lens_token():
+        return
+    st.warning(t("patent.token_missing"))
+    entered = st.text_input(t("patent.token_label"), type="password", key="lens_token_box")
+    st.caption(t("patent.token_help"))
+    if entered.strip():
+        st.session_state["lens_token"] = entered.strip()
+        st.rerun()
+    st.link_button(t("patent.key_lens"), "https://docs.api.lens.org/getting-started.html")
+
+
 def render_patent_intelligence_module():
     render_module_header(
         t("patent.title"),
@@ -61,8 +75,9 @@ def render_patent_intelligence_module():
 </div>""",
             unsafe_allow_html=True,
         )
-        st.link_button(t("patent.key_gp"), "https://patents.google.com/")
+        st.link_button(t("patent.key_lens"), "https://docs.api.lens.org/getting-started.html")
 
+    _lens_token_box()
     render_spec_patent_sources()
     topic = render_patent_topic_panel("patent")
 
@@ -77,7 +92,7 @@ def render_patent_intelligence_module():
         render_tt_europe_patent_section(domain=topic)
         return
 
-    from backend.patent_apis import live_assignee_counts
+    from backend.patent_apis import key_fingerprint, live_assignee_counts
     from backend.source_links import assignee_patent_links, topic_query
 
     spec = PatentService.get_spec_companies()
@@ -91,9 +106,10 @@ def render_patent_intelligence_module():
     )
     company_arg = None if company == "all" else company
     query = topic_query(topic or "6G")
+    keys = key_fingerprint()
 
     with st.spinner(t("patent.live_gp_spin")):
-        xhr_totals = live_assignee_counts(query, tuple(spec) if not company_arg else (company_arg,))
+        xhr_totals = live_assignee_counts(query, tuple(spec) if not company_arg else (company_arg,), keys)
         summary = PatentService.get_summary(company_arg, topic)
         patents = PatentService.get_top_patents(company_arg, topic)
 
@@ -119,7 +135,7 @@ def render_patent_intelligence_module():
         st.caption(t("sources.assignee_caption", company=company_arg))
         render_link_row(assignee_patent_links(company_arg), key_suffix=f"asg_{company_arg}")
     else:
-        render_source_button("https://patents.google.com", t("patent.open_gp"))
+        render_source_button("https://www.lens.org/lens/search/patent/list", t("patent.open_gp"))
 
     st.markdown(t("patent.companies_heading"))
     st.caption(t("patent.companies_caption"))
