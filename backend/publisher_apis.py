@@ -292,6 +292,12 @@ def _scholar_count(query: str, affiliation: Optional[str]) -> Optional[int]:
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
+def fetch_springer_topic_totals(_keys: str = "") -> Dict[str, Optional[int]]:
+    """Küresel Springer Meta API toplamı: «6G {token}», 2020–2026. Türkiye süzgeci yok."""
+    return {name: _springer_count(_q6g(name), None) for name in TOPIC_TOKEN}
+
+
+@st.cache_data(ttl=21600, show_spinner=False)
 def fetch_native_counts(
     region: str = "tr",
     topic: Optional[str] = None,

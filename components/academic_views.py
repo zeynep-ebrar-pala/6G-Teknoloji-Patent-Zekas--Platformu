@@ -14,6 +14,7 @@ from components.charts import (
     render_academic_bar_chart,
     render_academic_database_chart,
     render_academic_trends_chart,
+    render_wos_springer_totals_chart,
 )
 
 PUB_SECTION_KEYS = ["year", "inst", "country", "cited", "trend", "tt_eu"]
@@ -40,6 +41,27 @@ def _with_source(paper: dict) -> dict:
         elif prefix.startswith("10.1016"):
             out["source"] = "Elsevier"
     return out
+
+
+def _source_total_rows(bundle: dict) -> list:
+    from backend.wos_topic_cache import TOPIC_ORDER
+
+    wos = bundle.get("topics") or {}
+    springer = bundle.get("springer_topics") or {}
+    rows = []
+    for name in TOPIC_ORDER:
+        w = wos.get(name)
+        s = springer.get(name)
+        if not isinstance(w, int) and not isinstance(s, int):
+            continue
+        rows.append(
+            {
+                "name": name,
+                "wos": w if isinstance(w, int) else None,
+                "springer": s if isinstance(s, int) else None,
+            }
+        )
+    return rows
 
 
 def render_academic_publication_module():
@@ -205,7 +227,13 @@ def render_academic_publication_module():
             else:
                 show_empty(t("pub.empty_year"))
         topics = bundle.get("topics") or {}
-        if len(topics) > 1:
+        source_rows = _source_total_rows(bundle)
+        if source_rows:
+            st.caption(t("pub.wos_springer_caption"))
+            show_plotly(
+                render_wos_springer_totals_chart(source_rows, t("pub.chart_wos_springer"))
+            )
+        elif len(topics) > 1:
             show_plotly(
                 render_academic_bar_chart(
                     [{"name": k, "count": v} for k, v in topics.items()],

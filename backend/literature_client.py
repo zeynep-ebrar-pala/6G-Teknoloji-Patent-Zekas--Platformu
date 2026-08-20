@@ -13,7 +13,12 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 import streamlit as st
 
-from backend.publisher_apis import fetch_native_counts, key_fingerprint, key_status
+from backend.publisher_apis import (
+    fetch_native_counts,
+    fetch_springer_topic_totals,
+    key_fingerprint,
+    key_status,
+)
 from backend.wos_topic_cache import wos_overlay
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "tr_eu_6g.json"
@@ -229,6 +234,16 @@ def literature_bundle(
         )
         if overlay.get("wos_fetched_at"):
             payload["fetched_at"] = overlay["wos_fetched_at"]
+
+    springer_topics = fetch_springer_topic_totals(_keys or key_fingerprint())
+    springer_ok = {
+        name: n
+        for name, n in (springer_topics or {}).items()
+        if isinstance(n, int)
+    }
+    if tpc:
+        springer_ok = {tpc: springer_ok[tpc]} if tpc in springer_ok else {}
+    payload["springer_topics"] = springer_ok
     return payload
 
 

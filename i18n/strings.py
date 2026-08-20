@@ -245,17 +245,18 @@ ticarileşme tarihi değildir.
         },
         "pub": {
             "title": "Yayın Trendleri",
-            "subtitle": "Grafikler: WoS Core Collection, ISAC–Ambient IoT. Üst hücreler IEEE Xplore, Google Scholar, Springer, Elsevier, WoS API. Anahtar yoksa —. Kaynak: {source}",
+            "subtitle": "Toplam adet: WoS Core Collection + Springer Meta API (ISAC–Ambient IoT). Yıl / kurum / ülke / atıf: WoS. Üst hücreler resmi API. Anahtar yoksa —. Kaynak: {source}",
             "what_title": "Bu sayfa neyi sayıyor?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Problem:</strong> 6G yayın hacmi konu ve ülkeye göre değişir. Kilitli 8 kart bu külliyat değildir.
+<strong>Problem:</strong> 6G yayın hacmi konu ve kaynağa göre değişir. Kilitli 8 kart bu külliyat değildir.
 <strong>Kapsam:</strong> ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT.
-<strong>Grafikler:</strong> WoS (Web of Science — Web of Science) Core Collection. Sorgu <code>TS=(6G) AND konu AND PY=2020-2026</code>.
-<strong>Üst hücreler:</strong> IEEE Xplore, Google Scholar, Springer, Elsevier, WoS Starter API — anahtar yoksa —.
+<strong>Toplam adet:</strong> WoS Core Collection ile Springer Meta API yan yana. Hover’da ikisi de görünür. Tek birleşik külliyat yoktur (örtüşme düşülmedi).
+<strong>Yıl / kurum / ülke / atıf:</strong> WoS Analyze Results (<code>TS=(6G) AND konu AND PY=2020-2026</code>). Springer Basic bu kırılımları vermez.
+<strong>Üst hücreler:</strong> IEEE Xplore, Google Scholar, Springer (TR), Elsevier, WoS Starter API — anahtar yoksa —.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Grafikler küresel Core Collection’dır; Türkiye bağlılık süzgeci değildir. Altı konu toplanmaz (aynı makale birden fazla TS sorgusunda çıkar).
-<strong>Google Scholar</strong> resmi API vermez; HTML kazınmaz. Ülke çubukları toplanmaz.
+WoS küresel Core Collection’dır. Springer konu çubuğu da küresel Meta API’dir; üstteki Springer (TR) hücresi değildir.
+Altı konu ve iki kaynak toplanmaz. <strong>Google Scholar</strong> resmi API vermez; HTML kazınmaz.
 </p>""",
             "expert_title": "API adı, filtre, sınır",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
@@ -347,7 +348,12 @@ Anahtarsız resmi sayım uç noktası yok. Anahtar gelince uygulama çeker.
             "chart_year_x": "Takvim yılı",
             "chart_topic": "Türkiye — başlık 6G AND konu",
             "chart_topic_wos": "WoS Core Collection — TS=(6G) AND konu",
+            "chart_wos_springer": "Toplam yayın — WoS Core Collection vs Springer Meta API",
             "chart_trend_wos": "WoS Core Collection — yıllara göre konu serisi (toplanmaz)",
+            "series_wos": "WoS Core Collection",
+            "series_springer": "Springer Meta API",
+            "hover_wos_springer": "%{{y}}<br>{wos}: <b>%{{customdata[0]}}</b> {unit}<br>{springer}: <b>%{{customdata[1]}}</b> {unit}<extra></extra>",
+            "wos_springer_caption": "Hover’da her konu için WoS ve Springer ayrı yazılır. İki çubuk toplanıp «tek külliyat» yapılmaz: aynı makale her iki indekste de çıkabilir, örtüşme ölçülmedi. WoS: TS=(6G) AND konu AND PY=2020-2026. Springer: Meta API metin «6G {token}», 2020–2026, küresel. Üstteki Springer (TR) hücresi bu grafik değildir. Ambient IoT’de Springer serbest metin WoS tırnaklı sorgudan geniş kalır.",
             "chart_publisher": "DOI öneki (IEEE / Springer / Elsevier)",
             "empty_year": "Yıl serisi yok (önbellek boş). Sayı uydurulmaz.",
             "oa_heading": "### 6G konularına göre yayın",
@@ -1177,17 +1183,18 @@ not commercialisation date.
         },
         "pub": {
             "title": "Publication Trends",
-            "subtitle": "Charts: WoS Core Collection, ISAC–Ambient IoT. Top cells: IEEE Xplore, Google Scholar, Springer, Elsevier, WoS API. No key → —. Source: {source}",
+            "subtitle": "Totals: WoS Core Collection + Springer Meta API (ISAC–Ambient IoT). Year / institution / country / cited: WoS. Top cells: official APIs. No key → —. Source: {source}",
             "what_title": "What this page counts",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Problem:</strong> 6G output varies by topic and country. Eight locked cards are not that corpus.
+<strong>Problem:</strong> 6G output varies by topic and source. Eight locked cards are not that corpus.
 <strong>Scope:</strong> ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT.
-<strong>Charts:</strong> WoS (Web of Science) Core Collection. Query <code>TS=(6G) AND topic AND PY=2020-2026</code>.
-<strong>Top cells:</strong> IEEE Xplore, Google Scholar, Springer, Elsevier, WoS Starter API — no key → —.
+<strong>Totals:</strong> WoS Core Collection beside Springer Meta API. Hover shows both. There is no single unique corpus (overlap was not subtracted).
+<strong>Year / institution / country / cited:</strong> WoS Analyze Results (<code>TS=(6G) AND topic AND PY=2020-2026</code>). Springer Basic does not return those facets.
+<strong>Top cells:</strong> IEEE Xplore, Google Scholar, Springer (TR), Elsevier, WoS Starter API — no key → —.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-The charts are global Core Collection, not a Türkiye affiliation filter. The six topics are not summed (the same paper can match more than one TS query).
-<strong>Google Scholar</strong> has no official API; HTML is not scraped. Country bars are not summed.
+WoS is global Core Collection. Springer topic bars are also global Meta API, not the Springer (TR) cell above.
+The six topics and the two sources are not summed. <strong>Google Scholar</strong> has no official API; HTML is not scraped.
 </p>""",
             "expert_title": "API name, filter, limit",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
@@ -1279,7 +1286,12 @@ None of these sites expose a keyless official count API. When a key is present t
             "chart_year_x": "Calendar year",
             "chart_topic": "Türkiye — title 6G AND topic",
             "chart_topic_wos": "WoS Core Collection — TS=(6G) AND topic",
+            "chart_wos_springer": "Total papers — WoS Core Collection vs Springer Meta API",
             "chart_trend_wos": "WoS Core Collection — topic series by year (not summed)",
+            "series_wos": "WoS Core Collection",
+            "series_springer": "Springer Meta API",
+            "hover_wos_springer": "%{{y}}<br>{wos}: <b>%{{customdata[0]}}</b> {unit}<br>{springer}: <b>%{{customdata[1]}}</b> {unit}<extra></extra>",
+            "wos_springer_caption": "Hover shows WoS and Springer separately for each topic. The two bars are not added into one “unique corpus”: the same paper can appear in both indexes, and overlap was not measured. WoS: TS=(6G) AND topic AND PY=2020-2026. Springer: Meta API text “6G {token}”, 2020–2026, global. The Springer (TR) cell above is not this chart. For Ambient IoT, Springer free text is wider than the quoted WoS query.",
             "chart_publisher": "DOI prefix (IEEE / Springer / Elsevier)",
             "empty_year": "No year series (cache empty). Counts are not invented.",
             "oa_heading": "### Publications by 6G topic",

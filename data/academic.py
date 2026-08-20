@@ -4,8 +4,9 @@ Kaynak hücreleri IEEE / Springer / Elsevier / (isteğe bağlı) SerpAPI Scholar
 """
 
 ACADEMIC_DATA_SOURCE = (
-    "Grafikler: WoS Core Collection Analyze Results, TS=(6G) AND konu, PY=2020-2026. "
-    "Üst hücreler: IEEE / Springer / Elsevier / WoS Starter API (anahtar varsa). "
+    "Toplam adet: WoS Core Collection + Springer Meta API (yan yana, toplanmaz). "
+    "Yıl / kurum / ülke / atıf: WoS Analyze Results, TS=(6G) AND konu, PY=2020-2026. "
+    "Üst hücreler: IEEE / Springer (TR) / Elsevier / WoS Starter API (anahtar varsa). "
     "Google Scholar resmi API yok."
 )
 
