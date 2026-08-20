@@ -73,7 +73,7 @@ Streamlit Frontend (components/*, app.py)
 | Ana Sayfa | TRL radar, 7 teknoloji KPI kartları |
 | 6G Teknolojileri | Kavramsal temel, formül kartları, karşılaştırma, TT senaryoları, kayıt sayımı |
 | Patent Zekası | Yıl, konu, kelime bulutu, ağaç, yoğunluk, TF-IDF harita, Lens.org listesi |
-| Yayın Trendleri | WoS Core Collection + Springer Meta API; DOI kartları |
+| Yayın Trendleri | WoS + Springer; yıl 2022–2026; ülke ilk 10 + Türkiye sırası (uydurulmaz) |
 | Türk Telekom Görünümü | Avrupa’daki yer (doğrulanmış harita) + bölge/yoğunluk/önceliğe göre mimari önerisi |
 | AI Asistan | TF-IDF yerel geri getirme + isteğe bağlı Groq/Gemini |
 | Hakkında | Amaç, yığın, sunum iskeleti |

@@ -27,6 +27,34 @@
     "springer:all:6G ambient IoT": {
       "n": 1709,
       "at": "2026-08-20 07:53 UTC"
+    },
+    "springer:Turkey:6G ISAC": {
+      "n": 29,
+      "at": "2026-08-20 12:01 UTC"
+    },
+    "springer:Turkey:6G ISAC:2022-2026": {
+      "n": 26,
+      "at": "2026-08-20 12:22 UTC"
+    },
+    "springer:Turkey:6G RIS:2022-2026": {
+      "n": 88,
+      "at": "2026-08-20 12:22 UTC"
+    },
+    "springer:Turkey:6G NTN:2022-2026": {
+      "n": 20,
+      "at": "2026-08-20 12:22 UTC"
+    },
+    "springer:Turkey:6G O-RAN:2022-2026": {
+      "n": 15,
+      "at": "2026-08-20 12:22 UTC"
+    },
+    "springer:Turkey:6G THz:2022-2026": {
+      "n": 118,
+      "at": "2026-08-20 12:22 UTC"
+    },
+    "springer:Turkey:6G ambient IoT:2022-2026": {
+      "n": 94,
+      "at": "2026-08-20 12:22 UTC"
     }
   }
 }

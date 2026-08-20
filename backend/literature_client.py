@@ -252,7 +252,7 @@ def literature_bundle(
 
 
 def country_year_df(region: str = "both", topic: Optional[str] = None) -> Optional[pd.DataFrame]:
-    from backend.wos_topic_cache import TOPIC_ORDER, load_wos_topics
+    from backend.wos_topic_cache import LAST5_YEARS, TOPIC_ORDER, load_wos_topics
 
     bundle = literature_bundle(
         region,
@@ -261,14 +261,15 @@ def country_year_df(region: str = "both", topic: Optional[str] = None) -> Option
         str(load_wos_topics().get("fetched_at") or ""),
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}
+    axis = list(LAST5_YEARS)
     if bundle.get("chart_source") == "wos":
         keep = [name for name in TOPIC_ORDER if name in series] or list(series.keys())
         if not keep:
             return None
-        data: Dict[str, List[int]] = {"Years": list(TREND_YEARS)}
+        data: Dict[str, List[int]] = {"Years": axis}
         for name in keep:
             years = series.get(name) or {}
-            data[name] = [int(years.get(str(y), 0) or 0) for y in TREND_YEARS]
+            data[name] = [int(years.get(str(y), 0) or 0) for y in axis]
         return pd.DataFrame(data)
     if region == "tr":
         keep = ["TR"]
@@ -278,8 +279,8 @@ def country_year_df(region: str = "both", topic: Optional[str] = None) -> Option
         keep = ["TR"] + [cc for cc in TREND_EU if cc in series]
     if not keep:
         return None
-    data = {"Years": list(TREND_YEARS)}
+    data = {"Years": axis}
     for cc in keep:
         years = series.get(cc) or {}
-        data[cc] = [int(years.get(str(y), 0) or 0) for y in TREND_YEARS]
+        data[cc] = [int(years.get(str(y), 0) or 0) for y in axis]
     return pd.DataFrame(data)

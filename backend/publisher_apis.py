@@ -29,6 +29,7 @@ from backend.config import (
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "publisher_native.json"
 UA = "6G-Patent-Platform/1.3 (mailto:zeynep.ebrar.pala@example.com)"
 YEARS = (2020, 2026)
+LAST5 = (2022, 2026)
 
 TOPIC_TOKEN: Dict[str, str] = {
     "ISAC": "ISAC",
@@ -151,18 +152,23 @@ def _ieee_count(query: str, affiliation: Optional[str]) -> Optional[int]:
     return n
 
 
-def _springer_count(query: str, affiliation: Optional[str]) -> Optional[int]:
+def _springer_count(
+    query: str,
+    affiliation: Optional[str] = None,
+    years: tuple = YEARS,
+) -> Optional[int]:
     key = get_springer_api_key()
     if not key:
         return None
-    cache_key = f"springer:{affiliation or 'all'}:{query}"
+    y0, y1 = int(years[0]), int(years[1])
+    cache_key = f"springer:{affiliation or 'all'}:{query}:{y0}-{y1}"
     hit = _cache_get(cache_key)
     if hit is not None:
         return hit
-    q = f"{query} onlinedatefrom:{YEARS[0]}-01-01 onlinedateto:{YEARS[1]}-12-31"
+    q = f"{query} onlinedatefrom:{y0}-01-01 onlinedateto:{y1}-12-31"
     if affiliation:
         # Basic Meta: affiliation: alanı 403 (premium). Metin araması: 6G Turkey.
-        q = f"{query} {affiliation} onlinedatefrom:{YEARS[0]}-01-01 onlinedateto:{YEARS[1]}-12-31"
+        q = f"{query} {affiliation} onlinedatefrom:{y0}-01-01 onlinedateto:{y1}-12-31"
     url = (
         "https://api.springernature.com/meta/v2/json?"
         + urllib.parse.urlencode({"q": q, "api_key": key, "p": "1", "s": "1"})
@@ -295,6 +301,12 @@ def _scholar_count(query: str, affiliation: Optional[str]) -> Optional[int]:
 def fetch_springer_topic_totals(_keys: str = "") -> Dict[str, Optional[int]]:
     """Küresel Springer Meta API toplamı: «6G {token}», 2020–2026. Türkiye süzgeci yok."""
     return {name: _springer_count(_q6g(name), None) for name in TOPIC_TOKEN}
+
+
+@st.cache_data(ttl=21600, show_spinner=False)
+def fetch_springer_turkey_topics(_keys: str = "") -> Dict[str, Optional[int]]:
+    """Springer Meta: «6G {token} Turkey», son 5 yıl (2022–2026). Bağlılık facet değil; metin Turkey."""
+    return {name: _springer_count(_q6g(name), "Turkey", LAST5) for name in TOPIC_TOKEN}
 
 
 @st.cache_data(ttl=21600, show_spinner=False)

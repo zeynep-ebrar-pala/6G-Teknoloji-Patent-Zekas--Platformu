@@ -47,7 +47,9 @@ Bu küme tam küresel portföy değildir. Grafikler Lens.org API (firma başı e
 ## 4. Akademik Yayın Analizi
 
 - Toplam adet: WoS Core Collection + Springer Meta API (örtüşme düşülmez).
-- Yıl / kurum / ülke / atıf: WoS Analyze Results önbelleği.
+- Yıl / trend: son 5 yıl (2022–2026). 2026 eksik yıldır.
+- Kurum / ülke: her konu için WoS Analyze Results ilk 10 (sıra 1–10). Altı konu toplanmaz.
+- Türkiye WoS sırası: ilk 10’da yoksa tam sıra uydurulmaz; 10. ülke eşiği ve Springer 2022–2026 metin Turkey ayrı durur. Ülke listesinin Analyze Results penceresi PY=2020-2026’dır (yıllık ülke dilimi yok).
 - Anahtar yoksa hücre —.
 - **Türk Telekom yayın izi** sekmesi: kilitli DOI (TT bağlılığı) + resmi harita; operatör yayın API’si yoktur.
 

@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Optional
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "wos_topics.json"
 TREND_YEARS = list(range(2020, 2027))
+LAST5_YEARS = list(range(2022, 2027))
 TOPIC_ORDER = ("ISAC", "RIS", "NTN", "AI-RAN", "THz", "Ambient IoT")
 
 # WoS Analyze Results ülke adı → ISO 3166-1 alpha-2.
@@ -36,6 +37,9 @@ WOS_COUNTRY_CC = {
     "FINLAND": "FI",
     "GREECE": "GR",
     "EGYPT": "EG",
+    "TURKEY": "TR",
+    "TURKIYE": "TR",
+    "TÜRKIYE": "TR",
 }
 
 
@@ -77,21 +81,22 @@ def _institutions(row: Dict[str, Any]) -> List[Dict[str, Any]]:
 
 
 def _countries(row: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Analyze Results ilk 10. Eşleşmeyen ad atılmaz — sıra kaymasın."""
     out: List[Dict[str, Any]] = []
     for item in row.get("countries") or []:
         if not isinstance(item, dict):
             continue
-        raw = str(item.get("name") or "").strip().upper()
-        cc = WOS_COUNTRY_CC.get(raw)
-        if not cc:
+        raw_name = str(item.get("name") or "").strip()
+        if not raw_name:
             continue
+        cc = WOS_COUNTRY_CC.get(raw_name.upper()) or ""
         try:
             count = int(item.get("count"))
         except (TypeError, ValueError):
             continue
-        out.append({"cc": cc, "count": count})
-    out.sort(key=lambda r: (-int(r["count"]), str(r["cc"])))
-    return out
+        out.append({"cc": cc, "name": raw_name, "count": count})
+    out.sort(key=lambda r: (-int(r["count"]), str(r.get("cc") or r.get("name") or "")))
+    return out[:10]
 
 
 def _cited(row: Dict[str, Any], topic: str) -> List[Dict[str, Any]]:
