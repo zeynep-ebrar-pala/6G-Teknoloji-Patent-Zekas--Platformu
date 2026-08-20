@@ -388,13 +388,17 @@ def render_patent_keywords_chart(keywords_dict: Dict[str, int]) -> go.Figure:
     )
     return fig
 
-def render_academic_trends_chart(df_academic: pd.DataFrame) -> go.Figure:
+def render_academic_trends_chart(
+    df_academic: pd.DataFrame,
+    title: str | None = None,
+) -> go.Figure:
     """Renders academic publication volume trends by 6G topic."""
     fig = go.Figure()
     labels = _year_labels(df_academic["Years"])
     topics = [c for c in df_academic.columns if c != "Years"]
     colors = _color_list(topics)
     markers = ["circle", "square", "diamond", "triangle-up", "star", "x", "cross", "hexagon"]
+    chart_title = title or t("charts.academic_trend")
 
     for idx, (col, color) in enumerate(zip(topics, colors)):
         y_vals = _ints(df_academic[col])
@@ -410,7 +414,7 @@ def render_academic_trends_chart(df_academic: pd.DataFrame) -> go.Figure:
 
     fig.update_layout(
         **_layout(),
-        title=dict(text=f"<b>{t('charts.academic_trend')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        title=dict(text=f"<b>{chart_title}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=_year_axis(labels),
         yaxis=_count_axis(t("charts.paper_count"), [
             int(v) for col in topics for v in _ints(df_academic[col])

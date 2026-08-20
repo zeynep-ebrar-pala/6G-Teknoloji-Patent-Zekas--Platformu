@@ -7,7 +7,10 @@ EPO (EP) 6G yayın numarası bu kümede doğrulanmadı; boş ofis gizlenmez, uyd
 
 from __future__ import annotations
 
-TT_EUROPE_SOURCE = "Google Patents + DOI (OpenAlex/Crossref) + resmi ortak duyuruları"
+TT_EUROPE_SOURCE = (
+    "Google Patents + DOI (OpenAlex/Crossref) + WoS Core Collection UT "
+    "(oturumda açılan tam kayıt) + resmi ortak duyuruları"
+)
 
 # Haritada her ülke ayrı renk (katman rengi değil).
 TT_COUNTRY_COLORS = {
@@ -81,6 +84,24 @@ TT_GROUP_PATENTS = [
 # DE/MY/CZ gibi yanlış ülkeye düşebilir; ülke kodu burada raw affiliation'dan TR.
 # Liste yeniden eskiye (2026 → 2025).
 TT_AFFILIATED_PAPERS = [
+    {
+        "title": "Agentic AI-Based 5G and Beyond Radio Planning Framework",
+        "authors": "M. G. Tezcan, A. Yazar, S. N. Karahan, M. S. Osmanca, H. O. Altun",
+        "journal": "IEEE Access",
+        "year": 2026,
+        "doi": "10.1109/access.2026.3691411",
+        "topic": "AI-RAN",
+        "source": "IEEE Xplore",
+        "source_url": "https://doi.org/10.1109/access.2026.3691411",
+        "url": "https://doi.org/10.1109/access.2026.3691411",
+        "affiliation_country": "TR",
+        "wos_ut": "WOS:001767283200006",
+        "note": (
+            "WoS Core Collection tam kayıt: WOS:001767283200006. "
+            "OpenAlex kurumu Telekom Malaysia diye eşleyebilir; "
+            "yazar bağlılığı Türk Telekom Ar-Ge (Ankara) + Boğaziçi Üniversitesi’dir."
+        ),
+    },
     {
         "title": "Artificial intelligence for next-generation 6G technologies and networks",
         "authors": "Y. E. Tok, A. G. Toprak, S. N. Karahan, Ö. B. Mercan, H. M. Aydin, M. Altintas",

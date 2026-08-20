@@ -46,6 +46,7 @@ def _papers() -> List[Dict[str, Any]]:
         merged = dict(p)
         merged["affiliation_country"] = extra.get("affiliation_country") or "TR"
         merged["note"] = extra.get("note") or ""
+        merged["wos_ut"] = extra.get("wos_ut") or ""
         out.append(merged)
     return out
 

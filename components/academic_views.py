@@ -117,24 +117,50 @@ def render_academic_publication_module():
         with k5:
             st.link_button(t("pub.key_scholar"), REGISTER["scholar"])
 
+    wos = bundle.get("chart_source") == "wos"
     tr_n = bundle.get("total_tr")
-    col_a, col_b, col_c = st.columns(3)
+    col_a, col_b, col_c, col_d = st.columns(4)
     with col_a:
         st.metric(t("pub.metric_tr"), _fmt(tr_n))
     with col_b:
+        st.metric(t("pub.metric_wos_core"), _fmt(bundle.get("wos_total")))
+    with col_c:
+        peak_label = t("pub.metric_peak_year_wos") if wos else t("pub.metric_peak_year")
         years = bundle.get("year_counts") or {}
         if years:
             peak = max(years, key=lambda y: years[y])
-            st.metric(t("pub.metric_peak_year"), peak, t("pub.metric_peak_delta", n=_fmt(years[peak])))
+            st.metric(peak_label, peak, t("pub.metric_peak_delta", n=_fmt(years[peak])))
         else:
-            st.metric(t("pub.metric_peak_year"), "—")
-    with col_c:
+            series = bundle.get("year_series") or {}
+            best = None
+            for name, yc in series.items():
+                if not yc:
+                    continue
+                y = max(yc, key=lambda k: yc[k])
+                cand = (int(yc[y]), str(y), str(name))
+                if best is None or cand[0] > best[0]:
+                    best = cand
+            if best:
+                st.metric(
+                    peak_label,
+                    f"{best[1]} · {best[2]}",
+                    t("pub.metric_peak_delta", n=_fmt(best[0])),
+                )
+            else:
+                st.metric(peak_label, "—")
+    with col_d:
         countries = bundle.get("countries") or []
         if countries:
             top = countries[0]
-            st.metric(t("pub.metric_top_cc"), _cc_name(top["cc"]), t("pub.metric_topic_delta", n=_fmt(top["count"])))
+            st.metric(
+                t("pub.metric_top_cc"),
+                _cc_name(top["cc"]),
+                t("pub.metric_topic_delta", n=_fmt(top["count"])),
+            )
         else:
             st.metric(t("pub.metric_top_cc"), "—")
+    if wos and bundle.get("wos_fetched_at"):
+        st.caption(t("pub.snapshot", ts=bundle["wos_fetched_at"]))
 
     from backend.source_links import topic_pub_searches
 
@@ -154,58 +180,73 @@ def render_academic_publication_module():
         render_tt_europe_pub_section(topic)
         return
 
+    def _trend_fig():
+        df = AcademicService.get_trend_df(region, topic)
+        if df is None or df.empty:
+            return None
+        if wos:
+            return render_academic_trends_chart(df, t("pub.chart_trend_wos"))
+        rename = {c: _cc_name(c) for c in df.columns if c != "Years"}
+        return render_academic_trends_chart(df.rename(columns=rename))
+
     if section == "year":
         st.markdown(t("pub.year_heading"))
-        st.caption(t("pub.year_caption"))
+        st.caption(t("pub.year_caption_wos") if wos else t("pub.year_caption"))
         years = bundle.get("year_counts") or {}
-        if region == "tr" and years:
+        year_title = t("pub.chart_year_wos") if wos else t("pub.chart_year")
+        if years:
             show_plotly(
-                render_academic_database_chart(years, t("pub.chart_year"), t("pub.chart_year_x"))
+                render_academic_database_chart(years, year_title, t("pub.chart_year_x"))
             )
         else:
-            df = AcademicService.get_trend_df(region)
-            if df is not None and not df.empty:
-                rename = {c: _cc_name(c) for c in df.columns if c != "Years"}
-                show_plotly(render_academic_trends_chart(df.rename(columns=rename)))
-            elif years:
-                show_plotly(
-                    render_academic_database_chart(years, t("pub.chart_year"), t("pub.chart_year_x"))
-                )
+            fig = _trend_fig()
+            if fig is not None:
+                show_plotly(fig)
             else:
                 show_empty(t("pub.empty_year"))
         topics = bundle.get("topics") or {}
-        if topics:
+        if len(topics) > 1:
             show_plotly(
                 render_academic_bar_chart(
                     [{"name": k, "count": v} for k, v in topics.items()],
-                    t("pub.chart_topic"),
+                    t("pub.chart_topic_wos") if wos else t("pub.chart_topic"),
                 )
             )
 
     elif section == "inst":
         st.markdown(t("pub.inst_heading"))
-        st.caption(t("pub.inst_caption"))
+        st.caption(t("pub.inst_caption_wos") if wos else t("pub.inst_caption"))
         inst = bundle.get("institutions") or []
         if inst:
-            show_plotly(render_academic_bar_chart(inst, t("pub.chart_inst")))
+            show_plotly(
+                render_academic_bar_chart(
+                    inst,
+                    t("pub.chart_inst_wos") if wos else t("pub.chart_inst"),
+                )
+            )
         else:
-            show_empty(t("pub.empty_inst"))
+            show_empty(t("pub.empty_inst_wos") if wos else t("pub.empty_inst"))
 
     elif section == "country":
         st.markdown(t("pub.cc_heading"))
-        st.caption(t("pub.cc_caption"))
+        st.caption(t("pub.cc_caption_wos") if wos else t("pub.cc_caption"))
         rows = [
             {"name": _cc_name(r["cc"]), "count": r["count"]}
             for r in (bundle.get("countries") or [])
         ]
         if rows:
-            show_plotly(render_academic_bar_chart(rows, t("pub.chart_cc")))
+            show_plotly(
+                render_academic_bar_chart(
+                    rows,
+                    t("pub.chart_cc_wos") if wos else t("pub.chart_cc"),
+                )
+            )
         else:
-            show_empty(t("pub.empty_cc"))
+            show_empty(t("pub.empty_cc_wos") if wos else t("pub.empty_cc"))
 
     elif section == "cited":
         st.markdown(t("pub.cited_heading"))
-        st.caption(t("pub.cited_caption"))
+        st.caption(t("pub.cited_caption_wos") if wos else t("pub.cited_caption"))
         papers = bundle.get("cited") or []
         if not papers:
             show_empty(t("pub.empty_cited"))
@@ -215,11 +256,10 @@ def render_academic_publication_module():
 
     else:
         st.markdown(t("pub.trend_heading"))
-        st.caption(t("pub.trend_caption"))
-        df = AcademicService.get_trend_df(region)
-        if df is not None and not df.empty:
-            rename = {c: _cc_name(c) for c in df.columns if c != "Years"}
-            show_plotly(render_academic_trends_chart(df.rename(columns=rename)))
+        st.caption(t("pub.trend_caption_wos") if wos else t("pub.trend_caption"))
+        fig = _trend_fig()
+        if fig is not None:
+            show_plotly(fig)
         else:
             show_empty(t("pub.empty_year"))
         render_link_row(

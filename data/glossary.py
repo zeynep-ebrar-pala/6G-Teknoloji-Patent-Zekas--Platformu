@@ -389,6 +389,39 @@ GLOSSARY: dict[str, dict[str, str]] = {
         "definition": "Tamamen sentetik üç boyutlu ortam sunan arayüz sınıfıdır.",
         "why": "Gecikme ve bit hızı ihtiyacı THz ve hücresiz MIMO gerekçelerinden biridir.",
     },
+    "WoS": {
+        "abbr": "WoS",
+        "en": "Web of Science",
+        "tr": "Web of Science",
+        "definition": (
+            "Clarivate’in atıf indeksidir. Bu platformdaki konu grafikleri Core Collection "
+            "Analyze Results tablosundan gelir; Starter API hücresi ayrıdır."
+        ),
+        "why": "Yıl, kurum, ülke ve Times Cited sıralaması aynı sorgu kimliği üzerinde tutulur.",
+    },
+    "TS": {
+        "abbr": "TS",
+        "en": "Topic Search",
+        "tr": "Konu araması",
+        "definition": (
+            "WoS alan etiketidir; başlık, özet ve anahtar kelimede geçer. Yalnız başlık (TI) değildir."
+        ),
+        "why": "ISAC / RIS gibi kısaltmalar taramada TS ile tutulmazsa kaçabilir.",
+    },
+    "PY": {
+        "abbr": "PY",
+        "en": "Publication Year",
+        "tr": "Yayın yılı",
+        "definition": "WoS’ta kaydın yayın yılını süzmek için kullanılan alan etiketidir.",
+        "why": "Bu sayfadaki 2020–2026 penceresi PY ile kilitlenir; ay dilimi yoktur.",
+    },
+    "UT": {
+        "abbr": "UT",
+        "en": "Unique Identifier",
+        "tr": "Benzersiz kayıt no",
+        "definition": "WoS Core Collection’daki kaydın WOS:… biçimindeki kalıcı kimliğidir.",
+        "why": "DOI yokken bile aynı makaleyi tam kayıt sayfasında açmaya yarar.",
+    },
 }
 
 TRL_SCALE: list[dict[str, str]] = [

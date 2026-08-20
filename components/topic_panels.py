@@ -84,16 +84,19 @@ def render_pub_topic_panel(key_suffix: str = "pub") -> Tuple[Optional[str], str]
     picked = None if topic == "all" else topic
     bundle = AcademicService.get_bundle(region, picked)
     tr_n = bundle.get("total_tr")
-    n = format_int(tr_n) if isinstance(tr_n, int) else "—"
+    tr = format_int(tr_n) if isinstance(tr_n, int) else "—"
+    wos_n = bundle.get("wos_total")
     if picked is None:
-        st.info(t("sources.topic_live_all_pub", n=n))
+        st.info(t("sources.topic_live_all_pub", n=tr))
     else:
+        n = format_int(wos_n) if isinstance(wos_n, int) else "—"
         st.info(
             t(
                 "sources.topic_live_one_pub",
                 n=n,
+                tr=tr,
                 topic=picked,
-                q=SPEC_PUB_TOPICS[picked],
+                q=bundle.get("wos_query") or SPEC_PUB_TOPICS[picked],
             )
         )
     st.caption(t("sources.topic_buttons_hint_pub"))

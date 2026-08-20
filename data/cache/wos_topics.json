@@ -1,0 +1,329 @@
+{
+  "source": "Web of Science Core Collection",
+  "method": "Analyze Results + Citations: highest first",
+  "filter": "TS=(6G) AND TS=(topic tokens) AND PY=2020-2026",
+  "fetched_at": "2026-08-20",
+  "topics": {
+    "ISAC": {
+      "total": 1346,
+      "query": "TS=(6G) AND TS=(ISAC OR \"integrated sensing and communication\") AND PY=2020-2026",
+      "years": {"2020": 1, "2021": 5, "2022": 41, "2023": 108, "2024": 312, "2025": 508, "2026": 371},
+      "institutions": [
+        {"name": "Beijing University of Posts and Telecommunications", "count": 140},
+        {"name": "Southeast University (China)", "count": 115},
+        {"name": "University of London", "count": 63},
+        {"name": "Purple Mountain Laboratories", "count": 49},
+        {"name": "Huawei Technologies", "count": 47},
+        {"name": "Tsinghua University", "count": 46},
+        {"name": "Nanyang Technological University", "count": 45},
+        {"name": "China Mobile", "count": 44},
+        {"name": "Beijing Jiaotong University", "count": 43},
+        {"name": "Shanghai Jiao Tong University", "count": 41}
+      ],
+      "countries": [
+        {"name": "PEOPLES R CHINA", "count": 845},
+        {"name": "USA", "count": 188},
+        {"name": "ENGLAND", "count": 153},
+        {"name": "GERMANY", "count": 120},
+        {"name": "SOUTH KOREA", "count": 90},
+        {"name": "CANADA", "count": 84},
+        {"name": "AUSTRALIA", "count": 72},
+        {"name": "SINGAPORE", "count": 66},
+        {"name": "SWEDEN", "count": 64},
+        {"name": "INDIA", "count": 54}
+      ],
+      "cited": [
+        {
+          "title": "Integrated Sensing and Communications: Toward Dual-Functional Wireless Networks for 6G and Beyond",
+          "authors": "F. Liu, Y. Cui, et al.",
+          "journal": "IEEE Journal on Selected Areas in Communications",
+          "year": 2022,
+          "citations": 2993,
+          "doi": "10.1109/jsac.2022.3156632",
+          "wos_ut": "WOS:000797418900005"
+        },
+        {
+          "title": "6G Wireless Communication Systems: Applications, Requirements, Technologies, Challenges, and Research Directions",
+          "authors": "M. Z. Chowdhury, M. Shahjalal, et al.",
+          "journal": "IEEE Open Journal of the Communications Society",
+          "year": 2020,
+          "citations": 1267,
+          "doi": "10.1109/ojcoms.2020.3010270",
+          "wos_ut": "WOS:000723372400065"
+        },
+        {
+          "title": "Integrated Sensing and Communication Signals Toward 5G-A and 6G: A Survey",
+          "authors": "Z. Wei, H. Qu, et al.",
+          "journal": "IEEE Internet of Things Journal",
+          "year": 2023,
+          "citations": 550,
+          "doi": "10.1109/jiot.2023.3235618",
+          "wos_ut": "WOS:001018925700001"
+        }
+      ]
+    },
+    "RIS": {
+      "total": 2224,
+      "query": "TS=(6G) AND TS=(RIS OR \"reconfigurable intelligent surface\" OR \"intelligent reflecting surface\") AND PY=2020-2026",
+      "years": {"2020": 25, "2021": 111, "2022": 216, "2023": 309, "2024": 526, "2025": 635, "2026": 402},
+      "institutions": [
+        {"name": "Southeast University (China)", "count": 149},
+        {"name": "Beijing University of Posts and Telecommunications", "count": 79},
+        {"name": "University of London", "count": 69},
+        {"name": "University of Electronic Science and Technology of China", "count": 64},
+        {"name": "Indian Institute of Technology System", "count": 61},
+        {"name": "University of Luxembourg", "count": 60},
+        {"name": "Nanyang Technological University", "count": 58},
+        {"name": "Xidian University", "count": 55},
+        {"name": "Université Paris-Saclay", "count": 54},
+        {"name": "CNRS", "count": 52}
+      ],
+      "countries": [
+        {"name": "PEOPLES R CHINA", "count": 906},
+        {"name": "ENGLAND", "count": 261},
+        {"name": "USA", "count": 255},
+        {"name": "INDIA", "count": 225},
+        {"name": "SOUTH KOREA", "count": 197},
+        {"name": "CANADA", "count": 175},
+        {"name": "GERMANY", "count": 129},
+        {"name": "SAUDI ARABIA", "count": 122},
+        {"name": "FRANCE", "count": 111},
+        {"name": "SINGAPORE", "count": 93}
+      ],
+      "cited": [
+        {
+          "title": "Smart Radio Environments Empowered by Reconfigurable Intelligent Surfaces: How It Works, State of Research, and The Road Ahead",
+          "authors": "M. Di Renzo, A. Zappone, et al.",
+          "journal": "IEEE Journal on Selected Areas in Communications",
+          "year": 2020,
+          "citations": 2599,
+          "doi": "10.1109/jsac.2020.3007211",
+          "wos_ut": "WOS:000579341000002"
+        },
+        {
+          "title": "Reconfigurable Intelligent Surfaces: Principles and Opportunities",
+          "authors": "Y. Liu, X. Liu, et al.",
+          "journal": "IEEE Communications Surveys & Tutorials",
+          "year": 2021,
+          "citations": 1483,
+          "doi": "10.1109/comst.2021.3075437",
+          "wos_ut": "WOS:000688449200005"
+        }
+      ]
+    },
+    "NTN": {
+      "total": 772,
+      "query": "TS=(6G) AND TS=(NTN OR \"non-terrestrial network\" OR \"non-terrestrial networks\") AND PY=2020-2026",
+      "years": {"2020": 3, "2021": 27, "2022": 48, "2023": 93, "2024": 195, "2025": 252, "2026": 154},
+      "institutions": [
+        {"name": "University of Luxembourg", "count": 39},
+        {"name": "University of Bologna", "count": 35},
+        {"name": "Beijing University of Posts and Telecommunications", "count": 25},
+        {"name": "Carleton University", "count": 24},
+        {"name": "KAUST", "count": 23},
+        {"name": "Kyung Hee University", "count": 21},
+        {"name": "China Telecom", "count": 19},
+        {"name": "Ericsson", "count": 17},
+        {"name": "Helmholtz Association", "count": 15},
+        {"name": "DLR", "count": 14}
+      ],
+      "countries": [
+        {"name": "PEOPLES R CHINA", "count": 168},
+        {"name": "ITALY", "count": 102},
+        {"name": "USA", "count": 100},
+        {"name": "GERMANY", "count": 91},
+        {"name": "SOUTH KOREA", "count": 89},
+        {"name": "ENGLAND", "count": 65},
+        {"name": "CANADA", "count": 55},
+        {"name": "JAPAN", "count": 54},
+        {"name": "SPAIN", "count": 50},
+        {"name": "SAUDI ARABIA", "count": 45}
+      ],
+      "cited": [
+        {
+          "title": "Towards 6G wireless communication networks: vision, enabling technologies, and new paradigm shifts",
+          "authors": "X. You, C.-X. Wang, et al.",
+          "journal": "Science China Information Sciences",
+          "year": 2021,
+          "citations": 1621,
+          "doi": "10.1007/s11432-020-2955-4",
+          "wos_ut": "WOS:000597333100001"
+        },
+        {
+          "title": "The Road Towards 6G: A Comprehensive Survey",
+          "authors": "W. Jiang, B. Han, et al.",
+          "journal": "IEEE Open Journal of the Communications Society",
+          "year": 2021,
+          "citations": 1284,
+          "doi": "10.1109/ojcoms.2021.3057679",
+          "wos_ut": "WOS:001101785300001"
+        },
+        {
+          "title": "Non-Terrestrial Networks in the 6G Era: Challenges and Opportunities",
+          "authors": "M. Giordani, M. Zorzi",
+          "journal": "IEEE Network",
+          "year": 2021,
+          "citations": 529,
+          "doi": "10.1109/mnet.011.2000493",
+          "wos_ut": "WOS:000638250600035"
+        }
+      ]
+    },
+    "AI-RAN": {
+      "total": 468,
+      "query": "TS=(6G) AND TS=(\"O-RAN\" OR \"Open RAN\" OR \"AI-RAN\" OR \"RAN Intelligent Controller\") AND PY=2020-2026",
+      "years": {"2020": 1, "2021": 6, "2022": 18, "2023": 44, "2024": 119, "2025": 163, "2026": 117},
+      "institutions": [
+        {"name": "Northeastern University", "count": 28},
+        {"name": "IMT / Institut Mines-Télécom", "count": 18},
+        {"name": "CTTC", "count": 15},
+        {"name": "EURECOM", "count": 15},
+        {"name": "Technical University of Berlin", "count": 15},
+        {"name": "Universitat Politècnica de Catalunya", "count": 14},
+        {"name": "Virginia Tech", "count": 14},
+        {"name": "i2CAT", "count": 12},
+        {"name": "University of Surrey", "count": 12},
+        {"name": "University of York", "count": 12}
+      ],
+      "countries": [
+        {"name": "USA", "count": 101},
+        {"name": "ENGLAND", "count": 73},
+        {"name": "SPAIN", "count": 70},
+        {"name": "PEOPLES R CHINA", "count": 51},
+        {"name": "GERMANY", "count": 49},
+        {"name": "ITALY", "count": 36},
+        {"name": "CANADA", "count": 32},
+        {"name": "FRANCE", "count": 31},
+        {"name": "GREECE", "count": 28},
+        {"name": "INDIA", "count": 27}
+      ],
+      "cited": [
+        {
+          "title": "The Road Towards 6G: A Comprehensive Survey",
+          "authors": "W. Jiang, B. Han, et al.",
+          "journal": "IEEE Open Journal of the Communications Society",
+          "year": 2021,
+          "citations": 1284,
+          "doi": "10.1109/ojcoms.2021.3057679",
+          "wos_ut": "WOS:001101785300001"
+        },
+        {
+          "title": "Understanding O-RAN: Architecture, Interfaces, Algorithms, Security, and Research Challenges",
+          "authors": "M. Polese, L. Bonati, et al.",
+          "journal": "IEEE Communications Surveys & Tutorials",
+          "year": 2023,
+          "citations": 675,
+          "doi": "10.1109/comst.2023.3239220",
+          "wos_ut": "WOS:001001620300015"
+        }
+      ]
+    },
+    "THz": {
+      "total": 2716,
+      "query": "TS=(6G) AND TS=(THz OR terahertz) AND PY=2020-2026",
+      "years": {"2020": 85, "2021": 229, "2022": 338, "2023": 403, "2024": 582, "2025": 702, "2026": 377},
+      "institutions": [
+        {"name": "University of Oulu", "count": 84},
+        {"name": "Shanghai Jiao Tong University", "count": 79},
+        {"name": "Southeast University (China)", "count": 76},
+        {"name": "University of Electronic Science and Technology of China", "count": 75},
+        {"name": "Indian Institute of Technology System", "count": 64},
+        {"name": "Beijing University of Posts and Telecommunications", "count": 62},
+        {"name": "Nanyang Technological University", "count": 62},
+        {"name": "Fudan University", "count": 52},
+        {"name": "Northeastern University", "count": 52},
+        {"name": "Huawei Technologies", "count": 51}
+      ],
+      "countries": [
+        {"name": "PEOPLES R CHINA", "count": 843},
+        {"name": "USA", "count": 425},
+        {"name": "INDIA", "count": 310},
+        {"name": "JAPAN", "count": 261},
+        {"name": "SOUTH KOREA", "count": 193},
+        {"name": "GERMANY", "count": 174},
+        {"name": "ENGLAND", "count": 168},
+        {"name": "SAUDI ARABIA", "count": 143},
+        {"name": "FINLAND", "count": 127},
+        {"name": "CANADA", "count": 126}
+      ],
+      "cited": [
+        {
+          "title": "Towards 6G wireless communication networks: vision, enabling technologies, and new paradigm shifts",
+          "authors": "X. You, C.-X. Wang, et al.",
+          "journal": "Science China Information Sciences",
+          "year": 2021,
+          "citations": 1621,
+          "doi": "10.1007/s11432-020-2955-4",
+          "wos_ut": "WOS:000597333100001"
+        },
+        {
+          "title": "The Road Towards 6G: A Comprehensive Survey",
+          "authors": "W. Jiang, B. Han, et al.",
+          "journal": "IEEE Open Journal of the Communications Society",
+          "year": 2021,
+          "citations": 1284,
+          "doi": "10.1109/ojcoms.2021.3057679",
+          "wos_ut": "WOS:001101785300001"
+        },
+        {
+          "title": "6G Wireless Communication Systems: Applications, Requirements, Technologies, Challenges, and Research Directions",
+          "authors": "M. Z. Chowdhury, M. Shahjalal, et al.",
+          "journal": "IEEE Open Journal of the Communications Society",
+          "year": 2020,
+          "citations": 1267,
+          "doi": "10.1109/ojcoms.2020.3010270",
+          "wos_ut": "WOS:000723372400065"
+        }
+      ]
+    },
+    "Ambient IoT": {
+      "total": 83,
+      "query": "TS=(6G) AND TS=(\"ambient IoT\" OR \"ambient internet of things\" OR \"ambient backscatter\") AND PY=2020-2026",
+      "years": {"2020": 2, "2021": 9, "2022": 7, "2023": 5, "2024": 19, "2025": 26, "2026": 15},
+      "institutions": [
+        {"name": "Henan Polytechnic University", "count": 10},
+        {"name": "Beijing University of Posts and Telecommunications", "count": 8},
+        {"name": "Orange SA", "count": 8},
+        {"name": "Aalto University", "count": 6},
+        {"name": "Egyptian Knowledge Bank", "count": 6},
+        {"name": "Benha University", "count": 5},
+        {"name": "Huawei Technologies", "count": 5},
+        {"name": "Nanyang Technological University", "count": 5},
+        {"name": "University of Electronic Science and Technology of China", "count": 5},
+        {"name": "CNRS", "count": 3}
+      ],
+      "countries": [
+        {"name": "PEOPLES R CHINA", "count": 41},
+        {"name": "FRANCE", "count": 11},
+        {"name": "USA", "count": 11},
+        {"name": "CANADA", "count": 8},
+        {"name": "ENGLAND", "count": 8},
+        {"name": "SOUTH KOREA", "count": 8},
+        {"name": "EGYPT", "count": 6},
+        {"name": "FINLAND", "count": 6},
+        {"name": "SINGAPORE", "count": 6},
+        {"name": "GERMANY", "count": 5}
+      ],
+      "cited": [
+        {
+          "title": "6G and Beyond: The Future of Wireless Communications Systems",
+          "authors": "I. F. Akyildiz, A. Kak, S. Nie",
+          "journal": "IEEE Access",
+          "year": 2020,
+          "citations": 948,
+          "doi": "10.1109/access.2020.3010896",
+          "wos_ut": "WOS:000554362600001"
+        },
+        {
+          "title": "Backscatter Communication Assisted by Reconfigurable Intelligent Surfaces",
+          "authors": "Y.-C. Liang, Q. Zhang, et al.",
+          "journal": "Proceedings of the IEEE",
+          "year": 2022,
+          "citations": 155,
+          "doi": "10.1109/jproc.2022.3169622",
+          "wos_ut": "WOS:000791718500001"
+        }
+      ]
+    }
+  }
+}

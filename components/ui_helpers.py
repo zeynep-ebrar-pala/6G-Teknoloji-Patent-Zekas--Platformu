@@ -175,7 +175,11 @@ def render_paper_card(paper: dict) -> None:
         unsafe_allow_html=True,
     )
     render_link_row(
-        paper_record_links(doi, str(paper.get("source") or "")),
+        paper_record_links(
+            doi,
+            str(paper.get("source") or ""),
+            str(paper.get("wos_ut") or ""),
+        ),
         key_suffix=_link_key(str(doi)),
     )
 

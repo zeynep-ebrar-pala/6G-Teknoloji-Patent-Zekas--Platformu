@@ -245,25 +245,30 @@ ticarileşme tarihi değildir.
         },
         "pub": {
             "title": "Yayın Trendleri",
-            "subtitle": "Türkiye ve Avrupa 6G literatürü. Üst hücreler IEEE Xplore, Google Scholar, Springer, Elsevier, WoS. Anahtar yoksa —. Kaynak: {source}",
+            "subtitle": "Grafikler: WoS Core Collection, ISAC–Ambient IoT. Üst hücreler IEEE Xplore, Google Scholar, Springer, Elsevier, WoS API. Anahtar yoksa —. Kaynak: {source}",
             "what_title": "Bu sayfa neyi sayıyor?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Problem:</strong> 6G yayın hacmi ülke ve konuya göre değişir. Kilitli 8 kart bu külliyat değildir.
-<strong>Kapsam:</strong> Türkiye ve Avrupa. Konular: ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT.
-<strong>Kaynaklar:</strong> IEEE Xplore, Google Scholar, Springer, Elsevier, WoS — başka indeksten vekil yok.
+<strong>Problem:</strong> 6G yayın hacmi konu ve ülkeye göre değişir. Kilitli 8 kart bu külliyat değildir.
+<strong>Kapsam:</strong> ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT.
+<strong>Grafikler:</strong> WoS (Web of Science — Web of Science) Core Collection. Sorgu <code>TS=(6G) AND konu AND PY=2020-2026</code>.
+<strong>Üst hücreler:</strong> IEEE Xplore, Google Scholar, Springer, Elsevier, WoS Starter API — anahtar yoksa —.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Bu beş sitenin programlı sayımı resmi API anahtarı ister. Anahtar yoksa hücre <strong>—</strong> kalır; sayı uydurulmaz.
+Grafikler küresel Core Collection’dır; Türkiye bağlılık süzgeci değildir. Altı konu toplanmaz (aynı makale birden fazla TS sorgusunda çıkar).
 <strong>Google Scholar</strong> resmi API vermez; HTML kazınmaz. Ülke çubukları toplanmaz.
 </p>""",
             "expert_title": "API adı, filtre, sınır",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>IEEE Xplore Metadata API:</strong> <code>ieeexploreapi.ieee.org</code> + <code>affiliation=Turkey</code>, 2020–2026.
-<strong>Springer Nature Meta API:</strong> Basic planda <code>affiliation:</code> 403. Metin <code>6G Turkey</code> + tarih; bağlılık süzgeci değildir.
-<strong>Elsevier Scopus:</strong> <code>AFFILCOUNTRY(turkey)</code>; kurum token yoksa sonuç boş kalabilir.
-<strong>WoS Starter (Clarivate):</strong> <code>TS</code> + <code>OG=Turkey</code> (Starter’da CU yok).
+<strong>Grafik katmanı — WoS Core Collection Analyze Results:</strong>
+<code>TS</code> (Topic Search — konu araması) + <code>PY</code> (Publication Year — yayın yılı) 2020–2026.
+Yıl = Publication Years; kurum = Affiliations; ülke = Countries/Regions (Results count).
+Atıf = Times Cited, yüksekten düşüğe. Crossref <code>is-referenced-by-count</code> değildir.
+<strong>IEEE Xplore Metadata API:</strong> <code>ieeexploreapi.ieee.org</code> + <code>affiliation=Turkey</code>.
+<strong>Springer Nature Meta API:</strong> Basic planda <code>affiliation:</code> 403.
+<strong>Elsevier Scopus:</strong> <code>AFFILCOUNTRY(turkey)</code>.
+<strong>WoS Starter API hücresi:</strong> anahtar yoksa —; grafik tablosu bu hücrenin yerine geçmez.
 <strong>Google Scholar:</strong> resmi uç yok. Siteden çekilmez.
-Avrupa için tek kıta toplamı uydurulmaz.
+THz / AI-RAN üst atıf listesinde genel 6G taramaları da çıkar; konu-only sıralama değildir.
 </p>""",
             "access_title": "Kim bireysel mail, kim kurumsal?",
             "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
@@ -284,10 +289,12 @@ Anahtarsız resmi sayım uç noktası yok. Anahtar gelince uygulama çeker.
             "metric_springer": "Springer (TR)",
             "metric_elsevier": "Elsevier (TR)",
             "metric_wos": "WoS",
+            "metric_wos_core": "WoS Core (konu)",
             "metric_tr": "Türkiye 6G başlık",
             "metric_top_cc": "En çok yayın (bağlılık)",
             "metric_oa_year": "{year} (6 konu)",
             "metric_peak_year": "Türkiye — en çok makale yılı",
+            "metric_peak_year_wos": "WoS — tepe yıl",
             "metric_peak_delta": "{n} makale",
             "metric_topic": "Konu",
             "metric_topic_delta": "{n} makale",
@@ -319,20 +326,28 @@ Anahtarsız resmi sayım uç noktası yok. Anahtar gelince uygulama çeker.
             },
             "year_heading": "### Yıllara göre yayın",
             "year_caption": "Başlığında 6G geçen dergi ve bildiri, 2020–2026. Türkiye: bağlılıkta Turkey. Avrupa çizgisi: Almanya, Fransa, İtalya, İspanya, Birleşik Krallık, Finlandiya, Yunanistan, Çekya (ayrı seri; toplanmaz).",
+            "year_caption_wos": "WoS Core Collection, TS=(6G) AND konu, PY=2020-2026. Analyze Results → Publication Years. Tümü görünümünde altı seri ayrıdır; toplanmaz. Küresel indekstir; Türkiye bağlılığı değildir.",
             "inst_caption": "Türkiye 6G kayıtlarındaki bağlılık dizgesi (en sık 10). Avrupa kurum listesi bu önbellekte yok; ülke grafiğine bakın.",
+            "inst_caption_wos": "Analyze Results → Affiliations, Results count (alfabetik değil). Seçili konu. Ortak yazarlı makale birden fazla kurumda sayılır; çubuklar toplanmaz.",
             "cc_caption": "Bağlılık metninde ülke adı geçen, başlığında 6G olan kayıt. Ortak yazarlı makale birden fazla ülkede sayılır; çubuklar toplanmaz.",
+            "cc_caption_wos": "Analyze Results → Countries/Regions. WoS «ENGLAND» burada Birleşik Krallık (İngiltere dilimi) olarak gösterilir. Ortak yazarlı makale birden fazla ülkede sayılır; çubuklar toplanmaz.",
             "cited_heading": "### En çok atıf alan makaleler",
             "cited_caption": "Sıra: DOI kaydındaki is-referenced-by-count, yüksekten düşüğe. Scholar atıfı değildir. Kartlar canlı listedir; kilitli örnek seti yoktur.",
+            "cited_caption_wos": "Sıra: WoS Times Cited (atıf sayısı), yüksekten düşüğe. Crossref is-referenced-by-count veya Scholar değildir. UT (Unique Identifier — benzersiz kayıt no) varsa tam kayıt açılır. Geniş 6G taramaları konu kelimesi geçtiği için üstte çıkabilir.",
             "trend_heading": "### Trend analizi",
             "trend_caption": "Türkiye ve seçilen Avrupa ülkelerinde başlık 6G, yıllara göre. Toplam Avrupa tek sayı değildir (çift sayım olmasın diye toplanmaz).",
+            "trend_caption_wos": "Aynı WoS sorgusu, yıllara göre. Konu serileri toplanmaz. 2026 yılı devam eden yıldır; önceki yıllarla kıyas tek başına olgunluk kanıtı değildir.",
             "empty_cited": "Atıf sıralı kayıt yok.",
             "volume_heading": "### 6G literatür hacmi",
             "volume_caption": "Başlığında 6G geçen dergi ve bildiri, Türkiye / Avrupa bağlılığı, 2020–2026.",
             "doi_heading": "### Yıl ve konu",
             "doi_caption": "IEEE 10.1109, Springer 10.1007, Elsevier 10.1016. Scholar toplamı değildir.",
             "chart_year": "Yıllara göre yayın — başlık 6G",
+            "chart_year_wos": "Yıllara göre yayın — WoS Core Collection",
             "chart_year_x": "Takvim yılı",
             "chart_topic": "Türkiye — başlık 6G AND konu",
+            "chart_topic_wos": "WoS Core Collection — TS=(6G) AND konu",
+            "chart_trend_wos": "WoS Core Collection — yıllara göre konu serisi (toplanmaz)",
             "chart_publisher": "DOI öneki (IEEE / Springer / Elsevier)",
             "empty_year": "Yıl serisi yok (önbellek boş). Sayı uydurulmaz.",
             "oa_heading": "### 6G konularına göre yayın",
@@ -345,16 +360,20 @@ Anahtarsız resmi sayım uç noktası yok. Anahtar gelince uygulama çeker.
             "inst_heading": "### En çok yayın yapan kurumlar",
             "oa_groupby": "Bağlılık dizgesi, Türkiye 6G.",
             "chart_inst": "Kurumlara göre yayın (Türkiye, 6G)",
+            "chart_inst_wos": "Kurumlara göre yayın — WoS Affiliations",
             "open_inst": "Kurum aramasını aç ↗",
             "inst_fallback": "Türkiye bağlılık dizgesi. Scholar kurum toplamı yoktur.",
             "chart_inst_fb": "Kurumlar (makale adedi)",
             "empty_inst": "Kurum adı çıkmadı. Avrupa için ülke sekmesini kullanın.",
+            "empty_inst_wos": "Kurum listesi konu seçilince gelir (Analyze Results → Affiliations). Altı konu toplanmaz.",
             "cc_heading": "### En çok yayın yapan ülkeler",
             "chart_cc": "Ülkelere göre yayın — başlık 6G, bağlılık",
+            "chart_cc_wos": "Ülkelere göre yayın — WoS Countries/Regions",
             "open_cc": "Ülke aramasını aç ↗",
             "cc_fallback": "Bağlılıkta ülke adı. Scholar ülke toplamı uydurulmaz.",
             "chart_cc_fb": "Ülke (makale adedi)",
             "empty_cc": "Ülke sayısı yok.",
+            "empty_cc_wos": "Ülke listesi konu seçilince gelir (Analyze Results → Countries/Regions). Altı konu toplanmaz.",
             "papers_heading": "### En çok atıf alan 6G makaleleri",
             "papers_caption": "Canlı DOI listesi; kilitli örnek seti değil. Atıf: DOI is-referenced-by-count.",
             "citations_n": "{n} atıf",
@@ -394,6 +413,16 @@ Anahtarsız resmi sayım uç noktası yok. Anahtar gelince uygulama çeker.
                 "MT": "Malta",
                 "CY": "Kıbrıs",
                 "IS": "İzlanda",
+                "CN": "Çin",
+                "US": "ABD",
+                "KR": "Güney Kore",
+                "CA": "Kanada",
+                "AU": "Avustralya",
+                "SG": "Singapur",
+                "IN": "Hindistan",
+                "JP": "Japonya",
+                "SA": "Suudi Arabistan",
+                "EG": "Mısır",
             },
         },
         "tt_eu": {
@@ -455,7 +484,7 @@ bu platformda o ülke adı kilitlenmedi.
             "oa_heading": "### Ülke grafını TT Avrupa’sı sanmayın",
             "oa_caption": "Üstteki «Ülkeler» sekmesi küresel 6G konu aramasıdır, TT portföyü değildir. Aşağıdaki makalelerin ham bağlılığı TR’dir.",
             "papers_heading": "### Türk Telekom Ar-Ge bağlılıklı makaleler",
-            "papers_caption": "DOI kilitlidir. Sıra: yıl yeniden eskiye; aynı yılda atıf (cited_by_count) yüksekten düşüğe.",
+            "papers_caption": "DOI kilitlidir. Sıra: yıl yeniden eskiye; aynı yılda atıf (cited_by_count) yüksekten düşüğe. WoS UT’si bilinen kayıtta tam kayıt düğmesi açılır.",
             "open_touch": "Kaynak duyuruyu aç ↗",
             "open_press": "Milli başvuru açıklamasını aç ↗",
             "open_ir": "2024 entegre raporu PDF ↗",
@@ -590,7 +619,7 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "patent_heading": "### Şartname patent veritabanları",
             "patent_caption": "Kilitli kayıtlar Google Patents’ten alındı; kartta aynı yayın no varsa Lens, Espacenet, PATENTSCOPE ve US tescil PDF de listelenir. Boş USPTO ppubs SPA yok.",
             "pub_heading": "### Şartname yayın veritabanları",
-            "pub_caption": "Makaleler DOI ile kilitlidir. Kartta DOI + o kaydın bulunduğu yayınevi (IEEE / Springer / Elsevier) + Scholar listelenir. WoS oturum duvarı olduğu için karta eklenmez.",
+            "pub_caption": "Makaleler DOI ile kilitlidir. Kartta DOI + o kaydın bulunduğu yayınevi (IEEE / Springer / Elsevier) + Scholar + WoS (UT tam kayıt veya DOI OpenURL) listelenir. WoS üst hücre sayısı Clarivate API anahtarı ister; HTML kazınmaz.",
             "patent_metric": "Google Patents",
             "assignee_caption": "«{company}» hak sahibi (assignee) araması — sonuç sayısını buraya yazmayız; sitede doğrulayın.",
             "topic_search": "Konu taraması (şartname: ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT)",
@@ -620,13 +649,13 @@ Patent ofisleri ve USPTO tabloları bu sayfada yoktur — Patent Zekası’ndad�
             "topic_pat_heading": "### Konu taraması — bu sayfa + ofis araması",
             "topic_pat_caption": "Açılır kutu bu sayfayı kilitler: kartlar, metrikler ve ofis çubukları seçilen 6G konusuna iner (ISAC seçince Netsia çubukları 0’a düşer; üç tescil AI-RAN’dadır). Alttaki mavi düğmeler sayfayı değiştirmez — aynı sorguyu Google Patents / Lens / Espacenet / PATENTSCOPE / ABD koleksiyonunda yeni sekmede açar.",
             "topic_pub_heading": "### Konu taraması — bu sayfa + yayın araması",
-            "topic_pub_caption": "Bölge Türkiye / Avrupa’yı, açılır kutu ISAC–Ambient IoT konusunu kilitler. Düğmeler IEEE, Scholar, Springer, Elsevier, WoS aramasını yeni sekmede açar.",
+            "topic_pub_caption": "Açılır kutu ISAC–Ambient IoT konusunu kilitler. Grafikler WoS Core Collection (küresel). Düğmeler IEEE, Scholar, Springer, Elsevier, WoS aramasını yeni sekmede açar.",
             "topic_buttons_hint": "Bu düğmeler dış aramadır (yeni sekme). Sayfa içi sayılar yalnızca üstteki açılır kutudan değişir.",
             "topic_buttons_hint_pub": "Bu düğmeler dış aramadır (yeni sekme). Sayfa içi makale sayıları yalnızca üstteki açılır kutudan değişir.",
             "topic_live_all": "Rakip örnek kümede **{n}** kayıt (tüm konular). TT-grup ofis çubukları: Avrupa Patent Ofisi {ep} · ABD Patent ve Marka Ofisi {us} · Türkiye Patent ve Marka Kurumu {tr}.",
             "topic_live_one": "Rakip örnek kümede «{topic}»: **{n}** kayıt. TT-grup ofis çubukları: Avrupa Patent Ofisi {ep} · ABD Patent ve Marka Ofisi {us} · Türkiye Patent ve Marka Kurumu {tr}. Düğme yeni sekmede «{q}» aramasını açar.",
-            "topic_live_all_pub": "Türkiye, başlık 6G: **{n}** dergi+bildiri (2020–2026). Avrupa ülke çubukları ayrıdır ve toplanmaz. Kilitli örnek liste yok.",
-            "topic_live_one_pub": "Konu «{topic}» (sorgu «{q}»). Türkiye 6G başlık toplamı **{n}**. Düğme aynı konuyu dış sitede açar.",
+            "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND konu, PY=2020-2026. Altı konu çubuğu ayrıdır; toplanmaz. Türkiye başlık-6G önbelleği: **{n}** (küresel WoS değildir).",
+            "topic_live_one_pub": "WoS Core Collection «{topic}»: **{n}** kayıt. Sorgu: `{q}`. Türkiye başlık-6G: {tr} (Crossref önbelleği; WoS küresel sayım değildir).",
             "totals_caption_pat": "Aynı sorgu, tüm ofisler. Google Patents xhr yanıt verirse sayı yazılır; Lens / Espacenet / PATENTSCOPE / USPTO anahtarsız toplam vermez — uydurulmaz.",
             "totals_caption_pub": "IEEE / Springer / Elsevier / WoS: o sitenin API’si (anahtar varsa). Scholar resmi API yok.",
             "total_col_db": "Veritabanı",
@@ -1148,25 +1177,30 @@ not commercialisation date.
         },
         "pub": {
             "title": "Publication Trends",
-            "subtitle": "Türkiye and Europe 6G literature. Top cells: IEEE Xplore, Google Scholar, Springer, Elsevier, WoS. No key → —. Source: {source}",
+            "subtitle": "Charts: WoS Core Collection, ISAC–Ambient IoT. Top cells: IEEE Xplore, Google Scholar, Springer, Elsevier, WoS API. No key → —. Source: {source}",
             "what_title": "What this page counts",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Problem:</strong> 6G output varies by country and topic. Eight locked cards are not that corpus.
-<strong>Scope:</strong> Türkiye and Europe. Topics: ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT.
-<strong>Sources:</strong> IEEE Xplore, Google Scholar, Springer, Elsevier, WoS — no proxy index.
+<strong>Problem:</strong> 6G output varies by topic and country. Eight locked cards are not that corpus.
+<strong>Scope:</strong> ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT.
+<strong>Charts:</strong> WoS (Web of Science) Core Collection. Query <code>TS=(6G) AND topic AND PY=2020-2026</code>.
+<strong>Top cells:</strong> IEEE Xplore, Google Scholar, Springer, Elsevier, WoS Starter API — no key → —.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Programmatic counts from these five sites need an official API key. No key → <strong>—</strong>; counts are not invented.
+The charts are global Core Collection, not a Türkiye affiliation filter. The six topics are not summed (the same paper can match more than one TS query).
 <strong>Google Scholar</strong> has no official API; HTML is not scraped. Country bars are not summed.
 </p>""",
             "expert_title": "API name, filter, limit",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>IEEE Xplore Metadata API:</strong> <code>ieeexploreapi.ieee.org</code> + <code>affiliation=Turkey</code>, 2020–2026.
-<strong>Springer Nature Meta API:</strong> Basic plan returns 403 for <code>affiliation:</code>. Text <code>6G Turkey</code> + dates; not an affiliation filter.
-<strong>Elsevier Scopus:</strong> <code>AFFILCOUNTRY(turkey)</code>; without an institutional token the result may be empty.
-<strong>WoS Starter (Clarivate):</strong> <code>TS</code> + <code>OG=Turkey</code> (Starter has no CU tag).
+<strong>Chart layer — WoS Core Collection Analyze Results:</strong>
+<code>TS</code> (Topic Search) + <code>PY</code> (Publication Year) 2020–2026.
+Year = Publication Years; institution = Affiliations; country = Countries/Regions (Results count).
+Citations = Times Cited, high to low — not Crossref <code>is-referenced-by-count</code>.
+<strong>IEEE Xplore Metadata API:</strong> <code>ieeexploreapi.ieee.org</code> + <code>affiliation=Turkey</code>.
+<strong>Springer Nature Meta API:</strong> Basic plan returns 403 for <code>affiliation:</code>.
+<strong>Elsevier Scopus:</strong> <code>AFFILCOUNTRY(turkey)</code>.
+<strong>WoS Starter API cell:</strong> no key → —; the Analyze table does not fill that cell.
 <strong>Google Scholar:</strong> no official endpoint. Not scraped.
-A single Europe-continent total is not invented.
+THz / AI-RAN top-cited lists can include broad 6G surveys; they are not a topic-only ranking.
 </p>""",
             "access_title": "Personal vs institutional email",
             "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
@@ -1187,10 +1221,12 @@ None of these sites expose a keyless official count API. When a key is present t
             "metric_springer": "Springer (TR)",
             "metric_elsevier": "Elsevier (TR)",
             "metric_wos": "WoS",
+            "metric_wos_core": "WoS Core (topic)",
             "metric_tr": "Türkiye 6G-in-title",
             "metric_top_cc": "Top country (affiliation)",
             "metric_oa_year": "{year} (6 topics)",
             "metric_peak_year": "Türkiye — peak year",
+            "metric_peak_year_wos": "WoS — peak year",
             "metric_peak_delta": "{n} papers",
             "metric_topic": "Topic",
             "metric_topic_delta": "{n} papers",
@@ -1222,20 +1258,28 @@ None of these sites expose a keyless official count API. When a key is present t
             },
             "year_heading": "### Publications by year",
             "year_caption": "Journal and proceedings with 6G in the title, 2020–2026. Türkiye: affiliation contains Turkey. Europe lines: Germany, France, Italy, Spain, United Kingdom, Finland, Greece, Czechia (separate series; not summed).",
+            "year_caption_wos": "WoS Core Collection, TS=(6G) AND topic, PY=2020-2026. Analyze Results → Publication Years. In the all-topics view the six series are separate and not summed. This is a global index, not a Türkiye affiliation filter.",
             "inst_caption": "Affiliation strings on Türkiye 6G records (top 10). A Europe institution list is not in this cache; use the country chart.",
+            "inst_caption_wos": "Analyze Results → Affiliations, Results count (not alphabetical). Selected topic. A co-authored paper can count at more than one institution; bars are not summed.",
             "cc_caption": "Records with 6G in the title whose affiliation string contains the country name. A co-authored paper can count in more than one country; bars are not summed.",
+            "cc_caption_wos": "Analyze Results → Countries/Regions. WoS “ENGLAND” is shown here as United Kingdom (England slice). A co-authored paper can count in more than one country; bars are not summed.",
             "cited_heading": "### Most cited papers",
             "cited_caption": "Ranked by the DOI record’s is-referenced-by-count, high to low. Not a Scholar citation count. These cards are a live list; there is no locked sample set.",
+            "cited_caption_wos": "Ranked by WoS Times Cited, high to low. Not Crossref is-referenced-by-count or Scholar. A UT (Unique Identifier) opens the full record when present. Broad 6G surveys can rank at the top because the topic token appears in the record.",
             "trend_heading": "### Trend analysis",
             "trend_caption": "Title-6G by year for Türkiye and selected European countries. There is no single Europe total (it would double-count).",
+            "trend_caption_wos": "The same WoS query by year. Topic series are not summed. 2026 is an incomplete year; it is not, by itself, a maturity proof against earlier years.",
             "empty_cited": "No citation-ranked records.",
             "volume_heading": "### 6G literature volume",
             "volume_caption": "Journal and proceedings with 6G in the title, Türkiye / Europe affiliation, 2020–2026.",
             "doi_heading": "### Year and topic",
             "doi_caption": "IEEE 10.1109, Springer 10.1007, Elsevier 10.1016. Not a Scholar total.",
             "chart_year": "Publications by year — title 6G",
+            "chart_year_wos": "Publications by year — WoS Core Collection",
             "chart_year_x": "Calendar year",
             "chart_topic": "Türkiye — title 6G AND topic",
+            "chart_topic_wos": "WoS Core Collection — TS=(6G) AND topic",
+            "chart_trend_wos": "WoS Core Collection — topic series by year (not summed)",
             "chart_publisher": "DOI prefix (IEEE / Springer / Elsevier)",
             "empty_year": "No year series (cache empty). Counts are not invented.",
             "oa_heading": "### Publications by 6G topic",
@@ -1248,16 +1292,20 @@ None of these sites expose a keyless official count API. When a key is present t
             "inst_heading": "### Top publishing institutions",
             "oa_groupby": "Affiliation string, Türkiye 6G.",
             "chart_inst": "Publications by institution (Türkiye, 6G)",
+            "chart_inst_wos": "Publications by institution — WoS Affiliations",
             "open_inst": "Open an institution search ↗",
             "inst_fallback": "Türkiye affiliation strings. There is no Scholar institution total.",
             "chart_inst_fb": "Institutions (paper count)",
             "empty_inst": "No institution name. For Europe use the country tab.",
+            "empty_inst_wos": "Institution bars appear after a topic is selected (Analyze Results → Affiliations). The six topics are not summed.",
             "cc_heading": "### Top publishing countries",
             "chart_cc": "Publications by country — title 6G, affiliation",
+            "chart_cc_wos": "Publications by country — WoS Countries/Regions",
             "open_cc": "Open a country search ↗",
             "cc_fallback": "Country name in the affiliation. A Scholar country total is not invented.",
             "chart_cc_fb": "Country (paper count)",
             "empty_cc": "No country counts.",
+            "empty_cc_wos": "Country bars appear after a topic is selected (Analyze Results → Countries/Regions). The six topics are not summed.",
             "papers_heading": "### Most cited 6G papers",
             "papers_caption": "Live DOI list, not a locked sample. Citations: DOI is-referenced-by-count.",
             "citations_n": "{n} citations",
@@ -1297,6 +1345,16 @@ None of these sites expose a keyless official count API. When a key is present t
                 "MT": "Malta",
                 "CY": "Cyprus",
                 "IS": "Iceland",
+                "CN": "China",
+                "US": "United States",
+                "KR": "South Korea",
+                "CA": "Canada",
+                "AU": "Australia",
+                "SG": "Singapore",
+                "IN": "India",
+                "JP": "Japan",
+                "SA": "Saudi Arabia",
+                "EG": "Egypt",
             },
         },
         "tt_eu": {
@@ -1358,7 +1416,7 @@ An unpainted European country is not a claim of absence — its name was not loc
             "oa_heading": "### Do not read the country chart as TT-in-Europe",
             "oa_caption": "The Countries tab above is a global 6G topic search, not a TT portfolio. Raw affiliation on the papers below is TR.",
             "papers_heading": "### Papers with Türk Telekom R&amp;D affiliation",
-            "papers_caption": "DOIs are locked. Order: year newest to oldest; within a year, citation count (cited_by_count) high to low.",
+            "papers_caption": "DOIs are locked. Order: year newest to oldest; within a year, citation count (cited_by_count) high to low. Cards with a known WoS UT open the Core Collection full record.",
             "open_touch": "Open the source announcement ↗",
             "open_press": "Open the national-filing statement ↗",
             "open_ir": "2024 integrated report PDF ↗",
@@ -1493,7 +1551,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "patent_heading": "### Spec patent databases",
             "patent_caption": "Locked records were taken from Google Patents; if the same publication number exists, the card also lists Lens, Espacenet, PATENTSCOPE, and the US grant PDF. No blank USPTO ppubs SPA.",
             "pub_heading": "### Spec publication databases",
-            "pub_caption": "Papers are locked by DOI. Each card lists DOI + the publisher that actually hosts that DOI (IEEE / Springer / Elsevier) + Scholar. WoS is omitted on cards because of the login wall.",
+            "pub_caption": "Papers are locked by DOI. Each card lists DOI + the publisher that actually hosts that DOI (IEEE / Springer / Elsevier) + Scholar + WoS (UT full record or DOI OpenURL). The WoS headline count still needs a Clarivate API key; HTML is not scraped.",
             "patent_metric": "Google Patents",
             "assignee_caption": "Assignee search for “{company}” — we do not copy the hit count here; verify on the site.",
             "topic_search": "Topic search (spec: ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT)",
@@ -1523,13 +1581,13 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "topic_pat_heading": "### Topic search — this page + office search",
             "topic_pat_caption": "The drop-down locks this page: cards, metrics, and office bars drop to the chosen 6G topic (pick ISAC and the Netsia bars fall to 0 — the three grants are AI-RAN). The blue buttons do not change the page; they open the same query on Google Patents / Lens / Espacenet / PATENTSCOPE / the U.S. collection in a new tab.",
             "topic_pub_heading": "### Topic search — this page + publication search",
-            "topic_pub_caption": "Region locks Türkiye / Europe; the drop-down locks ISAC–Ambient IoT. Buttons open IEEE, Scholar, Springer, Elsevier, WoS in a new tab.",
+            "topic_pub_caption": "The drop-down locks ISAC–Ambient IoT. Charts are WoS Core Collection (global). Buttons open IEEE, Scholar, Springer, Elsevier, WoS in a new tab.",
             "topic_buttons_hint": "These buttons are external search (new tab). On-page counts change only from the drop-down above.",
             "topic_buttons_hint_pub": "These buttons are external search (new tab). On-page paper counts change only from the drop-down above.",
             "topic_live_all": "Vendor sample: **{n}** records (all topics). TT-group office bars: European Patent Office {ep} · U.S. Patent and Trademark Office {us} · Turkish Patent and Trademark Office {tr}.",
             "topic_live_one": "Vendor sample “{topic}”: **{n}** records. TT-group office bars: European Patent Office {ep} · U.S. Patent and Trademark Office {us} · Turkish Patent and Trademark Office {tr}. A button opens a “{q}” search in a new tab.",
-            "topic_live_all_pub": "Türkiye, title 6G: **{n}** journal+proceedings (2020–2026). Europe country bars are separate and not summed. There is no locked sample list.",
-            "topic_live_one_pub": "Topic “{topic}” (query “{q}”). Türkiye 6G-title total **{n}**. A button opens the same topic on the external site.",
+            "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND topic, PY=2020-2026. The six topic bars are separate and not summed. Türkiye title-6G cache: **{n}** (not the global WoS count).",
+            "topic_live_one_pub": "WoS Core Collection “{topic}”: **{n}** records. Query: `{q}`. Türkiye title-6G: {tr} (Crossref cache; not the global WoS count).",
             "totals_caption_pat": "Same query, every office. Google Patents xhr writes a count when it answers; Lens / Espacenet / PATENTSCOPE / USPTO have no keyless total — counts are not invented.",
             "totals_caption_pub": "IEEE / Springer / Elsevier / WoS: that site’s API when a key is set. Scholar has no official API.",
             "total_col_db": "Database",

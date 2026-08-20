@@ -15,6 +15,7 @@ from backend.literature_client import (
     snapshot_meta,
 )
 from backend.publisher_apis import key_fingerprint
+from backend.wos_topic_cache import load_wos_topics
 from data.academic import ACADEMIC_DATA_SOURCE, ACADEMIC_SOURCES
 
 
@@ -22,6 +23,10 @@ def _norm_topic(topic: Optional[str]) -> Optional[str]:
     if not topic or topic in ("all", "Tümü", "All"):
         return None
     return topic
+
+
+def _wos_fp() -> str:
+    return str(load_wos_topics().get("fetched_at") or "")
 
 
 class AcademicService:
@@ -37,11 +42,11 @@ class AcademicService:
 
     @staticmethod
     def get_bundle(region: str = "both", topic: Optional[str] = None) -> Dict[str, Any]:
-        return literature_bundle(region, _norm_topic(topic), key_fingerprint())
+        return literature_bundle(region, _norm_topic(topic), key_fingerprint(), _wos_fp())
 
     @staticmethod
     def get_summary(topic: Optional[str] = None) -> Dict[str, Any]:
-        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint())
+        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint(), _wos_fp())
         meta = snapshot_meta()
         years = bundle.get("year_counts") or {}
         peak_year, peak_n = "—", None
@@ -66,11 +71,11 @@ class AcademicService:
 
     @staticmethod
     def get_tech_publication_trends_df(topic: Optional[str] = None) -> Optional[pd.DataFrame]:
-        return country_year_df("tr")
+        return country_year_df("tr", _norm_topic(topic))
 
     @staticmethod
     def get_topic_yearly_df(topic: str) -> Optional[pd.DataFrame]:
-        df = country_year_df("tr")
+        df = country_year_df("tr", _norm_topic(topic))
         if df is None or df.empty:
             return None
         if "TR" in df.columns:
@@ -79,8 +84,8 @@ class AcademicService:
 
     @staticmethod
     def get_most_cited_papers(topic: Optional[str] = None) -> List[Dict[str, Any]]:
-        return list(literature_bundle("both", _norm_topic(topic), key_fingerprint()).get("cited") or [])
+        return list(literature_bundle("both", _norm_topic(topic), key_fingerprint(), _wos_fp()).get("cited") or [])
 
     @staticmethod
-    def get_trend_df(region: str = "both") -> Optional[pd.DataFrame]:
-        return country_year_df(region)
+    def get_trend_df(region: str = "both", topic: Optional[str] = None) -> Optional[pd.DataFrame]:
+        return country_year_df(region, _norm_topic(topic))

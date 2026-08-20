@@ -14,6 +14,7 @@ import pandas as pd
 import streamlit as st
 
 from backend.publisher_apis import fetch_native_counts, key_fingerprint, key_status
+from backend.wos_topic_cache import wos_overlay
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "tr_eu_6g.json"
 TREND_YEARS = list(range(2020, 2027))
@@ -100,6 +101,7 @@ def literature_bundle(
     region: str = "both",
     topic: Optional[str] = None,
     _keys: str = "",
+    _wos: str = "",
 ) -> Dict[str, Any]:
     """Türkiye / Avrupa / ikisi. Konu TR konu önbelleğindedir; ülke çubukları 6G başlıktır."""
     cache = _load_disk()
@@ -184,7 +186,7 @@ def literature_bundle(
         inst_rows = inst
         total = tr_total
 
-    return {
+    payload = {
         "region": region,
         "topic": tpc,
         "total_tr": tr_total,
@@ -197,6 +199,10 @@ def literature_bundle(
         "publishers": pub,
         "keys": key_status(),
         "cited": cited,
+        "chart_source": "crossref",
+        "wos_total": None,
+        "wos_query": "",
+        "wos_fetched_at": "",
         "source": (
             "IEEE Xplore Metadata API, Springer Nature Meta API, Elsevier Scopus API, "
             "Clarivate WoS Starter API (anahtar varsa). Google Scholar resmi API yok; HTML çekilmez."
@@ -204,10 +210,47 @@ def literature_bundle(
         **snapshot_meta(),
     }
 
+    overlay = wos_overlay(tpc)
+    if overlay:
+        payload["chart_source"] = "wos"
+        payload["wos_total"] = overlay.get("wos_total")
+        payload["wos_query"] = overlay.get("wos_query") or ""
+        payload["wos_fetched_at"] = overlay.get("wos_fetched_at") or ""
+        payload["topics"] = overlay.get("topics") or {}
+        payload["year_counts"] = overlay.get("year_counts") or {}
+        payload["year_series"] = overlay.get("year_series") or {}
+        payload["institutions"] = overlay.get("institutions") or []
+        payload["countries"] = overlay.get("countries") or []
+        payload["cited"] = overlay.get("cited") or []
+        payload["total"] = overlay.get("wos_total")
+        payload["source"] = (
+            "WoS Core Collection Analyze Results: TS=(6G) AND konu AND PY=2020-2026. "
+            "Üst hücreler resmi API (anahtar yoksa —). Konu serileri toplanmaz."
+        )
+        if overlay.get("wos_fetched_at"):
+            payload["fetched_at"] = overlay["wos_fetched_at"]
+    return payload
 
-def country_year_df(region: str = "both") -> Optional[pd.DataFrame]:
-    bundle = literature_bundle(region, None)
+
+def country_year_df(region: str = "both", topic: Optional[str] = None) -> Optional[pd.DataFrame]:
+    from backend.wos_topic_cache import TOPIC_ORDER, load_wos_topics
+
+    bundle = literature_bundle(
+        region,
+        topic,
+        key_fingerprint(),
+        str(load_wos_topics().get("fetched_at") or ""),
+    )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}
+    if bundle.get("chart_source") == "wos":
+        keep = [name for name in TOPIC_ORDER if name in series] or list(series.keys())
+        if not keep:
+            return None
+        data: Dict[str, List[int]] = {"Years": list(TREND_YEARS)}
+        for name in keep:
+            years = series.get(name) or {}
+            data[name] = [int(years.get(str(y), 0) or 0) for y in TREND_YEARS]
+        return pd.DataFrame(data)
     if region == "tr":
         keep = ["TR"]
     elif region == "eu":
@@ -216,7 +259,7 @@ def country_year_df(region: str = "both") -> Optional[pd.DataFrame]:
         keep = ["TR"] + [cc for cc in TREND_EU if cc in series]
     if not keep:
         return None
-    data: Dict[str, List[int]] = {"Years": list(TREND_YEARS)}
+    data = {"Years": list(TREND_YEARS)}
     for cc in keep:
         years = series.get(cc) or {}
         data[cc] = [int(years.get(str(y), 0) or 0) for y in TREND_YEARS]
