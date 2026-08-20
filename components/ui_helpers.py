@@ -128,7 +128,7 @@ def render_patent_card(patent: dict) -> None:
     url = patent.get("source_url") or patent.get("url") or ""
     if not url and pub:
         url = google_patents_record_url(pub)
-    if url and "ppubs.uspto.gov" in url:
+    if url and "patents.google.com" not in url and pub:
         url = google_patents_record_url(pub)
 
     st.markdown(

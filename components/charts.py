@@ -330,41 +330,51 @@ def render_patent_trends_chart(df_trends: pd.DataFrame) -> go.Figure:
     return fig
 
 def render_company_patent_domain_chart(df_domains: pd.DataFrame) -> go.Figure:
-    """Renders radar comparison of patent portfolios across companies."""
+    """Firma × konu radar — ham kayıt sayısı, yüzde yok."""
     fig = go.Figure()
-    domains = [c for c in df_domains.columns if c != 'Company']
+    domains = [c for c in df_domains.columns if c != "Company"]
     shown = df_domains.copy()
     value_cols = [c for c in shown.columns if c != "Company"]
     shown["_tot"] = shown[value_cols].sum(axis=1)
-    shown = shown.sort_values("_tot", ascending=False).head(5).drop(columns=["_tot"])
+    shown = shown[shown["_tot"] > 0].sort_values("_tot", ascending=False).drop(columns=["_tot"])
     companies = shown["Company"].tolist()
     colors = _color_list(companies)
+    peak = 1
+    for _, row in shown.iterrows():
+        peak = max(peak, max((int(row[d] or 0) for d in domains), default=0))
 
     for idx, (_, row) in enumerate(shown.iterrows()):
-        company = row['Company']
+        company = row["Company"]
         color = colors[idx]
-        values = [row[d] for d in domains]
+        values = [int(row[d] or 0) for d in domains]
         values_closed = values + [values[0]]
         domains_closed = domains + [domains[0]]
 
         fig.add_trace(go.Scatterpolar(
             r=values_closed,
             theta=domains_closed,
-            fill='toself',
+            fill="toself",
             name=company,
             fillcolor=_hex_rgba(color, 0.14),
             line=dict(color=color, width=2.5),
+            hovertemplate="%{theta}: %{r}<extra>" + company + "</extra>",
         ))
 
     fig.update_layout(
         **_layout(),
-        title=dict(text=f"<b>{t('charts.domain_radar')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
+        title=dict(text=f"<b>{t('charts.domain_radar')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         polar=dict(
-            radialaxis=dict(visible=True, range=[0, 100], gridcolor='rgba(200, 209, 220, 0.15)'),
-            angularaxis=dict(gridcolor='rgba(200, 209, 220, 0.15)', tickfont=dict(color='#FFFFFF')),
-            bgcolor='#121620'
+            radialaxis=dict(
+                visible=True,
+                range=[0, peak],
+                dtick=1 if peak <= 12 else None,
+                gridcolor="rgba(200, 209, 220, 0.15)",
+                tickformat="d",
+            ),
+            angularaxis=dict(gridcolor="rgba(200, 209, 220, 0.15)", tickfont=dict(color="#FFFFFF")),
+            bgcolor="#121620",
         ),
-        height=440
+        height=440,
     )
     return fig
 
@@ -596,7 +606,7 @@ def render_patent_network_graph(edges: Optional[List[tuple]] = None) -> go.Figur
 
 
 def render_company_counts_chart(counts: Dict[str, int]) -> go.Figure:
-    """En çok kayıtlı firmalar — doğrulanmış küme sayımı."""
+    """En çok kayıtlı firmalar — xhr/çekilen kayıt tam sayısı."""
     sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
     names = [c for c, _ in sorted_items]
     vals = _ints(n for _, n in sorted_items)
@@ -605,6 +615,23 @@ def render_company_counts_chart(counts: Dict[str, int]) -> go.Figure:
         **_layout(),
         title=dict(text=f"<b>{t('charts.company_counts')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)"),
+        yaxis=_count_axis(t("charts.patent_count"), vals),
+        height=360,
+        bargap=0.28,
+    )
+    return fig
+
+
+def render_patent_topic_mix_chart(counts: Dict[str, int]) -> go.Figure:
+    """Patent konusu dağılımı — ham kayıt sayısı."""
+    sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+    names = [c for c, _ in sorted_items]
+    vals = _ints(n for _, n in sorted_items)
+    fig = go.Figure(_count_bar(names, vals, unit_key="charts.patent_count"))
+    fig.update_layout(
+        **_layout(),
+        title=dict(text=f"<b>{t('charts.topic_mix')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
+        xaxis=dict(title=t("charts.topic_axis"), gridcolor="rgba(200, 209, 220, 0.1)"),
         yaxis=_count_axis(t("charts.patent_count"), vals),
         height=360,
         bargap=0.28,

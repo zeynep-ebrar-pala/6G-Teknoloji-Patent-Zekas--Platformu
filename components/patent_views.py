@@ -1,6 +1,6 @@
 """
 Modül 2 — Patent Zekası ve Rakip Analizi arayüzü.
-Tüm patent kayıtları Google Patents üzerinden doğrulanabilir.
+Grafikler Google Patents xhr kayıtları / xhr toplamıdır. Kilitli örnek yok.
 """
 
 import streamlit as st
@@ -10,12 +10,9 @@ from i18n.core import format_int, get_lang, t
 from components.charts import (
     render_company_counts_chart,
     render_company_patent_domain_chart,
-    render_patent_density_heatmap,
-    render_patent_keywords_chart,
-    render_patent_network_graph,
-    render_patent_sunburst,
     render_patent_tfidf_map,
     render_patent_trends_chart,
+    render_patent_topic_mix_chart,
     render_patent_wordcloud,
 )
 
@@ -33,7 +30,7 @@ from components.ui_helpers import (
 from components.topic_panels import render_patent_topic_panel
 from components.tt_europe_views import render_tt_europe_patent_section
 
-PATENT_SECTION_KEYS = ["year", "topics", "landscape", "tt_eu"]
+PATENT_SECTION_KEYS = ["charts", "tt_eu"]
 
 
 def render_patent_intelligence_module():
@@ -64,19 +61,7 @@ def render_patent_intelligence_module():
 </div>""",
             unsafe_allow_html=True,
         )
-        from backend.patent_apis import REGISTER
-
-        k1, k2, k3, k4, k5 = st.columns(5)
-        with k1:
-            st.link_button(t("patent.key_gp"), REGISTER["google_patents"])
-        with k2:
-            st.link_button(t("patent.key_lens"), REGISTER["lens"])
-        with k3:
-            st.link_button(t("patent.key_espacenet"), REGISTER["espacenet"])
-        with k4:
-            st.link_button(t("patent.key_wipo"), REGISTER["wipo"])
-        with k5:
-            st.link_button(t("patent.key_uspto"), REGISTER["uspto"])
+        st.link_button(t("patent.key_gp"), "https://patents.google.com/")
 
     render_spec_patent_sources()
     topic = render_patent_topic_panel("patent")
@@ -92,7 +77,8 @@ def render_patent_intelligence_module():
         render_tt_europe_patent_section(domain=topic)
         return
 
-    from backend.source_links import assignee_patent_links
+    from backend.patent_apis import live_assignee_counts
+    from backend.source_links import assignee_patent_links, topic_query
 
     spec = PatentService.get_spec_companies()
     filter_options = ["all"] + spec
@@ -104,13 +90,16 @@ def render_patent_intelligence_module():
         key="patent_company_filter",
     )
     company_arg = None if company == "all" else company
+    query = topic_query(topic or "6G")
 
-    summary = PatentService.get_summary(company_arg, topic)
-    patents = PatentService.get_top_patents(company_arg, topic)
+    with st.spinner(t("patent.live_gp_spin")):
+        xhr_totals = live_assignee_counts(query, tuple(spec) if not company_arg else (company_arg,))
+        summary = PatentService.get_summary(company_arg, topic)
+        patents = PatentService.get_top_patents(company_arg, topic)
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric(t("patent.metric_total"), format_int(summary["total"]))
+        st.metric(t("patent.metric_pulled"), format_int(summary["total"]))
     with col2:
         st.metric(
             t("patent.metric_leader"),
@@ -125,11 +114,66 @@ def render_patent_intelligence_module():
         )
     with col4:
         st.metric(t("patent.metric_source"), t("sources.patent_metric"))
+    st.caption(t("patent.pulled_caption"))
     if company_arg:
         st.caption(t("sources.assignee_caption", company=company_arg))
         render_link_row(assignee_patent_links(company_arg), key_suffix=f"asg_{company_arg}")
     else:
         render_source_button("https://patents.google.com", t("patent.open_gp"))
+
+    st.markdown(t("patent.companies_heading"))
+    st.caption(t("patent.companies_caption"))
+    firm_counts = {
+        name: n
+        for name, n in xhr_totals.items()
+        if isinstance(n, int) and n > 0
+    }
+    if not firm_counts:
+        show_empty(t("patent.empty_counts"))
+    else:
+        show_plotly(render_company_counts_chart(firm_counts))
+
+    st.markdown(t("patent.year_heading"))
+    st.caption(t("patent.year_caption"))
+    df_trends = PatentService.get_patent_trends_df(company_arg, topic)
+    if df_trends.empty:
+        show_empty(t("patent.empty_trend"))
+    else:
+        show_plotly(render_patent_trends_chart(df_trends))
+
+    st.markdown(t("patent.topic_mix_heading"))
+    st.caption(t("patent.topic_mix_caption"))
+    topic_counts = PatentService.get_topic_counts(company_arg, topic)
+    if not topic_counts:
+        show_empty(t("patent.empty_domain"))
+    else:
+        show_plotly(render_patent_topic_mix_chart(topic_counts))
+
+    st.markdown(t("patent.radar_heading"))
+    st.caption(t("patent.radar_caption"))
+    df_domains = PatentService.get_all_companies_domain_df(company_arg, topic)
+    numeric = df_domains.drop(columns=["Company"], errors="ignore") if not df_domains.empty else None
+    if df_domains.empty or numeric is None or int(numeric.fillna(0).to_numpy().sum()) == 0:
+        show_empty(t("patent.empty_domain"))
+    else:
+        show_plotly(render_company_patent_domain_chart(df_domains))
+
+    st.markdown(t("patent.wordcloud"))
+    st.caption(t("patent.wordcloud_caption"))
+    kw_dict = PatentService.get_patent_keywords(company_arg, topic)
+    wc_fig = render_patent_wordcloud(kw_dict) if kw_dict else None
+    if wc_fig is None:
+        show_empty(t("patent.empty_wc"))
+    else:
+        st.pyplot(wc_fig, clear_figure=True)
+
+    st.markdown(t("patent.map_heading"))
+    st.caption(t("patent.map_caption"))
+    df_map = PatentService.get_tfidf_map_df(company_arg, topic)
+    if df_map.empty:
+        show_empty(t("patent.empty_map"))
+    else:
+        show_plotly(render_patent_tfidf_map(df_map))
 
     st.markdown(t("patent.list_heading"))
     st.caption(t("patent.list_caption"))
@@ -139,121 +183,6 @@ def render_patent_intelligence_module():
             if topic
             else t("patent.empty_company", company=company if company != "all" else t("patent.all"))
         )
-    else:
-        for pat in patents:
-            render_patent_card(pat)
-
-    if section == "year":
-        _render_live_assignee_layer(company_arg, topic)
-
-        st.markdown(t("patent.companies_heading"))
-        counts = PatentService.get_company_counts(company_arg, topic)
-        if not company_arg:
-            spec = PatentService.get_spec_companies()
-            counts = {name: int(counts.get(name, 0)) for name in spec}
-        if not any(counts.values()):
-            show_empty(t("patent.empty_counts"))
-        else:
-            show_plotly(render_company_counts_chart(counts))
-
-        st.markdown(t("patent.year_heading"))
-        st.caption(t("patent.year_caption"))
-        df_trends = PatentService.get_patent_trends_df(company_arg, topic)
-        if df_trends.empty:
-            show_empty(t("patent.empty_trend"))
-        else:
-            show_plotly(render_patent_trends_chart(df_trends))
-
-    elif section == "topics":
-        col_radar, col_kw = st.columns([1.2, 1])
-        with col_radar:
-            df_domains = PatentService.get_all_companies_domain_df(company_arg, topic)
-            if df_domains.empty:
-                show_empty(t("patent.empty_domain"))
-            else:
-                show_plotly(render_company_patent_domain_chart(df_domains))
-
-        with col_kw:
-            kw_dict = PatentService.get_patent_keywords(company_arg, topic)
-            if not kw_dict:
-                show_empty(t("patent.empty_kw"))
-            else:
-                show_plotly(render_patent_keywords_chart(kw_dict))
-
-        st.markdown(t("patent.wordcloud"))
-        st.caption(t("patent.wordcloud_caption"))
-        kw_dict = PatentService.get_patent_keywords(company_arg, topic)
-        wc_fig = render_patent_wordcloud(kw_dict) if kw_dict else None
-        if wc_fig is None:
-            show_empty(t("patent.empty_wc"))
-        else:
-            st.pyplot(wc_fig, clear_figure=True)
-
-    else:
-        st.markdown(t("patent.tree_heading"))
-        df_tree = PatentService.get_sunburst_df(company_arg, topic)
-        if df_tree.empty:
-            show_empty(t("patent.empty_tree"))
-        else:
-            show_plotly(render_patent_sunburst(df_tree))
-
-        st.markdown(t("patent.density"))
-        df_density = PatentService.get_density_df(company_arg, topic)
-        if df_density.empty:
-            show_empty(t("patent.empty_density"))
-        else:
-            show_plotly(render_patent_density_heatmap(df_density))
-
-        st.markdown(t("patent.map_heading"))
-        st.caption(t("patent.map_caption"))
-        df_map = PatentService.get_tfidf_map_df(company_arg, topic)
-        if df_map.empty:
-            show_empty(t("patent.empty_map"))
-        else:
-            show_plotly(render_patent_tfidf_map(df_map))
-
-        st.markdown(t("patent.network"))
-        edges = PatentService.get_network_edges(company_arg, topic)
-        if not edges:
-            show_empty(t("patent.empty_net"))
-        else:
-            show_plotly(render_patent_network_graph(edges))
-
-
-def _render_live_assignee_layer(company: str | None, topic: str | None) -> None:
-    """Google Patents xhr hak sahibi sayısı. Örnek küme çubuklarıyla toplanmaz."""
-    from backend.patent_apis import live_assignee_counts
-    from backend.source_links import topic_query
-
-    spec = tuple(PatentService.get_spec_companies())
-    names = (company,) if company else spec
-    query = topic_query(topic or "6G")
-    st.markdown(t("patent.live_gp_heading"))
-    st.caption(t("patent.live_gp_caption"))
-    with st.spinner(t("patent.live_gp_spin")):
-        live = live_assignee_counts(query, names)
-    if company:
-        n = live.get(company)
-        if isinstance(n, int):
-            st.metric(t("patent.live_gp_metric"), format_int(n))
-        else:
-            show_empty(t("patent.live_gp_empty"))
         return
-    sample = PatentService.get_company_counts(None, topic)
-    rows = []
-    any_live = False
-    for name in spec:
-        xhr_n = live.get(name)
-        if isinstance(xhr_n, int):
-            any_live = True
-        rows.append(
-            {
-                t("patent.live_col_firm"): name,
-                t("patent.live_col_n"): format_int(xhr_n) if isinstance(xhr_n, int) else "—",
-                t("patent.live_col_sample"): format_int(int(sample.get(name, 0) or 0)),
-            }
-        )
-    if not any_live:
-        show_empty(t("patent.live_gp_empty"))
-        return
-    st.dataframe(rows, hide_index=True, width="stretch")
+    for pat in patents:
+        render_patent_card(pat)

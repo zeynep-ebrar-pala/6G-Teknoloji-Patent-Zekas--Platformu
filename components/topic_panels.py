@@ -8,10 +8,10 @@ import streamlit as st
 
 
 def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
-    """Konu seçimi kilitli patent kümesini, ofis çubuklarını ve ofis aramasını birlikte değiştirir."""
+    """Konu seçimi xhr toplamını, çekilen kayıtları ve ofis aramasını birlikte değiştirir."""
+    from backend.patent_apis import google_patents_count
     from backend.patent_service import PatentService
-    from backend.source_links import SPEC_PUB_TOPICS, topic_patent_searches
-    from backend.tt_europe_service import TTEuropeService
+    from backend.source_links import SPEC_PUB_TOPICS, topic_patent_searches, topic_query
     from components.ui_helpers import render_link_row, render_source_totals
     from i18n.core import format_int, get_lang, t
 
@@ -25,13 +25,11 @@ def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
         key=f"spec_pat_topic_{key_suffix}_{get_lang()}",
     )
     picked = None if topic == "all" else topic
-    n = PatentService.get_summary(None, picked)["total"]
-    offices = TTEuropeService.office_counts(picked)
+    xhr_n = google_patents_count(topic_query(picked or "6G"))
+    pulled_n = PatentService.get_summary(None, picked)["total"]
     live_kwargs = {
-        "n": format_int(n),
-        "ep": format_int(offices.get("EP") or 0),
-        "us": format_int(offices.get("US") or 0),
-        "tr": format_int(offices.get("TR") or 0),
+        "n": format_int(xhr_n) if isinstance(xhr_n, int) else "—",
+        "pulled": format_int(pulled_n),
     }
     if picked is None:
         st.info(t("sources.topic_live_all", **live_kwargs))

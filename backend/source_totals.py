@@ -40,57 +40,39 @@ def _patent_method(source_id: str, n: Optional[int], keys: Dict[str, bool]) -> s
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def fetch_patent_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[str, Any]]:
-    """Google Patents xhr; Lens / Espacenet / USPTO bireysel anahtar. WIPO anahtarsız JSON yok."""
+    """Yalnızca Google Patents xhr. Yanıt yoksa None (UI —)."""
     label = topic or "6G"
     query = topic_query(label)
     links = topic_patent_searches(label)
     counts = fetch_office_counts(query, _keys or patent_key_fingerprint())
     keys = patent_key_status()
+    n = counts.get("google_patents")
     return [
         _row(
-            source_id,
-            _search_url(links, source_id),
-            counts.get(source_id),
-            _patent_method(source_id, counts.get(source_id), keys),
+            "google_patents",
+            _search_url(links, "google_patents"),
+            n,
+            _patent_method("google_patents", n, keys),
         )
-        for source_id in ("google_patents", "lens", "espacenet", "wipo", "uspto")
     ]
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def fetch_pub_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[str, Any]]:
-    """IEEE / Springer / Elsevier / WoS / Scholar native API. Anahtar yoksa None."""
+    """Yalnızca WoS ve Springer. Anahtar yoksa None."""
     label = topic or "6G"
     links = topic_pub_searches(label, "tr")
     bundle = literature_bundle("tr", topic, _keys or key_fingerprint())
     pubs = bundle.get("publishers") or {}
     rows: List[Dict[str, Any]] = []
-    for source_id in ("ieee", "springer", "elsevier"):
+    for source_id in ("wos", "springer"):
         n = pubs.get(source_id)
         rows.append(
             _row(
                 source_id,
                 _search_url(links, source_id),
                 n if isinstance(n, int) else None,
-                f"native_{source_id}",
+                f"native_{source_id}" if isinstance(n, int) else "none",
             )
         )
-    scholar_n = pubs.get("scholar")
-    rows.append(
-        _row(
-            "scholar",
-            _search_url(links, "scholar"),
-            scholar_n if isinstance(scholar_n, int) else None,
-            "native_scholar" if isinstance(scholar_n, int) else "none",
-        )
-    )
-    wos_n = pubs.get("wos")
-    rows.append(
-        _row(
-            "wos",
-            _search_url(links, "wos"),
-            wos_n if isinstance(wos_n, int) else None,
-            "native_wos" if isinstance(wos_n, int) else "none",
-        )
-    )
     return rows

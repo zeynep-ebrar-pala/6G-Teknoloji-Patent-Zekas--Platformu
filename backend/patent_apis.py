@@ -1,6 +1,6 @@
 """
-Patent ofisi — Google Patents xhr + bireysel Lens / EPO OPS / PatentsView anahtarları.
-IEEE patent sunmaz. Anahtar yoksa None (UI —). HTML kazınmaz.
+Patent ofisi — Google Patents xhr.
+Anahtar yoksa None (UI —). HTML kazınmaz.
 """
 
 from __future__ import annotations
@@ -14,6 +14,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+import time
 
 import streamlit as st
 
@@ -30,6 +31,24 @@ GP_UA = (
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 )
 UA = "6G-Patent-Platform/1.3 (mailto:zeynep.ebrar.pala@example.com)"
+
+
+def _gp_get(url: str, timeout: int = 18) -> Optional[Dict[str, Any]]:
+    """Google Patents xhr. 503/429 olursa iki kez bekleyip dener. HTML kazınmaz."""
+    req = urllib.request.Request(url, headers={"User-Agent": GP_UA, "Accept": "application/json"})
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            return data if isinstance(data, dict) else None
+        except urllib.error.HTTPError as exc:
+            if exc.code in (429, 503) and attempt < 2:
+                time.sleep(1.5 * (attempt + 1))
+                continue
+            return None
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError):
+            return None
+    return None
 
 REGISTER = {
     "google_patents": "https://patents.google.com/",
@@ -118,11 +137,8 @@ def google_patents_count(query: str) -> Optional[int]:
         return hit
     inner = f"q={urllib.parse.quote_plus(q)}&num=1"
     url = f"https://patents.google.com/xhr/query?url={urllib.parse.quote(inner)}"
-    req = urllib.request.Request(url, headers={"User-Agent": GP_UA, "Accept": "application/json"})
-    try:
-        with urllib.request.urlopen(req, timeout=8) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError, ValueError):
+    data = _gp_get(url, timeout=8)
+    if not data:
         return None
     total = (data.get("results") or {}).get("total_num_results")
     if not isinstance(total, int):
@@ -260,27 +276,15 @@ def _iter_gp_patents(payload: Any) -> List[Dict[str, Any]]:
     return out
 
 
-def google_patents_records(query: str, num: int = 20) -> List[Dict[str, Any]]:
-    """Google Patents xhr sonuç satırları. HTML kazınmaz. Özet yoksa snippet."""
-    q = (query or "").strip()
-    if not q:
-        return []
-    n = max(1, min(int(num or 20), 50))
-    cache_key = f"gp_rec:{q}:{n}"
-    disk = _load()
-    recs = (disk.get("records") or {}).get(cache_key)
-    if isinstance(recs, list) and recs:
-        return recs
-    inner = f"q={urllib.parse.quote_plus(q)}&num={n}"
+def _xhr_payload(query: str, num: int, page: int) -> Optional[Dict[str, Any]]:
+    inner = f"q={urllib.parse.quote_plus(query)}&num={num}&page={page}"
     url = f"https://patents.google.com/xhr/query?url={urllib.parse.quote(inner)}"
-    req = urllib.request.Request(url, headers={"User-Agent": GP_UA, "Accept": "application/json"})
-    try:
-        with urllib.request.urlopen(req, timeout=18) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError, ValueError):
-        return []
+    return _gp_get(url, timeout=18)
+
+
+def _rows_from_patents(patents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     rows: List[Dict[str, Any]] = []
-    for patent in _iter_gp_patents(data):
+    for patent in patents:
         pub = str(patent.get("publication_number") or "").strip()
         title = str(patent.get("title") or "").strip()
         assignee = str(patent.get("assignee") or "").strip()
@@ -290,17 +294,47 @@ def google_patents_records(query: str, num: int = 20) -> List[Dict[str, Any]]:
             year = int(published[:4])
         if not pub or not title or year is None:
             continue
-        snippet = str(patent.get("snippet") or "").strip()
         rows.append(
             {
                 "publication_number": pub,
                 "title": title,
                 "assignee": assignee,
                 "year": year,
-                "abstract": snippet,
+                "abstract": str(patent.get("snippet") or "").strip(),
                 "source": "Google Patents xhr",
             }
         )
+    return rows
+
+
+def google_patents_records(query: str, num: int = 10, pages: int = 3) -> List[Dict[str, Any]]:
+    """Google Patents xhr sonuç satırları. HTML kazınmaz. Özet yoksa snippet."""
+    q = (query or "").strip()
+    if not q:
+        return []
+    n = max(1, min(int(num or 10), 20))
+    pmax = max(1, min(int(pages or 1), 5))
+    cache_key = f"gp_rec:{q}:{n}:{pmax}"
+    disk = _load()
+    recs = (disk.get("records") or {}).get(cache_key)
+    if isinstance(recs, list) and recs:
+        return recs
+    rows: List[Dict[str, Any]] = []
+    seen: set = set()
+    for page in range(1, pmax + 1):
+        data = _xhr_payload(q, n, page)
+        if not data:
+            break
+        batch = _rows_from_patents(_iter_gp_patents(data))
+        if not batch:
+            break
+        for row in batch:
+            pub = row["publication_number"]
+            if pub in seen:
+                continue
+            seen.add(pub)
+            rows.append(row)
+        time.sleep(0.15)
     if rows:
         payload = _load()
         records = payload.get("records") or {}

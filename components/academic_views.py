@@ -1,7 +1,7 @@
 """
 Modül 3 — Akademik Yayın Analizi.
 Türkiye ve Avrupa 6G literatürü: yıl, kurum, ülke, atıf, trend.
-Kilitli örnek liste yok. Scholar / WoS sayısı uydurulmaz.
+Kilitli örnek liste yok. WoS / Springer sayısı uydurulmaz.
 """
 
 from __future__ import annotations
@@ -33,13 +33,13 @@ def _cc_name(cc: str) -> str:
 def _with_source(paper: dict) -> dict:
     out = dict(paper)
     prefix = str(out.get("prefix") or "")
-    if not out.get("source"):
-        if prefix.startswith("10.1109"):
-            out["source"] = "IEEE Xplore"
-        elif prefix.startswith("10.1007"):
-            out["source"] = "Springer"
-        elif prefix.startswith("10.1016"):
-            out["source"] = "Elsevier"
+    src = str(out.get("source") or "")
+    if src in ("IEEE Xplore", "Elsevier", "Google Scholar"):
+        out["source"] = ""
+    if prefix.startswith("10.1007") or "springer" in src.lower():
+        out["source"] = "Springer"
+    elif not out.get("source"):
+        out["source"] = "WoS"
     return out
 
 
@@ -112,32 +112,20 @@ def render_academic_publication_module():
     bundle = AcademicService.get_bundle(region, topic)
     pubs = bundle.get("publishers") or {}
 
-    c1, c2, c3, c4, c5 = st.columns(5)
+    c1, c2 = st.columns(2)
     with c1:
-        st.metric(t("pub.metric_ieee"), _fmt(pubs.get("ieee")))
-    with c2:
-        st.metric(t("pub.metric_scholar"), _fmt(pubs.get("scholar")))
-    with c3:
-        st.metric(t("pub.metric_springer"), _fmt(pubs.get("springer")))
-    with c4:
-        st.metric(t("pub.metric_elsevier"), _fmt(pubs.get("elsevier")))
-    with c5:
         st.metric(t("pub.metric_wos"), _fmt(pubs.get("wos")))
+    with c2:
+        st.metric(t("pub.metric_springer"), _fmt(pubs.get("springer")))
     st.caption(t("pub.source_metric_caption"))
     if current_view_mode() == "expert":
         from backend.publisher_apis import REGISTER
 
-        k1, k2, k3, k4, k5 = st.columns(5)
+        k1, k2 = st.columns(2)
         with k1:
-            st.link_button(t("pub.key_ieee"), REGISTER["ieee"])
+            st.link_button(t("pub.key_wos"), REGISTER["wos"])
         with k2:
             st.link_button(t("pub.key_springer"), REGISTER["springer"])
-        with k3:
-            st.link_button(t("pub.key_elsevier"), REGISTER["elsevier"])
-        with k4:
-            st.link_button(t("pub.key_wos"), REGISTER["wos"])
-        with k5:
-            st.link_button(t("pub.key_scholar"), REGISTER["scholar"])
 
     wos = bundle.get("chart_source") == "wos"
     tr_n = bundle.get("total_tr")

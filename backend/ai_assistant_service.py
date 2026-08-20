@@ -107,16 +107,15 @@ def _corpus() -> List[Dict[str, str]]:
                     _strip_html(t("tt_eu.what_body")),
                     _strip_html(t("tt_eu.role_body")),
                     _strip_html(t("tt_eu.expert_body")),
-                    f"EP {tt_sum['ep_n']} USPTO {tt_sum['us_n']} papers {tt_sum['paper_n']}",
+                    f"Google Patents Netsia {tt_sum['patent_n']} papers {tt_sum['paper_n']}",
                     (
                         f"Türk Telekom Europe position: Türkiye publication rank {pos['tr_pub_rank']} "
-                        f"({pos['tr_pub_n']} locked DOI), patent rank {pos['tr_pat_rank']} ({pos['tr_pat_n']} Netsia USPTO). "
-                        f"Not Europe-wide publication or EP leader. EP grants {pos['ep_n']}. "
+                        f"({pos['tr_pub_n']} DOI), patent rank {pos['tr_pat_rank']} ({pos['tr_pat_n']} Netsia Google Patents). "
                         f"Non-TR countries with TT papers {pos['pub_outside_tr']}. "
                         f"In-country publication leaders: {lead_txt}. "
                         "Countries are separate leagues; no invented pan-Europe rank."
                     ),
-                    "Netsia Inc Türk Telekom grubu operatör toptan TTI EPO PCT territorial patent",
+                    "Netsia Inc Türk Telekom grubu operatör toptan TTI",
                 ]
             ),
         }

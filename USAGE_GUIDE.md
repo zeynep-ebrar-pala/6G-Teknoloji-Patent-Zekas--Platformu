@@ -10,7 +10,7 @@ cd 6G-Teknoloji-Patent-Zekas--Platformu
 pip install -r requirements.txt
 ```
 
-İsteğe bağlı AI için `.env.example` dosyasını `.env` olarak kopyalayın ve Groq veya Gemini anahtarını yazın. Anahtar olmadan da Ana Sayfa, 6G Teknolojileri, Patent Zekası, Yayın Trendleri ve Türk Telekom Görünümü açılır.
+İsteğe bağlı AI için `.env.example` dosyasını `.env` olarak kopyalayın ve Groq veya Gemini anahtarını yazın. Anahtar olmadan da Ana Sayfa, 6G Teknoloji Rehberi, Patent Zekası, Akademik Yayın Analizi ve Türk Telekom Görünümü açılır.
 
 ```bash
 streamlit run app.py
@@ -23,9 +23,9 @@ Tarayıcıda `http://localhost:8501` açılır.
 | Menü | Ne işe yarar |
 |------|----------------|
 | Ana Sayfa | 7 teknolojinin TRL radar haritası ve özet kartları |
-| 6G Teknolojileri | Tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL, kayıt sayımı grafikleri, referanslar |
+| 6G Teknoloji Rehberi | Tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL, kayıt sayımı grafikleri, referanslar |
 | Patent Zekası | Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE filtreli patent analitiği |
-| Yayın Trendleri | WoS Core Collection + Springer Meta API; DOI kartları |
+| Akademik Yayın Analizi | WoS Core Collection + Springer Meta API; DOI kartları |
 | Türk Telekom Görünümü | Saha senaryo çözümleyici |
 | AI Asistan | «RIS nedir?» ve «NTN ile ISAC arasındaki fark» dahil sorular; TF-IDF + isteğe bağlı LLM |
 | Hakkında | Amaç, yığın, 15 dakikalık sunum iskeleti |
@@ -38,19 +38,18 @@ Patent özetleri ve DOI kayıtları kaynakta kilitlidir (yeniden yazılmaz).
 
 1. Üstteki firmayı seçin (`Tümü` veya şartnamedeki 6 firmadan biri).
 2. Kayıt yoksa grafik çizilmez; sayı uydurulmaz.
-3. Sekmeler: yıl trendi, konu + kelime bulutu, patent ağacı + yoğunluk, TF-IDF harita + ağ, patent listesi, **TT Avrupa izi**.
+3. Altı grafik: en çok çalışan firmalar, patent sayısı / yıl, konu dağılımı, radar, kelime bulutu, teknoloji haritası; ayrıca **Türk Telekom patent izi**.
 4. Her karttaki **Kaynakta Aç** Google Patents sayfasını açar.
-5. **TT Avrupa izi:** TT Avrupa’da RAN satıcısı değil, Türkiye operatörü + TTI toptandır. Harita yalnızca adı kaynakta geçen ülkeleri boyar (TTI first-mover 6 ülke; 19/24 iddiası boyanmaz). Netsia Inc. USPTO; EP=0 gizlenmez. 921 milli başvuru çubuğa işlenmez. Örnek küme çubuğu küresel SEP payı değildir.
+5. **Türk Telekom patent izi:** TT Avrupa’da RAN satıcısı değil, Türkiye operatörü + TTI toptandır. Harita yalnızca adı kaynakta geçen ülkeleri boyar (TTI first-mover 6 ülke; 19/24 iddiası boyanmaz). Netsia Inc. Google Patents; 921 milli başvuru çubuğa işlenmez.
 
-Bu küme tam küresel portföy değildir. Grafikler Google Patents xhr (firma başı en fazla 20, assignee süzülür) + kilitli örnektir. Ofis tablosu xhr toplamıdır; toplanmaz.
+Bu küme tam küresel portföy değildir. Grafikler Google Patents xhr (firma başı en fazla 30, assignee süzülür). Ofis tablosu xhr toplamıdır; çekilen kayıtlarla toplanmaz.
 
-## 4. Yayın Trendleri
+## 4. Akademik Yayın Analizi
 
 - Toplam adet: WoS Core Collection + Springer Meta API (örtüşme düşülmez).
 - Yıl / kurum / ülke / atıf: WoS Analyze Results önbelleği.
-- Üst hücreler IEEE / Springer / Elsevier / WoS API; anahtar yoksa —.
-- Google Scholar resmi API yok; HTML çekilmez.
-- **TT Avrupa izi** sekmesi: kilitli DOI (TT bağlılığı) + resmi harita; operatör yayın API’si yoktur.
+- Anahtar yoksa hücre —.
+- **Türk Telekom yayın izi** sekmesi: kilitli DOI (TT bağlılığı) + resmi harita; operatör yayın API’si yoktur.
 
 ## 5. AI Asistan
 

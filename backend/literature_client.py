@@ -1,6 +1,6 @@
 """
 Modül 3 literatür sayımı — Türkiye ve Avrupa, başlık 6G, 2020–2026.
-Üst hücreler: IEEE / Springer / Elsevier / WoS / Scholar native API.
+Üst hücreler: WoS ve Springer.
 """
 
 from __future__ import annotations
@@ -208,8 +208,8 @@ def literature_bundle(
         "wos_query": "",
         "wos_fetched_at": "",
         "source": (
-            "IEEE Xplore Metadata API, Springer Nature Meta API, Elsevier Scopus API, "
-            "Clarivate WoS Starter API (anahtar varsa). Google Scholar resmi API yok; HTML çekilmez."
+            "WoS Core Collection ve Springer Nature Meta API (anahtar varsa). "
+            "İki kaynak toplanmaz."
         ),
         **snapshot_meta(),
     }
@@ -229,7 +229,7 @@ def literature_bundle(
         payload["total"] = overlay.get("wos_total")
         payload["source"] = (
             "WoS Core Collection Analyze Results: TS=(6G) AND konu AND PY=2020-2026. "
-            "Üst hücreler resmi API (anahtar yoksa —). Konu serileri toplanmaz."
+            "Toplam adet: WoS + Springer (toplanmaz). Konu serileri toplanmaz."
         )
         if overlay.get("wos_fetched_at"):
             payload["fetched_at"] = overlay["wos_fetched_at"]

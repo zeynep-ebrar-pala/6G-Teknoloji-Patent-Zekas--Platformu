@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional
 import streamlit as st
 
 from backend.data_validator import load_validated_papers, load_validated_patents
+from backend.patent_service import PatentService
 from data.eu_operators import (
     EU_MNO_LIST_URL,
     country_by_cc,
@@ -17,7 +18,6 @@ from data.eu_operators import (
     name_matches,
     operators_with_tt,
 )
-from data.patents import VERIFIED_PATENTS
 from data.tt_europe import (
     TT_AFFILIATED_PAPERS,
     TT_COUNTRY_COLORS,
@@ -89,14 +89,14 @@ class TTEuropeService:
 
     @staticmethod
     def country_rank(cc: str, include_pubs: bool = True) -> Dict[str, Any]:
-        """Kilitli 3 MNO + TT. Yayın: kilitli DOI (TT bağlılığı). Patent: kilitli örnek."""
-        from backend.source_links import ieee_text_search_url
+        """Kilitli 3 MNO + TT. Yayın: kilitli DOI (TT bağlılığı). Patent: Google Patents xhr."""
+        from backend.source_links import wos_text_search_url
 
         country = country_by_cc(cc)
         if not country:
             return {"ok": False, "cc": cc}
         ops = operators_with_tt(country)
-        sample_patents = load_validated_patents(VERIFIED_PATENTS) + _patents()
+        sample_patents = PatentService.get_top_patents(None, None)
         ranked: List[Dict[str, Any]] = []
         pub_any = False
         for op in ops:
@@ -133,7 +133,7 @@ class TTEuropeService:
                     "pub_hits": pub_hits[:3],
                     "pat_ids": pat_ids,
                     "patents_url": op["patents_url"],
-                    "pub_search_url": ieee_text_search_url(f"6G {op['name']} {country['name_en']}"),
+                    "pub_search_url": wos_text_search_url(f"6G {op['name']} {country['name_en']}"),
                 }
             )
 
@@ -163,7 +163,7 @@ class TTEuropeService:
             "name_tr": country["name_tr"],
             "name_en": country["name_en"],
             "mno_source": EU_MNO_LIST_URL,
-            "pub_search_url": ieee_text_search_url(f"6G {country['name_en']}"),
+            "pub_search_url": wos_text_search_url(f"6G {country['name_en']}"),
             "pub_ok": pub_any,
             "rows": ranked,
             "tt_pub_rank": None if not tt_row else tt_row["pub_rank"],

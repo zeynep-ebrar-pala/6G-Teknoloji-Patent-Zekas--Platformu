@@ -31,8 +31,8 @@
 ## 3. Projenin Kapsamı
 
 - 7 temel 6G teknolojisinin TRL haritası ve detaylı keşif modülü
-- Google Patents xhr + kilitli örnek patent analitiği
-- WoS / Springer / IEEE / Elsevier API ile akademik yayın sayımı (anahtar yoksa —)
+- Google Patents xhr patent analitiği (kilitli örnek yok)
+- WoS / Springer ile akademik yayın sayımı (anahtar yoksa —)
 - Türk Telekom saha dağıtım senaryo çözümleyici
 - Groq / Gemini ile isteğe bağlı AI asistan (yalnızca doğrulanmış veri üzerinde yorum; uygulama anahtarsız açılır)
 
@@ -42,14 +42,14 @@
 |---------|----------|
 | Dual-Depth görünüm | Temel (nedir/neden/nasıl) + Uzman (denklem, varsayım); uzman temel katmanı atlamaz |
 | Source-locked veri | Patent ve makale kayıtları gerçek source_url ile bağlı |
-| Canlı ofis toplamı | Google Patents xhr; Lens/EPO/USPTO bireysel anahtar |
-| Kaynakta Aç ↗ | Patent ve makaleler tarayıcıda gerçek kaynağa açılır |
+| Canlı ofis toplamı | Google Patents xhr |
+| Kaynakta Aç ↗ | Patent Google Patents; makale DOI / WoS / Springer |
 | Groq / Gemini | Yalnızca AI Asistan; anahtar `.env` veya oturumda, frontend'e sızmaz |
 
 ## 5. Sistem Mimarisi
 
 ```text
-Gerçek External Source (Google Patents, IEEE, Springer, WoS, DOI)
+Gerçek External Source (Google Patents, Springer, WoS, DOI)
         ↓
 Raw Data (data/patents.py, data/academic.py)
         ↓
@@ -82,14 +82,14 @@ Streamlit Frontend (components/*, app.py)
 
 - **Python 3.9+**, **Streamlit**, **Plotly**, **Pandas**, **Matplotlib**, **NetworkX**, **WordCloud**, **scikit-learn**
 - **python-dotenv**, **groq**, **google-genai** (AI Asistan, isteğe bağlı)
-- **Google Patents xhr**, **Lens / EPO OPS / PatentsView** (bireysel anahtar), **DOI (IEEE / Springer / Elsevier)**, **WoS**
+- **Google Patents xhr**, **DOI**, **Springer**, **WoS**
 
 ## 8. Frontend
 
 Streamlit tabanlı tek sayfa uygulaması (`app.py`). UI bileşenleri `components/` altında:
 
 - `auth_view.py` — isteğe bağlı Groq/Gemini (yalnızca AI Asistan)
-- `patent_views.py`, `academic_views.py` — Patent Zekası / Yayın Trendleri
+- `patent_views.py`, `academic_views.py` — Patent Zekası / Akademik Yayın Analizi
 - `tt_scenarios.py` — Saha senaryo çözümleyici
 - `about_view.py` — Hakkında
 - `ui_helpers.py` — Kaynak linkleri, boş/hata durumları
@@ -108,7 +108,7 @@ Adım adım kullanım: [USAGE_GUIDE.md](USAGE_GUIDE.md).
 | `config.py` | `.env` yükleme |
 | `auth_service.py` | Groq/Gemini API doğrulama |
 | `data_validator.py` | Source-locked kayıt filtresi |
-| `patent_apis.py` | Google Patents xhr + Lens / EPO / PatentsView |
+| `patent_apis.py` | Google Patents xhr |
 | `patent_service.py` | Patent metrikleri (gerçek kayıtlardan) |
 | `academic_service.py` | Akademik metrikler + DOI zenginleştirme |
 | `scenario_engine.py` | TT saha senaryo motoru |
@@ -186,12 +186,12 @@ Bu proje ayrı bir HTTP API sunucusu kullanmaz. Backend, Streamlit uygulaması i
 ## 19. Patent Veri Kaynakları
 
 - [Google Patents](https://patents.google.com) — her patent kartında doğrudan patent sayfası
-- USPTO publication number formatı (US*, WO*)
 
 ## 20. Akademik Veri Kaynakları
 
 - [Web of Science](https://www.webofscience.com) — konu grafikleri (Analyze Results önbelleği)
-- DOI → IEEE Xplore / Springer / Elsevier
+- [Springer](https://link.springer.com) — Meta API toplamı
+- DOI kaydı
 
 ## 21. Halüsinasyon Önleme Yaklaşımı
 

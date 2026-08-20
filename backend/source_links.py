@@ -1,7 +1,6 @@
 """
-Kaynak bağlantıları — kaydın bulunduğu sayfa (Google Patents / DOI + diğer ofisler).
-USPTO ppubs deep-link (external.html?q=...pn.) boş SPA verdiği için kullanılmaz.
-US tescil için USPTO grant PDF kullanılır (tarayıcıda açılır).
+Kaynak bağlantıları — sayfada yalnızca kullanılan siteler:
+patent: Google Patents; yayın: DOI, Springer, WoS.
 """
 
 from __future__ import annotations
@@ -107,20 +106,11 @@ def uspto_grant_pdf_url(pub: str) -> str:
 
 
 def patent_record_links(pub: str) -> List[Dict[str, str]]:
-    """Aynı yayın no: Google Patents + Lens + Espacenet + PATENTSCOPE + USPTO PDF (varsa)."""
+    """Kartta yalnızca Google Patents kaydı."""
     token = (pub or "").strip()
     if not token:
         return []
-    links: List[Dict[str, str]] = [
-        {"id": "google_patents", "url": google_patents_record_url(token)},
-        {"id": "lens", "url": lens_patent_url(token)},
-        {"id": "espacenet", "url": espacenet_record_url(token)},
-        {"id": "wipo", "url": wipo_record_url(token)},
-    ]
-    uspto = uspto_grant_pdf_url(token)
-    if uspto:
-        links.append({"id": "uspto", "url": uspto})
-    return links
+    return [{"id": "google_patents", "url": google_patents_record_url(token)}]
 
 
 def wos_full_record_url(ut: str) -> str:
@@ -147,23 +137,13 @@ def wos_doi_openurl(doi: str) -> str:
 
 
 def paper_record_links(doi: str, source: str = "", wos_ut: str = "") -> List[Dict[str, str]]:
-    """DOI her zaman. Yayıncı sayfası yalnızca DOI öneki o yayınevindeyse. Scholar + WoS."""
+    """DOI her zaman. Springer kaydıysa Springer; WoS tam kayıt veya DOI OpenURL."""
     doi_clean = (doi or "").strip().removeprefix("https://doi.org/").removeprefix("http://doi.org/")
     if not doi_clean:
         return []
     lower = doi_clean.lower()
     src = (source or "").lower()
     links: List[Dict[str, str]] = [{"id": "doi", "url": doi_url(doi_clean)}]
-    if lower.startswith("10.1109") or "ieee" in src:
-        links.append(
-            {
-                "id": "ieee",
-                "url": (
-                    "https://ieeexplore.ieee.org/search/searchresult.jsp"
-                    f"?newsearch=true&queryText={_q('DOI:' + doi_clean)}"
-                ),
-            }
-        )
     if lower.startswith("10.1007") or "springer" in src:
         links.append(
             {
@@ -171,19 +151,6 @@ def paper_record_links(doi: str, source: str = "", wos_ut: str = "") -> List[Dic
                 "url": f"https://link.springer.com/search?query={_q(doi_clean)}",
             }
         )
-    if lower.startswith("10.1016") or "elsevier" in src:
-        links.append(
-            {
-                "id": "elsevier",
-                "url": f"https://www.sciencedirect.com/search?qs={_q(doi_clean)}",
-            }
-        )
-    links.append(
-        {
-            "id": "scholar",
-            "url": f"https://scholar.google.com/scholar?q={_q(doi_clean)}",
-        }
-    )
     ut = (wos_ut or "").strip()
     if not ut:
         from data.wos_ut import ut_for_doi
@@ -194,52 +161,32 @@ def paper_record_links(doi: str, source: str = "", wos_ut: str = "") -> List[Dic
     return links
 
 
-def ieee_text_search_url(query: str) -> str:
+def wos_text_search_url(query: str) -> str:
     q = (query or "6G").strip() or "6G"
     return (
-        "https://ieeexplore.ieee.org/search/searchresult.jsp"
-        f"?newsearch=true&queryText={_q(q)}"
+        "https://www.webofscience.com/wos/woscc/advanced-search?"
+        f"search={_q(f'TS=({q})')}"
     )
 
 
 def assignee_patent_links(assignee: str) -> List[Dict[str, str]]:
-    """Hak sahibi araması — tüm şartname patent ofisleri."""
+    """Hak sahibi araması — Google Patents."""
     name = (assignee or "").strip()
     if not name:
         return []
     return [
         {"id": "google_patents", "url": f"https://patents.google.com/?assignee={_plus(name)}"},
-        {"id": "lens", "url": f"https://www.lens.org/lens/search/patent/list?q={_q('assignee:' + name)}"},
-        {
-            "id": "espacenet",
-            "url": f"https://worldwide.espacenet.com/patent/search?q={_plus(f'pa = \"{name}\"')}",
-        },
-        {
-            "id": "wipo",
-            "url": f"https://patentscope.wipo.int/search/en/result.jsf?query={_q('PA:(' + name + ')')}",
-        },
-        {"id": "uspto", "url": f"https://patents.google.com/?assignee={_plus(name)}&country=US"},
     ]
 
 
 def spec_patent_databases() -> List[Dict[str, str]]:
-    """Açılış sayfaları. ppubs deep-link yok."""
-    return [
-        {"id": "google_patents", "url": "https://patents.google.com/"},
-        {"id": "lens", "url": "https://www.lens.org/"},
-        {"id": "espacenet", "url": "https://worldwide.espacenet.com/"},
-        {"id": "wipo", "url": "https://patentscope.wipo.int/search/en/search.jsf"},
-        {"id": "uspto", "url": "https://www.uspto.gov/patents/search"},
-    ]
+    return [{"id": "google_patents", "url": "https://patents.google.com/"}]
 
 
 def spec_pub_databases() -> List[Dict[str, str]]:
     return [
-        {"id": "ieee", "url": "https://ieeexplore.ieee.org/"},
-        {"id": "scholar", "url": "https://scholar.google.com/"},
-        {"id": "springer", "url": "https://link.springer.com/"},
-        {"id": "elsevier", "url": "https://www.sciencedirect.com/"},
         {"id": "wos", "url": "https://www.webofscience.com/wos/woscc/basic-search"},
+        {"id": "springer", "url": "https://link.springer.com/"},
     ]
 
 
@@ -253,22 +200,13 @@ def topic_pub_searches(topic: str, region: str = "both") -> List[Dict[str, str]]
         query = f"{query} Europe"
     return [
         {
-            "id": "ieee",
-            "url": (
-                "https://ieeexplore.ieee.org/search/searchresult.jsp"
-                f"?newsearch=true&queryText={_q(query)}"
-            ),
-        },
-        {"id": "scholar", "url": f"https://scholar.google.com/scholar?q={_plus(query)}"},
-        {"id": "springer", "url": f"https://link.springer.com/search?query={_q(query)}"},
-        {"id": "elsevier", "url": f"https://www.sciencedirect.com/search?qs={_plus(query)}"},
-        {
             "id": "wos",
             "url": (
                 "https://www.webofscience.com/wos/woscc/advanced-search?"
                 f"search={_q(f'TS=({query})')}"
             ),
         },
+        {"id": "springer", "url": f"https://link.springer.com/search?query={_q(query)}"},
     ]
 
 
@@ -276,14 +214,4 @@ def topic_patent_searches(topic: str) -> List[Dict[str, str]]:
     query = topic_query(topic)
     return [
         {"id": "google_patents", "url": f"https://patents.google.com/?q={_plus(query)}"},
-        {"id": "lens", "url": f"https://www.lens.org/lens/search/patent/list?q={_q(query)}"},
-        {
-            "id": "espacenet",
-            "url": f"https://worldwide.espacenet.com/patent/search?q={_plus(query)}",
-        },
-        {
-            "id": "wipo",
-            "url": f"https://patentscope.wipo.int/search/en/result.jsf?query={_q(query)}",
-        },
-        {"id": "uspto", "url": f"https://patents.google.com/?q={_plus(query)}&country=US"},
     ]

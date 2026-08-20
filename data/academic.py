@@ -1,16 +1,14 @@
 """
 Akademik yayın veri kümesi — DOI ile doğrulanabilir kayıtlar.
-Kaynak hücreleri IEEE / Springer / Elsevier / (isteğe bağlı) SerpAPI Scholar.
+Kaynak hücreleri WoS ve Springer.
 """
 
 ACADEMIC_DATA_SOURCE = (
     "Toplam adet: WoS Core Collection + Springer Meta API (yan yana, toplanmaz). "
-    "Yıl / kurum / ülke / atıf: WoS Analyze Results, TS=(6G) AND konu, PY=2020-2026. "
-    "Üst hücreler: IEEE / Springer (TR) / Elsevier / WoS Starter API (anahtar varsa). "
-    "Google Scholar resmi API yok."
+    "Yıl / kurum / ülke / atıf: WoS Analyze Results, TS=(6G) AND konu, PY=2020-2026."
 )
 
-ACADEMIC_SOURCES = ["IEEE Xplore", "Springer", "Elsevier"]
+ACADEMIC_SOURCES = ["WoS", "Springer"]
 
 # DOI ile doğrulanmış makaleler — uydurma atıf sayısı yok
 MOST_CITED_PAPERS = [
@@ -21,7 +19,7 @@ MOST_CITED_PAPERS = [
         "year": 2022,
         "doi": "10.1109/jsac.2022.3156632",
         "topic": "ISAC",
-        "source": "IEEE Xplore",
+        "source": "DOI",
         "source_url": "https://doi.org/10.1109/jsac.2022.3156632",
         "url": "https://doi.org/10.1109/jsac.2022.3156632",
     },
@@ -32,7 +30,7 @@ MOST_CITED_PAPERS = [
         "year": 2020,
         "doi": "10.1109/mcom.001.1900107",
         "topic": "RIS",
-        "source": "IEEE Xplore",
+        "source": "DOI",
         "source_url": "https://doi.org/10.1109/mcom.001.1900107",
         "url": "https://doi.org/10.1109/mcom.001.1900107",
     },
@@ -43,7 +41,7 @@ MOST_CITED_PAPERS = [
         "year": 2022,
         "doi": "10.1109/comst.2021.3123267",
         "topic": "Cell-Free",
-        "source": "IEEE Xplore",
+        "source": "DOI",
         "source_url": "https://doi.org/10.1109/comst.2021.3123267",
         "url": "https://doi.org/10.1109/comst.2021.3123267",
     },
@@ -54,7 +52,7 @@ MOST_CITED_PAPERS = [
         "year": 2022,
         "doi": "10.1109/tcomm.2022.3171800",
         "topic": "THz",
-        "source": "IEEE Xplore",
+        "source": "DOI",
         "source_url": "https://doi.org/10.1109/tcomm.2022.3171800",
         "url": "https://doi.org/10.1109/tcomm.2022.3171800",
     },
@@ -65,7 +63,7 @@ MOST_CITED_PAPERS = [
         "year": 2021,
         "doi": "10.1109/mnet.011.2000493",
         "topic": "NTN",
-        "source": "IEEE Xplore",
+        "source": "DOI",
         "source_url": "https://doi.org/10.1109/mnet.011.2000493",
         "url": "https://doi.org/10.1109/mnet.011.2000493",
     },
@@ -76,7 +74,7 @@ MOST_CITED_PAPERS = [
         "year": 2021,
         "doi": "10.1109/mcom.001.2001076",
         "topic": "RIS",
-        "source": "IEEE Xplore",
+        "source": "DOI",
         "source_url": "https://doi.org/10.1109/mcom.001.2001076",
         "url": "https://doi.org/10.1109/mcom.001.2001076",
     },
@@ -98,7 +96,7 @@ MOST_CITED_PAPERS = [
         "year": 2025,
         "doi": "10.1016/j.eng.2025.05.013",
         "topic": "NTN",
-        "source": "Elsevier",
+        "source": "DOI",
         "source_url": "https://doi.org/10.1016/j.eng.2025.05.013",
         "url": "https://doi.org/10.1016/j.eng.2025.05.013",
     },
