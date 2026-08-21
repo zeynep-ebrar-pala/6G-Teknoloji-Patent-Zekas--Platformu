@@ -625,12 +625,13 @@ def render_patent_sunburst(df_tree: pd.DataFrame) -> go.Figure:
         textinfo="label+value",
         hovertemplate="<b>%{label}</b><br>" + t("charts.patent_count") + ": %{value:d}<extra></extra>",
     )
-    fig.update_layout(
-        **_layout(),
+    layout = _layout()
+    layout.update(
         title=dict(text=f"<b>{t('charts.sunburst')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         height=520,
         margin=dict(l=20, r=20, t=50, b=20),
     )
+    fig.update_layout(**layout)
     return fig
 
 
