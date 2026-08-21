@@ -57,8 +57,22 @@ def get_elsevier_inst_token() -> Optional[str]:
 
 
 def get_wos_api_key() -> Optional[str]:
-    """Clarivate Web of Science Starter API."""
-    return _secret("WOS_API_KEY")
+    """Clarivate Web of Science Starter API — .env veya oturum. Site girişi yetmez."""
+    env = (
+        _secret("WOS_API_KEY")
+        or _secret("WOS_STARTER_API_KEY")
+        or _secret("CLARIVATE_API_KEY")
+        or _secret("CLARIVATE_WOS_API_KEY")
+    )
+    if env:
+        return env
+    try:
+        import streamlit as st
+
+        sess = str(st.session_state.get("wos_api_key") or "").strip()
+        return sess or None
+    except Exception:
+        return None
 
 
 def get_serpapi_key() -> Optional[str]:

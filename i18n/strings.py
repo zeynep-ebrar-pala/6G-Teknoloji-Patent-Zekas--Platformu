@@ -176,7 +176,7 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
             "perf_caption": "Temsili 5G/6G hedef barı yok. Aşağıdaki grafikler bu teknolojinin doğrulanmış patent kayıt sayısı ve (varsa) Crossref 6G başlık yayın trendidir.",
             "empty_patents": "«{domain}» için doğrulanmış patent kaydı yok.",
             "pub_fail": "Bu konu için yayın yılı serisi yok; grafik gizlenir.",
-            "cell_free_pub": "Cell-Free, şartnamedeki akademik konu listesinde yoktur; konu serisi gösterilmez.",
+            "cell_free_pub": "Cell-Free Massive MIMO, yedi 6G konusunun üçüncüsüdür; WoS ve Springer çubuğunda ayrı durur.",
             "refs": "### Referans Makaleler & Yayınlar",
             "refs_caption": "Bağlantılar DOI veya resmi 3GPP / proje sayfalarına gider.",
         },
@@ -288,17 +288,17 @@ Radar / yoğunluk / ağaç ekseni kayıt sayısıdır (yüzde değil). Başlık 
         },
         "pub": {
             "title": "Akademik Yayın Analizi",
-            "subtitle": "WoS Core Collection + Springer Meta API. ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT. Yıl / kurum / ülke / atıf: WoS. Kaynak: {source}",
+            "subtitle": "WoS Core Collection + Springer Meta API. ISAC, RIS, Cell-Free, THz, AI-RAN, NTN, Ambient IoT. Yıl / kurum / ülke / atıf: WoS. Kaynak: {source}",
             "what_title": "Bu sayfa neyi sayıyor?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Akademik Yayın Analizi</strong> altı 6G konusunda yayını sayar:
-ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT.
+<strong>Akademik Yayın Analizi</strong> yedi 6G konusunda yayını sayar:
+ISAC, RIS, Cell-Free Massive MIMO, THz, AI-Native RAN, NTN, Ambient IoT.
 <strong>Toplam adet:</strong> WoS Core Collection ile Springer Meta API yan yana. Hover’da ikisi de görünür. Tek birleşik külliyat yoktur (örtüşme düşülmedi).
 <strong>Grafikler:</strong> yıllara göre yayın, en çok yayın yapan kurumlar, en çok yayın yapan ülkeler, en çok atıf alan makaleler, trend analizi.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Yıl / kurum / ülke / atıf: WoS Analyze Results (<code>TS=(6G) AND konu AND PY=2020-2026</code>).
-WoS küresel Core Collection’dır. Springer konu çubuğu da küresel Meta API’dir. Altı konu ve iki kaynak toplanmaz.
+Yıl / kurum / ülke / atıf: Clarivate WoS Starter API (<code>TS=(6G) AND konu AND PY=2020-2026</code>). Anahtar yoksa Analyze Results önbelleği (Cell-Free ve Türkiye sırası eksik kalır).
+WoS küresel Core Collection’dır. Springer konu çubuğu da küresel Meta API’dir. Yedi konu ve iki kaynak toplanmaz.
 </p>""",
             "expert_title": "API adı, filtre, sınır",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
@@ -329,12 +329,20 @@ Bu sayfa <strong>WoS</strong> ve <strong>Springer</strong> kullanır.
             "metric_tr": "Türkiye 6G başlık",
             "metric_top_cc": "WoS ilk 10 ülke",
             "metric_tr_springer": "Türkiye (Springer, 2022–2026)",
-            "metric_tr_springer_cap": "Springer Meta metin «Turkey»; WoS Countries/Regions sırası değildir. Altı konu toplanmaz.",
+            "metric_tr_springer_cap": "Springer Meta metin «Turkey»; WoS Countries/Regions sırası değildir. Yedi konu toplanmaz.",
             "metric_tr_wos_rank": "Türkiye WoS sırası",
             "metric_tr_wos_rank_n": "{n}.",
             "metric_tr_wos_out": "ilk 10’da yok",
             "metric_tr_wos_out_delta": "10. ülke {tenth} kayıt",
-            "metric_tr_wos_all_delta": "İlk 10’da olan konu sayısı / 6 konu. Tam sıra uydurulmaz.",
+            "metric_tr_wos_all_delta": "İlk 10’da olan konu sayısı / 7 konu. Tam sıra uydurulmaz.",
+            "metric_tr_wos_all_live": "Türkiye sırası ölçülen konu / 7 konu (Starter API CU=).",
+            "token_label": "WoS Starter API Key",
+            "token_missing": "WoS sayıları Clarivate Starter API anahtarı ister. Tarayıcıda WoS’a giriş yetmez. developer.clarivate.com → wos-starter uygulamasından anahtarı alın; buraya veya .env WOS_API_KEY= satırına yapıştırın. Anahtar sohbete yazılmasın.",
+            "token_help": "Kurumsal / kütüphane planı gerekir. Bireysel Gmail pratikte 403 verir. Anahtarı kaydettikten sonra sayılar arka planda dolar; menü kilitlenmez.",
+            "api_error": "WoS API yanıt vermedi ({detail}). Sayı uydurulmaz.",
+            "bg_wait": "WoS sayıları arka planda doluyor ({done}/{total}). Sol menü serbest.",
+            "cc_tr_list_label_n": "{n}. Türkiye",
+            "tr_rank_live": "WoS «{topic}»: Türkiye sırası **{rank}.** ({n} kayıt, CU=Turkey/Turkiye, taranan ülke listesi). Springer Meta «6G {topic} Turkey» 2022–2026: **{springer}** (WoS sırası değildir; toplanmaz).",
             "cc_col_rank": "Sıra",
             "cc_col_country": "Ülke",
             "cc_col_count": "WoS kayıt",
@@ -385,13 +393,13 @@ Bu sayfa <strong>WoS</strong> ve <strong>Springer</strong> kullanır.
             },
             "year_heading": "### Yıllara göre yayın",
             "year_caption": "Başlığında 6G geçen dergi ve bildiri, 2020–2026. Türkiye: bağlılıkta Turkey. Avrupa çizgisi: Almanya, Fransa, İtalya, İspanya, Birleşik Krallık, Finlandiya, Yunanistan, Çekya (ayrı seri; toplanmaz).",
-            "year_caption_wos": "WoS Core Collection, TS=(6G) AND konu. Yıl ekseni son 5 yıl: 2022–2026 (2026 eksik yıl). Tümü görünümünde altı seri ayrıdır; toplanmaz.",
+            "year_caption_wos": "WoS Core Collection, TS=(6G) AND konu. Yıl ekseni 2020–2026 (2026 eksik yıl). Tümü görünümünde yedi seri ayrıdır; toplanmaz.",
             "inst_caption": "Türkiye 6G kayıtlarındaki bağlılık dizgesi (en sık 10). Avrupa kurum listesi bu önbellekte yok; ülke grafiğine bakın.",
             "inst_caption_wos": "Analyze Results → Affiliations, Results count (alfabetik değil). Seçili konu. Ortak yazarlı makale birden fazla kurumda sayılır; çubuklar toplanmaz.",
-            "inst_caption_wos_all": "Tümü: her konu kendi WoS Analyze Results → Affiliations listesidir (önbellek). Altı konu toplanmaz (aynı makale birden fazla TS sorgusunda çıkar). Springer Meta Basic kurum facet vermez.",
+            "inst_caption_wos_all": "Tümü: her konu kendi WoS kurum listesidir. Yedi konu toplanmaz (aynı makale birden fazla TS sorgusunda çıkar). Springer Meta Basic kurum facet vermez.",
+            "cc_caption_wos_all": "Her konuda: WoS ilk 10 ülke, sonra …, sonra Türkiye sırası (CU= sayısı varsa tamsayı). Yedi konu toplanmaz.",
             "cc_caption": "Bağlılık metninde ülke adı geçen, başlığında 6G olan kayıt. Ortak yazarlı makale birden fazla ülkede sayılır; çubuklar toplanmaz.",
-            "cc_caption_wos": "Analyze Results → Countries/Regions, Results count, ilk 10 ülke (sıra 1–10; kim 1. olursa o). WoS «ENGLAND» burada Birleşik Krallık (İngiltere dilimi). Ortak yazarlı makale birden fazla ülkede sayılır; çubuklar toplanmaz. Ülke listesi PY=2020-2026 (yıllık ülke dilimi yok). Yıl/trend grafikleri son 5 yıl: 2022–2026. Konu: şartnamedeki altı 6G konusu.",
-            "cc_caption_wos_all": "Her konuda: WoS ilk 10 ülke, sonra …, sonra Türkiye sırası. Altı konu toplanmaz. Tam sıra yoksa >10; Springer 2022–2026 metin Turkey ayrı durur.",
+            "cc_caption_wos": "Countries/Regions: WoS Starter API CU= sayımı (taranan ülke listesi) veya Analyze Results ilk 10. WoS «ENGLAND» burada Birleşik Krallık (İngiltere dilimi). Ortak yazarlı makale birden fazla ülkede sayılır; çubuklar toplanmaz. Yıl/trend: 2020–2026. Konu: şartnamedeki yedi 6G konusu.",
             "cited_heading": "### En çok atıf alan makaleler",
             "cited_caption": "Sıra: DOI kaydındaki is-referenced-by-count, yüksekten düşüğe. Kartlar canlı listedir.",
             "cited_caption_wos": "Sıra: WoS Times Cited (atıf sayısı), yüksekten düşüğe. Crossref is-referenced-by-count değildir. UT (Unique Identifier — benzersiz kayıt no) varsa tam kayıt açılır. Geniş 6G taramaları konu kelimesi geçtiği için üstte çıkabilir.",
@@ -721,7 +729,7 @@ Patent ofisleri bu sayfada yoktur — Patent Zekası’ndadır.
             "topic_buttons_hint_pub": "Bu düğmeler dış aramadır (yeni sekme). Sayfa içi makale sayıları yalnızca üstteki açılır kutudan değişir.",
             "topic_live_all": "Lens.org (yedi 6G konusu): **{n}**. Çekilen kayıt: **{pulled}**. Toplanmaz. Ham «6G» değildir.",
             "topic_live_one": "Lens.org «{topic}» (`{q}`): **{n}**. Çekilen kayıt: **{pulled}**. Toplanmaz.",
-            "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND konu, PY=2020-2026. Altı konu çubuğu ayrıdır; toplanmaz. Türkiye başlık-6G önbelleği: **{n}** (küresel WoS değildir).",
+            "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND konu, PY=2020-2026. Yedi konu çubuğu ayrıdır; toplanmaz. Türkiye başlık-6G önbelleği: **{n}** (küresel WoS değildir).",
             "topic_live_one_pub": "WoS Core Collection «{topic}»: **{n}** kayıt. Sorgu: `{q}`. Türkiye başlık-6G: {tr} (Crossref önbelleği; WoS küresel sayım değildir).",
             "totals_caption_pat": "Aynı sorgu, Lens.org patent/search. Yanıt yoksa —. Toplam, çekilen kayıtlarla toplanmaz.",
             "totals_caption_pub": "WoS ve Springer: o sitenin API’si (anahtar varsa). Anahtar yoksa —.",
@@ -1182,7 +1190,7 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
             "perf_caption": "There is no representative 5G/6G target bar. The charts below are this technology’s verified patent-record count and, when available, the Crossref 6G-title publication trend.",
             "empty_patents": "No verified patent records for “{domain}”.",
             "pub_fail": "No publication-year series for this topic; the chart is hidden.",
-            "cell_free_pub": "Cell-free MIMO is not on the specification’s academic topic list; no topic series is shown.",
+            "cell_free_pub": "Cell-Free Massive MIMO is the third of the seven 6G topics; it has its own WoS and Springer bars.",
             "refs": "### Reference Papers & Publications",
             "refs_caption": "Links go to a DOI or an official 3GPP / project page.",
         },
@@ -1294,17 +1302,17 @@ On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
         },
         "pub": {
             "title": "Academic Publication Analysis",
-            "subtitle": "WoS Core Collection + Springer Meta API. ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT. Year / institution / country / cited: WoS. Source: {source}",
+            "subtitle": "WoS Core Collection + Springer Meta API. ISAC, RIS, Cell-Free, THz, AI-RAN, NTN, Ambient IoT. Year / institution / country / cited: WoS. Source: {source}",
             "what_title": "What this page counts",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Academic Publication Analysis</strong> counts papers on six 6G topics:
-ISAC, RIS, NTN, AI-RAN, THz, Ambient IoT.
+<strong>Academic Publication Analysis</strong> counts papers on seven 6G topics:
+ISAC, RIS, Cell-Free Massive MIMO, THz, AI-Native RAN, NTN, Ambient IoT.
 <strong>Totals:</strong> WoS Core Collection beside Springer Meta API. Hover shows both. There is no single unique corpus (overlap was not subtracted).
 <strong>Charts:</strong> publications by year, top institutions, top countries, most-cited papers, trend analysis.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Year / institution / country / cited: WoS Analyze Results (<code>TS=(6G) AND topic AND PY=2020-2026</code>).
-WoS is global Core Collection. Springer topic bars are also global Meta API. The six topics and the two sources are not summed.
+Year / institution / country / cited: Clarivate WoS Starter API (<code>TS=(6G) AND topic AND PY=2020-2026</code>). Without a key the Analyze Results cache is used (Cell-Free and Türkiye’s rank stay missing).
+WoS is global Core Collection. Springer topic bars are also global Meta API. The seven topics and the two sources are not summed.
 </p>""",
             "expert_title": "API name, filter, limit",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
@@ -1335,12 +1343,20 @@ This page uses <strong>WoS</strong> and <strong>Springer</strong>.
             "metric_tr": "Türkiye 6G-in-title",
             "metric_top_cc": "WoS top 10 countries",
             "metric_tr_springer": "Türkiye (Springer, 2022–2026)",
-            "metric_tr_springer_cap": "Springer Meta text “Turkey”; not a WoS Countries/Regions rank. The six topics are not summed.",
+            "metric_tr_springer_cap": "Springer Meta text “Turkey”; not a WoS Countries/Regions rank. The seven topics are not summed.",
             "metric_tr_wos_rank": "Türkiye WoS rank",
             "metric_tr_wos_rank_n": "{n}.",
             "metric_tr_wos_out": "not in top 10",
             "metric_tr_wos_out_delta": "10th country {tenth} records",
-            "metric_tr_wos_all_delta": "Topics where Türkiye is in the top 10 / 6 topics. Exact rank is not invented.",
+            "metric_tr_wos_all_delta": "Topics where Türkiye is in the top 10 / 7 topics. Exact rank is not invented.",
+            "metric_tr_wos_all_live": "Topics with a measured Türkiye rank / 7 topics (Starter API CU=).",
+            "token_label": "WoS Starter API Key",
+            "token_missing": "WoS totals need a Clarivate Starter API key. Signing in to WoS in a browser is not enough. Create an app at developer.clarivate.com → wos-starter; paste the key here or as WOS_API_KEY= in .env. Do not paste the key in chat.",
+            "token_help": "An institutional / library plan is required. A personal Gmail typically returns 403. After you save the key, counts fill in the background; the menu stays usable.",
+            "api_error": "WoS API did not respond ({detail}). Counts are not invented.",
+            "bg_wait": "WoS totals are filling in the background ({done}/{total}). The sidebar stays free.",
+            "cc_tr_list_label_n": "{n}. Türkiye",
+            "tr_rank_live": "WoS “{topic}”: Türkiye rank **{rank}.** ({n} records, CU=Turkey/Turkiye, roster of countries). Springer Meta “6G {topic} Turkey” 2022–2026: **{springer}** (not a WoS rank; not summed).",
             "cc_col_rank": "Rank",
             "cc_col_country": "Country",
             "cc_col_count": "WoS records",
@@ -1391,13 +1407,13 @@ This page uses <strong>WoS</strong> and <strong>Springer</strong>.
             },
             "year_heading": "### Publications by year",
             "year_caption": "Journal and proceedings with 6G in the title, 2020–2026. Türkiye: affiliation contains Turkey. Europe lines: Germany, France, Italy, Spain, United Kingdom, Finland, Greece, Czechia (separate series; not summed).",
-            "year_caption_wos": "WoS Core Collection, TS=(6G) AND topic. Year axis is the last 5 years: 2022–2026 (2026 is incomplete). In the all-topics view the six series are separate and not summed.",
+            "year_caption_wos": "WoS Core Collection, TS=(6G) AND topic. Year axis is 2020–2026 (2026 is incomplete). In the all-topics view the seven series are separate and not summed.",
             "inst_caption": "Affiliation strings on Türkiye 6G records (top 10). A Europe institution list is not in this cache; use the country chart.",
             "inst_caption_wos": "Analyze Results → Affiliations, Results count (not alphabetical). Selected topic. A co-authored paper can count at more than one institution; bars are not summed.",
-            "inst_caption_wos_all": "All topics: each topic is its own WoS Analyze Results → Affiliations list (cache). The six topics are not summed (the same paper can match more than one TS query). Springer Meta Basic has no institution facet.",
+            "inst_caption_wos_all": "All topics: each topic is its own WoS institution list. The seven topics are not summed (the same paper can match more than one TS query). Springer Meta Basic has no institution facet.",
             "cc_caption": "Records with 6G in the title whose affiliation string contains the country name. A co-authored paper can count in more than one country; bars are not summed.",
             "cc_caption_wos": "Analyze Results → Countries/Regions, Results count, top 10 countries (ranks 1–10; whoever is first). WoS “ENGLAND” is shown here as United Kingdom (England slice). A co-authored paper can count in more than one country; bars are not summed. Country list window: PY=2020-2026 (no yearly country slice). Year/trend charts use the last 5 years: 2022–2026. Topics: the six specification 6G topics.",
-            "cc_caption_wos_all": "On every topic: WoS top 10 countries, then …, then Türkiye’s rank. The six topics are not summed. If the exact rank is missing, the label is >10. Springer 2022–2026 text-Turkey sits separately.",
+            "cc_caption_wos_all": "On every topic: WoS top 10 countries, then …, then Türkiye’s rank (integer if CU= returned a count). The seven topics are not summed.",
             "cited_heading": "### Most cited papers",
             "cited_caption": "Ranked by the DOI record’s is-referenced-by-count, high to low. These cards are a live list.",
             "cited_caption_wos": "Ranked by WoS Times Cited, high to low. Not Crossref is-referenced-by-count. A UT (Unique Identifier) opens the full record when present. Broad 6G surveys can rank at the top because the topic token appears in the record.",
@@ -1727,7 +1743,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "topic_buttons_hint_pub": "These buttons are external search (new tab). On-page paper counts change only from the drop-down above.",
             "topic_live_all": "Lens.org (seven 6G topics): **{n}**. Pulled rows: **{pulled}**. Not summed. Not raw «6G».",
             "topic_live_one": "Lens.org “{topic}” (`{q}`): **{n}**. Pulled rows: **{pulled}**. Not summed.",
-            "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND topic, PY=2020-2026. The six topic bars are separate and not summed. Türkiye title-6G cache: **{n}** (not the global WoS count).",
+            "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND topic, PY=2020-2026. The seven topic bars are separate and not summed. Türkiye title-6G cache: **{n}** (not the global WoS count).",
             "topic_live_one_pub": "WoS Core Collection “{topic}”: **{n}** records. Query: `{q}`. Türkiye title-6G: {tr} (Crossref cache; not the global WoS count).",
             "totals_caption_pat": "Same query, Lens.org patent/search. No answer → —. The total is not summed with pulled rows.",
             "totals_caption_pub": "WoS and Springer: that site’s API when a key is set. No key → —.",

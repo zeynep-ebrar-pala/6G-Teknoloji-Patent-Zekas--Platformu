@@ -4,8 +4,8 @@ Kaynak hücreleri WoS ve Springer.
 """
 
 ACADEMIC_DATA_SOURCE = (
-    "Toplam adet: WoS Core Collection + Springer Meta API (yan yana, toplanmaz). "
-    "Yıl / kurum / ülke / atıf: WoS Analyze Results, TS=(6G) AND konu, PY=2020-2026."
+    "Toplam adet: WoS Core Collection (Starter API) + Springer Meta API (yan yana, toplanmaz). "
+    "Yıl / kurum / ülke / atıf: TS=(6G) AND konu AND PY=2020-2026. Cell-Free dahildir."
 )
 
 ACADEMIC_SOURCES = ["WoS", "Springer"]

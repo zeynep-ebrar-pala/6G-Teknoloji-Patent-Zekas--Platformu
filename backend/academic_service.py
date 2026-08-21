@@ -42,11 +42,19 @@ class AcademicService:
 
     @staticmethod
     def get_bundle(region: str = "both", topic: Optional[str] = None) -> Dict[str, Any]:
-        return literature_bundle(region, _norm_topic(topic), key_fingerprint(), _wos_fp())
+        from backend.wos_live import ensure_prefetch, load_live
+
+        ensure_prefetch()
+        live_at = str(load_live().get("fetched_at") or "")
+        return literature_bundle(region, _norm_topic(topic), key_fingerprint(), _wos_fp(), "cc3", live_at)
 
     @staticmethod
     def get_summary(topic: Optional[str] = None) -> Dict[str, Any]:
-        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint(), _wos_fp())
+        from backend.wos_live import ensure_prefetch, load_live
+
+        ensure_prefetch()
+        live_at = str(load_live().get("fetched_at") or "")
+        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint(), _wos_fp(), "cc3", live_at)
         meta = snapshot_meta()
         years = bundle.get("year_counts") or {}
         peak_year, peak_n = "—", None
@@ -84,7 +92,13 @@ class AcademicService:
 
     @staticmethod
     def get_most_cited_papers(topic: Optional[str] = None) -> List[Dict[str, Any]]:
-        return list(literature_bundle("both", _norm_topic(topic), key_fingerprint(), _wos_fp()).get("cited") or [])
+        from backend.wos_live import load_live
+
+        live_at = str(load_live().get("fetched_at") or "")
+        return list(
+            literature_bundle("both", _norm_topic(topic), key_fingerprint(), _wos_fp(), "cc3", live_at).get("cited")
+            or []
+        )
 
     @staticmethod
     def get_trend_df(region: str = "both", topic: Optional[str] = None) -> Optional[pd.DataFrame]:

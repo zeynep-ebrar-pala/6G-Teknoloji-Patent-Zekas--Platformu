@@ -11,10 +11,11 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from backend.wos_live import TOPIC_ORDER, live_topic_row, load_live
+
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "wos_topics.json"
 TREND_YEARS = list(range(2020, 2027))
 LAST5_YEARS = list(range(2022, 2027))
-TOPIC_ORDER = ("ISAC", "RIS", "NTN", "AI-RAN", "THz", "Ambient IoT")
 
 # WoS Analyze Results ülke adı → ISO 3166-1 alpha-2.
 # ENGLAND, WoS’ta UK’nin İngiltere dilimidir; İskoçya ayrı satır olabilir.
@@ -96,7 +97,7 @@ def _countries(row: Dict[str, Any]) -> List[Dict[str, Any]]:
             continue
         out.append({"cc": cc, "name": raw_name, "count": count})
     out.sort(key=lambda r: (-int(r["count"]), str(r.get("cc") or r.get("name") or "")))
-    return out[:10]
+    return out
 
 
 def _cited(row: Dict[str, Any], topic: str) -> List[Dict[str, Any]]:
@@ -149,15 +150,46 @@ def _merge_cited(topics: Dict[str, Any]) -> List[Dict[str, Any]]:
     return sorted(by_doi.values(), key=lambda p: -int(p.get("citations") or 0))[:10]
 
 
+def _merge_topic_row(name: str, cache_row: Dict[str, Any], live_row: Dict[str, Any]) -> Dict[str, Any]:
+    row = dict(cache_row or {})
+    if isinstance(live_row.get("total"), int):
+        row["total"] = int(live_row["total"])
+        row["query"] = str(live_row.get("query") or row.get("query") or "")
+    live_years = live_row.get("years") if isinstance(live_row.get("years"), dict) else {}
+    if live_years:
+        row["years"] = live_years
+    if live_row.get("cited"):
+        row["cited"] = live_row["cited"]
+    if live_row.get("countries"):
+        row["countries"] = live_row["countries"]
+    if live_row.get("institutions") and not _institutions(row):
+        row["institutions"] = live_row["institutions"]
+    if live_row.get("institutions") and name == "Cell-Free":
+        row["institutions"] = live_row["institutions"]
+    for key in ("turkey_count", "turkey_rank", "roster"):
+        if live_row.get(key) is not None:
+            row[key] = live_row[key]
+    return row
+
+
 def wos_overlay(topic: Optional[str]) -> Optional[Dict[str, Any]]:
-    """Grafik katmanı. Yoksa None — sayı uydurulmaz."""
+    """Grafik katmanı. Canlı Starter varsa o; yoksa Analyze önbelleği. Sayı uydurulmaz."""
     cache = load_wos_topics()
-    topics = cache.get("topics") if isinstance(cache.get("topics"), dict) else {}
+    live_blob = load_live()
+    cache_topics = cache.get("topics") if isinstance(cache.get("topics"), dict) else {}
+    topics: Dict[str, Any] = {}
+    for name in TOPIC_ORDER:
+        base = cache_topics.get(name) if isinstance(cache_topics.get(name), dict) else {}
+        live_row = live_topic_row(name)
+        merged = _merge_topic_row(name, base, live_row)
+        if merged.get("total") is not None or merged.get("years") or merged.get("countries") or merged.get("cited"):
+            topics[name] = merged
     if not topics:
         return None
 
     totals: Dict[str, int] = {}
     series: Dict[str, Dict[str, int]] = {}
+    turkey: Dict[str, Dict[str, Any]] = {}
     for name in TOPIC_ORDER:
         row = topics.get(name)
         if not isinstance(row, dict):
@@ -165,14 +197,21 @@ def wos_overlay(topic: Optional[str]) -> Optional[Dict[str, Any]]:
         if isinstance(row.get("total"), int):
             totals[name] = int(row["total"])
         series[name] = _ordered_years(row.get("years") or {})
+        turkey[name] = {
+            "count": row.get("turkey_count") if isinstance(row.get("turkey_count"), int) else None,
+            "rank": row.get("turkey_rank") if isinstance(row.get("turkey_rank"), int) else None,
+            "roster": row.get("roster") if isinstance(row.get("roster"), int) else None,
+        }
 
     if not totals:
         return None
 
+    fetched = str(live_blob.get("fetched_at") or cache.get("fetched_at") or "")
     meta = {
         "chart_source": "wos",
-        "wos_fetched_at": str(cache.get("fetched_at") or ""),
-        "wos_filter": str(cache.get("filter") or ""),
+        "wos_fetched_at": fetched,
+        "wos_filter": str(cache.get("filter") or "TS=(6G) AND konu AND PY=2020-2026"),
+        "turkey_by_topic": turkey,
     }
     by_inst: Dict[str, List[Dict[str, Any]]] = {}
     by_cc: Dict[str, List[Dict[str, Any]]] = {}
@@ -188,8 +227,8 @@ def wos_overlay(topic: Optional[str]) -> Optional[Dict[str, Any]]:
             by_cc[name] = cc
 
     tpc = (topic or "").strip() or None
-    if tpc and tpc in topics and isinstance(topics[tpc], dict):
-        row = topics[tpc]
+    if tpc:
+        row = topics.get(tpc) if isinstance(topics.get(tpc), dict) else {}
         return {
             **meta,
             "wos_total": int(row["total"]) if isinstance(row.get("total"), int) else None,
@@ -197,11 +236,12 @@ def wos_overlay(topic: Optional[str]) -> Optional[Dict[str, Any]]:
             "topics": {tpc: totals[tpc]} if tpc in totals else {},
             "year_counts": series.get(tpc) or {},
             "year_series": {tpc: series[tpc]} if tpc in series else {},
-            "institutions": _institutions(row),
-            "countries": _countries(row),
+            "institutions": _institutions(row) if row else [],
+            "countries": _countries(row) if row else [],
             "institutions_by_topic": {tpc: by_inst[tpc]} if tpc in by_inst else {},
             "countries_by_topic": {tpc: by_cc[tpc]} if tpc in by_cc else {},
-            "cited": _cited(row, tpc),
+            "cited": list(live_topic_row(tpc).get("cited") or []) or _cited(row, tpc),
+            "turkey": turkey.get(tpc) or {},
         }
 
     return {
@@ -216,4 +256,5 @@ def wos_overlay(topic: Optional[str]) -> Optional[Dict[str, Any]]:
         "institutions_by_topic": by_inst,
         "countries_by_topic": by_cc,
         "cited": _merge_cited(topics),
+        "turkey": {},
     }

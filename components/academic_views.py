@@ -62,12 +62,19 @@ def _as_bar_rows(kind: str, rows: list) -> list:
     return ranked
 
 
-def _country_list_items(rows: list) -> list:
-    """İlk 10, sonra …, sonra Türkiye sırası. Tam sıra yoksa >10; 0 basılmaz."""
+def _country_list_items(rows: list, turkey: dict | None = None) -> list:
+    """İlk 10, sonra …, sonra Türkiye sırası. Tam sayı varsa çubuk çizilir."""
     items = _as_bar_rows("countries", rows)
     if not items or _turkey_in_top(rows):
         return items
     items.append({"name": t("pub.cc_ellipsis"), "count": None, "gap": True})
+    info = turkey or {}
+    rank = info.get("rank") if isinstance(info.get("rank"), int) else None
+    count = info.get("count") if isinstance(info.get("count"), int) else None
+    if isinstance(count, int):
+        label = t("pub.cc_tr_list_label_n", n=rank) if rank else t("pub.cc_tr_list_label")
+        items.append({"name": label, "count": count, "cc": "TR"})
+        return items
     items.append(
         {
             "name": t("pub.cc_tr_list_label"),
@@ -80,7 +87,7 @@ def _country_list_items(rows: list) -> list:
 
 
 def _turkey_in_top(rows: list) -> bool:
-    return any(str(r.get("cc") or "") == "TR" for r in rows)
+    return any(str(r.get("cc") or "") == "TR" for r in rows[:10])
 
 
 def _turkey_wos_rank(rows: list) -> int | None:
@@ -99,7 +106,7 @@ def _tenth_count(rows: list) -> int | None:
         return None
 
 
-def _country_rank_table(wos_rows: list) -> list:
+def _country_rank_table(wos_rows: list, turkey: dict | None = None) -> list:
     table = []
     for i, row in enumerate(wos_rows[:10], 1):
         table.append(
@@ -116,26 +123,42 @@ def _country_rank_table(wos_rows: list) -> list:
             t("pub.cc_col_count"): t("pub.cc_ellipsis"),
         }
         table.append(blank)
+        info = turkey or {}
+        rank = info.get("rank") if isinstance(info.get("rank"), int) else None
+        count = info.get("count") if isinstance(info.get("count"), int) else None
         table.append(
             {
-                t("pub.cc_col_rank"): t("pub.cc_tr_rank_gt10"),
+                t("pub.cc_col_rank"): str(rank) if rank else t("pub.cc_tr_rank_gt10"),
                 t("pub.cc_col_country"): _cc_name("TR"),
-                t("pub.cc_col_count"): t("pub.cc_tr_not_measured"),
+                t("pub.cc_col_count"): _fmt(count) if isinstance(count, int) else t("pub.cc_tr_not_measured"),
             }
         )
     return table
+
+
+def _turkey_info(bundle: dict, topic: str | None) -> dict:
+    if topic:
+        info = bundle.get("turkey") or {}
+        if info:
+            return info
+        return ((bundle.get("turkey_by_topic") or {}).get(topic) or {})
+    return {}
 
 
 def _turkey_overview_table() -> list:
     from backend.publisher_apis import fetch_springer_turkey_topics, key_fingerprint
     from backend.wos_topic_cache import TOPIC_ORDER, wos_overlay
 
+    overlay = wos_overlay(None) or {}
     springer = fetch_springer_turkey_topics(key_fingerprint())
-    by_cc = (wos_overlay(None) or {}).get("countries_by_topic") or {}
+    by_cc = overlay.get("countries_by_topic") or {}
+    turkey_map = overlay.get("turkey_by_topic") or {}
     rows = []
     for name in TOPIC_ORDER:
         raw = by_cc.get(name) or []
-        rank = _turkey_wos_rank(raw)
+        info = turkey_map.get(name) or {}
+        rank = info.get("rank") if isinstance(info.get("rank"), int) else _turkey_wos_rank(raw)
+        count = info.get("count") if isinstance(info.get("count"), int) else None
         n = springer.get(name)
         rows.append(
             {
@@ -143,6 +166,7 @@ def _turkey_overview_table() -> list:
                 t("pub.cc_col_tr_rank"): (
                     t("pub.metric_tr_wos_rank_n", n=rank) if rank else t("pub.metric_tr_wos_out")
                 ),
+                t("pub.cc_col_count"): _fmt(count),
                 t("pub.cc_col_tenth"): _fmt(_tenth_count(raw)),
                 t("pub.cc_col_springer"): _fmt(n if isinstance(n, int) else None),
             }
@@ -153,29 +177,42 @@ def _turkey_overview_table() -> list:
 def _tr_rank_metric(topic: str | None, bundle: dict) -> tuple[str, str | None]:
     from backend.wos_topic_cache import TOPIC_ORDER
 
+    turkey_map = bundle.get("turkey_by_topic") or {}
     if topic:
-        rows = bundle.get("countries") or []
-        rank = _turkey_wos_rank(rows)
+        info = _turkey_info(bundle, topic)
+        rank = info.get("rank") if isinstance(info.get("rank"), int) else _turkey_wos_rank(bundle.get("countries") or [])
+        count = info.get("count") if isinstance(info.get("count"), int) else None
         if rank:
-            return t("pub.metric_tr_wos_rank_n", n=rank), None
-        tenth = _tenth_count(rows)
+            return t("pub.metric_tr_wos_rank_n", n=rank), (
+                t("pub.metric_peak_delta", n=_fmt(count)) if isinstance(count, int) else None
+            )
+        tenth = _tenth_count(bundle.get("countries") or [])
         delta = t("pub.metric_tr_wos_out_delta", tenth=_fmt(tenth)) if tenth is not None else None
         return t("pub.metric_tr_wos_out"), delta
+    measured = [name for name in TOPIC_ORDER if isinstance((turkey_map.get(name) or {}).get("rank"), int)]
+    if measured:
+        return f"{len(measured)} / {len(TOPIC_ORDER)}", t("pub.metric_tr_wos_all_live")
     by_topic = bundle.get("countries_by_topic") or {}
     hits = sum(1 for name in TOPIC_ORDER if _turkey_in_top(by_topic.get(name) or []))
     return f"{hits} / {len(TOPIC_ORDER)}", t("pub.metric_tr_wos_all_delta")
 
 
-def _render_turkey_note(topic: str | None, wos_rows: list) -> None:
+def _render_turkey_note(topic: str | None, wos_rows: list, turkey: dict | None = None) -> None:
     from backend.publisher_apis import fetch_springer_turkey_topics, key_fingerprint
     from i18n.core import format_int
 
     springer = fetch_springer_turkey_topics(key_fingerprint())
+    info = turkey or {}
+    rank = info.get("rank") if isinstance(info.get("rank"), int) else _turkey_wos_rank(wos_rows)
+    count = info.get("count") if isinstance(info.get("count"), int) else None
     in_top = _turkey_in_top(wos_rows)
     tenth = _tenth_count(wos_rows)
     if topic:
         n = springer.get(topic)
         n_txt = format_int(n) if isinstance(n, int) else "—"
+        if rank and isinstance(count, int):
+            st.info(t("pub.tr_rank_live", topic=topic, rank=rank, n=format_int(count), springer=n_txt))
+            return
         if in_top:
             st.info(t("pub.tr_in_top10", topic=topic, n=n_txt))
         else:
@@ -183,7 +220,9 @@ def _render_turkey_note(topic: str | None, wos_rows: list) -> None:
             st.info(t("pub.tr_not_top10", topic=topic, n=n_txt, tenth=tenth_txt))
         return
     bits = []
-    for name in ("ISAC", "RIS", "NTN", "AI-RAN", "THz", "Ambient IoT"):
+    from backend.wos_topic_cache import TOPIC_ORDER
+
+    for name in TOPIC_ORDER:
         n = springer.get(name)
         bits.append(f"{name}: {format_int(n) if isinstance(n, int) else '—'}")
     st.info(t("pub.tr_not_top10_all", springer="; ".join(bits)))
@@ -212,19 +251,20 @@ def _render_wos_breakdown(kind: str, topic: str | None, wos: bool) -> None:
 
     if topic:
         raw = overlay.get(single_key) or []
+        turkey = overlay.get("turkey") or {}
         st.caption(cap_one)
         if kind == "countries":
-            rows = _country_list_items(raw)
+            rows = _country_list_items(raw, turkey)
         else:
             rows = _as_bar_rows(kind, raw)
         if rows:
             if kind == "countries":
                 show_plotly(render_country_rank_chart(rows, f"{title_one} — {topic}"))
-                table = _country_rank_table(raw)
+                table = _country_rank_table(raw, turkey)
                 if table:
                     st.caption(t("pub.cc_rank_caption"))
                     st.dataframe(table, hide_index=True, use_container_width=True)
-                _render_turkey_note(topic, raw)
+                _render_turkey_note(topic, raw, turkey)
             else:
                 show_plotly(render_academic_bar_chart(rows, f"{title_one} — {topic}"))
         else:
@@ -238,11 +278,13 @@ def _render_wos_breakdown(kind: str, topic: str | None, wos: bool) -> None:
         if overview:
             st.caption(t("pub.cc_overview_caption"))
             st.dataframe(overview, hide_index=True, use_container_width=True)
+    turkey_map = overlay.get("turkey_by_topic") or {}
     drawn = False
     for name in TOPIC_ORDER:
         raw = by_topic.get(name) or []
+        turkey = turkey_map.get(name) or {}
         if kind == "countries":
-            rows = _country_list_items(raw)
+            rows = _country_list_items(raw, turkey)
         else:
             rows = _as_bar_rows(kind, raw)
         if not rows:
@@ -251,10 +293,10 @@ def _render_wos_breakdown(kind: str, topic: str | None, wos: bool) -> None:
         st.markdown(f"#### {name}")
         if kind == "countries":
             show_plotly(render_country_rank_chart(rows, f"{title_one} — {name}"))
-            table = _country_rank_table(raw)
+            table = _country_rank_table(raw, turkey)
             if table:
                 st.dataframe(table, hide_index=True, use_container_width=True)
-            _render_turkey_note(name, raw)
+            _render_turkey_note(name, raw, turkey)
         else:
             show_plotly(render_academic_bar_chart(rows, f"{title_one} — {name}"))
     if not drawn:
@@ -280,6 +322,30 @@ def _source_total_rows(bundle: dict) -> list:
             }
         )
     return rows
+
+
+def _wos_token_box() -> None:
+    from backend.config import get_wos_api_key
+    from backend.publisher_apis import REGISTER, wos_last_error
+    from backend.wos_live import prefetch_status
+
+    if get_wos_api_key():
+        status = prefetch_status()
+        if status.get("running") and int(status.get("total") or 0) > 0:
+            done = min(int(status.get("done") or 0), int(status["total"]))
+            st.info(t("pub.bg_wait", done=format_int(done), total=format_int(status["total"])))
+            st.progress(done / max(int(status["total"]), 1))
+        err = wos_last_error() or status.get("error")
+        if err:
+            st.warning(t("pub.api_error", detail=str(err).replace("{", "(").replace("}", ")")))
+        return
+    st.warning(t("pub.token_missing"))
+    entered = st.text_input(t("pub.token_label"), type="password", key="wos_token_box")
+    st.caption(t("pub.token_help"))
+    if entered.strip():
+        st.session_state["wos_api_key"] = entered.strip()
+        st.rerun()
+    st.link_button(t("pub.key_wos"), REGISTER["wos"])
 
 
 def render_academic_publication_module():
@@ -325,6 +391,7 @@ def render_academic_publication_module():
             unsafe_allow_html=True,
         )
 
+    _wos_token_box()
     render_spec_pub_sources()
     topic, region = render_pub_topic_panel("pub")
     bundle = AcademicService.get_bundle(region, topic)
@@ -358,10 +425,10 @@ def render_academic_publication_module():
         st.metric(t("pub.metric_wos_core"), _fmt(bundle.get("wos_total")))
     with col_c:
         peak_label = t("pub.metric_peak_year_wos") if wos else t("pub.metric_peak_year")
-        from backend.wos_topic_cache import LAST5_YEARS
+        from backend.wos_topic_cache import TREND_YEARS
 
         years = bundle.get("year_counts") or {}
-        years = {str(y): int(years.get(str(y), 0) or 0) for y in LAST5_YEARS if int(years.get(str(y), 0) or 0)}
+        years = {str(y): int(years.get(str(y), 0) or 0) for y in TREND_YEARS if int(years.get(str(y), 0) or 0)}
         if years:
             peak = max(years, key=lambda y: years[y])
             st.metric(peak_label, peak, t("pub.metric_peak_delta", n=_fmt(years[peak])))
@@ -371,7 +438,7 @@ def render_academic_publication_module():
             for name, yc in series.items():
                 if not yc:
                     continue
-                last = {str(y): int(yc.get(str(y), 0) or 0) for y in LAST5_YEARS}
+                last = {str(y): int(yc.get(str(y), 0) or 0) for y in TREND_YEARS}
                 if not any(last.values()):
                     continue
                 y = max(last, key=lambda k: last[k])
@@ -429,10 +496,10 @@ def render_academic_publication_module():
     if section == "year":
         st.markdown(t("pub.year_heading"))
         st.caption(t("pub.year_caption_wos") if wos else t("pub.year_caption"))
-        from backend.wos_topic_cache import LAST5_YEARS
+        from backend.wos_topic_cache import TREND_YEARS
 
         years = bundle.get("year_counts") or {}
-        years = {str(y): int(years.get(str(y), 0) or 0) for y in LAST5_YEARS}
+        years = {str(y): int(years.get(str(y), 0) or 0) for y in TREND_YEARS}
         year_title = t("pub.chart_year_wos") if wos else t("pub.chart_year")
         if years:
             show_plotly(

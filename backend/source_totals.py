@@ -9,7 +9,6 @@ from typing import Any, Dict, List, Optional
 
 import streamlit as st
 
-from backend.literature_client import literature_bundle
 from backend.patent_apis import fetch_office_counts, key_fingerprint as patent_key_fingerprint, key_status as patent_key_status
 from backend.publisher_apis import key_fingerprint
 from backend.source_links import topic_patent_searches, topic_pub_searches, topic_query
@@ -77,14 +76,26 @@ def fetch_patent_source_totals(topic: Optional[str], _keys: str = "") -> List[Di
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def fetch_pub_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[str, Any]]:
-    """Yalnızca WoS ve Springer. Anahtar yoksa None."""
+    """WoS (canlı veya önbellek) + Springer. Anahtar yoksa None."""
+    from backend.wos_topic_cache import wos_overlay
+
     label = topic or "6G"
     links = topic_pub_searches(label, "tr")
-    bundle = literature_bundle("tr", topic, _keys or key_fingerprint())
-    pubs = bundle.get("publishers") or {}
+    overlay = wos_overlay(topic)
+    wos_n = overlay.get("wos_total") if overlay else None
+    springer_topics = None
+    try:
+        from backend.publisher_apis import fetch_springer_topic_totals
+
+        springer_topics = fetch_springer_topic_totals(_keys or key_fingerprint())
+    except Exception:
+        springer_topics = {}
+    springer_n = None
+    if topic and isinstance(springer_topics, dict):
+        n = springer_topics.get(topic)
+        springer_n = n if isinstance(n, int) else None
     rows: List[Dict[str, Any]] = []
-    for source_id in ("wos", "springer"):
-        n = pubs.get(source_id)
+    for source_id, n in (("wos", wos_n), ("springer", springer_n)):
         rows.append(
             _row(
                 source_id,

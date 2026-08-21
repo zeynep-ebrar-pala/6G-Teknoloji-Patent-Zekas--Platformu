@@ -34,9 +34,10 @@ LAST5 = (2022, 2026)
 TOPIC_TOKEN: Dict[str, str] = {
     "ISAC": "ISAC",
     "RIS": "RIS",
-    "NTN": "NTN",
-    "AI-RAN": "O-RAN",
+    "Cell-Free": "cell-free massive MIMO",
     "THz": "THz",
+    "AI-RAN": "AI-RAN",
+    "NTN": "NTN",
     "Ambient IoT": "ambient IoT",
 }
 
@@ -231,27 +232,62 @@ def _elsevier_count(query: str, affiliation: Optional[str]) -> Optional[int]:
     return n
 
 
-def _wos_count(query: str, org: Optional[str]) -> Optional[int]:
-    """Clarivate Starter: CU yok; ülke yerine OG (organization)."""
+_WOS_ERR = ""
+
+
+def wos_last_error() -> str:
+    return _WOS_ERR
+
+
+def wos_documents(
+    query: str,
+    *,
+    limit: int = 1,
+    page: int = 1,
+    sort: Optional[str] = None,
+) -> Optional[Dict[str, Any]]:
+    """Clarivate Starter /documents. Anahtar yoksa None."""
+    global _WOS_ERR
     key = get_wos_api_key()
     if not key:
+        _WOS_ERR = "WOS_API_KEY yok"
         return None
-    cache_key = f"wos:{org or 'all'}:{query}"
+    params = {
+        "db": "WOS",
+        "q": query,
+        "limit": str(max(1, min(int(limit), 50))),
+        "page": str(max(1, int(page))),
+    }
+    if sort:
+        params["sortField"] = sort
+    url = "https://api.clarivate.com/apis/wos-starter/v1/documents?" + urllib.parse.urlencode(params)
+    headers = {"X-ApiKey": key, "Accept": "application/json", "User-Agent": UA}
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=28) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        _WOS_ERR = f"HTTP {exc.code}"
+        return None
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError):
+        _WOS_ERR = "ağ / JSON"
+        return None
+    _WOS_ERR = ""
+    return data if isinstance(data, dict) else None
+
+
+def wos_total(query: str) -> Optional[int]:
+    q = (query or "").strip()
+    if not q:
+        return None
+    cache_key = f"wosq:{q}"
     hit = _cache_get(cache_key)
     if hit is not None:
         return hit
-    q = f'TS="{query}"'
-    if org:
-        q = f'{q} AND OG={org}'
-    span = f"{YEARS[0]}-01-01+{YEARS[1]}-12-31"
-    url = (
-        "https://api.clarivate.com/apis/wos-starter/v1/documents?"
-        + urllib.parse.urlencode({"db": "WOS", "q": q, "limit": "1", "publishTimeSpan": span})
-    )
-    data = _json(url, headers={"X-ApiKey": key, "Accept": "application/json"})
+    data = wos_documents(q, limit=1, page=1)
     if not data:
         return None
-    meta = data.get("metadata") or {}
+    meta = data.get("metadata") if isinstance(data.get("metadata"), dict) else {}
     total = meta.get("total")
     if total is None:
         total = meta.get("totalCount")
@@ -261,6 +297,21 @@ def _wos_count(query: str, org: Optional[str]) -> Optional[int]:
         return None
     _cache_put(cache_key, n)
     return n
+
+
+def peek_wos_total(query: str) -> Optional[int]:
+    q = (query or "").strip()
+    if not q:
+        return None
+    return _cache_get(f"wosq:{q}")
+
+
+def _wos_count(query: str, org: Optional[str]) -> Optional[int]:
+    """Küresel konu veya CU=Turkey. OG=Turkey ülke sırası değildir."""
+    q = f"TS=({query}) AND PY=2020-2026"
+    if org:
+        q = f"{q} AND CU=(Turkey OR Turkiye OR Türkiye)"
+    return wos_total(q)
 
 
 def _scholar_count(query: str, affiliation: Optional[str]) -> Optional[int]:

@@ -26,9 +26,10 @@ TREND_YEARS = list(range(2020, 2027))
 TOPIC_QUERIES: Dict[str, str] = {
     "ISAC": "ISAC",
     "RIS": "RIS",
-    "NTN": "NTN",
-    "AI-RAN": "O-RAN",
+    "Cell-Free": "cell-free massive MIMO",
     "THz": "THz",
+    "AI-RAN": "AI-RAN",
+    "NTN": "NTN",
     "Ambient IoT": "ambient IoT",
 }
 
@@ -106,7 +107,8 @@ def literature_bundle(
     topic: Optional[str] = None,
     _keys: str = "",
     _wos: str = "",
-    _v: str = "cc2",
+    _v: str = "cc3",
+    _live: str = "",
 ) -> Dict[str, Any]:
     """Türkiye / Avrupa / ikisi. Konu TR konu önbelleğindedir; ülke çubukları 6G başlıktır."""
     cache = _load_disk()
@@ -232,8 +234,15 @@ def literature_bundle(
         payload["countries_by_topic"] = overlay.get("countries_by_topic") or {}
         payload["cited"] = overlay.get("cited") or []
         payload["total"] = overlay.get("wos_total")
+        payload["turkey_by_topic"] = overlay.get("turkey_by_topic") or {}
+        payload["turkey"] = overlay.get("turkey") or {}
+        if isinstance(overlay.get("wos_total"), int):
+            payload["publishers"]["wos"] = overlay.get("wos_total")
+        elif overlay.get("topics"):
+            # Tümü: konular toplanmaz; hücre konu seçilince dolar.
+            payload["publishers"]["wos"] = None
         payload["source"] = (
-            "WoS Core Collection Analyze Results: TS=(6G) AND konu AND PY=2020-2026. "
+            "WoS Core Collection (Starter API veya Analyze önbelleği): TS=(6G) AND konu AND PY=2020-2026. "
             "Toplam adet: WoS + Springer (toplanmaz). Konu serileri toplanmaz."
         )
         if overlay.get("wos_fetched_at"):
@@ -252,16 +261,19 @@ def literature_bundle(
 
 
 def country_year_df(region: str = "both", topic: Optional[str] = None) -> Optional[pd.DataFrame]:
-    from backend.wos_topic_cache import LAST5_YEARS, TOPIC_ORDER, load_wos_topics
+    from backend.wos_live import load_live
+    from backend.wos_topic_cache import TOPIC_ORDER, TREND_YEARS, load_wos_topics
 
     bundle = literature_bundle(
         region,
         topic,
         key_fingerprint(),
         str(load_wos_topics().get("fetched_at") or ""),
+        "cc3",
+        str(load_live().get("fetched_at") or ""),
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}
-    axis = list(LAST5_YEARS)
+    axis = list(TREND_YEARS)
     if bundle.get("chart_source") == "wos":
         keep = [name for name in TOPIC_ORDER if name in series] or list(series.keys())
         if not keep:
