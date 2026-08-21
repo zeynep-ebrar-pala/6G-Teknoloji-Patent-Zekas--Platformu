@@ -89,6 +89,14 @@ def _layout() -> dict:
     return {**DARK_LAYOUT_TEMPLATE, "separators": sep}
 
 
+def _apply_layout(fig: go.Figure, **kwargs) -> go.Figure:
+    """Tema + özel alan. **_layout() unpack Plotly 6’da margin/legend çiftler."""
+    layout = _layout()
+    layout.update(kwargs)
+    fig.update_layout(layout)
+    return fig
+
+
 def _hex_rgba(hex_color: str, alpha: float) -> str:
     h = hex_color.lstrip("#")
     r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
@@ -248,8 +256,8 @@ def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
         showlegend=False,
     ))
 
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.trl_title')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         polar=dict(
             radialaxis=dict(
@@ -288,8 +296,8 @@ def render_technology_record_counts_chart(df_counts: pd.DataFrame, tech_label: s
         cliponaxis=False,
         hovertemplate=t("charts.hover_v", unit=t("charts.count")),
     ))
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(
             text=f"<b>{t('charts.tech_counts', label=tech_label)}</b>",
             x=0.02, y=0.95, font=dict(size=14, color="#FFFFFF"),
@@ -320,8 +328,8 @@ def render_patent_trends_chart(df_trends: pd.DataFrame) -> go.Figure:
             hovertemplate=t("charts.hover_v", unit=t("charts.patent_count")),
         ))
 
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         barmode="group",
         title=dict(text=f"<b>{t('charts.patent_year')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=_year_axis(labels),
@@ -363,8 +371,8 @@ def render_company_patent_domain_chart(df_domains: pd.DataFrame) -> go.Figure:
             hovertemplate="%{theta}: %{r}<extra>" + company + "</extra>",
         ))
 
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.domain_radar')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         polar=dict(
             radialaxis=dict(
@@ -392,8 +400,8 @@ def render_patent_keywords_chart(keywords_dict: Dict[str, int]) -> go.Figure:
         marker=dict(color=_color_list(list(sorted_kw.keys())))
     ))
 
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.keywords')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=dict(title=t("charts.kw_x"), gridcolor='rgba(200, 209, 220, 0.1)'),
         yaxis=dict(autorange="reversed", gridcolor='rgba(200, 209, 220, 0.1)'),
@@ -425,8 +433,8 @@ def render_academic_trends_chart(
             hovertemplate=t("charts.hover_v", unit=t("charts.paper_count")),
         ))
 
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{chart_title}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         xaxis=_year_axis(labels),
         yaxis=_count_axis(t("charts.paper_count"), [
@@ -448,8 +456,8 @@ def render_academic_database_chart(
     labels = list(db_dict.keys())
     vals = _ints(db_dict.values())
     fig = go.Figure(_count_bar(labels, vals, unit_key="charts.paper_count"))
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color='#FFFFFF')),
         xaxis=dict(title=xlabel, type="category", gridcolor='rgba(200, 209, 220, 0.1)'),
         yaxis=_count_axis(t("charts.paper_count"), vals),
@@ -533,8 +541,8 @@ def render_patent_network_graph(edges: Optional[List[tuple]] = None) -> go.Figur
             font=dict(color="#94A3B8"),
         )
 
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.network')}</b>", x=0.02, y=0.95, font=dict(size=16, color='#FFFFFF')),
         showlegend=False,
         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
@@ -556,8 +564,8 @@ def render_company_counts_chart(
         names = [c for c, _ in sorted_items]
         vals = _ints(n for _, n in sorted_items)
     fig = go.Figure(_count_bar(names, vals, unit_key="charts.patent_count"))
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.company_counts')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)"),
         yaxis=_count_axis(t("charts.patent_count"), vals),
@@ -574,8 +582,8 @@ def render_patent_topic_mix_chart(
     names = list(order) if order else [c for c, _ in sorted(counts.items(), key=lambda x: x[1], reverse=True)]
     vals = _ints(int(counts.get(n, 0) or 0) for n in names)
     fig = go.Figure(_count_bar(names, vals, unit_key="charts.patent_count"))
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.topic_mix')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         xaxis=dict(title=t("charts.topic_axis"), gridcolor="rgba(200, 209, 220, 0.1)"),
         yaxis=_count_axis(t("charts.patent_count"), vals),
@@ -603,8 +611,8 @@ def render_patent_density_heatmap(df_density: pd.DataFrame) -> go.Figure:
             colorbar=dict(tickformat="d", title=t("charts.patent_count")),
         )
     )
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.density')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         height=max(380, 44 * len(companies) + 120),
     )
@@ -625,13 +633,12 @@ def render_patent_sunburst(df_tree: pd.DataFrame) -> go.Figure:
         textinfo="label+value",
         hovertemplate="<b>%{label}</b><br>" + t("charts.patent_count") + ": %{value:d}<extra></extra>",
     )
-    layout = _layout()
-    layout.update(
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.sunburst')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         height=520,
         margin=dict(l=20, r=20, t=50, b=20),
     )
-    fig.update_layout(**layout)
     return fig
 
 
@@ -648,8 +655,8 @@ def render_patent_tfidf_map(df_map: pd.DataFrame) -> go.Figure:
         color_discrete_sequence=QUALITATIVE_COLORS,
     )
     fig.update_traces(marker=dict(size=12, line=dict(width=1, color="#FFFFFF")))
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.tfidf')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         xaxis=dict(title="PCA-1", gridcolor="rgba(200, 209, 220, 0.1)", zeroline=False),
         yaxis=dict(title="PCA-2", gridcolor="rgba(200, 209, 220, 0.1)", zeroline=False),
@@ -740,7 +747,7 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
         ),
         margin=dict(l=10, r=10, t=50, b=10),
     )
-    fig.update_layout(**layout)
+    fig.update_layout(layout)
     fig.update_traces(
         marker_line_width=0.6,
         marker_line_color="rgba(200,209,220,0.35)",
@@ -766,8 +773,8 @@ def render_tt_role_kind_chart(items: List[Dict[str, Any]]) -> go.Figure:
         orientation="h",
         marker=dict(color=["#E20074", "#00C2FF", "#A855F7", "#FFB020", "#14B8A6", "#64748B"][: len(names)]),
     ))
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.tt_role')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         xaxis=dict(title=t("charts.tt_role_x"), gridcolor="rgba(200, 209, 220, 0.1)", dtick=1),
         yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
@@ -782,8 +789,8 @@ def render_tt_vs_vendors_chart(counts: Dict[str, int]) -> go.Figure:
     names = [c for c, _ in sorted_items]
     vals = _ints(n for _, n in sorted_items)
     fig = go.Figure(_count_bar(names, vals, unit_key="charts.patent_count"))
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.tt_vs_vendors')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)", tickangle=-25),
         yaxis=_count_axis(t("charts.patent_count"), vals),
@@ -810,8 +817,8 @@ def render_tt_country_rank_chart(
         cliponaxis=False,
         hovertemplate=t("charts.hover_v", unit=x_title),
     ))
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)", tickangle=-20),
         yaxis=_count_axis(x_title, vals),
@@ -865,7 +872,7 @@ def render_tt_europe_overview_chart(
         margin=dict(l=40, r=70, t=50, b=40),
         showlegend=False,
     )
-    fig.update_layout(**layout)
+    fig.update_layout(layout)
     return fig
 
 
@@ -904,7 +911,7 @@ def render_tt_vs_leader_chart(
         legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0.0),
         margin=dict(l=40, r=40, t=70, b=40),
     )
-    fig.update_layout(**layout)
+    fig.update_layout(layout)
     return fig
 
 
@@ -944,7 +951,7 @@ def render_tt_office_chart(counts: Dict[str, int]) -> go.Figure:
         bargap=0.35,
         margin=dict(l=40, r=20, t=50, b=110),
     )
-    fig.update_layout(**layout)
+    fig.update_layout(layout)
     return fig
 
 
@@ -958,8 +965,8 @@ def render_tt_europe_presence_chart(items: List[Dict[str, Any]], name_key: str =
         orientation="h",
         marker=dict(color="#818CF8"),
     ))
-    fig.update_layout(
-        **_layout(),
+    _apply_layout(
+        fig,
         title=dict(text=f"<b>{t('charts.tt_europe')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         xaxis=dict(title=t("charts.tt_europe_x"), gridcolor="rgba(200, 209, 220, 0.1)"),
         yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
@@ -987,7 +994,7 @@ def render_academic_bar_chart(
         bargap=0.28,
         margin=dict(l=40, r=70, t=50, b=40),
     )
-    fig.update_layout(**layout)
+    fig.update_layout(layout)
     return fig
 
 
@@ -1058,7 +1065,7 @@ def render_country_rank_chart(
         bargap=0.28,
         margin=dict(l=40, r=110, t=50, b=40),
     )
-    fig.update_layout(**layout)
+    fig.update_layout(layout)
     return fig
 
 
@@ -1114,6 +1121,6 @@ def render_academic_grouped_bar(
         legend=dict(orientation="h", y=1.12, font=dict(size=11)),
         margin=dict(l=40, r=40, t=70, b=40),
     )
-    fig.update_layout(**layout)
+    fig.update_layout(layout)
     return fig
 
