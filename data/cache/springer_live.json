@@ -1,0 +1,1696 @@
+{
+  "topics": {
+    "ISAC": {
+      "total": 731,
+      "query": "6G ISAC onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "years": {
+        "2020": 7,
+        "2021": 5,
+        "2022": 14,
+        "2023": 43,
+        "2024": 79,
+        "2025": 186,
+        "2026": 387
+      },
+      "countries": [
+        {
+          "cc": "CN",
+          "name": "China",
+          "count": 330
+        },
+        {
+          "cc": "IN",
+          "name": "India",
+          "count": 122
+        },
+        {
+          "cc": "MY",
+          "name": "Malaysia",
+          "count": 99
+        },
+        {
+          "cc": "JO",
+          "name": "Jordan",
+          "count": 92
+        },
+        {
+          "cc": "GB",
+          "name": "United Kingdom",
+          "count": 60
+        },
+        {
+          "cc": "US",
+          "name": "United States",
+          "count": 48
+        },
+        {
+          "cc": "DE",
+          "name": "Germany",
+          "count": 32
+        },
+        {
+          "cc": "SA",
+          "name": "Saudi Arabia",
+          "count": 32
+        },
+        {
+          "cc": "CA",
+          "name": "Canada",
+          "count": 31
+        },
+        {
+          "cc": "AE",
+          "name": "United Arab Emirates",
+          "count": 29
+        },
+        {
+          "cc": "TR",
+          "name": "Turkey",
+          "count": 29
+        },
+        {
+          "cc": "IT",
+          "name": "Italy",
+          "count": 23
+        },
+        {
+          "cc": "FR",
+          "name": "France",
+          "count": 21
+        },
+        {
+          "cc": "FI",
+          "name": "Finland",
+          "count": 20
+        },
+        {
+          "cc": "AU",
+          "name": "Australia",
+          "count": 17
+        },
+        {
+          "cc": "GR",
+          "name": "Greece",
+          "count": 17
+        },
+        {
+          "cc": "KR",
+          "name": "South Korea",
+          "count": 17
+        },
+        {
+          "cc": "SG",
+          "name": "Singapore",
+          "count": 17
+        },
+        {
+          "cc": "EG",
+          "name": "Egypt",
+          "count": 15
+        },
+        {
+          "cc": "PK",
+          "name": "Pakistan",
+          "count": 15
+        },
+        {
+          "cc": "IQ",
+          "name": "Iraq",
+          "count": 11
+        }
+      ],
+      "turkey_count": 29,
+      "turkey_rank": 11,
+      "institutions": [],
+      "cited": [
+        {
+          "title": "6G-PATH Experimentation in the B5G/6G Era via a Federated Approach",
+          "authors": "Chochliouros, Ioannis P., Spiliopoulou, Anastasia S., Díaz Zayas, Almudena, Cordeiro, Luís, Fernandes, João, Wang, Qi, Alcaraz Calero, Jose M., Lessi, Christina",
+          "journal": "Artificial Intelligence Applications and Innovations. AIAI 2026 IFIP WG 12.5 International Workshops",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-30507-7_3",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-30507-7_3",
+          "url": "https://doi.org/10.1007/978-3-032-30507-7_3",
+          "topic": "ISAC"
+        },
+        {
+          "title": "A Methodology for the Technoeconomic Assessment of ISAC-Enabled Network Deployments",
+          "authors": "Mesogiti, Ioanna, Theodoropoulou, Eleni, Lyberopoulos, George, Setaki, Foteini, Anastasopoulos, Markos, Tzanakaki, Anna, Guttierez, Jesus, Castellanos, German",
+          "journal": "Artificial Intelligence Applications and Innovations. AIAI 2026 IFIP WG 12.5 International Workshops",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-30507-7_6",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-30507-7_6",
+          "url": "https://doi.org/10.1007/978-3-032-30507-7_6",
+          "topic": "ISAC"
+        },
+        {
+          "title": "A survey on AI-empowered RIS-assisted integrated sensing and communication: From terrestrial to non-terrestrial networks",
+          "authors": "Ahmad, Shabeer, Jinling, Zhang, Ahmed, Manzoor, Khan, Adil, Khan, Wali Ullah, Hayat, Babar, Khan, Feroz",
+          "journal": "Journal of King Saud University Computer and Information Sciences",
+          "year": 2026,
+          "doi": "10.1007/s44443-026-01018-5",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s44443-026-01018-5",
+          "url": "https://doi.org/10.1007/s44443-026-01018-5",
+          "topic": "ISAC"
+        },
+        {
+          "title": "AI-driven Wi-Fi radar people counting for intelligent IoT and distributed sensing systems",
+          "authors": "El Amine, Julien, Guillet, Valery",
+          "journal": "Discover Computing",
+          "year": 2026,
+          "doi": "10.1007/s10791-026-10462-w",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s10791-026-10462-w",
+          "url": "https://doi.org/10.1007/s10791-026-10462-w",
+          "topic": "ISAC"
+        },
+        {
+          "title": "Beamforming for Reconfigurable Intelligence Surface Assisted Collaborative System of Communication and Sensing",
+          "authors": "Luo, Tianfang, Li, Zihan, Liu, Chao, Xiao, Pei, Wang, Tong, Ouyang, Min",
+          "journal": "Computer Supported Cooperative Work and Social Computing",
+          "year": 2026,
+          "doi": "10.1007/978-981-92-0288-1_13",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-0288-1_13",
+          "url": "https://doi.org/10.1007/978-981-92-0288-1_13",
+          "topic": "ISAC"
+        },
+        {
+          "title": "Bridging visual and wireless sensing via a unified radiation field for 3D radio map construction",
+          "authors": "Wen, Chaozheng, Tong, Jingwen, Lin, Zehong, Bian, Chenghong, Zhang, Jun",
+          "journal": "npj Wireless Technology",
+          "year": 2026,
+          "doi": "10.1038/s44459-026-00067-6",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1038/s44459-026-00067-6",
+          "url": "https://doi.org/10.1038/s44459-026-00067-6",
+          "topic": "ISAC"
+        },
+        {
+          "title": "Deep Reinforcement Learning Based Cooperative Transmission Optimization for IRS-Assisted Multi-UAV Covert Communication",
+          "authors": "Liu, Zixuan, Su, Wenting, Zhang, Bo, Ma, Ming",
+          "journal": "Advanced Intelligent Computing Technology and Applications",
+          "year": 2026,
+          "doi": "10.1007/978-981-92-3450-9_5",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-3450-9_5",
+          "url": "https://doi.org/10.1007/978-981-92-3450-9_5",
+          "topic": "ISAC"
+        },
+        {
+          "title": "Distributed Robust Control Mechanisms for Power Wireless Network Control Systems",
+          "authors": "Hou, Huanpeng, Lu, Jizhao, Li, Yongjie, Zhao, Jinglong, Zong, Jing, Zhang, Yuqi, Xu, Hong, Zheng, Sheng",
+          "journal": "Big Data and Security",
+          "year": 2026,
+          "doi": "10.1007/978-981-92-1884-4_17",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-1884-4_17",
+          "url": "https://doi.org/10.1007/978-981-92-1884-4_17",
+          "topic": "ISAC"
+        },
+        {
+          "title": "FAIR-OPT: Fairness-oriented resource optimization for IRS-aided UAV-MEC networks in smart mining environments",
+          "authors": "Darem, Laith A., R. Alharbi, Khalid N., Alkhaldi, Tareq, Abdullah, Monir, Alghawli, Abed Saif Ahmed, Sallami, Chams, Darem, Abdulbasit A., Alhashmi, Asma A.",
+          "journal": "Journal of King Saud University Computer and Information Sciences",
+          "year": 2026,
+          "doi": "10.1007/s44443-026-01011-y",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s44443-026-01011-y",
+          "url": "https://doi.org/10.1007/s44443-026-01011-y",
+          "topic": "ISAC"
+        },
+        {
+          "title": "Fluid, movable, and AI-enabled adaptive antenna technologies for 6G: evolution, unified taxonomy, challenges, and research directions",
+          "authors": "Hassan, Ali, Hassan, Syed Rizwan",
+          "journal": "Telecommunication Systems",
+          "year": 2026,
+          "doi": "10.1007/s11235-026-01506-z",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11235-026-01506-z",
+          "url": "https://doi.org/10.1007/s11235-026-01506-z",
+          "topic": "ISAC"
+        }
+      ]
+    },
+    "RIS": {
+      "total": 1790,
+      "query": "6G RIS onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "years": {
+        "2020": 17,
+        "2021": 46,
+        "2022": 77,
+        "2023": 159,
+        "2024": 291,
+        "2025": 491,
+        "2026": 697
+      },
+      "countries": [
+        {
+          "cc": "CN",
+          "name": "China",
+          "count": 594
+        },
+        {
+          "cc": "IN",
+          "name": "India",
+          "count": 415
+        },
+        {
+          "cc": "SA",
+          "name": "Saudi Arabia",
+          "count": 132
+        },
+        {
+          "cc": "MY",
+          "name": "Malaysia",
+          "count": 127
+        },
+        {
+          "cc": "US",
+          "name": "United States",
+          "count": 116
+        },
+        {
+          "cc": "JO",
+          "name": "Jordan",
+          "count": 107
+        },
+        {
+          "cc": "GB",
+          "name": "United Kingdom",
+          "count": 106
+        },
+        {
+          "cc": "",
+          "name": "Vietnam",
+          "count": 82
+        },
+        {
+          "cc": "KR",
+          "name": "South Korea",
+          "count": 63
+        },
+        {
+          "cc": "CA",
+          "name": "Canada",
+          "count": 58
+        },
+        {
+          "cc": "PK",
+          "name": "Pakistan",
+          "count": 57
+        },
+        {
+          "cc": "EG",
+          "name": "Egypt",
+          "count": 56
+        },
+        {
+          "cc": "DE",
+          "name": "Germany",
+          "count": 51
+        },
+        {
+          "cc": "AE",
+          "name": "United Arab Emirates",
+          "count": 49
+        },
+        {
+          "cc": "IT",
+          "name": "Italy",
+          "count": 49
+        },
+        {
+          "cc": "FR",
+          "name": "France",
+          "count": 46
+        },
+        {
+          "cc": "",
+          "name": "Iran",
+          "count": 43
+        },
+        {
+          "cc": "GR",
+          "name": "Greece",
+          "count": 36
+        },
+        {
+          "cc": "TR",
+          "name": "Turkey",
+          "count": 36
+        },
+        {
+          "cc": "AU",
+          "name": "Australia",
+          "count": 27
+        }
+      ],
+      "turkey_count": 99,
+      "turkey_rank": 19,
+      "institutions": [],
+      "cited": [
+        {
+          "title": "6G-PATH Experimentation in the B5G/6G Era via a Federated Approach",
+          "authors": "Chochliouros, Ioannis P., Spiliopoulou, Anastasia S., Díaz Zayas, Almudena, Cordeiro, Luís, Fernandes, João, Wang, Qi, Alcaraz Calero, Jose M., Lessi, Christina",
+          "journal": "Artificial Intelligence Applications and Innovations. AIAI 2026 IFIP WG 12.5 International Workshops",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-30507-7_3",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-30507-7_3",
+          "url": "https://doi.org/10.1007/978-3-032-30507-7_3",
+          "topic": "RIS"
+        },
+        {
+          "title": "Adaptive physical-layer key generation via RIS phase-shift matrix design in quasi-static environment",
+          "authors": "Gao, Qiangqiang, Tan, Weijie, Cao, Xin, Zhang, Lisha, Yan, Peishun, Li, Chunguo",
+          "journal": "Journal of King Saud University Computer and Information Sciences",
+          "year": 2026,
+          "doi": "10.1007/s44443-026-01160-0",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s44443-026-01160-0",
+          "url": "https://doi.org/10.1007/s44443-026-01160-0",
+          "topic": "RIS"
+        },
+        {
+          "title": "Beamforming for Reconfigurable Intelligence Surface Assisted Collaborative System of Communication and Sensing",
+          "authors": "Luo, Tianfang, Li, Zihan, Liu, Chao, Xiao, Pei, Wang, Tong, Ouyang, Min",
+          "journal": "Computer Supported Cooperative Work and Social Computing",
+          "year": 2026,
+          "doi": "10.1007/978-981-92-0288-1_13",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-0288-1_13",
+          "url": "https://doi.org/10.1007/978-981-92-0288-1_13",
+          "topic": "RIS"
+        },
+        {
+          "title": "D-Band Channel Measurements in a Medical Environment",
+          "authors": "Loeser, Lorenz H. W., Elesina, Varvara, Jensen, Georg, Kleine-Ostmann, Thomas, Kürner, Thomas",
+          "journal": "Journal of Infrared, Millimeter, and Terahertz Waves",
+          "year": 2026,
+          "doi": "10.1007/s10762-026-01169-6",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s10762-026-01169-6",
+          "url": "https://doi.org/10.1007/s10762-026-01169-6",
+          "topic": "RIS"
+        },
+        {
+          "title": "Deep Reinforcement Learning Based Cooperative Transmission Optimization for IRS-Assisted Multi-UAV Covert Communication",
+          "authors": "Liu, Zixuan, Su, Wenting, Zhang, Bo, Ma, Ming",
+          "journal": "Advanced Intelligent Computing Technology and Applications",
+          "year": 2026,
+          "doi": "10.1007/978-981-92-3450-9_5",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-3450-9_5",
+          "url": "https://doi.org/10.1007/978-981-92-3450-9_5",
+          "topic": "RIS"
+        },
+        {
+          "title": "Deep-Learning-Enabled Fast Prediction of Desired Amplitude-Phase Responses in Massively Reconfigurable RF Phase Shifter",
+          "authors": "Lu, Zhilong, Qin, Qincheng, Li, Jingyu, Tong, Kin-Fai, Wong, Leon, Liu, Baiyang",
+          "journal": "Advanced Intelligent Computing Technology and Applications",
+          "year": 2026,
+          "doi": "10.1007/978-981-92-3400-4_1",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-3400-4_1",
+          "url": "https://doi.org/10.1007/978-981-92-3400-4_1",
+          "topic": "RIS"
+        },
+        {
+          "title": "Dependency-aware adaptive task offloading in edge-AI IoT networks using transformer-DDQN",
+          "authors": "Nagaraj, Tejaswini, Ali, Qaisar, Ullah, Ihsan",
+          "journal": "The Journal of Supercomputing",
+          "year": 2026,
+          "doi": "10.1007/s11227-026-08733-w",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11227-026-08733-w",
+          "url": "https://doi.org/10.1007/s11227-026-08733-w",
+          "topic": "RIS"
+        },
+        {
+          "title": "Development of banana-cotton textile substrate material-based asymmetrical quad-port MIMO antenna for 5G (n77, n78, and n79) and WBAN applications",
+          "authors": "Obulesu, G., Sudharani, V., Reddy, S. S. Mohan, Madhav, B. T. P., Pardhasaradhi, P., Devi, Y. Usha",
+          "journal": "The European Physical Journal Plus",
+          "year": 2026,
+          "doi": "10.1140/epjp/s13360-026-08153-y",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1140/epjp/s13360-026-08153-y",
+          "url": "https://doi.org/10.1140/epjp/s13360-026-08153-y",
+          "topic": "RIS"
+        },
+        {
+          "title": "Evaluation of Split Federated Learning for 6G IoT Optimization: A Comparative Study with Baseline, Federated Learning, and Split Learning Models",
+          "authors": "Alkayat, Samar H., Hamad, Ali H.",
+          "journal": "Computational Science and Its Applications – ICCSA 2026 Workshops",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-30497-1_3",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-30497-1_3",
+          "url": "https://doi.org/10.1007/978-3-032-30497-1_3",
+          "topic": "RIS"
+        },
+        {
+          "title": "Fluid, movable, and AI-enabled adaptive antenna technologies for 6G: evolution, unified taxonomy, challenges, and research directions",
+          "authors": "Hassan, Ali, Hassan, Syed Rizwan",
+          "journal": "Telecommunication Systems",
+          "year": 2026,
+          "doi": "10.1007/s11235-026-01506-z",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11235-026-01506-z",
+          "url": "https://doi.org/10.1007/s11235-026-01506-z",
+          "topic": "RIS"
+        }
+      ]
+    },
+    "Cell-Free": {
+      "total": 575,
+      "query": "6G cell-free massive MIMO onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "years": {
+        "2020": 3,
+        "2021": 20,
+        "2022": 37,
+        "2023": 82,
+        "2024": 97,
+        "2025": 159,
+        "2026": 173
+      },
+      "countries": [
+        {
+          "cc": "CN",
+          "name": "China",
+          "count": 181
+        },
+        {
+          "cc": "IN",
+          "name": "India",
+          "count": 157
+        },
+        {
+          "cc": "GB",
+          "name": "United Kingdom",
+          "count": 45
+        },
+        {
+          "cc": "SA",
+          "name": "Saudi Arabia",
+          "count": 37
+        },
+        {
+          "cc": "US",
+          "name": "United States",
+          "count": 34
+        },
+        {
+          "cc": "IT",
+          "name": "Italy",
+          "count": 27
+        },
+        {
+          "cc": "DE",
+          "name": "Germany",
+          "count": 26
+        },
+        {
+          "cc": "PK",
+          "name": "Pakistan",
+          "count": 22
+        },
+        {
+          "cc": "",
+          "name": "Vietnam",
+          "count": 20
+        },
+        {
+          "cc": "CA",
+          "name": "Canada",
+          "count": 19
+        },
+        {
+          "cc": "FR",
+          "name": "France",
+          "count": 18
+        },
+        {
+          "cc": "EG",
+          "name": "Egypt",
+          "count": 17
+        },
+        {
+          "cc": "IQ",
+          "name": "Iraq",
+          "count": 16
+        },
+        {
+          "cc": "",
+          "name": "Iran",
+          "count": 16
+        },
+        {
+          "cc": "MY",
+          "name": "Malaysia",
+          "count": 16
+        },
+        {
+          "cc": "KR",
+          "name": "South Korea",
+          "count": 15
+        },
+        {
+          "cc": "GR",
+          "name": "Greece",
+          "count": 14
+        },
+        {
+          "cc": "",
+          "name": "Belgium",
+          "count": 13
+        },
+        {
+          "cc": "AE",
+          "name": "United Arab Emirates",
+          "count": 12
+        },
+        {
+          "cc": "TR",
+          "name": "Turkey",
+          "count": 12
+        }
+      ],
+      "turkey_count": 26,
+      "turkey_rank": 20,
+      "institutions": [],
+      "cited": [
+        {
+          "title": "A scientometric review of digital twin in 3G to 6G networks: industry applications and trends",
+          "authors": "Bhatia, Munish, Malik, Vinika",
+          "journal": "Journal of Intelligent Manufacturing",
+          "year": 2025,
+          "doi": "10.1007/s10845-025-02679-1",
+          "citations": 5,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s10845-025-02679-1",
+          "url": "https://doi.org/10.1007/s10845-025-02679-1",
+          "topic": "Cell-Free"
+        },
+        {
+          "title": "6G-PATH Experimentation in the B5G/6G Era via a Federated Approach",
+          "authors": "Chochliouros, Ioannis P., Spiliopoulou, Anastasia S., Díaz Zayas, Almudena, Cordeiro, Luís, Fernandes, João, Wang, Qi, Alcaraz Calero, Jose M., Lessi, Christina",
+          "journal": "Artificial Intelligence Applications and Innovations. AIAI 2026 IFIP WG 12.5 International Workshops",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-30507-7_3",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-30507-7_3",
+          "url": "https://doi.org/10.1007/978-3-032-30507-7_3",
+          "topic": "Cell-Free"
+        },
+        {
+          "title": "A FPGA-Enabled Hybrid Beamformer for 5G Millimeter Wave Massive MIMO System",
+          "authors": "S P, Spoorthi, S H, Bharathi",
+          "journal": "Wireless Personal Communications",
+          "year": 2026,
+          "doi": "10.1007/s11277-026-12166-2",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11277-026-12166-2",
+          "url": "https://doi.org/10.1007/s11277-026-12166-2",
+          "topic": "Cell-Free"
+        },
+        {
+          "title": "A hybrid model-driven deep learning and block-sparse adaptive matching pursuit framework for robust 5G massive MIMO channel estimation",
+          "authors": "Ravikanth, Sivangi, Revathi, Rallabandi, Kumar, P. Kiran, Rao, Jillella Venkateswara, Reddy, Sakam Nagi, Kurukuntla, Srinivasa Reddy",
+          "journal": "Proceedings of the Indian National Science Academy",
+          "year": 2026,
+          "doi": "10.1007/s43538-026-00864-1",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s43538-026-00864-1",
+          "url": "https://doi.org/10.1007/s43538-026-00864-1",
+          "topic": "Cell-Free"
+        },
+        {
+          "title": "A survey on AI-empowered RIS-assisted integrated sensing and communication: From terrestrial to non-terrestrial networks",
+          "authors": "Ahmad, Shabeer, Jinling, Zhang, Ahmed, Manzoor, Khan, Adil, Khan, Wali Ullah, Hayat, Babar, Khan, Feroz",
+          "journal": "Journal of King Saud University Computer and Information Sciences",
+          "year": 2026,
+          "doi": "10.1007/s44443-026-01018-5",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s44443-026-01018-5",
+          "url": "https://doi.org/10.1007/s44443-026-01018-5",
+          "topic": "Cell-Free"
+        },
+        {
+          "title": "AI Modernization Enabled by Cloud-Native and Edge-Intelligent Architectures",
+          "authors": "Goyal, Kapil Kumar, Hebbar, Kishore Subramanya, Mali, Rakesh Kumar",
+          "journal": "Proceedings of International Conference on Information Technology and Artificial Intelligence",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-34789-3_9",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-34789-3_9",
+          "url": "https://doi.org/10.1007/978-3-032-34789-3_9",
+          "topic": "Cell-Free"
+        },
+        {
+          "title": "AI-Enabled Reconfigurable Intelligent Surfaces for Secure 6G Networks",
+          "authors": "Singh, Manjeet, Bindle, Abhay, Singla, Preeti, Tiwari, Sourabh",
+          "journal": "Wireless Personal Communications",
+          "year": 2026,
+          "doi": "10.1007/s11277-026-12157-3",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11277-026-12157-3",
+          "url": "https://doi.org/10.1007/s11277-026-12157-3",
+          "topic": "Cell-Free"
+        },
+        {
+          "title": "Alternating Graph-Regularized Neural Network for adaptive beamforming in 5G milli meter wave massive MIMO multicellular networks",
+          "authors": "Bolla, Sandhya, Ramesh, B., Srinivas, Nomula",
+          "journal": "Wireless Networks",
+          "year": 2026,
+          "doi": "10.1007/s11276-026-04194-4",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11276-026-04194-4",
+          "url": "https://doi.org/10.1007/s11276-026-04194-4",
+          "topic": "Cell-Free"
+        },
+        {
+          "title": "An efficient MaMIMO-based indoor positioning system",
+          "authors": "Deprem, Zeynel, Onat, Emrah",
+          "journal": "Signal, Image and Video Processing",
+          "year": 2026,
+          "doi": "10.1007/s11760-026-05601-1",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11760-026-05601-1",
+          "url": "https://doi.org/10.1007/s11760-026-05601-1",
+          "topic": "Cell-Free"
+        },
+        {
+          "title": "Enhanced spectrum sensing and management in 6G cognitive radio using quantum reinforcement learning and magnificent frigate serval optimization",
+          "authors": "Murugan, Suriya, Lekhaa, T. R., Swetha, K., Roshini, A.",
+          "journal": "Analog Integrated Circuits and Signal Processing",
+          "year": 2026,
+          "doi": "10.1007/s10470-026-02633-y",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s10470-026-02633-y",
+          "url": "https://doi.org/10.1007/s10470-026-02633-y",
+          "topic": "Cell-Free"
+        }
+      ]
+    },
+    "THz": {
+      "total": 2583,
+      "query": "6G THz onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "years": {
+        "2020": 46,
+        "2021": 135,
+        "2022": 228,
+        "2023": 323,
+        "2024": 473,
+        "2025": 663,
+        "2026": 704
+      },
+      "countries": [
+        {
+          "cc": "IN",
+          "name": "India",
+          "count": 775
+        },
+        {
+          "cc": "CN",
+          "name": "China",
+          "count": 654
+        },
+        {
+          "cc": "US",
+          "name": "United States",
+          "count": 264
+        },
+        {
+          "cc": "SA",
+          "name": "Saudi Arabia",
+          "count": 170
+        },
+        {
+          "cc": "GB",
+          "name": "United Kingdom",
+          "count": 131
+        },
+        {
+          "cc": "DE",
+          "name": "Germany",
+          "count": 126
+        },
+        {
+          "cc": "CA",
+          "name": "Canada",
+          "count": 87
+        },
+        {
+          "cc": "IT",
+          "name": "Italy",
+          "count": 86
+        },
+        {
+          "cc": "EG",
+          "name": "Egypt",
+          "count": 84
+        },
+        {
+          "cc": "JP",
+          "name": "Japan",
+          "count": 76
+        },
+        {
+          "cc": "MY",
+          "name": "Malaysia",
+          "count": 72
+        },
+        {
+          "cc": "TR",
+          "name": "Turkey",
+          "count": 72
+        },
+        {
+          "cc": "",
+          "name": "Iran",
+          "count": 68
+        },
+        {
+          "cc": "KR",
+          "name": "South Korea",
+          "count": 66
+        },
+        {
+          "cc": "FR",
+          "name": "France",
+          "count": 64
+        },
+        {
+          "cc": "ES",
+          "name": "Spain",
+          "count": 52
+        },
+        {
+          "cc": "",
+          "name": "Russia",
+          "count": 51
+        },
+        {
+          "cc": "",
+          "name": "Bangladesh",
+          "count": 50
+        },
+        {
+          "cc": "PK",
+          "name": "Pakistan",
+          "count": 45
+        },
+        {
+          "cc": "FI",
+          "name": "Finland",
+          "count": 43
+        }
+      ],
+      "turkey_count": 135,
+      "turkey_rank": 12,
+      "institutions": [],
+      "cited": [
+        {
+          "title": "A Methodology for the Technoeconomic Assessment of ISAC-Enabled Network Deployments",
+          "authors": "Mesogiti, Ioanna, Theodoropoulou, Eleni, Lyberopoulos, George, Setaki, Foteini, Anastasopoulos, Markos, Tzanakaki, Anna, Guttierez, Jesus, Castellanos, German",
+          "journal": "Artificial Intelligence Applications and Innovations. AIAI 2026 IFIP WG 12.5 International Workshops",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-30507-7_6",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-30507-7_6",
+          "url": "https://doi.org/10.1007/978-3-032-30507-7_6",
+          "topic": "THz"
+        },
+        {
+          "title": "A survey on AI-empowered RIS-assisted integrated sensing and communication: From terrestrial to non-terrestrial networks",
+          "authors": "Ahmad, Shabeer, Jinling, Zhang, Ahmed, Manzoor, Khan, Adil, Khan, Wali Ullah, Hayat, Babar, Khan, Feroz",
+          "journal": "Journal of King Saud University Computer and Information Sciences",
+          "year": 2026,
+          "doi": "10.1007/s44443-026-01018-5",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s44443-026-01018-5",
+          "url": "https://doi.org/10.1007/s44443-026-01018-5",
+          "topic": "THz"
+        },
+        {
+          "title": "AI-Based QoS Optimization Using Level Crossing Rate Analysis in 6G Networks with Cooperative Relaying in Generalized Fading Channels and Interference",
+          "authors": "Upadhyay, Deepak, Venu, Nookala, Tiwari, Mohit, Uniyal, Pinky, Nagendra, Chandra Shekhar, Sharma, Priti, Asudani, Deepak Suresh",
+          "journal": "Proceedings of International Conference on Computational Intelligence",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-31526-7_19",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-31526-7_19",
+          "url": "https://doi.org/10.1007/978-3-032-31526-7_19",
+          "topic": "THz"
+        },
+        {
+          "title": "AI-Native Vulnerability Prediction Models for HIPAA-Compliant Multi-cloud Environments",
+          "authors": "Kande, Radhika",
+          "journal": "Evolutionary Artificial Intelligence",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-32423-8_20",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-32423-8_20",
+          "url": "https://doi.org/10.1007/978-3-032-32423-8_20",
+          "topic": "THz"
+        },
+        {
+          "title": "Asymptotic Decoupled SSOR Precoding for Low-Complexity Hybrid Massive MIMO Using RMT Initialization",
+          "authors": "ranjini, Shiva, S B, Anjappa, S, Veena, G, Shashibhushan, Goyal, Deepak Kumar",
+          "journal": "Wireless Personal Communications",
+          "year": 2026,
+          "doi": "10.1007/s11277-026-12208-9",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11277-026-12208-9",
+          "url": "https://doi.org/10.1007/s11277-026-12208-9",
+          "topic": "THz"
+        },
+        {
+          "title": "Bridging the Adoption Gap: A Techno-Economic and Strategic Commercialisation Framework for 6G Across European Verticals",
+          "authors": "Premarathne, Imesha D., Weerakkody, Vishanth, Li, Jing, Sivarajah, Uthayasankar, Chochliouros, Ioannis, Cordeiro, Luís",
+          "journal": "Artificial Intelligence Applications and Innovations. AIAI 2026 IFIP WG 12.5 International Workshops",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-30507-7_9",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-30507-7_9",
+          "url": "https://doi.org/10.1007/978-3-032-30507-7_9",
+          "topic": "THz"
+        },
+        {
+          "title": "D-Band Channel Measurements in a Medical Environment",
+          "authors": "Loeser, Lorenz H. W., Elesina, Varvara, Jensen, Georg, Kleine-Ostmann, Thomas, Kürner, Thomas",
+          "journal": "Journal of Infrared, Millimeter, and Terahertz Waves",
+          "year": 2026,
+          "doi": "10.1007/s10762-026-01169-6",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s10762-026-01169-6",
+          "url": "https://doi.org/10.1007/s10762-026-01169-6",
+          "topic": "THz"
+        },
+        {
+          "title": "DAMAC: An Intelligent Protocol for Decentralized Autonomous Multi-agent Communication Networks",
+          "authors": "Ni, Yu, Cai, Jun, Chen, Wanqiu, Hu, Bing, Chai, Jiahe",
+          "journal": "Advanced Intelligent Computing Technology and Applications",
+          "year": 2026,
+          "doi": "10.1007/978-981-92-3557-5_19",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-3557-5_19",
+          "url": "https://doi.org/10.1007/978-981-92-3557-5_19",
+          "topic": "THz"
+        },
+        {
+          "title": "Demonstration of Ultra-Tunable Terahertz Broadband Absorption using Graphene Based Metamaterial Absorber",
+          "authors": "Ali, Ahmed, Barkathulla, Asrafali, Li, Xiaoguang",
+          "journal": "Plasmonics",
+          "year": 2026,
+          "doi": "10.1007/s11468-026-03417-w",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11468-026-03417-w",
+          "url": "https://doi.org/10.1007/s11468-026-03417-w",
+          "topic": "THz"
+        },
+        {
+          "title": "Design and Performance Analysis of Single and Dual Port Novel MIMO Antenna for 5G/6G Wireless Communication",
+          "authors": "Sharma, Pradeep Kumar, Kumar, Ashwini, Bora, Avnish",
+          "journal": "Deep Learning and Visual Artificial Intelligence",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-32476-4_40",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-32476-4_40",
+          "url": "https://doi.org/10.1007/978-3-032-32476-4_40",
+          "topic": "THz"
+        }
+      ]
+    },
+    "AI-RAN": {
+      "total": 38,
+      "query": "6G AI-RAN onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "years": {
+        "2020": 1,
+        "2021": 1,
+        "2022": 0,
+        "2023": 1,
+        "2024": 3,
+        "2025": 10,
+        "2026": 22
+      },
+      "countries": [
+        {
+          "cc": "CN",
+          "name": "China",
+          "count": 9
+        },
+        {
+          "cc": "IN",
+          "name": "India",
+          "count": 9
+        },
+        {
+          "cc": "GB",
+          "name": "United Kingdom",
+          "count": 6
+        },
+        {
+          "cc": "SA",
+          "name": "Saudi Arabia",
+          "count": 5
+        },
+        {
+          "cc": "US",
+          "name": "United States",
+          "count": 5
+        },
+        {
+          "cc": "",
+          "name": "Belgium",
+          "count": 4
+        },
+        {
+          "cc": "IT",
+          "name": "Italy",
+          "count": 4
+        },
+        {
+          "cc": "TR",
+          "name": "Turkey",
+          "count": 4
+        },
+        {
+          "cc": "KR",
+          "name": "South Korea",
+          "count": 3
+        },
+        {
+          "cc": "AU",
+          "name": "Australia",
+          "count": 2
+        },
+        {
+          "cc": "CH",
+          "name": "Switzerland",
+          "count": 2
+        },
+        {
+          "cc": "DE",
+          "name": "Germany",
+          "count": 2
+        },
+        {
+          "cc": "FR",
+          "name": "France",
+          "count": 2
+        },
+        {
+          "cc": "GR",
+          "name": "Greece",
+          "count": 2
+        },
+        {
+          "cc": "JP",
+          "name": "Japan",
+          "count": 2
+        },
+        {
+          "cc": "",
+          "name": "Algeria",
+          "count": 1
+        },
+        {
+          "cc": "CA",
+          "name": "Canada",
+          "count": 1
+        },
+        {
+          "cc": "FI",
+          "name": "Finland",
+          "count": 1
+        },
+        {
+          "cc": "",
+          "name": "Hong Kong",
+          "count": 1
+        },
+        {
+          "cc": "",
+          "name": "Hungary",
+          "count": 1
+        },
+        {
+          "cc": "",
+          "name": "Iran",
+          "count": 1
+        }
+      ],
+      "turkey_count": 4,
+      "turkey_rank": 8,
+      "institutions": [],
+      "cited": [
+        {
+          "title": "Distributed control circuits across a brain-and-cord connectome",
+          "authors": "Bates, Alexander S., Phelps, Jasper S., Kim, Minsu, Yang, Helen H., Matsliah, Arie, Ajabi, Zaki, Perlman, Eric, Delgado, Kevin M.",
+          "journal": "Nature",
+          "year": 2026,
+          "doi": "10.1038/s41586-026-10735-w",
+          "citations": 4,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1038/s41586-026-10735-w",
+          "url": "https://doi.org/10.1038/s41586-026-10735-w",
+          "topic": "AI-RAN"
+        },
+        {
+          "title": "6G and Embodied AI: Benefits and Risks of Increasingly Extended Minds",
+          "authors": "Farina, Mirko, Lavazza, Andrea",
+          "journal": "Neuroethics",
+          "year": 2026,
+          "doi": "10.1007/s12152-026-09632-w",
+          "citations": 3,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s12152-026-09632-w",
+          "url": "https://doi.org/10.1007/s12152-026-09632-w",
+          "topic": "AI-RAN"
+        },
+        {
+          "title": "Artificial intelligence for next-generation 6G technologies and networks",
+          "authors": "Tok, Yasin Emre, Toprak, Amine Gonca, Karahan, Sumeye Nur, Mercan, Oyku Berfin, Aydin, Hurkan Mustafa, Altintas, Mucahit",
+          "journal": "Discover Networks",
+          "year": 2026,
+          "doi": "10.1007/s44354-026-00016-3",
+          "citations": 3,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s44354-026-00016-3",
+          "url": "https://doi.org/10.1007/s44354-026-00016-3",
+          "topic": "AI-RAN"
+        },
+        {
+          "title": "AI-enabled cybersecurity framework for future 5G wireless infrastructures",
+          "authors": "Alam, Asad, Umer, Asif, Ullah, Insaf, Alsayat, Ahmed",
+          "journal": "Scientific Reports",
+          "year": 2026,
+          "doi": "10.1038/s41598-026-37444-8",
+          "citations": 2,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1038/s41598-026-37444-8",
+          "url": "https://doi.org/10.1038/s41598-026-37444-8",
+          "topic": "AI-RAN"
+        },
+        {
+          "title": "Survey on AI technologies aiding multicast and broadcast services in 5G and 6G",
+          "authors": "Szabó, Marcell, Toka, László",
+          "journal": "Telecommunication Systems",
+          "year": 2026,
+          "doi": "10.1007/s11235-026-01407-1",
+          "citations": 2,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11235-026-01407-1",
+          "url": "https://doi.org/10.1007/s11235-026-01407-1",
+          "topic": "AI-RAN"
+        },
+        {
+          "title": "A development and validation framework for AI/ML-driven rApps in open RAN: a case study on network energy saving",
+          "authors": "Kim, Minhyun, Lee, Kyoung Seok, Jung, Soojung, Moon, Jung Mo, Na, Jee-Hyeon, D’Oro, Salvatore, Bonati, Leonardo, Melodia, Tommaso",
+          "journal": "Journal on Wireless Communications and Networking",
+          "year": 2026,
+          "doi": "10.1186/s13638-026-02601-0",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1186/s13638-026-02601-0",
+          "url": "https://doi.org/10.1186/s13638-026-02601-0",
+          "topic": "AI-RAN"
+        },
+        {
+          "title": "A novel deep reinforcement learning-based cell selection algorithm for efficient mobility management in 6G networks",
+          "authors": "Popat, Kalpesh, Meva, Divyakant",
+          "journal": "Telecommunication Systems",
+          "year": 2026,
+          "doi": "10.1007/s11235-026-01495-z",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11235-026-01495-z",
+          "url": "https://doi.org/10.1007/s11235-026-01495-z",
+          "topic": "AI-RAN"
+        },
+        {
+          "title": "AI Modeling Methods, Tools and Techniques",
+          "authors": "Kim, Kwi-Gon, Atkin, Catherine, Grichting, Anna, Hoa, Trieu Thy, Kwon, Seijoong",
+          "journal": "AI Transformation of Cities for Climate Solutions",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-21940-4_5",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-21940-4_5",
+          "url": "https://doi.org/10.1007/978-3-032-21940-4_5",
+          "topic": "AI-RAN"
+        },
+        {
+          "title": "Artificial Intelligence: Sustainability Challenges, Opportunities, and the Case of 6G",
+          "authors": "Merluzzi, Mattia, Briguglio, Luigi, Bories, Serge, Brayford, David, Callebaut, Gilles, Strinati, Emilio Calvanese, Carwile, Lucas Pereira, Complido, Emma",
+          "journal": "Digital Sustainability: Legislations, Standards, Solutions and Related Case Studies",
+          "year": 2026,
+          "doi": "10.1007/978-981-92-0458-8_11",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-0458-8_11",
+          "url": "https://doi.org/10.1007/978-981-92-0458-8_11",
+          "topic": "AI-RAN"
+        },
+        {
+          "title": "Artificial intelligence empowered Terahertz communications for 6G networks challenges enablers and research gaps",
+          "authors": "Polara, Vishal, Jain, Mahaveer, Vala, Jaykumar M., Patel, Anand K., Vincent, Shweta, Sharma, Yogesh, Patel, Shobhit K.",
+          "journal": "Discover Applied Sciences",
+          "year": 2026,
+          "doi": "10.1007/s42452-026-08883-9",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s42452-026-08883-9",
+          "url": "https://doi.org/10.1007/s42452-026-08883-9",
+          "topic": "AI-RAN"
+        }
+      ]
+    },
+    "NTN": {
+      "total": 336,
+      "query": "6G NTN onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "years": {
+        "2020": 3,
+        "2021": 8,
+        "2022": 8,
+        "2023": 31,
+        "2024": 31,
+        "2025": 97,
+        "2026": 150
+      },
+      "countries": [
+        {
+          "cc": "CN",
+          "name": "China",
+          "count": 109
+        },
+        {
+          "cc": "IN",
+          "name": "India",
+          "count": 55
+        },
+        {
+          "cc": "GB",
+          "name": "United Kingdom",
+          "count": 34
+        },
+        {
+          "cc": "US",
+          "name": "United States",
+          "count": 34
+        },
+        {
+          "cc": "CA",
+          "name": "Canada",
+          "count": 23
+        },
+        {
+          "cc": "SA",
+          "name": "Saudi Arabia",
+          "count": 20
+        },
+        {
+          "cc": "FI",
+          "name": "Finland",
+          "count": 19
+        },
+        {
+          "cc": "IT",
+          "name": "Italy",
+          "count": 19
+        },
+        {
+          "cc": "KR",
+          "name": "South Korea",
+          "count": 18
+        },
+        {
+          "cc": "FR",
+          "name": "France",
+          "count": 14
+        },
+        {
+          "cc": "DE",
+          "name": "Germany",
+          "count": 12
+        },
+        {
+          "cc": "PK",
+          "name": "Pakistan",
+          "count": 12
+        },
+        {
+          "cc": "EG",
+          "name": "Egypt",
+          "count": 10
+        },
+        {
+          "cc": "ES",
+          "name": "Spain",
+          "count": 10
+        },
+        {
+          "cc": "GR",
+          "name": "Greece",
+          "count": 9
+        },
+        {
+          "cc": "TR",
+          "name": "Turkey",
+          "count": 9
+        },
+        {
+          "cc": "",
+          "name": "Luxembourg",
+          "count": 8
+        },
+        {
+          "cc": "",
+          "name": "Poland",
+          "count": 7
+        },
+        {
+          "cc": "AE",
+          "name": "United Arab Emirates",
+          "count": 6
+        },
+        {
+          "cc": "AU",
+          "name": "Australia",
+          "count": 6
+        }
+      ],
+      "turkey_count": 22,
+      "turkey_rank": 16,
+      "institutions": [],
+      "cited": [
+        {
+          "title": "A novel deep reinforcement learning-based cell selection algorithm for efficient mobility management in 6G networks",
+          "authors": "Popat, Kalpesh, Meva, Divyakant",
+          "journal": "Telecommunication Systems",
+          "year": 2026,
+          "doi": "10.1007/s11235-026-01495-z",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11235-026-01495-z",
+          "url": "https://doi.org/10.1007/s11235-026-01495-z",
+          "topic": "NTN"
+        },
+        {
+          "title": "A survey on AI-empowered RIS-assisted integrated sensing and communication: From terrestrial to non-terrestrial networks",
+          "authors": "Ahmad, Shabeer, Jinling, Zhang, Ahmed, Manzoor, Khan, Adil, Khan, Wali Ullah, Hayat, Babar, Khan, Feroz",
+          "journal": "Journal of King Saud University Computer and Information Sciences",
+          "year": 2026,
+          "doi": "10.1007/s44443-026-01018-5",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s44443-026-01018-5",
+          "url": "https://doi.org/10.1007/s44443-026-01018-5",
+          "topic": "NTN"
+        },
+        {
+          "title": "A systematic review of intelligent wireless communication and sensing for sustainable 5G and 6G enabled intelligent transportation systems",
+          "authors": "Simwinga, Benjamin, Zimba, Aaron, Nyirenda, Mayumbo",
+          "journal": "Discover Networks",
+          "year": 2026,
+          "doi": "10.1007/s44354-026-00043-0",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s44354-026-00043-0",
+          "url": "https://doi.org/10.1007/s44354-026-00043-0",
+          "topic": "NTN"
+        },
+        {
+          "title": "AI-Native Vulnerability Prediction Models for HIPAA-Compliant Multi-cloud Environments",
+          "authors": "Kande, Radhika",
+          "journal": "Evolutionary Artificial Intelligence",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-32423-8_20",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-32423-8_20",
+          "url": "https://doi.org/10.1007/978-3-032-32423-8_20",
+          "topic": "NTN"
+        },
+        {
+          "title": "Adaptive resource allocation in dynamic wireless environments: a systematic review",
+          "authors": "Clinton, A., Tweneboah-Koduah, S., Owusu, J., Kyiewu, B.",
+          "journal": "Journal of Electrical Systems and Information Technology",
+          "year": 2026,
+          "doi": "10.1186/s43067-026-00378-2",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1186/s43067-026-00378-2",
+          "url": "https://doi.org/10.1186/s43067-026-00378-2",
+          "topic": "NTN"
+        },
+        {
+          "title": "Application of artificial intelligence in unmanned aerial vehicles: a survey",
+          "authors": "Zhu, Qing, Xi, Mengyao, Chen, Ning, Wang, Jian, Zhang, Peiying, Kostromitin, Konstantin Igorevich",
+          "journal": "International Journal of Machine Learning and Cybernetics",
+          "year": 2026,
+          "doi": "10.1007/s13042-026-03218-x",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s13042-026-03218-x",
+          "url": "https://doi.org/10.1007/s13042-026-03218-x",
+          "topic": "NTN"
+        },
+        {
+          "title": "ChatIot: Large Language Model-Based Security Assistant for Internet of Things with RAG",
+          "authors": "Dong, Ye, Aung, Yan Lin, Chattopadhyay, Sudipta, Zhou, Jianying",
+          "journal": "Applied Cryptography and Network Security",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-32578-5_4",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-32578-5_4",
+          "url": "https://doi.org/10.1007/978-3-032-32578-5_4",
+          "topic": "NTN"
+        },
+        {
+          "title": "Design of a Reusable CeO_2/Fe_2O_3/CA polymer film for enhanced charge separation and visible-light photodegradation of dyes",
+          "authors": "Rajeswari, R., Mukkannan, Azhagurajan, Thanikaikarasan, S.",
+          "journal": "Journal of Polymer Research",
+          "year": 2026,
+          "doi": "10.1007/s10965-026-05080-5",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s10965-026-05080-5",
+          "url": "https://doi.org/10.1007/s10965-026-05080-5",
+          "topic": "NTN"
+        },
+        {
+          "title": "Evaluation of integrated framework for terrestrial-LEO 5G networks with new radio dual connectivity",
+          "authors": "Pradhan, Grishan, Dawadi, Babu R.",
+          "journal": "Discover Networks",
+          "year": 2026,
+          "doi": "10.1007/s44354-026-00039-w",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s44354-026-00039-w",
+          "url": "https://doi.org/10.1007/s44354-026-00039-w",
+          "topic": "NTN"
+        },
+        {
+          "title": "Healthcare 5.0 and Challenges for 6G Mobile Technology",
+          "authors": "Tomaszewski, Lechosław, Tomaszewska, Agnieszka",
+          "journal": "Artificial Intelligence Applications and Innovations. AIAI 2026 IFIP WG 12.5 International Workshops",
+          "year": 2026,
+          "doi": "10.1007/978-3-032-30507-7_13",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-30507-7_13",
+          "url": "https://doi.org/10.1007/978-3-032-30507-7_13",
+          "topic": "NTN"
+        }
+      ]
+    },
+    "Ambient IoT": {
+      "total": 1711,
+      "query": "6G ambient IoT onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "years": {
+        "2020": 16,
+        "2021": 75,
+        "2022": 137,
+        "2023": 222,
+        "2024": 295,
+        "2025": 478,
+        "2026": 481
+      },
+      "countries": [
+        {
+          "cc": "IN",
+          "name": "India",
+          "count": 637
+        },
+        {
+          "cc": "CN",
+          "name": "China",
+          "count": 362
+        },
+        {
+          "cc": "SA",
+          "name": "Saudi Arabia",
+          "count": 152
+        },
+        {
+          "cc": "US",
+          "name": "United States",
+          "count": 121
+        },
+        {
+          "cc": "GB",
+          "name": "United Kingdom",
+          "count": 99
+        },
+        {
+          "cc": "PK",
+          "name": "Pakistan",
+          "count": 93
+        },
+        {
+          "cc": "",
+          "name": "Iran",
+          "count": 66
+        },
+        {
+          "cc": "CA",
+          "name": "Canada",
+          "count": 58
+        },
+        {
+          "cc": "KR",
+          "name": "South Korea",
+          "count": 54
+        },
+        {
+          "cc": "MY",
+          "name": "Malaysia",
+          "count": 54
+        },
+        {
+          "cc": "DE",
+          "name": "Germany",
+          "count": 51
+        },
+        {
+          "cc": "TR",
+          "name": "Turkey",
+          "count": 47
+        },
+        {
+          "cc": "ES",
+          "name": "Spain",
+          "count": 45
+        },
+        {
+          "cc": "AE",
+          "name": "United Arab Emirates",
+          "count": 44
+        },
+        {
+          "cc": "EG",
+          "name": "Egypt",
+          "count": 43
+        },
+        {
+          "cc": "FR",
+          "name": "France",
+          "count": 42
+        },
+        {
+          "cc": "IQ",
+          "name": "Iraq",
+          "count": 42
+        },
+        {
+          "cc": "AU",
+          "name": "Australia",
+          "count": 41
+        },
+        {
+          "cc": "IT",
+          "name": "Italy",
+          "count": 37
+        },
+        {
+          "cc": "",
+          "name": "Vietnam",
+          "count": 37
+        }
+      ],
+      "turkey_count": 107,
+      "turkey_rank": 12,
+      "institutions": [],
+      "cited": [
+        {
+          "title": "A Survey on Challenges and Emerging Frontiers of Multi-agent Systems",
+          "authors": "Nguyen-Thi Mai, Anh, Nguyen-Thi Van, Anh, Doan-Quoc, Bao, Tran-Duc, Minh, Tran, Hung, Voznak, Miroslav, Ho, Tu Dac, Van, Vo Nhan",
+          "journal": "Information and Communication Technology",
+          "year": 2026,
+          "doi": "10.1007/978-981-92-2590-3_21",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-2590-3_21",
+          "url": "https://doi.org/10.1007/978-981-92-2590-3_21",
+          "topic": "Ambient IoT"
+        },
+        {
+          "title": "A novel cloud security risk assessment framework",
+          "authors": "Thakur, Neha, Pramanik, Pijush Kanti Dutta, Singh, Avtar, Kumar, Ravi",
+          "journal": "The Journal of Supercomputing",
+          "year": 2026,
+          "doi": "10.1007/s11227-026-08795-w",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11227-026-08795-w",
+          "url": "https://doi.org/10.1007/s11227-026-08795-w",
+          "topic": "Ambient IoT"
+        },
+        {
+          "title": "A survey on AI-empowered RIS-assisted integrated sensing and communication: From terrestrial to non-terrestrial networks",
+          "authors": "Ahmad, Shabeer, Jinling, Zhang, Ahmed, Manzoor, Khan, Adil, Khan, Wali Ullah, Hayat, Babar, Khan, Feroz",
+          "journal": "Journal of King Saud University Computer and Information Sciences",
+          "year": 2026,
+          "doi": "10.1007/s44443-026-01018-5",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s44443-026-01018-5",
+          "url": "https://doi.org/10.1007/s44443-026-01018-5",
+          "topic": "Ambient IoT"
+        },
+        {
+          "title": "A survey on dependent task offloading in vehicular edge computing: models, algorithms, and challenges",
+          "authors": "Cao, Chongying, Guo, Zhenmin, Zheng, Xin",
+          "journal": "Cluster Computing",
+          "year": 2026,
+          "doi": "10.1007/s10586-026-06451-9",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s10586-026-06451-9",
+          "url": "https://doi.org/10.1007/s10586-026-06451-9",
+          "topic": "Ambient IoT"
+        },
+        {
+          "title": "Air Quality Monitoring in Sparse Urban Networks: An Enhanced Fog Hierarchical Federated Learning Approach",
+          "authors": "Manju, A. B., Kumar, C. S. Pavan, Nunna, Satya Krishna, Jegan, J., Jagadeesan, D.",
+          "journal": "SN Computer Science",
+          "year": 2026,
+          "doi": "10.1007/s42979-026-05273-1",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s42979-026-05273-1",
+          "url": "https://doi.org/10.1007/s42979-026-05273-1",
+          "topic": "Ambient IoT"
+        },
+        {
+          "title": "An Edge-First Digital Twin–Driven Cyber–Physical Home System for Resilient Aging-in-Place",
+          "authors": "Wang, Zhizhi, Hu, Xiaoyi",
+          "journal": "Sensing and Imaging",
+          "year": 2026,
+          "doi": "10.1007/s11220-026-00851-2",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11220-026-00851-2",
+          "url": "https://doi.org/10.1007/s11220-026-00851-2",
+          "topic": "Ambient IoT"
+        },
+        {
+          "title": "An Implantable Multi-Polarized Ultra-wide bandwidth MIMO Antenna for Multi-Scenario Applications",
+          "authors": "Song, Zhiwei, Li, Mengke, Zheng, Hongxing",
+          "journal": "Arabian Journal for Science and Engineering",
+          "year": 2026,
+          "doi": "10.1007/s13369-026-11544-z",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s13369-026-11544-z",
+          "url": "https://doi.org/10.1007/s13369-026-11544-z",
+          "topic": "Ambient IoT"
+        },
+        {
+          "title": "Artificial Intelligence for Autonomous Solar Photovoltaic Health Management: From Fault Detection to Self-Optimizing Predictive Maintenance",
+          "authors": "Ahmed, Faizan, Mewada, Hiren",
+          "journal": "Process Integration and Optimization for Sustainability",
+          "year": 2026,
+          "doi": "10.1007/s41660-026-00851-5",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s41660-026-00851-5",
+          "url": "https://doi.org/10.1007/s41660-026-00851-5",
+          "topic": "Ambient IoT"
+        },
+        {
+          "title": "Enhanced spectrum sensing and management in 6G cognitive radio using quantum reinforcement learning and magnificent frigate serval optimization",
+          "authors": "Murugan, Suriya, Lekhaa, T. R., Swetha, K., Roshini, A.",
+          "journal": "Analog Integrated Circuits and Signal Processing",
+          "year": 2026,
+          "doi": "10.1007/s10470-026-02633-y",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s10470-026-02633-y",
+          "url": "https://doi.org/10.1007/s10470-026-02633-y",
+          "topic": "Ambient IoT"
+        },
+        {
+          "title": "Fluid, movable, and AI-enabled adaptive antenna technologies for 6G: evolution, unified taxonomy, challenges, and research directions",
+          "authors": "Hassan, Ali, Hassan, Syed Rizwan",
+          "journal": "Telecommunication Systems",
+          "year": 2026,
+          "doi": "10.1007/s11235-026-01506-z",
+          "citations": 0,
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11235-026-01506-z",
+          "url": "https://doi.org/10.1007/s11235-026-01506-z",
+          "topic": "Ambient IoT"
+        }
+      ]
+    }
+  },
+  "source": "Springer Nature Meta API",
+  "fetched_at": "2026-08-21 10:28 UTC"
+}

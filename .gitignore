@@ -11,8 +11,9 @@ env/
 venv/
 ENV/
 
-data/cache/springer_live.json
+# Prefetch lock/status only — live overlay JSON is committed so Cloud matches local charts
 data/cache/springer_prefetch_status.json
+data/cache/patent_prefetch_status.json
 
 # IDE & OS
 .vscode/
