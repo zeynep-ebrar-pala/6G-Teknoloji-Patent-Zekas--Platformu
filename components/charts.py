@@ -42,6 +42,9 @@ COMPANY_COLORS = {
     "Samsung": "#14B8A6",
     "Qualcomm": "#22C55E",
     "ZTE": "#818CF8",
+    "NEC": "#EAB308",
+    "NICT": "#FB7185",
+    "Intel": "#3B82F6",
     "Türk Telekom": "#E20074",
     "Türk Telekom (Netsia)": "#E20074",
     "AT&T": "#F97316",
@@ -605,28 +608,35 @@ def render_patent_network_graph(edges: Optional[List[tuple]] = None) -> go.Figur
     return fig
 
 
-def render_company_counts_chart(counts: Dict[str, int]) -> go.Figure:
-    """En çok kayıtlı firmalar — xhr/çekilen kayıt tam sayısı."""
-    sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
-    names = [c for c, _ in sorted_items]
-    vals = _ints(n for _, n in sorted_items)
+def render_company_counts_chart(
+    counts: Dict[str, int], order: Optional[List[str]] = None
+) -> go.Figure:
+    """Şartname firmalarının tamamı; 0 da çubuk (Lens boş = uydurma yok)."""
+    if order:
+        names = list(order)
+        vals = _ints(int(counts.get(n, 0) or 0) for n in names)
+    else:
+        sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+        names = [c for c, _ in sorted_items]
+        vals = _ints(n for _, n in sorted_items)
     fig = go.Figure(_count_bar(names, vals, unit_key="charts.patent_count"))
     fig.update_layout(
         **_layout(),
         title=dict(text=f"<b>{t('charts.company_counts')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
         xaxis=dict(title=t("charts.company"), gridcolor="rgba(200, 209, 220, 0.1)"),
         yaxis=_count_axis(t("charts.patent_count"), vals),
-        height=360,
+        height=400,
         bargap=0.28,
     )
     return fig
 
 
-def render_patent_topic_mix_chart(counts: Dict[str, int]) -> go.Figure:
-    """Patent konusu dağılımı — ham kayıt sayısı."""
-    sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
-    names = [c for c, _ in sorted_items]
-    vals = _ints(n for _, n in sorted_items)
+def render_patent_topic_mix_chart(
+    counts: Dict[str, int], order: Optional[List[str]] = None
+) -> go.Figure:
+    """Yedi 6G konusu — Unclassified yok."""
+    names = list(order) if order else [c for c, _ in sorted(counts.items(), key=lambda x: x[1], reverse=True)]
+    vals = _ints(int(counts.get(n, 0) or 0) for n in names)
     fig = go.Figure(_count_bar(names, vals, unit_key="charts.patent_count"))
     fig.update_layout(
         **_layout(),

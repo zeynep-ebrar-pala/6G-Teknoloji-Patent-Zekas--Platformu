@@ -24,7 +24,7 @@ Tarayıcıda `http://localhost:8501` açılır.
 |------|----------------|
 | Ana Sayfa | 7 teknolojinin TRL radar haritası ve özet kartları |
 | 6G Teknoloji Rehberi | Tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL, kayıt sayımı grafikleri, referanslar |
-| Patent Zekası | Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE filtreli patent analitiği |
+| Patent Zekası | Nokia–Intel (9 firma), yedi 6G konusu; Lens.org analitiği |
 | Akademik Yayın Analizi | WoS Core Collection + Springer Meta API; DOI kartları |
 | Türk Telekom Görünümü | Saha senaryo çözümleyici |
 | AI Asistan | «RIS nedir?» ve «NTN ile ISAC arasındaki fark» dahil sorular; TF-IDF + isteğe bağlı LLM |
@@ -36,13 +36,14 @@ Patent özetleri ve DOI kayıtları kaynakta kilitlidir (yeniden yazılmaz).
 
 ## 3. Patent Zekası
 
-1. Üstteki firmayı seçin (`Tümü` veya şartnamedeki 6 firmadan biri).
-2. Kayıt yoksa grafik çizilmez; sayı uydurulmaz.
-3. Altı grafik: en çok çalışan firmalar, patent sayısı / yıl, konu dağılımı, radar, kelime bulutu, teknoloji haritası; ayrıca **Türk Telekom patent izi**.
-4. Her karttaki **Kaynakta Aç** Lens.org kayıt sayfasını açar.
-5. **Türk Telekom patent izi:** TT Avrupa’da RAN satıcısı değil, Türkiye operatörü + TTI toptandır. Harita yalnızca adı kaynakta geçen ülkeleri boyar (TTI first-mover 6 ülke; 19/24 iddiası boyanmaz). Netsia Inc. Google Patents; 921 milli başvuru çubuğa işlenmez.
+1. Üstteki firmayı seçin (`Tümü` veya Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel).
+2. Konu kutusu yedi 6G Technology Explorer alanıdır (ISAC, RIS, Cell-Free, THz, AI-RAN, NTN, Ambient IoT). Ham «6G» aranmaz.
+3. Kayıt yoksa grafik 0 gösterir veya gizlenir; Unclassified yoktur; sayı uydurulmaz.
+4. Grafikler: en çok çalışan firmalar (API total), patent sayısı / yıl, konu dağılımı, radar, kelime bulutu, patent ağacı, yoğunluk, teknoloji haritası; ayrıca **Türk Telekom patent izi**.
+5. Her karttaki **Kaynakta Aç** Lens.org kayıt sayfasını açar.
+6. **Türk Telekom patent izi:** TT Avrupa’da RAN satıcısı değil, Türkiye operatörü + TTI toptandır. Harita yalnızca adı kaynakta geçen ülkeleri boyar (TTI first-mover 6 ülke; 19/24 iddiası boyanmaz). Netsia Inc. Google Patents; 921 milli başvuru çubuğa işlenmez.
 
-Bu küme tam küresel portföy değildir. Grafikler Lens.org API (firma başı en fazla 25, applicant süzülür). Ofis tablosu API toplamıdır; çekilen kayıtlarla toplanmaz.
+Bu küme tam küresel portföy değildir. Firma çubuğu yedi konu × applicant Lens `total` değeridir. Diğer grafikler çekilen kayıttır (konu başı en fazla 100). İki katman toplanmaz.
 
 ## 4. Akademik Yayın Analizi
 

@@ -14,6 +14,9 @@ SPEC_COMPANIES = [
     "Samsung",
     "Qualcomm",
     "ZTE",
+    "NEC",
+    "NICT",
+    "Intel",
 ]
 
 # Doğrulanmış veri kümesinde en az bir kaydı olan assignee'ler

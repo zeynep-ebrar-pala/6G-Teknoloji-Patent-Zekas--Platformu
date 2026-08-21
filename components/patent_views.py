@@ -10,6 +10,8 @@ from i18n.core import format_int, get_lang, t
 from components.charts import (
     render_company_counts_chart,
     render_company_patent_domain_chart,
+    render_patent_density_heatmap,
+    render_patent_sunburst,
     render_patent_tfidf_map,
     render_patent_trends_chart,
     render_patent_topic_mix_chart,
@@ -93,7 +95,8 @@ def render_patent_intelligence_module():
         return
 
     from backend.patent_apis import key_fingerprint, lens_last_error, live_assignee_counts
-    from backend.source_links import assignee_patent_links, topic_query
+    from backend.source_links import assignee_patent_links
+    from data.patents import TECHNOLOGY_DOMAINS
 
     spec = PatentService.get_spec_companies()
     filter_options = ["all"] + spec
@@ -105,11 +108,14 @@ def render_patent_intelligence_module():
         key="patent_company_filter",
     )
     company_arg = None if company == "all" else company
-    query = topic_query(topic or "6G")
     keys = key_fingerprint()
 
     with st.spinner(t("patent.live_gp_spin")):
-        xhr_totals = live_assignee_counts(query, tuple(spec) if not company_arg else (company_arg,), keys)
+        xhr_totals = live_assignee_counts(
+            topic or "",
+            tuple(spec) if not company_arg else (company_arg,),
+            keys,
+        )
         summary = PatentService.get_summary(company_arg, topic)
         patents = PatentService.get_top_patents(company_arg, topic)
     api_err = lens_last_error()
@@ -142,15 +148,15 @@ def render_patent_intelligence_module():
 
     st.markdown(t("patent.companies_heading"))
     st.caption(t("patent.companies_caption"))
+    firm_names = [company_arg] if company_arg else list(spec)
     firm_counts = {
-        name: n
-        for name, n in xhr_totals.items()
-        if isinstance(n, int) and n > 0
+        name: int(xhr_totals[name]) if isinstance(xhr_totals.get(name), int) else 0
+        for name in firm_names
     }
-    if not firm_counts:
+    if not any(firm_counts.values()):
         show_empty(t("patent.empty_counts"))
     else:
-        show_plotly(render_company_counts_chart(firm_counts))
+        show_plotly(render_company_counts_chart(firm_counts, order=firm_names))
 
     st.markdown(t("patent.year_heading"))
     st.caption(t("patent.year_caption"))
@@ -163,10 +169,10 @@ def render_patent_intelligence_module():
     st.markdown(t("patent.topic_mix_heading"))
     st.caption(t("patent.topic_mix_caption"))
     topic_counts = PatentService.get_topic_counts(company_arg, topic)
-    if not topic_counts:
+    if not any(int(v) > 0 for v in topic_counts.values()):
         show_empty(t("patent.empty_domain"))
     else:
-        show_plotly(render_patent_topic_mix_chart(topic_counts))
+        show_plotly(render_patent_topic_mix_chart(topic_counts, order=list(TECHNOLOGY_DOMAINS)))
 
     st.markdown(t("patent.radar_heading"))
     st.caption(t("patent.radar_caption"))
@@ -185,6 +191,22 @@ def render_patent_intelligence_module():
         show_empty(t("patent.empty_wc"))
     else:
         st.pyplot(wc_fig, clear_figure=True)
+
+    st.markdown(t("patent.tree_heading"))
+    st.caption(t("patent.tree_caption"))
+    df_tree = PatentService.get_sunburst_df(company_arg, topic)
+    if df_tree.empty:
+        show_empty(t("patent.empty_tree"))
+    else:
+        show_plotly(render_patent_sunburst(df_tree))
+
+    st.markdown(t("patent.density"))
+    st.caption(t("patent.density_caption"))
+    df_density = PatentService.get_density_df(company_arg, topic)
+    if df_density.empty or int(df_density.drop(columns=["Company"], errors="ignore").fillna(0).to_numpy().sum()) == 0:
+        show_empty(t("patent.empty_density"))
+    else:
+        show_plotly(render_patent_density_heatmap(df_density))
 
     st.markdown(t("patent.map_heading"))
     st.caption(t("patent.map_caption"))

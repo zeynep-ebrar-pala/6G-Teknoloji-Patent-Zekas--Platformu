@@ -4,6 +4,7 @@ Patent analitik servisi — Lens.org kayıtlarından metrik üretir.
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -11,7 +12,7 @@ import pandas as pd
 import streamlit as st
 
 from backend.data_validator import normalize_patent
-from backend.source_links import lens_patent_url, topic_query
+from backend.source_links import lens_patent_url
 from data.patents import SPEC_COMPANIES, TECHNOLOGY_DOMAINS
 
 TECH_ID_TO_DOMAIN = {
@@ -36,6 +37,7 @@ _ASSIGNEE_MAP = {
     "ZTE Corp": "ZTE",
     "NEC Corporation": "NEC",
     "Intel Corporation": "Intel",
+    "National Institute of Information and Communications Technology": "NICT",
     "InterDigital Patent Holdings Inc.": "InterDigital",
     "Northeastern University": "Northeastern Univ.",
     "AT&T Intellectual Property I, L.P.": "AT&T",
@@ -44,39 +46,60 @@ _ASSIGNEE_MAP = {
 }
 
 
+_COMPANY_PATTERNS: Tuple[Tuple[str, str], ...] = (
+    ("Nokia", r"\bnokia\b"),
+    ("Ericsson", r"\bericsson\b"),
+    ("Huawei", r"\bhuawei\b"),
+    ("Samsung", r"\bsamsung\b"),
+    ("Qualcomm", r"\bqualcomm\b"),
+    ("ZTE", r"\bzte\b"),
+    ("NEC", r"\bnec\b"),
+    ("NICT", r"\bnict\b|national institute of information"),
+    ("Intel", r"\bintel\b"),
+)
+
+
+def _company_match(assignee: str) -> Optional[str]:
+    """Intel ≠ intelligent. NICT tam ad veya kısaltma."""
+    text = (assignee or "").lower()
+    if not text:
+        return None
+    for name, pat in _COMPANY_PATTERNS:
+        if re.search(pat, text):
+            return name
+    return None
+
+
 def _normalize_company(assignee: str) -> str:
     raw = (assignee or "").strip()
     if not raw:
         return raw
+    hit = _company_match(raw)
+    if hit:
+        return hit
     if raw in _ASSIGNEE_MAP:
         return _ASSIGNEE_MAP[raw]
-    low = raw.lower()
-    for name in SPEC_COMPANIES:
-        if name.lower() in low:
-            return name
-    for key, val in _ASSIGNEE_MAP.items():
-        if key.lower() in low or val.lower() in low:
-            return val
     return raw.split()[0]
 
 
 _DOMAIN_HINTS = (
-    ("ISAC", ("isac", "integrated sensing", "sensing and communication", "joint communication and sensing")),
-    ("RIS", ("reconfigurable intelligent", "intelligent surface", "ris-assisted", " ris ")),
-    ("NTN", ("non-terrestrial", "non terrestrial", "ntn ", "leo satellite")),
-    ("AI-RAN", ("ai-ran", "ai native", "o-ran", "oran", "radio access network")),
-    ("THz", ("terahertz", "thz ", "sub-thz", "sub thz")),
-    ("Ambient IoT", ("ambient iot", "ambient internet", "backscatter")),
+    ("ISAC", ("isac", "integrated sensing", "sensing and communication", "joint communication and sensing", "jcas", "6g perception", "perception framework")),
+    ("RIS", ("reconfigurable intelligent", "intelligent surface", "intelligent reflecting", "ris-assisted", " metasurface", " ris ")),
     ("Cell-Free", ("cell-free", "cell free", "distributed mimo")),
+    ("THz", ("terahertz", "thz ", "sub-thz", "sub thz")),
+    ("AI-RAN", ("ai-ran", "ai native", "ai-native", "intelligent ran")),
+    ("NTN", ("non-terrestrial", "non terrestrial", "ntn ", "leo satellite", "satellite ran")),
+    ("Ambient IoT", ("ambient iot", "ambient internet", "zero-energy iot", "backscatter iot")),
 )
 
 
-def _infer_domain(title: str, snippet: str) -> str:
+def _infer_domain(title: str, snippet: str) -> Optional[str]:
+    """Yedili Explorer dışı etiket yok. Eşleşmezse kayıt düşer; Unclassified yok."""
     text = f" {title} {snippet} ".lower()
     for domain, hints in _DOMAIN_HINTS:
         if any(h in text for h in hints):
             return domain
-    return "Unclassified"
+    return None
 
 
 def _from_lens(raw: Dict[str, Any], domain: str) -> Optional[Dict[str, Any]]:
@@ -98,30 +121,29 @@ def _from_lens(raw: Dict[str, Any], domain: str) -> Optional[Dict[str, Any]]:
 
 
 def _fetch_live_vendor_patents(domain: Optional[str] = None) -> List[Dict[str, Any]]:
-    """Şartname firmaları — Lens.org. Applicant süzülür. Boş sonuç kilitli örnek değildir."""
+    """Yedi 6G konusu × şartname firmaları. Konu = arama; Unclassified yok."""
     from backend.config import get_lens_token
-    from backend.patent_apis import key_fingerprint, lens_assignee_bundle
+    from backend.patent_apis import key_fingerprint, lens_topic_vendor_bundle
 
     if not get_lens_token():
         return []
     topic = _norm_domain(domain)
-    query = topic_query(topic or "6G")
+    topics = [topic] if topic else list(TECHNOLOGY_DOMAINS)
     keys = key_fingerprint()
     out: List[Dict[str, Any]] = []
     seen: set = set()
-    for name in SPEC_COMPANIES:
-        bundle = lens_assignee_bundle(query, name, keys)
+    for name in topics:
+        bundle = lens_topic_vendor_bundle(name, tuple(SPEC_COMPANIES), keys)
         for raw in bundle.get("rows") or []:
             payload = dict(raw)
-            assignee = payload.get("assignee") or name
-            if name.lower() not in assignee.lower():
+            company = _company_match(payload.get("assignee") or "")
+            if not company:
                 continue
-            payload["assignee"] = assignee
+            payload["assignee"] = company
             pub = payload.get("publication_number") or ""
             if not pub or pub in seen:
                 continue
-            inferred = topic if topic else _infer_domain(payload.get("title") or "", payload.get("abstract") or "")
-            rec = _from_lens(payload, inferred)
+            rec = _from_lens(payload, name)
             if not rec:
                 continue
             seen.add(pub)
@@ -194,8 +216,6 @@ def _build_domain_distribution(company: Optional[str] = None, domain: Optional[s
     records = []
     companies = sorted({_normalize_company(p["assignee"]) for p in patents})
     axes = list(TECHNOLOGY_DOMAINS)
-    extra = sorted({p["domain"] for p in patents if p.get("domain") and p["domain"] not in axes})
-    axes.extend(extra)
     for comp in companies:
         company_patents = [p for p in patents if _normalize_company(p["assignee"]) == comp]
         if not company_patents:
@@ -229,7 +249,7 @@ def _compute_summary(company: Optional[str] = None, domain: Optional[str] = None
     total = len(patents)
     by_company = Counter(_normalize_company(p["assignee"]) for p in patents)
     leader = by_company.most_common(1)[0] if by_company else ("—", 0)
-    by_domain = Counter(p["domain"] for p in patents)
+    by_domain = Counter(p["domain"] for p in patents if p.get("domain") in TECHNOLOGY_DOMAINS)
     top_domain = by_domain.most_common(1)[0] if by_domain else ("—", 0)
     return {
         "total": total,
@@ -239,7 +259,7 @@ def _compute_summary(company: Optional[str] = None, domain: Optional[str] = None
         "top_domain_count": top_domain[1],
         "source": "Lens.org",
         "company_counts": dict(by_company),
-        "topic_counts": {k: int(v) for k, v in by_domain.items()},
+        "topic_counts": {d: int(by_domain.get(d, 0)) for d in TECHNOLOGY_DOMAINS},
     }
 
 
@@ -256,7 +276,7 @@ def _build_network_edges(company: Optional[str] = None, domain: Optional[str] = 
 
 def _build_density_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
     patents = _scoped(company, domain)
-    companies = sorted({_normalize_company(p["assignee"]) for p in patents})
+    companies = [company] if company else list(SPEC_COMPANIES)
     rows = []
     for comp in companies:
         row = {"Company": comp}
@@ -390,7 +410,7 @@ class PatentService:
     @staticmethod
     def get_topic_counts(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, int]:
         raw = _compute_summary(company, domain).get("topic_counts") or {}
-        return {str(k): int(v) for k, v in raw.items() if int(v) > 0}
+        return {str(k): int(v) for k, v in raw.items()}
 
     @staticmethod
     def get_density_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:

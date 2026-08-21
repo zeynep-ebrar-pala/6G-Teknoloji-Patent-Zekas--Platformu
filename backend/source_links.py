@@ -12,10 +12,59 @@ from typing import Dict, List, Optional, Tuple
 SPEC_PUB_TOPICS: Dict[str, str] = {
     "ISAC": "integrated sensing and communication",
     "RIS": "reconfigurable intelligent surface",
-    "NTN": "non-terrestrial network",
-    "AI-RAN": "AI-native radio access network",
+    "Cell-Free": "cell-free massive MIMO",
     "THz": "terahertz communication",
+    "AI-RAN": "AI-native radio access network",
+    "NTN": "non-terrestrial network",
     "Ambient IoT": "ambient IoT",
+}
+
+# Lens query_string eşanlamları — ham «6G» değil; Unclassified üretmez.
+TOPIC_TERMS: Dict[str, tuple] = {
+    "ISAC": (
+        "integrated sensing and communication",
+        "joint communication and sensing",
+        "sensing and communication",
+        "ISAC",
+        "JCAS",
+        "6G perception",
+    ),
+    "RIS": (
+        "reconfigurable intelligent surface",
+        "intelligent reflecting surface",
+        "RIS-assisted",
+        "intelligent metasurface",
+    ),
+    "Cell-Free": (
+        "cell-free massive MIMO",
+        "cell-free MIMO",
+        "cell free massive MIMO",
+        "cell-free RAN",
+    ),
+    "THz": (
+        "terahertz communication",
+        "THz communication",
+        "sub-THz communication",
+        "THz RAN",
+    ),
+    "AI-RAN": (
+        "AI-RAN",
+        "AI-native RAN",
+        "AI native radio",
+        "intelligent RAN",
+    ),
+    "NTN": (
+        "non-terrestrial network",
+        "non-terrestrial networks",
+        "NTN 6G",
+        "6G NTN",
+    ),
+    "Ambient IoT": (
+        "ambient IoT",
+        "ambient internet of things",
+        "zero-energy IoT",
+        "6G ambient",
+    ),
 }
 
 _PUB_RE = re.compile(r"^([A-Z]{2})(\d+)([A-Z]\d?)$")
@@ -30,7 +79,9 @@ def _q(text: str) -> str:
 
 
 def topic_query(topic: str) -> str:
-    return SPEC_PUB_TOPICS.get(topic) or (topic or "6G")
+    if not topic or topic in ("6G", "all", "Tümü", "All"):
+        return " OR ".join(f'"{phrase}"' for phrase in SPEC_PUB_TOPICS.values())
+    return SPEC_PUB_TOPICS.get(topic) or topic
 
 
 def parse_publication_number(pub: str) -> Optional[Tuple[str, str, str]]:

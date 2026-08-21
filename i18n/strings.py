@@ -182,22 +182,28 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
         },
         "patent": {
             "title": "Patent Zekası",
-            "subtitle": "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE — Lens.org. Altı grafik: en çok çalışan firmalar, patent sayısı / yıl, konu dağılımı, radar, kelime bulutu, teknoloji haritası. Kaynak: {source}",
-            "filter": "Firma (şartname listesi: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE):",
+            "subtitle": "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel — yedi 6G konusu (ISAC, RIS, Cell-Free, THz, AI-RAN, NTN, Ambient IoT). Kaynak: {source}",
+            "filter": "Firma (Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel):",
             "all": "Tümü",
             "what_title": "Bu sayfa ne işe yarar?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Patent Zekası</strong> rakip 6G patentlerini Lens.org API’sinden çeker:
-Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE.
-<strong>Altı grafik:</strong> en çok çalışan firmalar, patent sayısı / yıl, patent konusu dağılımı, radar, kelime bulutu, patent teknoloji haritası.
+<strong>Patent Zekası</strong> rakip portföyü <strong>6G Technology Explorer</strong> yedilisinden çeker:
+<strong>ISAC</strong> (Integrated Sensing and Communication — bütünleşik sezim ve haberleşme),
+<strong>RIS</strong> (Reconfigurable Intelligent Surfaces — yeniden yapılandırılabilir akıllı yüzeyler),
+<strong>Cell-Free Massive MIMO</strong> (hücresiz çok-antennli erişim),
+<strong>THz</strong> (terahertz haberleşme),
+<strong>AI-Native RAN</strong> (yapay zekâ yerlisi radyo erişim ağı),
+<strong>NTN</strong> (Non-Terrestrial Networks — yer-dışı ağlar),
+<strong>Ambient IoT</strong> (ortam enerjili nesnelerin interneti).
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Firma çubuğu Lens <code>total</code> değeridir (tam sayı). Diğer beş grafik çekilen kayıtlardır (başlık + yayın no + yıl).
-İki katman toplanmaz. Yüzde / yuvarlanmış oran yok. Yanıt yoksa grafik gizlenir; sayı uydurulmaz.
+Dokuz applicant: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT (National Institute of Information and Communications Technology — Japonya ulusal BİT enstitüsü), Intel.
+Firma çubuğu bu yedi konunun Lens <code>total</code> değeridir — ham «6G» kelimesi değildir (telefon/6G gürültüsü karışmaz).
+Diğer grafikler çekilen kayıttır (başlık + yayın no + yıl). İki katman toplanmaz. Yüzde yok.
 </p>
 <p style="color:#94A3B8;font-size:0.84rem;margin:10px 0 0 0;">
-<strong>Applicant</strong> (başvuru sahibi) kimin başvurduğunu söyler; sahada ürün anlamına gelmez.
-Tek patent = pazar liderliği değildir. Yıl çubuğu yayın yılıdır, ticarileşme tarihi değildir.
+Bir kayıt sayfaya ancak yedi sorgudan birine düşünce girer; etiket o sorgunun konusudur. <strong>Unclassified yoktur</strong> — eşleşmeyen satır düşer, uydurulmaz.
+<strong>Applicant</strong> kimin başvurduğunu söyler; sahada ürün değildir. Tek patent = pazar liderliği değildir. Yıl = yayın yılıdır.
 </p>""",
             "access_title": "Veri nereden geliyor?",
             "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
@@ -208,9 +214,9 @@ HTML kazınmaz. Yanıt yoksa hücre —.
 </p>""",
             "expert_title": "Çekilen kayıt ve sınır",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
-Firma çubuğu Lens <code>total</code>.
-Yıl / konu / radar / bulut / harita: aynı yanıttaki <code>data</code> (firma başı en fazla 25, applicant süzülür).
-Çekilen kayıt API toplamı değildir. Radar ekseni kayıt sayısıdır (yüzde değil). Başlık yeniden yazılmaz.
+Firma çubuğu: yedi konu DSL’inin OR’u × <code>applicant.name</code> (Lens <code>total</code>).
+Çekilen satır: konu başı en fazla 100, dokuz firma OR süzülür. Aynı yayın no iki konuya düşerse listedeki ilk konu kalır (ISAC → … → Ambient IoT).
+Radar / yoğunluk / ağaç ekseni kayıt sayısıdır (yüzde değil). Başlık yeniden yazılmaz.
 429 olursa <code>x-rate-limit-retry-after-seconds</code> kadar beklenir.
 </p>""",
             "key_gp": "Lens.org ↗",
@@ -250,9 +256,9 @@ Yıl / konu / radar / bulut / harita: aynı yanıttaki <code>data</code> (firma 
             "year_caption": "Çekilen Lens kayıtlarının yayın yılı. Tam sayı. API toplamı bu çubukların toplamı değildir.",
             "empty_trend": "Trend grafiği için yeterli patent verisi yok.",
             "companies_heading": "### En çok çalışan firmalar",
-            "companies_caption": "Lens.org total (tam sayı). applicant.name süzülür. 0 veya yanıt yok = çubuk yok.",
+            "companies_caption": "Lens.org total: yedi 6G konusu (OR) + applicant. Ham «6G» değil. 0 = bu sorguda kayıt yok; çubuk durur, sayı uydurulmaz.",
             "topic_mix_heading": "### Patent konusu dağılımı",
-            "topic_mix_caption": "Çekilen kayıtlarda başlık/özetten eşleşen konu. Eşleşmeyen Unclassified. Yüzde yok.",
+            "topic_mix_caption": "Çekilen kaydın konusu = hangi Explorer sorgusu getirdi. Unclassified yok. Yüzde yok. Sıfır çubuk «bakıldı, 0» demektir.",
             "radar_heading": "### Radar grafiği",
             "radar_caption": "Firma × konu, çekilen kayıt sayısı. Eksen yüzde değil.",
             "empty_counts": "Firma sayımı için veri yok.",
@@ -262,8 +268,10 @@ Yıl / konu / radar / bulut / harita: aynı yanıttaki <code>data</code> (firma 
             "wordcloud_caption": "Çekilen patent başlıklarındaki kelime sıklığı (tam sayı).",
             "empty_wc": "Kelime bulutu için wordcloud/matplotlib yüklü değil veya kelime yok.",
             "density": "### Patent Yoğunluk Grafiği",
+            "density_caption": "Firma × yedi 6G konusu, çekilen kayıt sayısı. Isı rengi uydurulmaz.",
             "empty_density": "Yoğunluk haritası için veri yok.",
             "tree_heading": "### Patent Ağacı",
+            "tree_caption": "Firma → 6G konusu → yayın numarası. Dilim alanı çekilen kayıt adedidir.",
             "empty_tree": "Ağaç grafiği için veri yok.",
             "map_heading": "### Patent Teknoloji Haritası",
             "map_caption": "Koordinatlar çekilen başlıkların TF-IDF vektörlerinin PCA ile 2 boyuta indirgenmesidir; konum uydurulmaz.",
@@ -709,7 +717,7 @@ Patent ofisleri bu sayfada yoktur — Patent Zekası’ndadır.
             "topic_pub_caption": "Açılır kutu ISAC–Ambient IoT konusunu kilitler. Grafikler WoS Core Collection (küresel). Düğmeler WoS ve Springer aramasını yeni sekmede açar.",
             "topic_buttons_hint": "Bu düğmeler dış aramadır (yeni sekme). Sayfa içi sayılar yalnızca üstteki açılır kutudan değişir.",
             "topic_buttons_hint_pub": "Bu düğmeler dış aramadır (yeni sekme). Sayfa içi makale sayıları yalnızca üstteki açılır kutudan değişir.",
-            "topic_live_all": "Lens.org (tüm konular): **{n}**. Çekilen kayıt: **{pulled}**. Toplanmaz.",
+            "topic_live_all": "Lens.org (yedi 6G konusu): **{n}**. Çekilen kayıt: **{pulled}**. Toplanmaz. Ham «6G» değildir.",
             "topic_live_one": "Lens.org «{topic}» (`{q}`): **{n}**. Çekilen kayıt: **{pulled}**. Toplanmaz.",
             "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND konu, PY=2020-2026. Altı konu çubuğu ayrıdır; toplanmaz. Türkiye başlık-6G önbelleği: **{n}** (küresel WoS değildir).",
             "topic_live_one_pub": "WoS Core Collection «{topic}»: **{n}** kayıt. Sorgu: `{q}`. Türkiye başlık-6G: {tr} (Crossref önbelleği; WoS küresel sayım değildir).",
@@ -889,7 +897,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "mod_left": """
 - **Ana Sayfa** — 7 teknolojinin TRL radar haritası; Dual-Depth (Temel/Uzman) giriş metnini değiştirir
 - **6G Teknoloji Rehberi** — tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL
-- **Patent Zekası** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; Lens.org; altı grafik (firma, yıl, konu, radar, kelime bulutu, harita)
+- **Patent Zekası** — Nokia–Intel (9 firma); yedi 6G konusu; Lens.org; grafik: firma, yıl, konu, radar, bulut, ağaç, yoğunluk, harita
 - **Akademik Yayın Analizi** — WoS Core Collection + Springer; yıl / kurum / ülke / atıf / trend
             """,
             "mod_right": """
@@ -1178,22 +1186,28 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
         },
         "patent": {
             "title": "Patent Intelligence",
-            "subtitle": "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE — Lens.org. Six charts: top firms, count / year, topic mix, radar, word cloud, technology map. Source: {source}",
-            "filter": "Company (specification list: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE):",
+            "subtitle": "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel — seven 6G topics (ISAC, RIS, Cell-Free, THz, AI-RAN, NTN, Ambient IoT). Source: {source}",
+            "filter": "Company (Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel):",
             "all": "All",
             "what_title": "What this page is for",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Patent Intelligence</strong> pulls rival 6G patents from the Lens.org API:
-Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE.
-<strong>Six charts:</strong> top firms, patent count / year, topic mix, radar, word cloud, technology map.
+<strong>Patent Intelligence</strong> pulls rival filings from the <strong>6G Technology Explorer</strong> seven:
+<strong>ISAC</strong> (Integrated Sensing and Communication),
+<strong>RIS</strong> (Reconfigurable Intelligent Surfaces),
+<strong>Cell-Free Massive MIMO</strong>,
+<strong>THz</strong> (terahertz communication),
+<strong>AI-Native RAN</strong> (radio access network),
+<strong>NTN</strong> (Non-Terrestrial Networks),
+<strong>Ambient IoT</strong>.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Firm bars are the Lens <code>total</code> (integers). The other five charts use pulled rows (title + publication number + year).
-The two layers are not summed. No percentages. If there is no answer, the chart is hidden; counts are not invented.
+Nine applicants: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT (National Institute of Information and Communications Technology, Japan), Intel.
+Firm bars are Lens <code>total</code> for these seven topics — not a raw «6G» keyword (handset noise is excluded).
+The other charts are pulled rows (title + publication number + year). The two layers are not summed. No percents.
 </p>
 <p style="color:#94A3B8;font-size:0.84rem;margin:10px 0 0 0;">
-The <strong>applicant</strong> names who filed; it is not a fielded product. One patent is not market leadership.
-The year bar is publication year, not commercialisation date.
+A record appears only if it matched one of the seven queries; the label is that query’s topic. <strong>There is no Unclassified</strong> — unmatched rows are dropped, not invented.
+The <strong>applicant</strong> is who filed, not a fielded product. One patent is not market leadership. Year is publication year.
 </p>""",
             "access_title": "Where the data comes from",
             "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
@@ -1204,9 +1218,9 @@ HTML is not scraped. No answer → —.
 </p>""",
             "expert_title": "Pulled rows and limit",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
-Firm bars are Lens <code>total</code>.
-Year / topic / radar / cloud / map: <code>data</code> from the same response (up to 25 per firm, applicant-filtered).
-Pulled rows are not the API total. The radar axis is a record count, not a percent. Titles are not rewritten.
+Firm bars: OR of the seven topic DSLs × <code>applicant.name</code> (Lens <code>total</code>).
+Pulled rows: up to 100 per topic, nine-firm OR. If a publication hits two topics, the first in list order is kept (ISAC → … → Ambient IoT).
+Radar / density / tree axes are record counts, not percents. Titles are not rewritten.
 On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
 </p>""",
             "key_gp": "Lens.org ↗",
@@ -1246,9 +1260,9 @@ On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
             "year_caption": "Publication year of pulled Lens rows. Integers. The API total is not the sum of these bars.",
             "empty_trend": "Not enough patent data for a trend chart.",
             "companies_heading": "### Firms with the most filings",
-            "companies_caption": "Lens.org total (integer). Filtered by applicant.name. Zero or no answer = no bar.",
+            "companies_caption": "Lens.org total: seven 6G topics (OR) + applicant. Not raw «6G». 0 = none for this query; the bar stays, the count is not invented.",
             "topic_mix_heading": "### Patent topic mix",
-            "topic_mix_caption": "Topic matched from title/snippet of pulled rows. No match → Unclassified. No percents.",
+            "topic_mix_caption": "A pulled row’s topic is the Explorer query that retrieved it. No Unclassified. No percents. A zero bar means ‘looked, 0’.",
             "radar_heading": "### Radar chart",
             "radar_caption": "Firm × topic, pulled record counts. The axis is not a percent.",
             "empty_counts": "No data for a company count.",
@@ -1258,8 +1272,10 @@ On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
             "wordcloud_caption": "Word frequency in pulled patent titles (integers).",
             "empty_wc": "Word cloud needs wordcloud/matplotlib, or there are no tokens.",
             "density": "### Patent density chart",
+            "density_caption": "Firm × seven 6G topics, pulled record counts. Heat colour is not invented.",
             "empty_density": "No data for a density heatmap.",
             "tree_heading": "### Patent tree",
+            "tree_caption": "Firm → 6G topic → publication number. Slice area is the pulled-row count.",
             "empty_tree": "No data for a tree chart.",
             "map_heading": "### Patent technology map",
             "map_caption": "Coordinates are TF-IDF vectors of pulled titles reduced to 2-D with PCA; positions are not invented.",
@@ -1705,7 +1721,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "topic_pub_caption": "The drop-down locks ISAC–Ambient IoT. Charts are WoS Core Collection (global). Buttons open WoS and Springer in a new tab.",
             "topic_buttons_hint": "These buttons are external search (new tab). On-page counts change only from the drop-down above.",
             "topic_buttons_hint_pub": "These buttons are external search (new tab). On-page paper counts change only from the drop-down above.",
-            "topic_live_all": "Lens.org (all topics): **{n}**. Pulled rows: **{pulled}**. Not summed.",
+            "topic_live_all": "Lens.org (seven 6G topics): **{n}**. Pulled rows: **{pulled}**. Not summed. Not raw «6G».",
             "topic_live_one": "Lens.org “{topic}” (`{q}`): **{n}**. Pulled rows: **{pulled}**. Not summed.",
             "topic_live_all_pub": "WoS Core Collection: TS=(6G) AND topic, PY=2020-2026. The six topic bars are separate and not summed. Türkiye title-6G cache: **{n}** (not the global WoS count).",
             "topic_live_one_pub": "WoS Core Collection “{topic}”: **{n}** records. Query: `{q}`. Türkiye title-6G: {tr} (Crossref cache; not the global WoS count).",
@@ -1884,7 +1900,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "mod_left": """
 - **Home** — TRL radar for the seven technologies; dual-depth (foundation/expert) switches the intro
 - **6G Technology Explorer** — definition, operating principle, block diagram, architecture, use cases, advantages/disadvantages, global work, TT scenarios, TRL
-- **Patent Intelligence** — Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE; Lens.org; six charts (firms, year, topic, radar, word cloud, map)
+- **Patent Intelligence** — Nokia–Intel (9 firms); seven 6G topics; Lens.org; charts: firms, year, topic, radar, cloud, tree, density, map
 - **Academic Publication Analysis** — WoS Core Collection + Springer; year / institution / country / cited / trend
             """,
             "mod_right": """

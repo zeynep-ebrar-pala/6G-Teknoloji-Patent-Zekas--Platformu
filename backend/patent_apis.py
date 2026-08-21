@@ -157,16 +157,49 @@ def google_patents_count(query: str) -> Optional[int]:
 
 
 def lens_topic_dsl(topic: str) -> str:
-    """Lens query_string: başlık / özet / istem. HTML değil."""
-    text = (topic or "6G").replace('"', " ").strip() or "6G"
-    return f'(title:("{text}") OR abstract:("{text}") OR claim:("{text}"))'
+    """Yedi 6G konusundan biri — başlık / özet / istem. Ham «6G» değil."""
+    from backend.source_links import SPEC_PUB_TOPICS, TOPIC_TERMS
+
+    key = (topic or "").strip()
+    terms = TOPIC_TERMS.get(key)
+    if not terms:
+        for name, phrase in SPEC_PUB_TOPICS.items():
+            if key == phrase or key.lower() == name.lower():
+                terms = TOPIC_TERMS.get(name)
+                break
+    if not terms:
+        text = key.replace('"', " ").strip()
+        terms = (text,) if text and text not in ("6G", "all", "Tümü", "All") else ()
+    if not terms:
+        return lens_explorer_dsl()
+    clauses = [f'(title:("{t}") OR abstract:("{t}") OR claim:("{t}"))' for t in terms]
+    return "(" + " OR ".join(clauses) + ")"
+
+
+def lens_explorer_dsl() -> str:
+    """Yedi 6G Technology Explorer konusu (OR). Samsung 6G telefon gürültüsü yok."""
+    from backend.source_links import TOPIC_TERMS
+
+    return "(" + " OR ".join(lens_topic_dsl(name) for name in TOPIC_TERMS) + ")"
+
+
+def _applicant_clause(company: str) -> str:
+    name = (company or "").replace('"', " ").strip()
+    aliases = {
+        "NICT": '(NICT OR "National Institute of Information and Communications Technology")',
+        "NEC": "(NEC)",
+        "Intel": "(Intel)",
+    }
+    inner = aliases.get(name, f"({name})")
+    return f"applicant.name:{inner}"
 
 
 def lens_assignee_dsl(topic: str, company: str) -> str:
     name = (company or "").replace('"', " ").strip()
+    dsl = lens_topic_dsl(topic) if (topic or "").strip() else lens_explorer_dsl()
     if not name:
-        return lens_topic_dsl(topic)
-    return f"{lens_topic_dsl(topic)} AND applicant.name:({name})"
+        return dsl
+    return f"{dsl} AND {_applicant_clause(name)}"
 
 
 def _as_list(value: Any) -> List[Any]:
@@ -333,7 +366,7 @@ def _rows_from_lens(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
         year = _year_from(ref.get("date")) or _year_from(rec.get("date_published") or rec.get("date_publ"))
         lens_id = str(rec.get("lens_id") or "").strip()
         assignee = _applicant_names(biblio)
-        abstracts = biblio.get("abstract") or biblio.get("abstracts")
+        abstracts = biblio.get("abstract") or biblio.get("abstracts") or rec.get("abstract")
         abstract = ""
         for item in _as_list(abstracts):
             if isinstance(item, dict) and item.get("text"):
@@ -342,6 +375,10 @@ def _rows_from_lens(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
                 if lang.startswith("en") or not abstract:
                     if lang.startswith("en"):
                         break
+            elif isinstance(item, str) and item.strip() and not abstract:
+                abstract = item.strip()
+        if isinstance(abstracts, str) and abstracts.strip() and not abstract:
+            abstract = abstracts.strip()
         if not pub:
             pub = str(rec.get("lens_id") or "").replace("-", "")
         if not pub or not title or year is None:
@@ -371,7 +408,7 @@ def lens_search(query: str, size: int = 25) -> Optional[Dict[str, Any]]:
     payload: Dict[str, Any] = {
         "query": q,
         "size": n,
-        "include": ["lens_id", "biblio", "date_published"],
+        "include": ["lens_id", "biblio", "date_published", "abstract"],
     }
     data = _lens_post(payload)
     if not isinstance(data, dict):
@@ -382,6 +419,12 @@ def lens_search(query: str, size: int = 25) -> Optional[Dict[str, Any]]:
 def lens_topic_count(topic: str) -> Optional[int]:
     """Konu taraması toplamı (firma süzülmeden). Token yoksa None."""
     return _lens_count(lens_topic_dsl(topic))
+
+
+def lens_scope_count(topic: Optional[str] = None) -> Optional[int]:
+    """Tümü = yedi Explorer konusu. Tek konu = o DSL."""
+    dsl = lens_topic_dsl(topic) if topic else lens_explorer_dsl()
+    return _lens_count(dsl)
 
 
 def _lens_count(query: str) -> Optional[int]:
@@ -409,7 +452,24 @@ def lens_assignee_bundle(topic: str, company: str, _keys: str = "") -> Dict[str,
     if not name or not get_lens_token():
         return {"total": None, "rows": []}
     data = lens_search(lens_assignee_dsl(topic, name), size=25)
-    time.sleep(0.4)
+    time.sleep(0.25)
+    if not data:
+        return {"total": None, "rows": []}
+    return {"total": _lens_total(data), "rows": _rows_from_lens(data)}
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def lens_topic_vendor_bundle(topic: str, companies: tuple, _keys: str = "") -> Dict[str, Any]:
+    """Bir 6G konusu + şartname firmaları (tek POST)."""
+    from data.patents import SPEC_COMPANIES
+
+    names = [str(n).strip() for n in (companies or SPEC_COMPANIES) if str(n).strip()]
+    if not names or not get_lens_token():
+        return {"total": None, "rows": []}
+    applicant_or = " OR ".join(_applicant_clause(n) for n in names)
+    dsl = f"{lens_topic_dsl(topic)} AND ({applicant_or})"
+    data = lens_search(dsl, size=100)
+    time.sleep(0.25)
     if not data:
         return {"total": None, "rows": []}
     return {"total": _lens_total(data), "rows": _rows_from_lens(data)}
@@ -584,26 +644,26 @@ def google_patents_records(query: str, num: int = 10, pages: int = 3) -> List[Di
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def fetch_office_counts(query: str, _keys: str = "") -> Dict[str, Optional[int]]:
-    """Aynı 6G/konu sorgusu. WIPO anahtarsız JSON toplam vermez."""
-    q = (query or "6G").strip() or "6G"
+    """Yalnızca Lens.org. Ham «6G» yerine Explorer DSL."""
+    q = (query or "").strip()
+    dsl = lens_topic_dsl(q) if q and q not in ("6G", "all") else lens_explorer_dsl()
     return {
-        "google_patents": google_patents_count(q),
-        "lens": _lens_count(lens_topic_dsl(q)),
-        "espacenet": _epo_ops_count(q),
+        "google_patents": None,
+        "lens": _lens_count(dsl),
+        "espacenet": None,
         "wipo": None,
-        "uspto": _patentsview_count(q),
+        "uspto": None,
     }
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
-def live_assignee_counts(query: str, companies: tuple, _keys: str = "") -> Dict[str, Optional[int]]:
-    """Lens.org — hak sahibi + konu. Çekilen kayıt ile toplanmaz."""
-    q = (query or "6G").strip() or "6G"
+def live_assignee_counts(topic: str, companies: tuple, _keys: str = "") -> Dict[str, Optional[int]]:
+    """Firma çubuğu: yedi konu (veya seçilen konu) × applicant. Çekilen satır değil."""
+    names = [str(n).strip() for n in companies if str(n).strip()]
+    dsl = lens_topic_dsl(topic) if (topic or "").strip() else lens_explorer_dsl()
     out: Dict[str, Optional[int]] = {}
-    for name in companies:
-        a = (name or "").strip()
-        if not a:
-            continue
-        total = lens_assignee_bundle(q, a, _keys).get("total")
-        out[a] = int(total) if isinstance(total, int) else None
+    for name in names:
+        n = _lens_count(f"{dsl} AND {_applicant_clause(name)}")
+        time.sleep(0.2)
+        out[name] = int(n) if isinstance(n, int) else None
     return out
