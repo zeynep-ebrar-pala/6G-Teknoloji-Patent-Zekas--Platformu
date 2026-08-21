@@ -11,8 +11,8 @@ env/
 venv/
 ENV/
 
-data/cache/wos_live.json
-data/cache/wos_prefetch_status.json
+data/cache/springer_live.json
+data/cache/springer_prefetch_status.json
 
 # IDE & OS
 .vscode/

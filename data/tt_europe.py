@@ -8,7 +8,7 @@ EPO (EP) 6G yayın numarası bu kümede doğrulanmadı; boş ofis gizlenmez, uyd
 from __future__ import annotations
 
 TT_EUROPE_SOURCE = (
-    "Google Patents + DOI + WoS Core Collection UT "
+    "Google Patents + DOI + Springer Nature Meta API UT "
     "(oturumda açılan tam kayıt) + resmi ortak duyuruları"
 )
 
@@ -95,9 +95,7 @@ TT_AFFILIATED_PAPERS = [
         "source_url": "https://doi.org/10.1109/access.2026.3691411",
         "url": "https://doi.org/10.1109/access.2026.3691411",
         "affiliation_country": "TR",
-        "wos_ut": "WOS:001767283200006",
         "note": (
-            "WoS Core Collection tam kayıt: WOS:001767283200006. "
             "Yazar bağlılığı Türk Telekom Ar-Ge (Ankara) + Boğaziçi Üniversitesi’dir."
         ),
     },

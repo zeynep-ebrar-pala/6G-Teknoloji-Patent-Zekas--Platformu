@@ -1,6 +1,6 @@
 """
 Kaynak bağlantıları — sayfada yalnızca kullanılan siteler:
-patent: Lens.org; yayın: DOI, Springer, WoS.
+patent: Lens.org; yayın: DOI, Springer Nature.
 """
 
 from __future__ import annotations
@@ -175,31 +175,13 @@ def patent_record_links(pub: str, source_url: str = "", lens_id: str = "") -> Li
     return [{"id": "lens", "url": lens_patent_url(token, lens_id)}]
 
 
-def wos_full_record_url(ut: str) -> str:
-    """WoS Core Collection tam kayıt. UT yoksa boş."""
-    token = (ut or "").strip().upper()
-    if not token:
-        return ""
-    if not token.startswith("WOS:"):
-        token = f"WOS:{token}"
-    return f"https://www.webofscience.com/wos/woscc/full-record/{token}"
+def springer_text_search_url(query: str) -> str:
+    q = (query or "6G").strip() or "6G"
+    return f"https://link.springer.com/search?query={_q(q)}"
 
 
-def wos_doi_openurl(doi: str) -> str:
-    """Clarivate OpenURL — oturum açıksa DOI’yi WoS kaydına çözer."""
-    doi_clean = (doi or "").strip().removeprefix("https://doi.org/").removeprefix("http://doi.org/")
-    if not doi_clean:
-        return "https://www.webofscience.com/wos/woscc/basic-search"
-    return (
-        "https://ws.isiknowledge.com/cps/openurl/service?"
-        + urllib.parse.urlencode(
-            {"url_ver": "Z39.88-2004", "rft_id": f"info:doi/{doi_clean}"}
-        )
-    )
-
-
-def paper_record_links(doi: str, source: str = "", wos_ut: str = "") -> List[Dict[str, str]]:
-    """DOI her zaman. Springer kaydıysa Springer; WoS tam kayıt veya DOI OpenURL."""
+def paper_record_links(doi: str, source: str = "") -> List[Dict[str, str]]:
+    """DOI her zaman. Springer kaydıysa Springer araması."""
     doi_clean = (doi or "").strip().removeprefix("https://doi.org/").removeprefix("http://doi.org/")
     if not doi_clean:
         return []
@@ -213,22 +195,7 @@ def paper_record_links(doi: str, source: str = "", wos_ut: str = "") -> List[Dic
                 "url": f"https://link.springer.com/search?query={_q(doi_clean)}",
             }
         )
-    ut = (wos_ut or "").strip()
-    if not ut:
-        from data.wos_ut import ut_for_doi
-
-        ut = ut_for_doi(doi_clean)
-    wos_url = wos_full_record_url(ut) or wos_doi_openurl(doi_clean)
-    links.append({"id": "wos", "url": wos_url})
     return links
-
-
-def wos_text_search_url(query: str) -> str:
-    q = (query or "6G").strip() or "6G"
-    return (
-        "https://www.webofscience.com/wos/woscc/advanced-search?"
-        f"search={_q(f'TS=({q})')}"
-    )
 
 
 def assignee_patent_links(assignee: str) -> List[Dict[str, str]]:
@@ -245,7 +212,6 @@ def spec_patent_databases() -> List[Dict[str, str]]:
 
 def spec_pub_databases() -> List[Dict[str, str]]:
     return [
-        {"id": "wos", "url": "https://www.webofscience.com/wos/woscc/basic-search"},
         {"id": "springer", "url": "https://link.springer.com/"},
     ]
 
@@ -259,13 +225,6 @@ def topic_pub_searches(topic: str, region: str = "both") -> List[Dict[str, str]]
     elif region == "eu":
         query = f"{query} Europe"
     return [
-        {
-            "id": "wos",
-            "url": (
-                "https://www.webofscience.com/wos/woscc/advanced-search?"
-                f"search={_q(f'TS=({query})')}"
-            ),
-        },
         {"id": "springer", "url": f"https://link.springer.com/search?query={_q(query)}"},
     ]
 

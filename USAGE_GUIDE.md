@@ -25,7 +25,7 @@ Tarayıcıda `http://localhost:8501` açılır.
 | Ana Sayfa | 7 teknolojinin TRL radar haritası ve özet kartları |
 | 6G Teknoloji Rehberi | Tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL, kayıt sayımı grafikleri, referanslar |
 | Patent Zekası | Nokia–Intel (9 firma), yedi 6G konusu; Lens.org analitiği |
-| Akademik Yayın Analizi | WoS Core Collection + Springer Meta API; DOI kartları |
+| Akademik Yayın Analizi | Springer Nature Meta API + Springer Meta API; DOI kartları |
 | Türk Telekom Görünümü | Saha senaryo çözümleyici |
 | AI Asistan | «RIS nedir?» ve «NTN ile ISAC arasındaki fark» dahil sorular; TF-IDF + isteğe bağlı LLM |
 | Hakkında | Amaç, yığın, 15 dakikalık sunum iskeleti |
@@ -47,10 +47,10 @@ Bu küme tam küresel portföy değildir. Firma çubuğu yedi konu × applicant 
 
 ## 4. Akademik Yayın Analizi
 
-- Toplam adet: WoS Core Collection + Springer Meta API (örtüşme düşülmez).
+- Toplam adet: Springer Nature Meta API + Springer Meta API (örtüşme düşülmez).
 - Yıl / trend: son 5 yıl (2022–2026). 2026 eksik yıldır.
-- Kurum / ülke: her konu için WoS Analyze Results ilk 10 (sıra 1–10), sonra …, sonra Türkiye sırası. Altı konu toplanmaz.
-- Türkiye WoS sırası: ilk 10’da yoksa tam sıra uydurulmaz; 10. ülke eşiği ve Springer 2022–2026 metin Turkey ayrı durur. Ülke listesinin Analyze Results penceresi PY=2020-2026’dır (yıllık ülke dilimi yok).
+- Kurum / ülke: her konu için Springer Meta API facet ilk 10 (sıra 1–10), sonra …, sonra Türkiye sırası. Altı konu toplanmaz.
+- Türkiye sırası: ilk 10’da yoksa tam sıra uydurulmaz; 10. ülke eşiği ve Springer 2022–2026 metin Turkey ayrı durur. Ülke listesinin Meta API facet penceresi 2020–2026’dır (yıllık ülke dilimi yok).
 - Anahtar yoksa hücre —.
 - **Türk Telekom yayın izi** sekmesi: kilitli DOI (TT bağlılığı) + resmi harita; operatör yayın API’si yoktur.
 

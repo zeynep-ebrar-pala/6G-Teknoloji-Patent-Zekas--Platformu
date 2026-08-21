@@ -32,7 +32,7 @@
 
 - 7 temel 6G teknolojisinin TRL haritası ve detaylı keşif modülü
 - Lens.org patent analitiği (Access Token; kilitli örnek yok)
-- WoS / Springer ile akademik yayın sayımı (anahtar yoksa —)
+- Springer Nature Meta API ile akademik yayın sayımı (anahtar yoksa —)
 - Türk Telekom saha dağıtım senaryo çözümleyici
 - Groq / Gemini ile isteğe bağlı AI asistan (yalnızca doğrulanmış veri üzerinde yorum; uygulama anahtarsız açılır)
 
@@ -43,13 +43,13 @@
 | Dual-Depth görünüm | Temel (nedir/neden/nasıl) + Uzman (denklem, varsayım); uzman temel katmanı atlamaz |
 | Source-locked veri | Patent ve makale kayıtları gerçek source_url ile bağlı |
 | Canlı ofis toplamı | Lens.org patent/search |
-| Kaynakta Aç ↗ | Patent Lens.org; makale DOI / WoS / Springer |
+| Kaynakta Aç ↗ | Patent Lens.org; makale DOI / Springer Nature Meta API |
 | Groq / Gemini | Yalnızca AI Asistan; anahtar `.env` veya oturumda, frontend'e sızmaz |
 
 ## 5. Sistem Mimarisi
 
 ```text
-Gerçek External Source (Lens.org, Springer, WoS, DOI)
+Gerçek External Source (Lens.org, Springer, Springer, DOI)
         ↓
 Raw Data (data/patents.py, data/academic.py)
         ↓
@@ -73,7 +73,7 @@ Streamlit Frontend (components/*, app.py)
 | Ana Sayfa | TRL radar, 7 teknoloji KPI kartları |
 | 6G Teknolojileri | Kavramsal temel, formül kartları, karşılaştırma, TT senaryoları, kayıt sayımı |
 | Patent Zekası | Yıl, konu, kelime bulutu, ağaç, yoğunluk, TF-IDF harita, Lens.org listesi |
-| Yayın Trendleri | WoS + Springer; yıl 2022–2026; ülke ilk 10 + Türkiye sırası (uydurulmaz) |
+| Yayın Trendleri | Springer Nature Meta API; yıl 2022–2026; ülke ilk 10 + Türkiye sırası (uydurulmaz) |
 | Türk Telekom Görünümü | Avrupa’daki yer (doğrulanmış harita) + bölge/yoğunluk/önceliğe göre mimari önerisi |
 | AI Asistan | TF-IDF yerel geri getirme + isteğe bağlı Groq/Gemini |
 | Hakkında | Amaç, yığın, sunum iskeleti |
@@ -82,7 +82,7 @@ Streamlit Frontend (components/*, app.py)
 
 - **Python 3.9+**, **Streamlit**, **Plotly**, **Pandas**, **Matplotlib**, **NetworkX**, **WordCloud**, **scikit-learn**
 - **python-dotenv**, **groq**, **google-genai** (AI Asistan, isteğe bağlı)
-- **Lens.org patent API**, **DOI**, **Springer**, **WoS**
+- **Lens.org patent API**, **DOI**, **Springer**, **Springer**
 
 ## 8. Frontend
 
@@ -189,8 +189,7 @@ Bu proje ayrı bir HTTP API sunucusu kullanmaz. Backend, Streamlit uygulaması i
 
 ## 20. Akademik Veri Kaynakları
 
-- [Web of Science](https://www.webofscience.com) — konu grafikleri (Analyze Results önbelleği)
-- [Springer](https://link.springer.com) — Meta API toplamı
+- [Springer Nature](https://link.springer.com) — konu grafikleri (Meta API)
 - DOI kaydı
 
 ## 21. Halüsinasyon Önleme Yaklaşımı

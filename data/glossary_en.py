@@ -192,7 +192,7 @@ GLOSSARY_EN: dict[str, dict[str, str]] = {
     },
     "API": {
         "definition": "A ruled call interface that one piece of software exposes to others.",
-        "why": "Springer, WoS and optional LLM providers attach to this platform through APIs.",
+        "why": "The Springer Nature Meta API, Lens.org and optional LLM providers attach to this platform through APIs.",
     },
     "SDK": {
         "definition": "A package of libraries, tools, and docs for building on a platform.",
@@ -238,26 +238,12 @@ GLOSSARY_EN: dict[str, dict[str, str]] = {
         "definition": "An interface class that presents a fully synthetic 3-D environment.",
         "why": "Its latency and bit-rate needs are one of the arguments for THz and cell-free MIMO.",
     },
-    "WoS": {
+    "Meta API": {
         "definition": (
-            "Clarivate’s citation index. Topic charts on this platform come from the Core Collection "
-            "Analyze Results table; the Starter API cell is separate."
+            "Springer Nature’s publication metadata API. Year and country charts on this page "
+            "come from facets; institution and citation counts come from pulled records plus Crossref."
         ),
-        "why": "Year, institution, country and Times Cited ranking stay on the same query identity.",
-    },
-    "TS": {
-        "definition": (
-            "A WoS field tag covering title, abstract and keywords. It is not title-only (TI)."
-        ),
-        "why": "Abbreviations such as ISAC / RIS can be missed if the search is not held in TS.",
-    },
-    "PY": {
-        "definition": "The WoS field tag used to filter a record’s publication year.",
-        "why": "The 2020–2026 window on this page is locked with PY; there is no month slice.",
-    },
-    "UT": {
-        "definition": "The persistent WOS:… identity of a Core Collection record.",
-        "why": "It opens the same paper’s full record even when a DOI is missing.",
+        "why": "The seven 6G topics are counted as «6G {token}» for 2020–2026; topics are not summed.",
     },
 }
 

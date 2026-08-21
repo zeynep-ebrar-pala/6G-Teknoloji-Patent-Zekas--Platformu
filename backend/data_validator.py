@@ -91,7 +91,6 @@ def normalize_paper(raw: Dict[str, Any]) -> Dict[str, Any] | None:
         "source_url": source_url.strip(),
         "url": source_url.strip(),
         "topic": str(raw.get("topic") or "").strip(),
-        "wos_ut": str(raw.get("wos_ut") or "").strip(),
     }
 
 

@@ -46,7 +46,6 @@ def _papers() -> List[Dict[str, Any]]:
         merged = dict(p)
         merged["affiliation_country"] = extra.get("affiliation_country") or "TR"
         merged["note"] = extra.get("note") or ""
-        merged["wos_ut"] = extra.get("wos_ut") or ""
         out.append(merged)
     return out
 
@@ -90,7 +89,7 @@ class TTEuropeService:
     @staticmethod
     def country_rank(cc: str, include_pubs: bool = True) -> Dict[str, Any]:
         """Kilitli 3 MNO + TT. Yayın: kilitli DOI (TT bağlılığı). Patent: Google Patents xhr."""
-        from backend.source_links import wos_text_search_url
+        from backend.source_links import springer_text_search_url
 
         country = country_by_cc(cc)
         if not country:
@@ -133,7 +132,7 @@ class TTEuropeService:
                     "pub_hits": pub_hits[:3],
                     "pat_ids": pat_ids,
                     "patents_url": op["patents_url"],
-                    "pub_search_url": wos_text_search_url(f"6G {op['name']} {country['name_en']}"),
+                    "pub_search_url": springer_text_search_url(f"6G {op['name']} {country['name_en']}"),
                 }
             )
 
@@ -163,7 +162,7 @@ class TTEuropeService:
             "name_tr": country["name_tr"],
             "name_en": country["name_en"],
             "mno_source": EU_MNO_LIST_URL,
-            "pub_search_url": wos_text_search_url(f"6G {country['name_en']}"),
+            "pub_search_url": springer_text_search_url(f"6G {country['name_en']}"),
             "pub_ok": pub_any,
             "rows": ranked,
             "tt_pub_rank": None if not tt_row else tt_row["pub_rank"],

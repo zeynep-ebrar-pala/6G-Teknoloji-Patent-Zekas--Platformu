@@ -310,7 +310,7 @@ GLOSSARY: dict[str, dict[str, str]] = {
         "en": "Application Programming Interface",
         "tr": "Uygulama Programlama Arayüzü",
         "definition": "Bir yazılımın başka yazılımlara sunduğu kurallı çağrı yüzüdür.",
-        "why": "Springer, WoS ve isteğe bağlı LLM sağlayıcıları bu platforma API ile bağlanır.",
+        "why": "Springer Nature Meta API, Lens.org ve isteğe bağlı LLM sağlayıcıları bu platforma API ile bağlanır.",
     },
     "SDK": {
         "abbr": "SDK",
@@ -389,38 +389,15 @@ GLOSSARY: dict[str, dict[str, str]] = {
         "definition": "Tamamen sentetik üç boyutlu ortam sunan arayüz sınıfıdır.",
         "why": "Gecikme ve bit hızı ihtiyacı THz ve hücresiz MIMO gerekçelerinden biridir.",
     },
-    "WoS": {
-        "abbr": "WoS",
-        "en": "Web of Science",
-        "tr": "Web of Science",
+    "Meta API": {
+        "abbr": "Meta API",
+        "en": "Springer Nature Meta API",
+        "tr": "Springer Nature Meta API",
         "definition": (
-            "Clarivate’in atıf indeksidir. Bu platformdaki konu grafikleri Core Collection "
-            "Analyze Results tablosundan gelir; Starter API hücresi ayrıdır."
+            "Springer Nature’ın yayın üstveri arayüzüdür. Bu sayfadaki yıl ve ülke grafikleri "
+            "facet çıktısıdır; kurum ve atıf çekilen kayıt + Crossref’tir."
         ),
-        "why": "Yıl, kurum, ülke ve Times Cited sıralaması aynı sorgu kimliği üzerinde tutulur.",
-    },
-    "TS": {
-        "abbr": "TS",
-        "en": "Topic Search",
-        "tr": "Konu araması",
-        "definition": (
-            "WoS alan etiketidir; başlık, özet ve anahtar kelimede geçer. Yalnız başlık (TI) değildir."
-        ),
-        "why": "ISAC / RIS gibi kısaltmalar taramada TS ile tutulmazsa kaçabilir.",
-    },
-    "PY": {
-        "abbr": "PY",
-        "en": "Publication Year",
-        "tr": "Yayın yılı",
-        "definition": "WoS’ta kaydın yayın yılını süzmek için kullanılan alan etiketidir.",
-        "why": "Bu sayfadaki 2020–2026 penceresi PY ile kilitlenir; ay dilimi yoktur.",
-    },
-    "UT": {
-        "abbr": "UT",
-        "en": "Unique Identifier",
-        "tr": "Benzersiz kayıt no",
-        "definition": "WoS Core Collection’daki kaydın WOS:… biçimindeki kalıcı kimliğidir.",
-        "why": "DOI yokken bile aynı makaleyi tam kayıt sayfasında açmaya yarar.",
+        "why": "Yedi 6G konusu «6G {token}», 2020–2026 penceresinde sayılır; konular toplanmaz.",
     },
 }
 

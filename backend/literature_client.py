@@ -1,6 +1,5 @@
 """
-Modül 3 literatür sayımı — Türkiye ve Avrupa, başlık 6G, 2020–2026.
-Üst hücreler: WoS ve Springer.
+Modül 3 literatür sayımı — yedi 6G konusu, Springer Nature Meta API, 2020–2026.
 """
 
 from __future__ import annotations
@@ -18,7 +17,7 @@ from backend.publisher_apis import (
     key_fingerprint,
     key_status,
 )
-from backend.wos_topic_cache import wos_overlay
+from backend.springer_live import TOPIC_ORDER, TREND_YEARS, ensure_prefetch, load_live, springer_overlay
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "tr_eu_6g.json"
 TREND_YEARS = list(range(2020, 2027))
@@ -106,11 +105,11 @@ def literature_bundle(
     region: str = "both",
     topic: Optional[str] = None,
     _keys: str = "",
-    _wos: str = "",
-    _v: str = "cc3",
+    _v: str = "sp1",
     _live: str = "",
 ) -> Dict[str, Any]:
-    """Türkiye / Avrupa / ikisi. Konu TR konu önbelleğindedir; ülke çubukları 6G başlıktır."""
+    """Yedi 6G konusu. Grafikler Springer Meta; konular toplanmaz."""
+    ensure_prefetch()
     cache = _load_disk()
     region = region if region in ("tr", "eu", "both") else "both"
     tpc = (topic or "").strip() or None
@@ -160,7 +159,6 @@ def literature_bundle(
         "ieee": native.get("ieee"),
         "springer": native.get("springer"),
         "elsevier": native.get("elsevier"),
-        "wos": native.get("wos"),
         "scholar": native.get("scholar"),
     }
 
@@ -207,24 +205,15 @@ def literature_bundle(
         "keys": key_status(),
         "cited": cited,
         "chart_source": "crossref",
-        "wos_total": None,
-        "wos_query": "",
-        "wos_fetched_at": "",
-        "institutions_by_topic": {},
-        "countries_by_topic": {},
-        "source": (
-            "WoS Core Collection ve Springer Nature Meta API (anahtar varsa). "
-            "İki kaynak toplanmaz."
-        ),
+        "turkey_by_topic": {},
+        "turkey": {},
+        "source": "Springer Nature Meta API (anahtar varsa). Konu serileri toplanmaz.",
         **snapshot_meta(),
     }
 
-    overlay = wos_overlay(tpc)
+    overlay = springer_overlay(tpc)
     if overlay:
-        payload["chart_source"] = "wos"
-        payload["wos_total"] = overlay.get("wos_total")
-        payload["wos_query"] = overlay.get("wos_query") or ""
-        payload["wos_fetched_at"] = overlay.get("wos_fetched_at") or ""
+        payload["chart_source"] = "springer"
         payload["topics"] = overlay.get("topics") or {}
         payload["year_counts"] = overlay.get("year_counts") or {}
         payload["year_series"] = overlay.get("year_series") or {}
@@ -233,20 +222,18 @@ def literature_bundle(
         payload["institutions_by_topic"] = overlay.get("institutions_by_topic") or {}
         payload["countries_by_topic"] = overlay.get("countries_by_topic") or {}
         payload["cited"] = overlay.get("cited") or []
-        payload["total"] = overlay.get("wos_total")
+        payload["total"] = overlay.get("total")
         payload["turkey_by_topic"] = overlay.get("turkey_by_topic") or {}
         payload["turkey"] = overlay.get("turkey") or {}
-        if isinstance(overlay.get("wos_total"), int):
-            payload["publishers"]["wos"] = overlay.get("wos_total")
-        elif overlay.get("topics"):
-            # Tümü: konular toplanmaz; hücre konu seçilince dolar.
-            payload["publishers"]["wos"] = None
+        payload["query"] = overlay.get("query") or ""
+        if isinstance(overlay.get("total"), int):
+            payload["publishers"]["springer"] = overlay.get("total")
         payload["source"] = (
-            "WoS Core Collection (Starter API veya Analyze önbelleği): TS=(6G) AND konu AND PY=2020-2026. "
-            "Toplam adet: WoS + Springer (toplanmaz). Konu serileri toplanmaz."
+            "Springer Nature Meta API: «6G {konu}», 2020–2026. "
+            "Yıl / ülke: facet. Kurum ve atıf: çekilen kayıt + Crossref. Konular toplanmaz."
         )
-        if overlay.get("wos_fetched_at"):
-            payload["fetched_at"] = overlay["wos_fetched_at"]
+        if overlay.get("fetched_at"):
+            payload["fetched_at"] = overlay["fetched_at"]
 
     springer_topics = fetch_springer_topic_totals(_keys or key_fingerprint())
     springer_ok = {
@@ -261,20 +248,16 @@ def literature_bundle(
 
 
 def country_year_df(region: str = "both", topic: Optional[str] = None) -> Optional[pd.DataFrame]:
-    from backend.wos_live import load_live
-    from backend.wos_topic_cache import TOPIC_ORDER, TREND_YEARS, load_wos_topics
-
     bundle = literature_bundle(
         region,
         topic,
         key_fingerprint(),
-        str(load_wos_topics().get("fetched_at") or ""),
-        "cc3",
+        "sp1",
         str(load_live().get("fetched_at") or ""),
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}
     axis = list(TREND_YEARS)
-    if bundle.get("chart_source") == "wos":
+    if bundle.get("chart_source") == "springer":
         keep = [name for name in TOPIC_ORDER if name in series] or list(series.keys())
         if not keep:
             return None

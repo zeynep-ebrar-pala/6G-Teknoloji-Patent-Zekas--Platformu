@@ -76,32 +76,28 @@ def fetch_patent_source_totals(topic: Optional[str], _keys: str = "") -> List[Di
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def fetch_pub_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[str, Any]]:
-    """WoS (canlı veya önbellek) + Springer. Anahtar yoksa None."""
-    from backend.wos_topic_cache import wos_overlay
+    """Springer Nature Meta API. Anahtar yoksa None."""
+    from backend.springer_live import live_topic_row, springer_overlay
+    from backend.publisher_apis import fetch_springer_topic_totals
 
     label = topic or "6G"
     links = topic_pub_searches(label, "tr")
-    overlay = wos_overlay(topic)
-    wos_n = overlay.get("wos_total") if overlay else None
-    springer_topics = None
-    try:
-        from backend.publisher_apis import fetch_springer_topic_totals
-
-        springer_topics = fetch_springer_topic_totals(_keys or key_fingerprint())
-    except Exception:
-        springer_topics = {}
-    springer_n = None
-    if topic and isinstance(springer_topics, dict):
-        n = springer_topics.get(topic)
-        springer_n = n if isinstance(n, int) else None
-    rows: List[Dict[str, Any]] = []
-    for source_id, n in (("wos", wos_n), ("springer", springer_n)):
-        rows.append(
-            _row(
-                source_id,
-                _search_url(links, source_id),
-                n if isinstance(n, int) else None,
-                f"native_{source_id}" if isinstance(n, int) else "none",
-            )
+    n = None
+    if topic:
+        row = live_topic_row(topic)
+        n = row.get("total") if isinstance(row.get("total"), int) else None
+        if n is None:
+            overlay = springer_overlay(topic) or {}
+            n = overlay.get("total") if isinstance(overlay.get("total"), int) else None
+        if n is None:
+            springer_topics = fetch_springer_topic_totals(_keys or key_fingerprint())
+            hit = (springer_topics or {}).get(topic)
+            n = hit if isinstance(hit, int) else None
+    return [
+        _row(
+            "springer",
+            _search_url(links, "springer"),
+            n if isinstance(n, int) else None,
+            "native_springer" if isinstance(n, int) else "none",
         )
-    return rows
+    ]

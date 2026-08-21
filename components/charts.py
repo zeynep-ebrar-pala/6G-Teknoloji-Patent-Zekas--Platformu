@@ -437,70 +437,6 @@ def render_academic_trends_chart(
     return fig
 
 
-def render_wos_springer_totals_chart(
-    rows: List[Dict[str, Any]],
-    title: str,
-) -> go.Figure:
-    """WoS vs Springer toplam adet. Hover’da ikisi birden; birleşik külliyat uydurulmaz."""
-    names = [str(r.get("name") or "") for r in rows]
-    wos_vals = [r.get("wos") for r in rows]
-    sp_vals = [r.get("springer") for r in rows]
-
-    def _n(v) -> str:
-        return str(int(v)) if isinstance(v, int) else "—"
-
-    custom = [[_n(w), _n(s)] for w, s in zip(wos_vals, sp_vals)]
-    unit = t("charts.paper_count")
-    hover = t(
-        "pub.hover_wos_springer",
-        wos=t("pub.series_wos"),
-        springer=t("pub.series_springer"),
-        unit=unit,
-    )
-    fig = go.Figure()
-    if any(isinstance(v, int) for v in wos_vals):
-        fig.add_bar(
-            name=t("pub.series_wos"),
-            y=names,
-            x=[int(v) if isinstance(v, int) else None for v in wos_vals],
-            orientation="h",
-            marker_color=OTHER_BAR,
-            text=[_n(v) if isinstance(v, int) else "" for v in wos_vals],
-            textposition="outside",
-            cliponaxis=False,
-            customdata=custom,
-            hovertemplate=hover,
-        )
-    if any(isinstance(v, int) for v in sp_vals):
-        fig.add_bar(
-            name=t("pub.series_springer"),
-            y=names,
-            x=[int(v) if isinstance(v, int) else None for v in sp_vals],
-            orientation="h",
-            marker_color="#FFB020",
-            text=[_n(v) if isinstance(v, int) else "" for v in sp_vals],
-            textposition="outside",
-            cliponaxis=False,
-            customdata=custom,
-            hovertemplate=hover,
-        )
-    vals = [int(v) for v in wos_vals + sp_vals if isinstance(v, int)]
-    layout = _layout()
-    layout.update(
-        title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
-        xaxis=_count_axis(t("charts.paper_count"), vals),
-        yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
-        barmode="group",
-        hovermode="y unified",
-        height=max(360, 36 * max(len(rows), 1) + 100),
-        bargap=0.28,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0.0),
-        margin=dict(l=40, r=70, t=70, b=40),
-    )
-    fig.update_layout(**layout)
-    return fig
-
-
 def render_academic_database_chart(
     db_dict: Dict[str, int],
     title: str | None = None,
@@ -1080,7 +1016,7 @@ def render_country_rank_chart(
             continue
         if row.get("out") or row.get("count") is None:
             xs.append(float("nan"))
-            texts.append(t("pub.metric_tr_wos_out"))
+            texts.append(t("pub.metric_tr_out"))
             colors.append(TT_BAR)
             hovers.append("%{y}<extra></extra>")
             continue

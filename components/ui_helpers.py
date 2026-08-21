@@ -180,7 +180,6 @@ def render_paper_card(paper: dict) -> None:
         paper_record_links(
             doi,
             str(paper.get("source") or ""),
-            str(paper.get("wos_ut") or ""),
         ),
         key_suffix=_link_key(str(doi)),
     )

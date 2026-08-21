@@ -1,14 +1,14 @@
 """
 Akademik yayın veri kümesi — DOI ile doğrulanabilir kayıtlar.
-Kaynak hücreleri WoS ve Springer.
+Kaynak hücreleri Springer Nature Meta API.
 """
 
 ACADEMIC_DATA_SOURCE = (
-    "Toplam adet: WoS Core Collection (Starter API) + Springer Meta API (yan yana, toplanmaz). "
-    "Yıl / kurum / ülke / atıf: TS=(6G) AND konu AND PY=2020-2026. Cell-Free dahildir."
+    "Springer Nature Meta API: «6G {konu}», 2020–2026. "
+    "Yıl ve ülke facet; kurum ve atıf çekilen kayıt + Crossref. Yedi konu toplanmaz."
 )
 
-ACADEMIC_SOURCES = ["WoS", "Springer"]
+ACADEMIC_SOURCES = ["Springer"]
 
 # DOI ile doğrulanmış makaleler — uydurma atıf sayısı yok
 MOST_CITED_PAPERS = [

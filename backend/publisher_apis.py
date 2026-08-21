@@ -1,6 +1,6 @@
 """
 Şartname yayın kaynakları — yalnız bu sitelerin resmi API’si.
-IEEE Xplore, Springer Nature, Elsevier Scopus, Clarivate WoS.
+IEEE Xplore, Springer Nature, Elsevier Scopus.
 Google Scholar resmi API yok; HTML kazınmaz. SERPAPI_KEY varsa üçüncü taraf.
 Anahtar yoksa None (UI —).
 """
@@ -23,7 +23,6 @@ from backend.config import (
     get_ieee_api_key,
     get_serpapi_key,
     get_springer_api_key,
-    get_wos_api_key,
 )
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "publisher_native.json"
@@ -45,7 +44,6 @@ REGISTER = {
     "ieee": "https://developer.ieee.org/getting_started",
     "springer": "https://dev.springernature.com/",
     "elsevier": "https://dev.elsevier.com/",
-    "wos": "https://developer.clarivate.com/apis/wos-starter",
     "scholar": "https://scholar.google.com/",
 }
 
@@ -110,7 +108,6 @@ def key_status() -> Dict[str, bool]:
         "ieee": bool(get_ieee_api_key()),
         "springer": bool(get_springer_api_key()),
         "elsevier": bool(get_elsevier_api_key()),
-        "wos": bool(get_wos_api_key()),
         "scholar": bool(get_serpapi_key()),
     }
 
@@ -232,88 +229,6 @@ def _elsevier_count(query: str, affiliation: Optional[str]) -> Optional[int]:
     return n
 
 
-_WOS_ERR = ""
-
-
-def wos_last_error() -> str:
-    return _WOS_ERR
-
-
-def wos_documents(
-    query: str,
-    *,
-    limit: int = 1,
-    page: int = 1,
-    sort: Optional[str] = None,
-) -> Optional[Dict[str, Any]]:
-    """Clarivate Starter /documents. Anahtar yoksa None."""
-    global _WOS_ERR
-    key = get_wos_api_key()
-    if not key:
-        _WOS_ERR = "WOS_API_KEY yok"
-        return None
-    params = {
-        "db": "WOS",
-        "q": query,
-        "limit": str(max(1, min(int(limit), 50))),
-        "page": str(max(1, int(page))),
-    }
-    if sort:
-        params["sortField"] = sort
-    url = "https://api.clarivate.com/apis/wos-starter/v1/documents?" + urllib.parse.urlencode(params)
-    headers = {"X-ApiKey": key, "Accept": "application/json", "User-Agent": UA}
-    req = urllib.request.Request(url, headers=headers)
-    try:
-        with urllib.request.urlopen(req, timeout=28) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        _WOS_ERR = f"HTTP {exc.code}"
-        return None
-    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError):
-        _WOS_ERR = "ağ / JSON"
-        return None
-    _WOS_ERR = ""
-    return data if isinstance(data, dict) else None
-
-
-def wos_total(query: str) -> Optional[int]:
-    q = (query or "").strip()
-    if not q:
-        return None
-    cache_key = f"wosq:{q}"
-    hit = _cache_get(cache_key)
-    if hit is not None:
-        return hit
-    data = wos_documents(q, limit=1, page=1)
-    if not data:
-        return None
-    meta = data.get("metadata") if isinstance(data.get("metadata"), dict) else {}
-    total = meta.get("total")
-    if total is None:
-        total = meta.get("totalCount")
-    try:
-        n = int(str(total).replace(",", ""))
-    except (TypeError, ValueError):
-        return None
-    _cache_put(cache_key, n)
-    return n
-
-
-def peek_wos_total(query: str) -> Optional[int]:
-    q = (query or "").strip()
-    if not q:
-        return None
-    return _cache_get(f"wosq:{q}")
-
-
-def _wos_count(query: str, org: Optional[str]) -> Optional[int]:
-    """Küresel konu veya CU=Turkey. OG=Turkey ülke sırası değildir."""
-    q = f"TS=({query}) AND PY=2020-2026"
-    if org:
-        q = f"{q} AND CU=(Turkey OR Turkiye OR Türkiye)"
-    return wos_total(q)
-
-
 def _scholar_count(query: str, affiliation: Optional[str]) -> Optional[int]:
     """Google Scholar HTML kazınmaz. Yalnız isteğe bağlı SerpAPI."""
     key = get_serpapi_key()
@@ -366,9 +281,9 @@ def fetch_native_counts(
     topic: Optional[str] = None,
     _keys: str = "",
 ) -> Dict[str, Optional[int]]:
-    """IEEE / Springer / Elsevier / WoS / Scholar. Anahtar yoksa None."""
+    """IEEE / Springer / Elsevier / Scholar. Anahtar yoksa None."""
     q = _q6g(topic)
-    empty = {"ieee": None, "springer": None, "elsevier": None, "wos": None, "scholar": None}
+    empty = {"ieee": None, "springer": None, "elsevier": None, "scholar": None}
     if region == "eu":
         out = dict(empty)
         out["scholar"] = _scholar_count(q, "Europe")
@@ -377,6 +292,5 @@ def fetch_native_counts(
         "ieee": _ieee_count(q, "Turkey"),
         "springer": _springer_count(q, "Turkey"),
         "elsevier": _elsevier_count(q, "turkey"),
-        "wos": _wos_count(q, "Turkey"),
         "scholar": _scholar_count(q, "Turkey"),
     }
