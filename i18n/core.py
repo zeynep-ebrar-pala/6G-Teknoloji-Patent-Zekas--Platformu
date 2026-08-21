@@ -20,9 +20,6 @@ _FLAT_MTIME: int = 0
 
 
 def flatten(data: dict[str, Any], prefix: str = "") -> dict[str, str]:
-
-
-def flatten(data: dict[str, Any], prefix: str = "") -> dict[str, str]:
     out: dict[str, str] = {}
     for key, val in data.items():
         dotted = f"{prefix}.{key}" if prefix else str(key)
