@@ -116,26 +116,42 @@ def render_patent_intelligence_module():
             tuple(spec) if not company_arg else (company_arg,),
             keys,
         )
-        summary = PatentService.get_summary(company_arg, topic)
+        topic_counts = PatentService.get_topic_counts(company_arg, topic)
+        df_density = PatentService.get_density_df(company_arg, topic)
+        df_trends = PatentService.get_patent_trends_df(company_arg, topic)
         patents = PatentService.get_top_patents(company_arg, topic)
     api_err = lens_last_error()
     if api_err:
         st.warning(t("patent.api_error", detail=api_err.replace("{", "(").replace("}", ")")))
 
+    firm_names = [company_arg] if company_arg else list(spec)
+    firm_counts = {
+        name: int(xhr_totals[name]) if isinstance(xhr_totals.get(name), int) else 0
+        for name in firm_names
+    }
+    if firm_counts and any(firm_counts.values()):
+        leader_company, leader_count = max(firm_counts.items(), key=lambda kv: kv[1])
+    else:
+        leader_company, leader_count = "—", 0
+    if topic_counts and any(int(v) > 0 for v in topic_counts.values()):
+        top_domain, top_domain_count = max(topic_counts.items(), key=lambda kv: int(kv[1]))
+    else:
+        top_domain, top_domain_count = "—", 0
+
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric(t("patent.metric_pulled"), format_int(summary["total"]))
+        st.metric(t("patent.metric_pulled"), format_int(len(patents)))
     with col2:
         st.metric(
             t("patent.metric_leader"),
-            summary["leader_company"],
-            t("patent.metric_leader_delta", n=format_int(summary["leader_count"])),
+            leader_company,
+            t("patent.metric_leader_delta", n=format_int(leader_count)),
         )
     with col3:
         st.metric(
             t("patent.metric_domain"),
-            summary["top_domain"],
-            t("patent.metric_domain_delta", n=format_int(summary["top_domain_count"])),
+            top_domain,
+            t("patent.metric_domain_delta", n=format_int(top_domain_count)),
         )
     with col4:
         st.metric(t("patent.metric_source"), t("sources.patent_metric"))
@@ -148,11 +164,6 @@ def render_patent_intelligence_module():
 
     st.markdown(t("patent.companies_heading"))
     st.caption(t("patent.companies_caption"))
-    firm_names = [company_arg] if company_arg else list(spec)
-    firm_counts = {
-        name: int(xhr_totals[name]) if isinstance(xhr_totals.get(name), int) else 0
-        for name in firm_names
-    }
     if not any(firm_counts.values()):
         show_empty(t("patent.empty_counts"))
     else:
@@ -160,7 +171,6 @@ def render_patent_intelligence_module():
 
     st.markdown(t("patent.year_heading"))
     st.caption(t("patent.year_caption"))
-    df_trends = PatentService.get_patent_trends_df(company_arg, topic)
     if df_trends.empty:
         show_empty(t("patent.empty_trend"))
     else:
@@ -168,7 +178,6 @@ def render_patent_intelligence_module():
 
     st.markdown(t("patent.topic_mix_heading"))
     st.caption(t("patent.topic_mix_caption"))
-    topic_counts = PatentService.get_topic_counts(company_arg, topic)
     if not any(int(v) > 0 for v in topic_counts.values()):
         show_empty(t("patent.empty_domain"))
     else:
@@ -176,7 +185,7 @@ def render_patent_intelligence_module():
 
     st.markdown(t("patent.radar_heading"))
     st.caption(t("patent.radar_caption"))
-    df_domains = PatentService.get_all_companies_domain_df(company_arg, topic)
+    df_domains = df_density
     numeric = df_domains.drop(columns=["Company"], errors="ignore") if not df_domains.empty else None
     if df_domains.empty or numeric is None or int(numeric.fillna(0).to_numpy().sum()) == 0:
         show_empty(t("patent.empty_domain"))
@@ -202,7 +211,6 @@ def render_patent_intelligence_module():
 
     st.markdown(t("patent.density"))
     st.caption(t("patent.density_caption"))
-    df_density = PatentService.get_density_df(company_arg, topic)
     if df_density.empty or int(df_density.drop(columns=["Company"], errors="ignore").fillna(0).to_numpy().sum()) == 0:
         show_empty(t("patent.empty_density"))
     else:

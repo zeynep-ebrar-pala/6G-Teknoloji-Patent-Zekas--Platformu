@@ -370,22 +370,12 @@ class PatentService:
         return _compute_summary(company, domain)
 
     @staticmethod
-    def get_patent_trends_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
-        return _build_patent_trends(company, domain)
-
-    @staticmethod
     def get_company_domain_distribution(company: str) -> Dict[str, float]:
         df = _build_domain_distribution(company)
         row = df[df["Company"] == company]
         if row.empty:
             return {}
         return {col: float(row.iloc[0][col]) for col in TECHNOLOGY_DOMAINS if col in row.columns}
-
-    @staticmethod
-    def get_all_companies_domain_df(
-        company: Optional[str] = None, domain: Optional[str] = None
-    ) -> pd.DataFrame:
-        return _build_domain_distribution(company, domain)
 
     @staticmethod
     def get_patent_keywords(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, int]:
@@ -409,16 +399,66 @@ class PatentService:
 
     @staticmethod
     def get_topic_counts(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, int]:
-        raw = _compute_summary(company, domain).get("topic_counts") or {}
-        return {str(k): int(v) for k, v in raw.items()}
+        from backend.patent_apis import key_fingerprint, live_company_topic_matrix, live_topic_or_counts
+
+        axes = tuple([domain] if _norm_domain(domain) else TECHNOLOGY_DOMAINS)
+        firms = tuple([company] if company else SPEC_COMPANIES)
+        keys = key_fingerprint()
+        if company:
+            matrix = live_company_topic_matrix(tuple(TECHNOLOGY_DOMAINS), firms, keys)
+            row = matrix.get(company) or {}
+            return {d: int(row.get(d, 0) or 0) for d in TECHNOLOGY_DOMAINS}
+        return {d: int((live_topic_or_counts(axes, firms, keys) or {}).get(d, 0) or 0) for d in axes}
 
     @staticmethod
     def get_density_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
-        return _build_density_df(company, domain)
+        from backend.patent_apis import key_fingerprint, live_company_topic_matrix
+
+        firms = tuple([company] if company else SPEC_COMPANIES)
+        axes = list(TECHNOLOGY_DOMAINS)
+        matrix = live_company_topic_matrix(tuple(axes), firms, key_fingerprint())
+        rows = []
+        for comp in firms:
+            row: Dict[str, Any] = {"Company": comp}
+            for dname in axes:
+                row[dname] = int((matrix.get(comp) or {}).get(dname, 0) or 0)
+            rows.append(row)
+        return pd.DataFrame(rows)
+
+    @staticmethod
+    def get_all_companies_domain_df(
+        company: Optional[str] = None, domain: Optional[str] = None
+    ) -> pd.DataFrame:
+        return PatentService.get_density_df(company, domain)
+
+    @staticmethod
+    def get_patent_trends_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
+        from backend.patent_apis import key_fingerprint, live_company_year_counts
+
+        firms = tuple([company] if company else SPEC_COMPANIES)
+        years = tuple(range(2020, 2027))
+        raw = live_company_year_counts(domain or "", firms, years, key_fingerprint())
+        rows: Dict[str, List[int]] = {"Years": list(years)}
+        for comp in firms:
+            counts = [int((raw.get(comp) or {}).get(y, 0) or 0) for y in years]
+            rows[comp] = counts
+        return pd.DataFrame(rows)
 
     @staticmethod
     def get_sunburst_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
-        return _build_sunburst_df(company, domain)
+        df = PatentService.get_density_df(company, domain)
+        if df.empty:
+            return pd.DataFrame()
+        records = []
+        axes = [c for c in df.columns if c != "Company"]
+        for _, row in df.iterrows():
+            comp = str(row["Company"])
+            for dname in axes:
+                n = int(row.get(dname) or 0)
+                if n <= 0:
+                    continue
+                records.append({"company": comp, "domain": dname, "n": n})
+        return pd.DataFrame(records)
 
     @staticmethod
     def get_tfidf_map_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:

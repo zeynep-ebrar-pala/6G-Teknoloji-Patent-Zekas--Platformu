@@ -650,40 +650,51 @@ def render_patent_topic_mix_chart(
 
 
 def render_patent_density_heatmap(df_density: pd.DataFrame) -> go.Figure:
-    """Firma × teknoloji alanı yoğunluk ısı haritası."""
+    """Firma × teknoloji — Lens total, hücrede tam sayı."""
     companies = df_density["Company"].tolist()
     domains = [c for c in df_density.columns if c != "Company"]
-    z = df_density[domains].values.tolist()
-    fig = go.Figure(data=go.Heatmap(
-        z=z,
-        x=domains,
-        y=companies,
-        colorscale=[[0, "#121620"], [0.5, "#0066B3"], [1, "#00E5FF"]],
-        hoverongaps=False,
-    ))
+    z = [[int(v or 0) for v in row] for row in df_density[domains].values.tolist()]
+    fig = go.Figure(
+        data=go.Heatmap(
+            z=z,
+            x=domains,
+            y=companies,
+            colorscale=[[0, "#121620"], [0.5, "#0066B3"], [1, "#00E5FF"]],
+            hoverongaps=False,
+            text=z,
+            texttemplate="%{text:d}",
+            textfont=dict(color="#FFFFFF", size=11),
+            colorbar=dict(tickformat="d", title=t("charts.patent_count")),
+        )
+    )
     fig.update_layout(
         **_layout(),
         title=dict(text=f"<b>{t('charts.density')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
-        height=max(360, 40 * len(companies) + 120),
+        height=max(380, 44 * len(companies) + 120),
     )
     return fig
 
 
 def render_patent_sunburst(df_tree: pd.DataFrame) -> go.Figure:
-    """Firma → alan → patent numarası ağacı."""
-    fig = px.sunburst(
+    """Firma → konu treemap. Yayın no yok; alan = Lens total."""
+    fig = px.treemap(
         df_tree,
-        path=["company", "domain", "patent"],
+        path=["company", "domain"],
+        values="n",
         color="domain",
         color_discrete_map=DOMAIN_COLORS,
         color_discrete_sequence=QUALITATIVE_COLORS,
     )
+    fig.update_traces(
+        textinfo="label+value",
+        hovertemplate="<b>%{label}</b><br>" + t("charts.patent_count") + ": %{value:d}<extra></extra>",
+    )
     fig.update_layout(
         **_layout(),
         title=dict(text=f"<b>{t('charts.sunburst')}</b>", x=0.02, y=0.95, font=dict(size=16, color="#FFFFFF")),
-        height=480,
+        height=520,
+        margin=dict(l=20, r=20, t=50, b=20),
     )
-    fig.update_traces(insidetextorientation="radial")
     return fig
 
 
