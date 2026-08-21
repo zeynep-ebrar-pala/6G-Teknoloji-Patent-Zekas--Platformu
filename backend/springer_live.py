@@ -16,6 +16,7 @@ from typing import Any, Dict, List, Optional
 
 from backend.config import get_springer_api_key, reload_env
 from backend.publisher_apis import TOPIC_TOKEN, UA, YEARS, _cache_get, _cache_put, _json, _q6g, _springer_count
+from backend.topic_filter import filter_cited
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "springer_live.json"
 STATUS_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "springer_prefetch_status.json"
@@ -195,6 +196,9 @@ def _records(data: Optional[Dict[str, Any]], topic: str) -> List[Dict[str, Any]]
         journal = str(rec.get("publicationName") or "").strip()
         year = _year_of(rec)
         url = f"https://doi.org/{doi}" if doi.startswith("10.") else ""
+        abstract = str(rec.get("abstract") or rec.get("teaser") or "").strip()
+        if len(abstract) > 1200:
+            abstract = abstract[:1200]
         out.append(
             {
                 "title": title,
@@ -203,6 +207,7 @@ def _records(data: Optional[Dict[str, Any]], topic: str) -> List[Dict[str, Any]]
                 "year": year,
                 "doi": doi if doi.startswith("10.") else "",
                 "citations": None,
+                "abstract": abstract,
                 "source": "Springer",
                 "source_url": url,
                 "url": url,
@@ -289,8 +294,8 @@ def _work() -> None:
                 )
                 done += 1
                 _status(running=True, done=done, total=total_jobs)
-                rec_data = _meta(q, page=20, start=1, facet=False)
-                papers = _records(rec_data, name)
+                rec_data = _meta(q, page=50, start=1, facet=False)
+                papers = filter_cited(_records(rec_data, name), name, limit=50)
                 done += 1
                 _status(running=True, done=done, total=total_jobs)
                 inst_counts: Dict[str, int] = {}
@@ -398,14 +403,14 @@ def springer_overlay(topic: Optional[str] = None) -> Optional[Dict[str, Any]]:
                 cited_all.append(paper)
     if not totals:
         return None
-    cited_all.sort(key=lambda p: (-int(p.get("citations") or 0), str(p.get("title") or "")))
+    tpc = (topic or "").strip() or None
+    cited_all = filter_cited(cited_all, tpc, limit=10)
     fetched = str(blob.get("fetched_at") or "")
     meta = {
         "chart_source": "springer",
         "fetched_at": fetched,
         "turkey_by_topic": turkey,
     }
-    tpc = (topic or "").strip() or None
     if tpc:
         row = topics.get(tpc) if isinstance(topics.get(tpc), dict) else {}
         return {
@@ -419,7 +424,7 @@ def springer_overlay(topic: Optional[str] = None) -> Optional[Dict[str, Any]]:
             "countries": by_cc.get(tpc) or [],
             "institutions_by_topic": {tpc: by_inst[tpc]} if tpc in by_inst else {},
             "countries_by_topic": {tpc: by_cc[tpc]} if tpc in by_cc else {},
-            "cited": list(row.get("cited") or [])[:10],
+            "cited": filter_cited(row.get("cited") or [], tpc, limit=10),
             "turkey": turkey.get(tpc) or {},
         }
     return {

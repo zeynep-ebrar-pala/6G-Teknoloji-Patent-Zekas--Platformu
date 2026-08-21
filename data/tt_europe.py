@@ -23,6 +23,7 @@ TT_COUNTRY_COLORS = {
     "SWE": "#818CF8",
     "ESP": "#14B8A6",
     "FRA": "#FFB020",
+    "KKTC": "#F43F5E",
 }
 
 # Hukuki assignee Netsia Inc. (Türk Telekom grubu ABD Ar-Ge iştiraki).
@@ -254,6 +255,86 @@ TTI_WHOLESALE_FIRST_MOVER = [
 TTI_ABOUT_URL = "https://www.turktelekomint.com/about-us"
 TT_IR_2024_URL = "https://www.ttyatirimciiliskileri.com.tr/media/l10mbc5l/2024-integrated-annual-report.pdf"
 
+# KAP özel durum açıklaması (Temmuz 2025). ISO-3166-1’de KKTC kodu yok; choropleth CYP = Güney Kıbrıs, boyanmaz.
+TT_KKTC_SOURCE_URL = (
+    "https://www.cnbce.com/borsa/turk-telekom-kktcde-sabit-altyapi-kurmak-icin-sirket-kurdu-h14897"
+)
+TT_KKTC_POINT = {
+    "iso3": "",
+    "lat": 35.198,
+    "lon": 33.356,
+    "layer": "kktc_infra",
+    "name_tr": "Kuzey Kıbrıs Türk Cumhuriyeti",
+    "name_en": "Turkish Republic of Northern Cyprus",
+    "label_tr": (
+        "Kamuyu Aydınlatma Platformu (KAP) açıklamasına göre Türk Telekom grubu, "
+        "KKTC’de sabit altyapı ve perakende sabit hizmet şirketi kurma kararı aldı (Temmuz 2025). "
+        "Bu bir 6G yayın sayısı değildir. ISO haritası Kuzey Kıbrıs’ı ayrı ülke olarak boyamaz; "
+        "ada üzerindeki işaret bu kararı gösterir. Güney Kıbrıs (CYP) bu kaynakta yoktur."
+    ),
+    "label_en": (
+        "Per a KAP (Public Disclosure Platform) notice, the Türk Telekom group decided to form a "
+        "company in Northern Cyprus for fixed infrastructure and retail fixed services (July 2025). "
+        "This is not a 6G paper count. ISO choropleths do not paint Northern Cyprus as a country; "
+        "the marker is that decision. The Republic of Cyprus (CYP) is not in this source."
+    ),
+    "color": "#F43F5E",
+    "source_url": TT_KKTC_SOURCE_URL,
+}
+
+# 6G Ar-Ge dokunuşları — harita ISO-3 (EUREKA ülke değil, boyanmaz)
+TT_MAP_RD = [
+    {
+        "iso3": "TUR",
+        "layer": "hq",
+        "label_tr": (
+            "Türkiye, grubun operatör merkezi ve Ar-Ge (Araştırma ve Geliştirme) üssüdür. "
+            "Kilitli DOI kümesindeki Türk Telekom bağlılıklı makaleler buraya yazılır."
+        ),
+        "label_en": (
+            "Türkiye is the group’s operator headquarters and R&D (research and development) base. "
+            "Locked DOI papers with Türk Telekom affiliation are counted here."
+        ),
+    },
+    {
+        "iso3": "SWE",
+        "layer": "rd_collab",
+        "label_tr": (
+            "İsveç’te 6G Ar-Ge ortaklığı: Net Insight ile duyurulan işbirliği. "
+            "Bu, İsveç’te TT abone şebekesi olduğu anlamına gelmez."
+        ),
+        "label_en": (
+            "Sweden: 6G R&D partnership announced with Net Insight. "
+            "This is not a claim that TT runs a retail network in Sweden."
+        ),
+    },
+    {
+        "iso3": "ESP",
+        "layer": "mou_venue",
+        "label_tr": (
+            "İspanya: MoU (Memorandum of Understanding — mutabakat zaptı) MWC Barcelona’da imzalandı. "
+            "İmza yeri, İspanya’da TT şebekesi olduğu anlamına gelmez."
+        ),
+        "label_en": (
+            "Spain: an MoU (memorandum of understanding) was signed at MWC Barcelona. "
+            "The venue is not a Spanish retail network."
+        ),
+    },
+    {
+        "iso3": "FRA",
+        "layer": "standards",
+        "label_tr": (
+            "Fransa: ETSI (European Telecommunications Standards Institute — Avrupa Telekomünikasyon "
+            "Standartları Enstitüsü) merkezi buradadır. TT’nin ilgili denemesi kaynakta Ankara’dadır; "
+            "Fransa’da toptan first-mover iddiası bu satır değildir."
+        ),
+        "label_en": (
+            "France is the seat of ETSI (European Telecommunications Standards Institute). "
+            "The related TT trial is in Ankara in the source; this row is not a French wholesale first-mover claim."
+        ),
+    },
+]
+
 # Entegre faaliyet raporu 2024 — ülke adları raporda yok; haritaya 24 ülke basılmaz.
 TT_IR_WHOLESALE = {
     "pop_floor": 135,
@@ -267,34 +348,6 @@ TT_IR_WHOLESALE = {
         "so the map does not paint 24 countries. TTI About says 19 countries; the two totals stay separate."
     ),
 }
-
-# 6G Ar-Ge dokunuşları — harita ISO-3 (EUREKA ülke değil, boyanmaz)
-TT_MAP_RD = [
-    {
-        "iso3": "TUR",
-        "layer": "hq",
-        "label_tr": "Merkez; operatör Ar-Ge (Araştırma ve Geliştirme)",
-        "label_en": "HQ; operator R&D (research and development)",
-    },
-    {
-        "iso3": "SWE",
-        "layer": "rd_collab",
-        "label_tr": "6G Ar-Ge (Araştırma ve Geliştirme) ortağı: Net Insight",
-        "label_en": "6G R&D (research and development) partner: Net Insight",
-    },
-    {
-        "iso3": "ESP",
-        "layer": "mou_venue",
-        "label_tr": "MoU (Memorandum of Understanding — mutabakat zaptı) imza yeri: MWC Barcelona",
-        "label_en": "MoU (memorandum of understanding) signing venue: MWC Barcelona",
-    },
-    {
-        "iso3": "FRA",
-        "layer": "standards",
-        "label_tr": "ETSI (European Telecommunications Standards Institute — Avrupa Telekomünikasyon Standartları Enstitüsü) merkezi; deneme Ankara’da",
-        "label_en": "ETSI (European Telecommunications Standards Institute) seat; trial in Ankara",
-    },
-]
 
 TT_PRESS_CLAIMS = {
     "tr_filings_2025": 921,

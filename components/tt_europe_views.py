@@ -15,6 +15,7 @@ from components.charts import (
     render_tt_role_kind_chart,
     render_tt_vs_leader_chart,
     render_tt_vs_vendors_chart,
+    tt_vs_comparable_rows,
 )
 from components import ui_helpers as _uh
 from i18n.core import format_int, get_lang, t
@@ -97,24 +98,29 @@ def _metrics(kind: str, domain: str | None = None) -> None:
         st.metric(t("tt_eu.metric_named"), format_int(s["wholesale_named_n"]))
 
 
-def _named_country_chips(rows: list, lang: str) -> None:
+def _named_country_cards(rows: list, lang: str) -> None:
     st.markdown(t("tt_eu.named_heading"))
     st.caption(t("tt_eu.named_caption"))
-    chips = []
-    ranked = sorted(rows, key=lambda r: (r.get("name_tr") or r.get("iso3") or ""))
+    ranked = sorted(
+        rows,
+        key=lambda r: (0 if r.get("layer") == "kktc_infra" else 1, r.get("name_tr") or r.get("iso3") or ""),
+    )
     for row in ranked:
         name = row["name_tr"] if lang == "tr" else row["name_en"]
+        body = row["label_tr"] if lang == "tr" else row["label_en"]
         layer = t(f"tt_eu.layer.{row['layer']}")
         hex_c = row.get("color") or "#64748B"
-        chips.append(
-            f'<span style="display:inline-block;margin:0 8px 8px 0;padding:7px 12px;'
-            f'border-radius:999px;border:1px solid {hex_c};background:{hex_c}22;'
-            f'color:#F8FAFC;font-size:0.82rem;">{name} · {layer}</span>'
+        st.markdown(
+            f"""<div class="glass-card" style="margin-bottom:10px;padding:16px 18px;border-left:5px solid {hex_c};">
+<span class="trl-pill trl-mid">{layer}</span>
+<h4 style="color:#FFFFFF;margin:8px 0 6px 0;">{name}</h4>
+<p style="color:#C8D1DC;font-size:0.9rem;line-height:1.55;margin:0;">{body}</p>
+</div>""",
+            unsafe_allow_html=True,
         )
-    st.markdown(
-        f'<div style="margin:4px 0 12px 0;">{"".join(chips)}</div>',
-        unsafe_allow_html=True,
-    )
+        url = row.get("source_url") or ""
+        if url:
+            render_source_button(url, t("tt_eu.open_place"))
 
 
 def _europe_position_banner(kind: str, domain: str | None = None) -> None:
@@ -195,7 +201,7 @@ def _geo_presence() -> None:
         show_plotly(render_tt_europe_choropleth(rows, lang=lang))
     except Exception:
         st.info(t("tt_eu.map_fail"))
-    _named_country_chips(rows, lang)
+    _named_country_cards(rows, lang)
     ir = TTEuropeService.get_ir_wholesale()
     st.caption(ir["attribution_tr"] if lang == "tr" else ir["attribution_en"])
     c_ir, c_tti = st.columns(2)
@@ -250,17 +256,23 @@ def _country_rank(kind: str) -> None:
                 reverse=True,
             )
             if pat_rows:
-                show_plotly(
-                    render_tt_vs_leader_chart(
-                        pat_rows,
-                        name_key,
-                        t("tt_eu.overview_vs_title_pat"),
-                        t("tt_eu.rank_pat_x"),
-                        lead_key="pat_lead_n",
-                        tt_key="tt_pat_n",
-                        lead_name=t("tt_eu.overview_pat_lead_short"),
-                    )
+                vs_rows = tt_vs_comparable_rows(
+                    pat_rows, lead_key="pat_lead_n", tt_key="tt_pat_n", lead_name_key="pat_lead"
                 )
+                if vs_rows:
+                    show_plotly(
+                        render_tt_vs_leader_chart(
+                            vs_rows,
+                            name_key,
+                            t("tt_eu.overview_vs_title_pat"),
+                            t("tt_eu.rank_pat_x"),
+                            lead_key="pat_lead_n",
+                            tt_key="tt_pat_n",
+                            lead_name=t("tt_eu.overview_pat_lead_short"),
+                        )
+                    )
+                else:
+                    st.info(t("tt_eu.overview_vs_empty_pat"))
                 table = []
                 for row in pat_rows:
                     table.append(
@@ -277,27 +289,36 @@ def _country_rank(kind: str) -> None:
             else:
                 show_empty(t("tt_eu.overview_empty_pat"))
         else:
-            show_plotly(
-                render_tt_vs_leader_chart(
-                    overview,
-                    name_key,
-                    t("tt_eu.overview_vs_title"),
-                    t("tt_eu.rank_pub_x"),
+            vs_rows = tt_vs_comparable_rows(overview)
+            if vs_rows:
+                show_plotly(
+                    render_tt_vs_leader_chart(
+                        vs_rows,
+                        name_key,
+                        t("tt_eu.overview_vs_title"),
+                        t("tt_eu.rank_pub_x"),
+                    )
                 )
-            )
-            show_plotly(
-                render_tt_europe_overview_chart(
-                    overview,
-                    "pub_lead_n",
-                    "tt_pub_rank",
-                    name_key,
-                    t("tt_eu.overview_pub_title"),
-                    t("tt_eu.rank_pub_x"),
-                    label_key="pub_lead",
+            else:
+                st.info(t("tt_eu.overview_vs_empty"))
+            tt_only = [r for r in overview if int(r.get("tt_pub_n") or 0) > 0]
+            if tt_only:
+                show_plotly(
+                    render_tt_europe_overview_chart(
+                        tt_only,
+                        "tt_pub_n",
+                        "tt_pub_rank",
+                        name_key,
+                        t("tt_eu.overview_tt_only_title"),
+                        t("tt_eu.rank_pub_x"),
+                    )
                 )
-            )
+            else:
+                show_empty(t("tt_eu.overview_empty_pub"))
             table = []
             for row in overview:
+                if int(row.get("tt_pub_n") or 0) <= 0:
+                    continue
                 top = row.get("pub_top3") or []
                 table.append(
                     {
@@ -396,11 +417,15 @@ def _country_rank(kind: str) -> None:
         )
     )
     if payload.get("pub_ok"):
-        show_plotly(
-            render_tt_country_rank_chart(
-                rows, "pub_n", t("tt_eu.rank_pub_title"), t("tt_eu.rank_pub_x")
+        drawn = [r for r in rows if r.get("pub_resolved") and int(r.get("pub_n") or 0) > 0]
+        if drawn:
+            show_plotly(
+                render_tt_country_rank_chart(
+                    drawn, "pub_n", t("tt_eu.rank_pub_title"), t("tt_eu.rank_pub_x")
+                )
             )
-        )
+        else:
+            st.info(t("tt_eu.rank_oa_fail"))
     else:
         st.info(t("tt_eu.rank_oa_fail"))
     src_col = t("ui.source").replace(" ↗", "")

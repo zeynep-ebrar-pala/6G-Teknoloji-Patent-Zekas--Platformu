@@ -26,6 +26,8 @@ from data.tt_europe import (
     TT_GROUP_PATENTS,
     TT_IR_2024_URL,
     TT_IR_WHOLESALE,
+    TT_KKTC_POINT,
+    TT_KKTC_SOURCE_URL,
     TT_MAP_RD,
     TT_PRESS_CLAIMS,
     TTI_ABOUT_URL,
@@ -137,7 +139,7 @@ class TTEuropeService:
             )
 
         def _with_rank(rows: List[Dict[str, Any]], key: str, dest: str) -> None:
-            # 0 kayıt = sıra yok. 0 ile «2. sıra» yazmak Fransa/İspanya’da yanıltır.
+            # 0 kayıt = sıra yok. Tek ölçülen firma «1. sıra» değildir; rakip sayılmadı.
             ordered = sorted(rows, key=lambda r: int(r[key] or 0), reverse=True)
             rank = 0
             prev = None
@@ -152,6 +154,9 @@ class TTEuropeService:
                     rank = seen
                     prev = val
                 row[dest] = rank
+            if seen < 2:
+                for row in rows:
+                    row[dest] = None
 
         _with_rank(ranked, "pub_n", "pub_rank")
         _with_rank(ranked, "pat_n", "pat_rank")
@@ -244,17 +249,28 @@ class TTEuropeService:
 
     @staticmethod
     def map_rows() -> List[Dict[str, Any]]:
-        """Harita katmanı: 6G Ar-Ge, yoksa TTI first-mover toptan. İki katman bir ülkede birleşmez uydurma sayıyla."""
+        """Harita katmanı: 6G Ar-Ge, yoksa TTI first-mover toptan. KKTC ISO boyası değil, nokta."""
         by_iso: Dict[str, Dict[str, Any]] = {}
         for row in TTI_WHOLESALE_FIRST_MOVER:
+            name_tr = row["name_tr"]
+            name_en = row["name_en"]
             by_iso[row["iso3"]] = {
                 "iso3": row["iso3"],
                 "layer": "wholesale",
-                "name_tr": row["name_tr"],
-                "name_en": row["name_en"],
-                "label_tr": "TTI (Türk Telekom International) toptan; first-mover (ilk giren pazar, resmi About)",
-                "label_en": "TTI (Türk Telekom International) wholesale; first-mover (official About)",
+                "name_tr": name_tr,
+                "name_en": name_en,
+                "label_tr": (
+                    f"{name_tr}: TTI (Türk Telekom International), resmi About sayfasında "
+                    "toptan veri ve ses ağında ilk giren pazar olarak bu ülkeyi sayar. "
+                    "Abone şebekesi veya 6G yayın sayısı değildir."
+                ),
+                "label_en": (
+                    f"{name_en}: TTI (Türk Telekom International) names this country as a "
+                    "wholesale data/voice first-mover on its About page. "
+                    "It is not a retail network or a 6G paper count."
+                ),
                 "color": TT_COUNTRY_COLORS.get(row["iso3"], "#64748B"),
+                "source_url": TTI_ABOUT_URL,
             }
         for row in TT_MAP_RD:
             prev = by_iso.get(row["iso3"])
@@ -268,7 +284,11 @@ class TTEuropeService:
                 name_tr, name_en = "Fransa", "France"
             elif row["iso3"] == "TUR":
                 name_tr, name_en = "Türkiye", "Türkiye"
-            # 6G katmanı toptanın üstüne yazılır; TR hem merkez hem toptan — merkez öncelikli
+            src = (prev or {}).get("source_url") or ""
+            cc_map = {"SWE": "SE", "ESP": "ES", "FRA": "FR"}
+            cc = cc_map.get(row["iso3"])
+            if cc:
+                src = next((tp["url"] for tp in TT_EUROPE_TOUCHPOINTS if tp["country"] == cc), src)
             by_iso[row["iso3"]] = {
                 "iso3": row["iso3"],
                 "layer": row["layer"],
@@ -277,8 +297,13 @@ class TTEuropeService:
                 "label_tr": row["label_tr"],
                 "label_en": row["label_en"],
                 "color": TT_COUNTRY_COLORS.get(row["iso3"], "#64748B"),
+                "source_url": src,
             }
-        return list(by_iso.values())
+        rows = list(by_iso.values())
+        kktc = dict(TT_KKTC_POINT)
+        kktc["source_url"] = TT_KKTC_SOURCE_URL
+        rows.append(kktc)
+        return rows
 
     @staticmethod
     def role_kind_counts() -> List[Dict[str, Any]]:
@@ -289,6 +314,7 @@ class TTEuropeService:
             {"id": "rd_collab", "count": sum(1 for r in TT_MAP_RD if r["layer"] == "rd_collab")},
             {"id": "standards", "count": sum(1 for r in TT_MAP_RD if r["layer"] == "standards")},
             {"id": "mou_venue", "count": sum(1 for r in TT_MAP_RD if r["layer"] == "mou_venue")},
+            {"id": "kktc_infra", "count": 1},
             {"id": "ep_grant", "count": 0},
         ]
         return kinds

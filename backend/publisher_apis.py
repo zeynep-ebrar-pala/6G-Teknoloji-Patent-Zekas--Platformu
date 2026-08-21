@@ -99,8 +99,8 @@ def _json(
 def _q6g(topic: Optional[str]) -> str:
     token = TOPIC_TOKEN.get(topic or "", "")
     if token:
-        return f"6G {token}"
-    return "6G"
+        return f'"6G" {token}'
+    return '"6G"'
 
 
 def key_status() -> Dict[str, bool]:

@@ -414,7 +414,7 @@ Bu sayfa <strong>Springer Nature Meta API</strong> kullanır. Bireysel e-posta y
             "year_caption": "Springer Nature Meta year facet, «6G {konu}», 2020–2026. Tümü görünümünde yedi seri ayrıdır; toplanmaz. 2026 eksik yıldır.",
             "inst_caption": "Çekilen Springer kayıtlarının Crossref bağlılığı (örneklem). Tam külliyat kurum facet’i yoktur; çubuklar toplanmaz.",
             "cc_caption": "Springer Meta country facet (ilk 20). Türkiye yoksa metin «Turkey» satırı eklenir. Ortak yazarlı kayıt birden fazla ülkede sayılır; çubuklar toplanmaz.",
-            "cited_caption": "Sıra: çekilen Springer DOI’nin Crossref is-referenced-by-count değeri, yüksekten düşüğe. Tam külliyat atıf facet’i değildir.",
+            "cited_caption": "Sıra: çekilen Springer kaydının Crossref is-referenced-by-count değeri. Başlık 6G veya kilitli yedi konudan (ISAC, RIS, Cell-Free, THz, AI-RAN, NTN, Ambient IoT) birine değmeyen makale düşer. Tam külliyat atıf facet’i değildir; 2 atıflık Nature/5G kaydı «en çok atıf» diye basılmaz.",
             "trend_caption": "Aynı Springer sorgusu, year facet. Yedi konu serisi toplanmaz. 2026 devam eden yıldır.",
             "chart_year": "Yıllara göre yayın — Springer Nature Meta API",
             "chart_topic": "Springer Nature Meta API — 6G {konu}",
@@ -422,7 +422,7 @@ Bu sayfa <strong>Springer Nature Meta API</strong> kullanır. Bireysel e-posta y
             "chart_cc": "İlk 10 ülke — Springer Meta country facet",
             "cited_heading": "### En çok atıf alan makaleler",
             "trend_heading": "### Trend analizi",
-            "empty_cited": "Atıf sıralı kayıt yok.",
+            "empty_cited": "Çekilen örneklemde 6G konusuyla eşleşen atıf sıralı kayıt yok. Alakasız DOI uydurulmaz.",
             "volume_heading": "### 6G literatür hacmi",
             "volume_caption": "Springer Nature Meta API, 2020–2026.",
             "doi_heading": "### Yıl ve konu",
@@ -530,8 +530,8 @@ Harita yalnızca adı kaynakta geçen ülkeleri boyar. Boyanmayan Avrupa ülkesi
 bu platformda o ülke adı kilitlenmedi.
 </p>""",
             "map_heading": "### Avrupa haritası (kaynakta adı geçen ülkeler)",
-            "map_caption": "Katmanlar ayrıdır: merkez, TTI (Türk Telekom International) toptan ilk giren pazar, 6G Ar-Ge (Araştırma ve Geliştirme) ortağı, ETSI (European Telecommunications Standards Institute — Avrupa Telekomünikasyon Standartları Enstitüsü) merkezi, MoU (Memorandum of Understanding — mutabakat zaptı) imza yeri. Abone/pazar payı değildir.",
-            "map_fail": "Harita çizilemedi; aşağıdaki liste kaynakta adı geçen ülkelerin tam kümesidir.",
+            "map_caption": "Boyanan ülke TTI (Türk Telekom International) About’taki ilk giren toptan pazar, operatör merkezi, 6G Ar-Ge (Araştırma ve Geliştirme) ortağı, ETSI (European Telecommunications Standards Institute — Avrupa Telekomünikasyon Standartları Enstitüsü) merkezi veya MoU (Memorandum of Understanding — mutabakat zaptı) imza yeridir. KKTC ISO üç harfli kodu olmadığı için boyanmaz; KAP kararındaki konum işaretlenir. Abone veya pazar payı değildir.",
+            "map_fail": "Harita çizilemedi; aşağıdaki liste kaynakta adı geçen yerlerin tam kümesidir.",
             "role_heading": "### Kanıt türü (kaç ülkede adı geçti)",
             "role_caption": "EP (European Patent — Avrupa patenti) tescil çubuğu 0’dır. Toptan 6 ülke TTI About «ilk giren pazar» listesidir; 19 veya 24’ün tamamı değildir.",
             "vs_heading": "### Bu platformun kilitli 6G örnek kümesi",
@@ -543,9 +543,10 @@ bu platformda o ülke adı kilitlenmedi.
             "empty_topic": "Kilitli Netsia kümesinde «{topic}» tescili yok; üç ofis çubuğu 0’dır. Konu taramasındaki ofis düğmeleri aynı sorguyu dış sitede açar.",
             "pat_list_heading": "### Netsia Inc. (Türk Telekom grubu) — Google Patents",
             "pat_list_caption": "Hak sahibi (assignee): Netsia Inc. Kartlar yıla göre yeniden eskiye (2025 → 2023). Rakip (Nokia–ZTE) kümesine karıştırılmaz.",
-            "named_heading": "### Kaynakta adı geçen ülkeler (eksiksiz liste)",
-            "named_caption": "Haritada boyanan ülkelerin tam kümesi budur. 19 veya 24 ülke adı raporda yok; eklenmez.",
-            "named_col_place": "Ülke",
+            "named_heading": "### Kaynakta adı geçen yerler — TT burada ne yapıyor?",
+            "named_caption": "Her kart bir cümledir: ülke + TT’nin o yerdeki işi + kaynak. 19 veya 24 ülke adı raporda yok; eklenmez.",
+            "named_col_place": "Yer",
+            "open_place": "Bu yerin kaynağını aç ↗",
             "named_col_layer": "Katman",
             "presence_heading": "### 6G dokunuşları — işbirliği / standart / proje",
             "presence_caption": "Kart resmi duyurudur. Eşit yükseklikli «ülke başına 1» çubuk pazar payı gibi okunduğu için çizilmez.",
@@ -559,7 +560,7 @@ bu platformda o ülke adı kilitlenmedi.
             "open_tti": "TTI About sayfasını aç ↗",
             "position_heading": "### Türk Telekom Avrupa’da nerededir? (bu platformun ölçümü)",
             "position_m_pub": "TR yayın sırası",
-            "position_m_pub_help": "6G konu + 3 MNO ve TT; {n} kayıt",
+            "position_m_pub_help": "Kilitli DOI bağlılığı; {n} kayıt. Rakip MNO yayın API’si yok.",
             "position_m_pat": "TR patent sırası",
             "position_m_pat_help": "Kilitli ABD Patent ve Marka Ofisi örnek kümesi; {n} Netsia kaydı",
             "position_m_ep": "Avrupa Patent Ofisi tescili",
@@ -598,15 +599,12 @@ Bu EPO PATSTAT taraması veya abone payı değildir. 0 kayıt sıra almaz (—).
 </div>""",
             "position_body_pub": """<div class="glass-card" style="border-left:6px solid #E20074;margin-bottom:12px;">
 <p style="color:#F8FAFC;font-size:0.95rem;line-height:1.65;margin:0;">
-<strong>Türkiye:</strong> 6G-bitişik yayında <em>{pub_rank}. sıra</em> ({pub_n} kayıt; 3 MNO + TT).
-<strong>Avrupa:</strong> yayın lideri değildir. TR dışı kilitli ülkede TT bağlılıklı yayın &gt;0 olan ülke: {pub_out}.
-Ülkeler ayrı ligdir; tek bir Avrupa sıra sayısı üretilmez.
-</p>
-<p style="color:#C8D1DC;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-<strong>Aynı ülkelerin yayın 1.’leri (yüksekten düşüğe):</strong> {leaders}
+<strong>Türkiye:</strong> kilitli DOI kümesinde Türk Telekom bağlılığı {pub_n} kayıttır.
+Rakip operatör (Turkcell, Vodafone Türkiye) bu platformda yayın API’si olmadığı için sayılmadı; sıra üretilmez ({pub_rank}).
+<strong>Avrupa:</strong> TR dışı kilitli ülkede TT bağlılıklı yayın &gt;0 olan yer: {pub_out}.
 </p>
 <p style="color:#94A3B8;font-size:0.82rem;margin:8px 0 0 0;">
-Bu abone/gelir payı değildir. 0 kayıt sıra almaz (—). Patent tabloları Patent Zekası sayfasındadır.
+Bu abone/gelir payı değildir. Patent tabloları Patent Zekası sayfasındadır.
 </p>
 </div>""",
             "what_title_pub": "Yayın bağlılığı ülke sırasını nasıl kurar?",
@@ -623,10 +621,14 @@ Patent ofisleri bu sayfada yoktur — Patent Zekası’ndadır.
             "overview_heading_pub": "### Avrupa geneli — yayın",
             "overview_caption": "Her ülkede Wikipedia MNO listesindeki 3 işletmeci, 6G konu aramasında kurum kimliği (veya bağlılık dizesi) ile sayıldı. 1./2./3. bu üç firmanın kendi iç sıralamasıdır; abone payı değildir. TT ayrı sütundadır. Ölçülmüş 0 (kurum bulundu, konu kaydı yok) 0’dır. Sorgulanamayan sayı — olarak kalır, uydurulmaz. Patent sütunu bu platformun kilitli örnek kümesidir (EPO PATSTAT taraması değil).",
             "overview_caption_pat": "Kilitli örnek kümede en az bir patenti olan ülkeler. 0’lık 2./3. operatör sütunu yok; yayın sütunu bu sayfada yok. Netsia Google Patents yalnız TR. 0 kayıt sıra almaz (—).",
-            "overview_caption_pub": "Her ülkede Wikipedia MNO listesindeki 3 işletmeci, 6G konu aramasında kurum kimliği (veya bağlılık dizesi) ile sayıldı. 1./2./3. bu üç firmanın kendi iç sıralamasıdır; abone payı değildir. TT ayrı sütundadır. Ölçülmüş 0, 0’dır. Sorgulanamayan sayı — olarak kalır.",
+            "overview_caption_pub": "Türk Telekom satırı kilitli DOI bağlılığıdır (bu ülkede yazar adresi). Turkcell, Vodafone ve diğer MNO’ların yayın API’si bu platformda yok; 0 çizilmez, tabloda — kalır. «1. operatör vs TT» yalnızca her iki sayı da ayrı ölçüldüyse çizilir.",
             "overview_spin": "Operatör yayın sayıları yükleniyor (önbellek varsa beklenmez)",
             "overview_spin_pat": "Kilitli patent örnek kümesi yükleniyor",
             "overview_empty_pat": "Kilitli örnek kümede Avrupa satırında patent yok. Sayı uydurulmaz.",
+            "overview_empty_pub": "Kilitli DOI kümesinde bu ülkelerde TT bağlılıklı yayın yok. Sayı uydurulmaz.",
+            "overview_vs_empty": "Karşılaştırılacak ikinci operatör yayın sayısı yok (API yok). Aynı 5’i iki kez çizmek yerine yalnızca TT bağlılığı gösterilir.",
+            "overview_vs_empty_pat": "Kilitli örnekte TT ile ayrı ölçülmüş rakip patent sayısı yok; kopya çubuk çizilmez.",
+            "overview_tt_only_title": "Türk Telekom bağlılıklı yayın (kilitli DOI)",
             "overview_hits_pat": "Kayıtlı firma (örnek küme)",
             "overview_pub_title": "Ülkede yayın 1. operatör (>0)",
             "overview_pat_title": "Ülkede patent 1. (kilitli örnek, >0)",
@@ -669,12 +671,13 @@ Patent ofisleri bu sayfada yoktur — Patent Zekası’ndadır.
             "rank_open_wiki": "Avrupa MNO listesini aç ↗",
             "rank_open_gp": "Google Patents hak sahibi (assignee) ↗",
             "layer": {
-                "hq": "Merkez / operatör Ar-Ge (Araştırma ve Geliştirme)",
-                "wholesale": "TTI (Türk Telekom International) toptan — ilk giren pazar (first-mover)",
-                "rd_collab": "6G Ar-Ge (Araştırma ve Geliştirme) ortaklığı",
-                "standards": "Standart organı: ETSI (European Telecommunications Standards Institute — Avrupa Telekomünikasyon Standartları Enstitüsü)",
-                "mou_venue": "MoU (Memorandum of Understanding — mutabakat zaptı) imza yeri",
-                "ep_grant": "EPO (European Patent Office — Avrupa Patent Ofisi) EP tescil",
+                "hq": "Operatör merkezi",
+                "wholesale": "TTI toptan ağ",
+                "rd_collab": "6G Ar-Ge ortaklığı",
+                "standards": "ETSI standart organı",
+                "mou_venue": "Mutabakat zaptı imza yeri",
+                "kktc_infra": "KKTC sabit altyapı",
+                "ep_grant": "EPO EP tescil",
             },
             "map_col_layer": "Katman",
             "map_col_note": "Açıklama",
@@ -1420,7 +1423,7 @@ This page uses the <strong>Springer Nature Meta API</strong>. A personal email i
             "year_caption": "Springer Nature Meta year facet, «6G {topic}», 2020–2026. In the all-topics view the seven series are separate and not summed. 2026 is incomplete.",
             "inst_caption": "Crossref affiliations of pulled Springer records (sample). There is no full-corpus institution facet; bars are not summed.",
             "cc_caption": "Springer Meta country facet (top 20). If Türkiye is missing, a text “Turkey” row is added. A co-authored record can count in more than one country; bars are not summed.",
-            "cited_caption": "Ranked by Crossref is-referenced-by-count on pulled Springer DOIs, high to low. This is not a full-corpus citation facet.",
+            "cited_caption": "Ranked by Crossref is-referenced-by-count on pulled Springer records. A paper whose title does not mention 6G or one of the seven locked topics (ISAC, RIS, Cell-Free, THz, AI-RAN, NTN, Ambient IoT) is dropped. This is not a full-corpus citation facet; a 2-cite Nature/5G record is not shown as “most cited”.",
             "trend_caption": "The same Springer query, year facet. The seven topic series are not summed. 2026 is an incomplete year.",
             "chart_year": "Publications by year — Springer Nature Meta API",
             "chart_topic": "Springer Nature Meta API — 6G {topic}",
@@ -1428,7 +1431,7 @@ This page uses the <strong>Springer Nature Meta API</strong>. A personal email i
             "chart_cc": "Top 10 countries — Springer Meta country facet",
             "cited_heading": "### Most cited papers",
             "trend_heading": "### Trend analysis",
-            "empty_cited": "No citation-ranked records.",
+            "empty_cited": "No citation-ranked record in the pulled sample matches the 6G topic. Off-topic DOIs are not invented.",
             "volume_heading": "### 6G literature volume",
             "volume_caption": "Springer Nature Meta API, 2020–2026.",
             "doi_heading": "### Year and topic",
@@ -1535,9 +1538,9 @@ It is not a Nokia/Ericsson-class RAN vendor in the European 6G <em>equipment</em
 CEE–Türkiye–Caucasus–Middle East. The map paints only countries named in a locked source.
 An unpainted European country is not a claim of absence — its name was not locked here.
 </p>""",
-            "map_heading": "### Europe map (countries named in a source)",
-            "map_caption": "Layers are distinct: HQ, TTI wholesale first-mover, 6G R&amp;D partner, ETSI seat, MoU venue. Not subscriber or revenue share.",
-            "map_fail": "The map could not be drawn; the list below is the complete set of countries named in a source.",
+            "map_heading": "### Europe map (places named in a source)",
+            "map_caption": "Painted countries are TTI (Türk Telekom International) About first-mover wholesale markets, operator HQ, a 6G R&amp;D (research and development) partner, the ETSI (European Telecommunications Standards Institute) seat, or an MoU (memorandum of understanding) venue. Northern Cyprus has no ISO-3166-1 code, so it is marked from the KAP decision rather than painted. Not subscriber or revenue share.",
+            "map_fail": "The map could not be drawn; the list below is the complete set of places named in a source.",
             "role_heading": "### Evidence type (how many named countries)",
             "role_caption": "The EP-grant bar is 0. Wholesale 6 is TTI About’s first-mover list, not the full 19 or 24.",
             "vs_heading": "### This platform’s locked 6G sample",
@@ -1549,9 +1552,10 @@ An unpainted European country is not a claim of absence — its name was not loc
             "empty_topic": "The locked Netsia set has no “{topic}” grant; all three office bars are 0. The office buttons in Topic search open the same query on the external site.",
             "pat_list_heading": "### Netsia Inc. (Türk Telekom group) — Google Patents",
             "pat_list_caption": "Assignee: Netsia Inc. Cards are newest to oldest (2025 → 2023). These cards are not mixed into the Nokia–ZTE vendor set.",
-            "named_heading": "### Countries named in a source (complete list)",
-            "named_caption": "This is the full set painted on the map. The 19 or 24 country names are not in the report; they are not added.",
-            "named_col_place": "Country",
+            "named_heading": "### Places named in a source — what TT does there",
+            "named_caption": "Each card is a sentence: place + TT’s activity there + source. The 19 or 24 country names are not in the report; they are not added.",
+            "named_col_place": "Place",
+            "open_place": "Open this place’s source ↗",
             "named_col_layer": "Layer",
             "presence_heading": "### 6G touchpoints — collaboration / standards / project",
             "presence_caption": "Each card is an official announcement. Equal-height “1 per country” bars are not drawn; they read as market share.",
@@ -1565,7 +1569,7 @@ An unpainted European country is not a claim of absence — its name was not loc
             "open_tti": "Open the TTI About page ↗",
             "position_heading": "### Where is Türk Telekom in Europe? (this platform’s measurement)",
             "position_m_pub": "TR publication rank",
-            "position_m_pub_help": "6G topic + 3 MNOs and TT; {n} records",
+            "position_m_pub_help": "Locked DOI affiliation; {n} records. Rival MNOs have no publication API here.",
             "position_m_pat": "TR patent rank",
             "position_m_pat_help": "Locked U.S. Patent and Trademark Office sample; {n} Netsia records",
             "position_m_ep": "European Patent Office grants",
@@ -1604,15 +1608,12 @@ This is not an EPO PATSTAT extract or subscriber share. A zero count is unranked
 </div>""",
             "position_body_pub": """<div class="glass-card" style="border-left:6px solid #E20074;margin-bottom:12px;">
 <p style="color:#F8FAFC;font-size:0.95rem;line-height:1.65;margin:0;">
-<strong>Türkiye:</strong> 6G-adjacent publications rank <em>{pub_rank}</em> ({pub_n} records among 3 MNOs + TT).
-<strong>Europe:</strong> TT is not the publication leader. Locked countries outside TR with TT-affiliated papers &gt;0: {pub_out}.
-Countries are separate leagues; a pan-Europe rank is not invented.
-</p>
-<p style="color:#C8D1DC;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-<strong>Publication leaders in those countries (high to low):</strong> {leaders}
+<strong>Türkiye:</strong> the locked DOI set has {pub_n} papers with Türk Telekom affiliation.
+Rival operators (Turkcell, Vodafone Türkiye) are not counted here — there is no operator publication API; rank is not invented ({pub_rank}).
+<strong>Europe:</strong> locked places outside TR with TT-affiliated papers &gt;0: {pub_out}.
 </p>
 <p style="color:#94A3B8;font-size:0.82rem;margin:8px 0 0 0;">
-This is not subscriber/revenue share. A zero count is unranked (—). Patent tables sit on Patent Intelligence.
+This is not subscriber/revenue share. Patent tables sit on Patent Intelligence.
 </p>
 </div>""",
             "what_title_pub": "How affiliation builds the country ranking",
@@ -1629,10 +1630,14 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "overview_heading_pub": "### Europe-wide — publications",
             "overview_caption": "In each country the three MNOs from the Wikipedia list are counted via a 6G topic search on institution IDs (or affiliation strings). 1st/2nd/3rd rank those three firms, not subscriber share. TT is a separate column. A measured 0 (institution found, no topic hits) stays 0. A count that could not be queried stays — and is not invented. Patent columns are this platform’s locked sample, not an EPO PATSTAT extract.",
             "overview_caption_pat": "Only countries with at least one patent in the locked sample. No empty 2nd/3rd operator columns; publication columns are not on this page. Netsia Google Patents is counted on TR only. A zero count is unranked (—).",
-            "overview_caption_pub": "In each country the three Wikipedia MNOs are counted via a 6G topic search. 1st/2nd/3rd rank those firms, not subscriber share. TT is a separate column. A measured 0 stays 0. A count that could not be queried stays —.",
+            "overview_caption_pub": "The Türk Telekom row is locked DOI affiliation (author address in that country). Turkcell, Vodafone and other MNOs have no publication API here; 0 is not drawn and the table keeps —. Leader-vs-TT bars are drawn only when both counts were measured separately.",
             "overview_spin": "Loading operator publication counts (skipped when cached)",
             "overview_spin_pat": "Loading the locked patent sample",
             "overview_empty_pat": "The locked sample has no patents on the Europe rows. Counts are not invented.",
+            "overview_empty_pub": "The locked DOI set has no TT-affiliated papers in these countries. Counts are not invented.",
+            "overview_vs_empty": "There is no second operator publication count to compare (no API). The same 5 is not drawn twice; only TT affiliation is shown.",
+            "overview_vs_empty_pat": "The locked sample has no separately measured rival patent count versus TT; duplicate bars are not drawn.",
+            "overview_tt_only_title": "Türk Telekom-affiliated papers (locked DOI)",
             "overview_hits_pat": "Firms with records (sample)",
             "overview_pub_title": "Publication leader in-country (>0)",
             "overview_pat_title": "Patent leader in-country (locked sample, >0)",
@@ -1675,12 +1680,13 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "rank_open_wiki": "Open the European MNO list ↗",
             "rank_open_gp": "Google Patents assignee ↗",
             "layer": {
-                "hq": "HQ / operator R&amp;D (research and development)",
-                "wholesale": "TTI (Türk Telekom International) wholesale — first-mover",
-                "rd_collab": "6G R&amp;D (research and development) partnership",
-                "standards": "Standards body: ETSI (European Telecommunications Standards Institute)",
-                "mou_venue": "MoU (memorandum of understanding) signing venue",
-                "ep_grant": "EPO (European Patent Office) EP grant",
+                "hq": "Operator HQ",
+                "wholesale": "TTI wholesale",
+                "rd_collab": "6G R&amp;D partnership",
+                "standards": "ETSI standards body",
+                "mou_venue": "MoU signing venue",
+                "kktc_infra": "Northern Cyprus fixed infrastructure",
+                "ep_grant": "EPO EP grant",
             },
             "map_col_layer": "Layer",
             "map_col_note": "Note",

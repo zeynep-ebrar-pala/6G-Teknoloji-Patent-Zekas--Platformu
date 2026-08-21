@@ -715,8 +715,10 @@ def render_patent_wordcloud(keywords_dict: Dict[str, int]):
 
 
 def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") -> go.Figure:
-    """Yalnızca adı doğrulanmış ülkeler; her ülke ayrı renk. 19/24 iddiası boyanmaz."""
-    df = pd.DataFrame(rows)
+    """Yalnızca adı doğrulanmış ülkeler; KKTC ISO boyası değil nokta. 19/24 iddiası boyanmaz."""
+    painted = [r for r in rows if len(str(r.get("iso3") or "")) == 3]
+    points = [r for r in rows if r.get("lat") is not None and r.get("lon") is not None]
+    df = pd.DataFrame(painted)
     name_col = "name_tr" if lang == "tr" else "name_en"
     label_col = "label_tr" if lang == "tr" else "label_en"
     place_col = t("tt_eu.named_col_place")
@@ -731,7 +733,7 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
         locations="iso3",
         color=place_col,
         hover_name=place_col,
-        hover_data={"iso3": False, place_col: False, layer_col: True, note_col: True},
+        hover_data={"iso3": False, place_col: False, layer_col: True, note_col: False},
         color_discrete_map=color_map,
         locationmode="ISO-3",
     )
@@ -748,14 +750,33 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
         showcountries=True,
         showcoastlines=True,
         projection_type="natural earth",
-        center=dict(lat=48.2, lon=19.5),
-        lonaxis_range=[-12, 48],
-        lataxis_range=[34, 72],
+        center=dict(lat=46.5, lon=22.0),
+        lonaxis_range=[-12, 46],
+        lataxis_range=[33.2, 72],
     )
+    if points:
+        fig.add_trace(
+            go.Scattergeo(
+                lon=[p["lon"] for p in points],
+                lat=[p["lat"] for p in points],
+                text=[p[name_col] for p in points],
+                mode="markers+text",
+                textposition="top center",
+                marker=dict(
+                    size=14,
+                    color=[p.get("color") or "#F43F5E" for p in points],
+                    line=dict(width=1.2, color="#FFFFFF"),
+                    symbol="diamond",
+                ),
+                name=t("tt_eu.layer.kktc_infra"),
+                hovertext=[p[label_col] for p in points],
+                hovertemplate="<b>%{text}</b><br>%{hovertext}<extra></extra>",
+            )
+        )
     layout = _layout()
     layout.update(
         title=dict(text=f"<b>{t('charts.tt_map')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
-        height=520,
+        height=560,
         legend_title_text=place_col,
         legend=dict(
             orientation="v",
@@ -770,15 +791,14 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
     )
     fig.layout.update(layout)
     fig.update_traces(
+        selector=dict(type="choropleth"),
         marker_line_width=0.6,
         marker_line_color="rgba(200,209,220,0.35)",
-        customdata=df[[layer_col, note_col]].to_numpy(),
+        customdata=df[[layer_col]].to_numpy(),
         hovertemplate=(
             "<b>%{hovertext}</b><br>"
             + layer_col
-            + ": %{customdata[0]}<br>"
-            + note_col
-            + ": %{customdata[1]}<extra></extra>"
+            + ": %{customdata[0]}<extra></extra>"
         ),
     )
     return fig
@@ -887,7 +907,7 @@ def render_tt_europe_overview_chart(
     layout = _layout()
     layout.update(
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
-        xaxis=dict(title=x_title, gridcolor="rgba(200, 209, 220, 0.1)"),
+        xaxis=_count_axis(x_title, vals),
         yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
         height=max(360, 28 * max(len(ordered), 1) + 80),
         margin=dict(l=40, r=70, t=50, b=40),
@@ -895,6 +915,29 @@ def render_tt_europe_overview_chart(
     )
     fig.layout.update(layout)
     return fig
+
+
+def tt_vs_comparable_rows(
+    rows: List[Dict[str, Any]],
+    *,
+    lead_key: str = "pub_lead_n",
+    tt_key: str = "tt_pub_n",
+    lead_name_key: str = "pub_lead",
+) -> List[Dict[str, Any]]:
+    """Rakip gerçekten sayıldıysa karşılaştır; TT=TT kopya çubuğu dönmez."""
+    out: List[Dict[str, Any]] = []
+    for row in rows:
+        lead_n = int(row.get(lead_key) or 0)
+        tt_n = int(row.get(tt_key) or 0)
+        if lead_n <= 0 and tt_n <= 0:
+            continue
+        lead_label = str(row.get(lead_name_key) or "")
+        if _is_tt_name(lead_label) and lead_n == tt_n:
+            continue
+        if lead_n == tt_n and tt_n > 0:
+            continue
+        out.append(row)
+    return out
 
 
 def render_tt_vs_leader_chart(
@@ -907,8 +950,11 @@ def render_tt_vs_leader_chart(
     tt_key: str = "tt_pub_n",
     lead_name: str | None = None,
 ) -> go.Figure:
-    """Ülke 1. operatör vs Türk Telekom. TT çubuğu her zaman magenta."""
-    ordered = [r for r in rows if int(r.get(lead_key) or 0) > 0 or int(r.get(tt_key) or 0) > 0]
+    """Ülke 1. operatör vs Türk Telekom. Aynı sayı iki kez çizilmez."""
+    name_field = "pat_lead" if lead_key.startswith("pat") else "pub_lead"
+    ordered = tt_vs_comparable_rows(
+        rows, lead_key=lead_key, tt_key=tt_key, lead_name_key=name_field
+    )
     ordered = sorted(ordered, key=lambda r: int(r.get(lead_key) or 0), reverse=True)
     names = [r[name_key] for r in ordered]
     lead = [int(r.get(lead_key) or 0) for r in ordered]
@@ -916,16 +962,22 @@ def render_tt_vs_leader_chart(
     fig = go.Figure()
     fig.add_bar(
         name=lead_name or t("tt_eu.overview_pub_lead_short"),
-        y=names,
-        x=lead,
+        y=names or ["—"],
+        x=lead or [0],
         orientation="h",
         marker_color=OTHER_BAR,
     )
-    fig.add_bar(name="Türk Telekom", y=names, x=tt, orientation="h", marker_color=TT_BAR)
+    fig.add_bar(
+        name="Türk Telekom",
+        y=names or ["—"],
+        x=tt or [0],
+        orientation="h",
+        marker_color=TT_BAR,
+    )
     layout = _layout()
     layout.update(
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
-        xaxis=dict(title=x_title, gridcolor="rgba(200, 209, 220, 0.1)"),
+        xaxis=_count_axis(x_title, (lead or [0]) + (tt or [0])),
         yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
         barmode="group",
         height=max(420, 34 * max(len(ordered), 1) + 90),
