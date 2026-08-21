@@ -3,7 +3,6 @@ Modül 2 — Patent Zekası ve Rakip Analizi arayüzü.
 Grafikler Lens.org toplamı / çekilen kayıttır. Kilitli örnek yok.
 """
 
-from datetime import timedelta
 from typing import Any, Dict, List
 
 import streamlit as st
@@ -182,6 +181,22 @@ def _draw_count_charts(payload: Dict[str, Any], *, heavy: bool) -> None:
     else:
         show_plotly(render_company_patent_domain_chart(df_density))
 
+    st.markdown(t("patent.list_heading"))
+    st.caption(t("patent.list_caption"))
+    if not patents:
+        show_empty(
+            t("patent.empty_topic", topic=topic)
+            if topic
+            else t("patent.empty_company", company=company_arg or t("patent.all"))
+        )
+    else:
+        cap = 12
+        for pat in patents[:cap]:
+            render_patent_card(pat)
+        extra = len(patents) - cap
+        if extra > 0:
+            st.caption(t("patent.cards_more", n=format_int(cap), rest=format_int(extra)))
+
     if not heavy:
         return
 
@@ -215,32 +230,6 @@ def _draw_count_charts(payload: Dict[str, Any], *, heavy: bool) -> None:
         show_empty(t("patent.empty_map"))
     else:
         show_plotly(render_patent_tfidf_map(df_map))
-
-    st.markdown(t("patent.list_heading"))
-    st.caption(t("patent.list_caption"))
-    if not patents:
-        show_empty(
-            t("patent.empty_topic", topic=topic)
-            if topic
-            else t("patent.empty_company", company=company_arg or t("patent.all"))
-        )
-        return
-    for pat in patents:
-        render_patent_card(pat)
-
-
-@st.fragment(run_every=timedelta(seconds=2))
-def _patent_charts_polling() -> None:
-    payload = _chart_payload()
-    if payload["snap"].get("complete"):
-        st.rerun()
-        return
-    _draw_count_charts(payload, heavy=False)
-
-
-@st.fragment
-def _patent_charts_ready() -> None:
-    _draw_count_charts(_chart_payload(), heavy=True)
 
 
 def render_patent_intelligence_module():
@@ -300,11 +289,19 @@ def render_patent_intelligence_module():
     st.session_state["_pat_topic"] = topic
     st.session_state["_pat_company"] = company_arg
     from backend.config import get_lens_token
-    from backend.patent_prefetch import ensure_prefetch, snapshot
+    from backend.patent_prefetch import ensure_prefetch
 
     if get_lens_token():
         ensure_prefetch(topic, tuple(spec))
-    if snapshot(topic, tuple(spec)).get("complete"):
-        _patent_charts_ready()
-    else:
-        _patent_charts_polling()
+    payload = _chart_payload()
+    complete = bool(payload["snap"].get("complete"))
+    if not complete:
+        st.caption(t("patent.bg_partial"))
+        if st.button(t("patent.bg_refresh"), key="pat_bg_refresh"):
+            st.rerun()
+    heavy = complete and st.checkbox(
+        t("patent.heavy_toggle"),
+        value=False,
+        key="pat_heavy_charts",
+    )
+    _draw_count_charts(payload, heavy=heavy)
