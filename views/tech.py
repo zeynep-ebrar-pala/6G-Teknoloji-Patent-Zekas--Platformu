@@ -165,37 +165,46 @@ elif section == "global_tt":
 
 else:
     from backend.academic_service import AcademicService
-    from backend.patent_service import PatentService
+    from backend.config import get_lens_token, get_springer_api_key
+    from backend.patent_service import PatentService, TECH_ID_TO_DOMAIN
+    from backend.springer_live import ensure_prefetch as ensure_springer, prefetch_status as springer_status
     from components.charts import (
         render_academic_trends_chart,
         render_technology_record_counts_chart,
     )
+    from i18n.core import format_int
 
     _section_label("tech.perf_heading")
     _teach_note(t("tech.perf_caption"))
     domain = PatentService.domain_for_tech(tech["id"])
-    df_pat = PatentService.get_domain_yearly_df(tech["id"])
-    if df_pat.empty:
-        show_empty(t("tech.empty_patents", domain=domain or tech["acronym"]))
-    else:
-        show_plotly(render_technology_record_counts_chart(df_pat, domain or tech["acronym"]))
+    pub_topic = TECH_ID_TO_DOMAIN.get(tech["id"])
 
-    pub_topic = {
-        "isac": "ISAC",
-        "ris": "RIS",
-        "thz": "THz",
-        "ai_ran": "AI-RAN",
-        "ntn": "NTN",
-        "ambient_iot": "Ambient IoT",
-    }.get(tech["id"])
-    if pub_topic:
+    if not get_lens_token():
+        show_empty(t("tech.empty_patents_token"))
+    else:
+        df_pat = PatentService.get_domain_yearly_df(tech["id"])
+        if df_pat.empty:
+            show_empty(t("tech.empty_patents", domain=domain or tech["acronym"]))
+        else:
+            show_plotly(render_technology_record_counts_chart(df_pat, domain or tech["acronym"]))
+            st.caption(t("tech.pat_chart_caption"))
+
+    if not get_springer_api_key():
+        show_empty(t("tech.empty_pub_token"))
+    elif pub_topic:
+        ensure_springer()
+        sp = springer_status()
+        if sp.get("running") and int(sp.get("total") or 0) > 0:
+            done = min(int(sp.get("done") or 0), int(sp["total"]))
+            st.info(t("pub.bg_wait", done=format_int(done), total=format_int(sp["total"])))
         df_pub = AcademicService.get_topic_yearly_df(pub_topic)
         if df_pub is None or df_pub.empty:
-            show_error(t("tech.pub_fail"))
+            show_empty(t("tech.pub_fail"))
         else:
-            show_plotly(render_academic_trends_chart(df_pub))
+            show_plotly(render_academic_trends_chart(df_pub, t("pub.chart_trend")))
+            st.caption(t("tech.pub_chart_caption"))
     else:
-        _teach_note(t("tech.cell_free_pub"))
+        show_empty(t("tech.pub_fail"))
 
     st.divider()
     _section_label("tech.refs")

@@ -257,25 +257,15 @@ def country_year_df(region: str = "both", topic: Optional[str] = None) -> Option
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}
     axis = list(TREND_YEARS)
-    if bundle.get("chart_source") == "springer":
-        keep = [name for name in TOPIC_ORDER if name in series] or list(series.keys())
-        if not keep:
-            return None
-        data: Dict[str, List[int]] = {"Years": axis}
-        for name in keep:
-            years = series.get(name) or {}
-            data[name] = [int(years.get(str(y), 0) or 0) for y in axis]
-        return pd.DataFrame(data)
-    if region == "tr":
-        keep = ["TR"]
-    elif region == "eu":
-        keep = [cc for cc in TREND_EU if cc in series]
-    else:
-        keep = ["TR"] + [cc for cc in TREND_EU if cc in series]
+    if bundle.get("chart_source") != "springer":
+        return None
+    keep = [name for name in TOPIC_ORDER if name in series]
+    if topic:
+        keep = [topic] if topic in series else []
     if not keep:
         return None
-    data = {"Years": axis}
-    for cc in keep:
-        years = series.get(cc) or {}
-        data[cc] = [int(years.get(str(y), 0) or 0) for y in axis]
+    data: Dict[str, List[int]] = {"Years": axis}
+    for name in keep:
+        years = series.get(name) or {}
+        data[name] = [int(years.get(str(y), 0) or 0) for y in axis]
     return pd.DataFrame(data)

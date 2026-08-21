@@ -140,6 +140,38 @@ def ensure_prefetch(topic: Optional[str], companies: Tuple[str, ...]) -> None:
         t.start()
 
 
+def _topic_year_work(topic: str) -> None:
+    from backend.config import reload_env
+    from backend.patent_apis import _lens_count, lens_topic_year_query
+
+    reload_env()
+    for year in _YEARS:
+        _lens_count(lens_topic_year_query(topic, int(year)))
+        time.sleep(0.05)
+
+
+def ensure_topic_year_prefetch(topic: str) -> None:
+    """Teknoloji sayfası: konu × yıl Lens total. Firma süzgeci yok."""
+    name = (topic or "").strip()
+    if not name:
+        return
+    from backend.config import get_lens_token
+    from backend.patent_apis import peek_topic_year_counts
+
+    if not get_lens_token():
+        return
+    if all(isinstance(n, int) for n in peek_topic_year_counts(name, _YEARS).values()):
+        return
+    key = f"ty|{name}"
+    with _lock:
+        alive = _threads.get(key)
+        if alive is not None and alive.is_alive():
+            return
+        t = threading.Thread(target=_topic_year_work, args=(name,), daemon=True, name=f"lens-year-{name}")
+        _threads[key] = t
+        t.start()
+
+
 def load_vendor_rows(topic: Optional[str]) -> List[Dict[str, Any]]:
     blob = _read_json(_ROWS)
     key = _job_key(topic, tuple(SPEC_COMPANIES))

@@ -156,6 +156,23 @@ def google_patents_count(query: str) -> Optional[int]:
     return total
 
 
+def lens_topic_year_query(topic: str, year: int) -> str:
+    return f"{lens_topic_dsl(topic)} AND year_published:{int(year)}"
+
+
+def peek_topic_year_counts(topic: str, years: tuple = (2020, 2021, 2022, 2023, 2024, 2025, 2026)) -> Dict[int, Optional[int]]:
+    """Disk önbelleği — ağ yok. Ölçülmeyen yıl None (0 uydurulmaz)."""
+    out: Dict[int, Optional[int]] = {}
+    for raw in years:
+        try:
+            y = int(raw)
+        except (TypeError, ValueError):
+            continue
+        n = peek_lens_count(lens_topic_year_query(topic, y))
+        out[y] = n if isinstance(n, int) else None
+    return out
+
+
 def lens_topic_dsl(topic: str) -> str:
     """Yedi 6G konusundan biri — başlık / özet / istem. Ham «6G» değil."""
     from backend.source_links import SPEC_PUB_TOPICS, TOPIC_TERMS

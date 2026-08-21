@@ -432,10 +432,20 @@ class PatentService:
 
     @staticmethod
     def get_domain_yearly_df(tech_id: str) -> pd.DataFrame:
+        """Lens.org total: konu DSL + year_published. Çekilen 100 satır değil. None yıl çizilmez."""
         domain = TECH_ID_TO_DOMAIN.get(tech_id, "")
         if not domain:
             return pd.DataFrame()
-        return _domain_yearly_counts(domain)
+        from backend.patent_apis import peek_topic_year_counts
+        from backend.patent_prefetch import ensure_topic_year_prefetch
+
+        ensure_topic_year_prefetch(domain)
+        years = tuple(range(2020, 2027))
+        raw = peek_topic_year_counts(domain, years)
+        axis = [y for y in years if isinstance(raw.get(y), int)]
+        if not axis:
+            return pd.DataFrame()
+        return pd.DataFrame({"Years": axis, domain: [int(raw[y]) for y in axis]})
 
     @staticmethod
     def domain_for_tech(tech_id: str) -> str:

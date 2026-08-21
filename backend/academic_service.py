@@ -75,7 +75,19 @@ class AcademicService:
 
     @staticmethod
     def get_topic_yearly_df(topic: str) -> Optional[pd.DataFrame]:
-        return country_year_df("both", _norm_topic(topic))
+        """Springer Nature Meta year facet. Overlay yoksa None — Crossref yedek yok."""
+        from backend.springer_live import TREND_YEARS, ensure_prefetch, live_topic_row
+
+        name = _norm_topic(topic)
+        if not name:
+            return None
+        ensure_prefetch()
+        row = live_topic_row(name)
+        years = row.get("years") if isinstance(row.get("years"), dict) else {}
+        axis = [y for y in TREND_YEARS if isinstance(years.get(str(y)), int)]
+        if not axis:
+            return None
+        return pd.DataFrame({"Years": axis, name: [int(years[str(y)]) for y in axis]})
 
     @staticmethod
     def get_most_cited_papers(topic: Optional[str] = None) -> List[Dict[str, Any]]:
