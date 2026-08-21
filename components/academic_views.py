@@ -14,6 +14,7 @@ from components.charts import (
     render_academic_bar_chart,
     render_academic_database_chart,
     render_academic_trends_chart,
+    render_country_rank_chart,
     render_wos_springer_totals_chart,
 )
 
@@ -61,6 +62,23 @@ def _as_bar_rows(kind: str, rows: list) -> list:
     return ranked
 
 
+def _country_list_items(rows: list) -> list:
+    """İlk 10, sonra …, sonra Türkiye sırası. Tam sıra yoksa >10; 0 basılmaz."""
+    items = _as_bar_rows("countries", rows)
+    if not items or _turkey_in_top(rows):
+        return items
+    items.append({"name": t("pub.cc_ellipsis"), "count": None, "gap": True})
+    items.append(
+        {
+            "name": t("pub.cc_tr_list_label"),
+            "count": None,
+            "cc": "TR",
+            "out": True,
+        }
+    )
+    return items
+
+
 def _turkey_in_top(rows: list) -> bool:
     return any(str(r.get("cc") or "") == "TR" for r in rows)
 
@@ -92,6 +110,12 @@ def _country_rank_table(wos_rows: list) -> list:
             }
         )
     if wos_rows and not _turkey_in_top(wos_rows):
+        blank = {
+            t("pub.cc_col_rank"): t("pub.cc_ellipsis"),
+            t("pub.cc_col_country"): t("pub.cc_ellipsis"),
+            t("pub.cc_col_count"): t("pub.cc_ellipsis"),
+        }
+        table.append(blank)
         table.append(
             {
                 t("pub.cc_col_rank"): t("pub.cc_tr_rank_gt10"),
@@ -188,16 +212,21 @@ def _render_wos_breakdown(kind: str, topic: str | None, wos: bool) -> None:
 
     if topic:
         raw = overlay.get(single_key) or []
-        rows = _as_bar_rows(kind, raw)
         st.caption(cap_one)
+        if kind == "countries":
+            rows = _country_list_items(raw)
+        else:
+            rows = _as_bar_rows(kind, raw)
         if rows:
-            show_plotly(render_academic_bar_chart(rows, f"{title_one} — {topic}"))
             if kind == "countries":
+                show_plotly(render_country_rank_chart(rows, f"{title_one} — {topic}"))
                 table = _country_rank_table(raw)
                 if table:
                     st.caption(t("pub.cc_rank_caption"))
                     st.dataframe(table, hide_index=True, use_container_width=True)
                 _render_turkey_note(topic, raw)
+            else:
+                show_plotly(render_academic_bar_chart(rows, f"{title_one} — {topic}"))
         else:
             show_empty(empty)
         return
@@ -212,17 +241,22 @@ def _render_wos_breakdown(kind: str, topic: str | None, wos: bool) -> None:
     drawn = False
     for name in TOPIC_ORDER:
         raw = by_topic.get(name) or []
-        rows = _as_bar_rows(kind, raw)
+        if kind == "countries":
+            rows = _country_list_items(raw)
+        else:
+            rows = _as_bar_rows(kind, raw)
         if not rows:
             continue
         drawn = True
         st.markdown(f"#### {name}")
-        show_plotly(render_academic_bar_chart(rows, f"{title_one} — {name}"))
         if kind == "countries":
+            show_plotly(render_country_rank_chart(rows, f"{title_one} — {name}"))
             table = _country_rank_table(raw)
             if table:
                 st.dataframe(table, hide_index=True, use_container_width=True)
             _render_turkey_note(name, raw)
+        else:
+            show_plotly(render_academic_bar_chart(rows, f"{title_one} — {name}"))
     if not drawn:
         show_empty(empty)
 

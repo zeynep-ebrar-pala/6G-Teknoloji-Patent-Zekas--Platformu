@@ -1033,6 +1033,77 @@ def render_academic_bar_chart(
     return fig
 
 
+def render_country_rank_chart(
+    items: List[Dict[str, Any]],
+    title: str,
+    name_key: str = "name",
+) -> go.Figure:
+    """İlk 10 çubuk, sonra …, sonra Türkiye sırası. None sayım 0 yazılmaz."""
+    unit = t("charts.paper_count")
+    hover_n = t("charts.hover_h", unit=unit)
+    labels: List[str] = []
+    xs: List[Optional[int]] = []
+    texts: List[str] = []
+    colors: List[str] = []
+    hovers: List[str] = []
+    counted: List[int] = []
+    fallback_i = 0
+    for row in items:
+        label = str(row.get(name_key) or "")
+        labels.append(label)
+        if row.get("gap"):
+            xs.append(float("nan"))
+            texts.append("")
+            colors.append("rgba(148, 163, 184, 0.0)")
+            hovers.append("<extra></extra>")
+            continue
+        if row.get("out") or row.get("count") is None:
+            xs.append(float("nan"))
+            texts.append(t("pub.metric_tr_wos_out"))
+            colors.append(TT_BAR)
+            hovers.append("%{y}<extra></extra>")
+            continue
+        n = int(row["count"])
+        xs.append(n)
+        texts.append(str(n))
+        counted.append(n)
+        is_tr = str(row.get("cc") or "") == "TR" or "türkiye" in label.casefold()
+        if is_tr:
+            colors.append(TT_BAR)
+        else:
+            colors.append(QUALITATIVE_COLORS[fallback_i % len(QUALITATIVE_COLORS)])
+            fallback_i += 1
+        hovers.append(hover_n)
+    fig = go.Figure(
+        go.Bar(
+            x=xs,
+            y=labels,
+            orientation="h",
+            marker=dict(color=colors),
+            text=texts,
+            textposition="outside",
+            cliponaxis=False,
+            hovertemplate=hovers,
+        )
+    )
+    layout = _layout()
+    layout.update(
+        title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=_count_axis(t("charts.paper_count"), counted),
+        yaxis=dict(
+            autorange="reversed",
+            categoryorder="array",
+            categoryarray=labels,
+            gridcolor="rgba(200, 209, 220, 0.1)",
+        ),
+        height=max(400, 28 * max(len(labels), 1) + 90),
+        bargap=0.28,
+        margin=dict(l=40, r=110, t=50, b=40),
+    )
+    fig.update_layout(**layout)
+    return fig
+
+
 def render_academic_grouped_bar(
     by_topic: Dict[str, List[Dict[str, Any]]],
     title: str,
