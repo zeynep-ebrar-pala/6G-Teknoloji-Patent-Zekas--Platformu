@@ -90,10 +90,10 @@ def _layout() -> dict:
 
 
 def _apply_layout(fig: go.Figure, **kwargs) -> go.Figure:
-    """Tema + özel alan. **_layout() unpack Plotly 6’da margin/legend çiftler."""
+    """Tema + özel alan. Figure.update_layout(dict, margin=...) Plotly 6’da çiftler."""
     layout = _layout()
     layout.update(kwargs)
-    fig.update_layout(layout)
+    fig.layout.update(layout)
     return fig
 
 
@@ -621,17 +621,38 @@ def render_patent_density_heatmap(df_density: pd.DataFrame) -> go.Figure:
 
 def render_patent_sunburst(df_tree: pd.DataFrame) -> go.Figure:
     """Firma → konu treemap. Yayın no yok; alan = Lens total."""
-    fig = px.treemap(
-        df_tree,
-        path=["company", "domain"],
-        values="n",
-        color="domain",
-        color_discrete_map=DOMAIN_COLORS,
-        color_discrete_sequence=QUALITATIVE_COLORS,
-    )
-    fig.update_traces(
-        textinfo="label+value",
-        hovertemplate="<b>%{label}</b><br>" + t("charts.patent_count") + ": %{value:d}<extra></extra>",
+    ids: List[str] = []
+    labels: List[str] = []
+    parents: List[str] = []
+    values: List[int] = []
+    colors: List[str] = []
+    for company, grp in df_tree.groupby("company", sort=False):
+        cid = f"c:{company}"
+        ids.append(cid)
+        labels.append(str(company))
+        parents.append("")
+        values.append(int(grp["n"].sum()))
+        colors.append("#334155")
+        for _, row in grp.iterrows():
+            domain = str(row["domain"])
+            ids.append(f"{cid}/{domain}")
+            labels.append(domain)
+            parents.append(cid)
+            values.append(int(row["n"]))
+            colors.append(DOMAIN_COLORS.get(domain, "#64748B"))
+    fig = go.Figure(
+        go.Treemap(
+            ids=ids,
+            labels=labels,
+            parents=parents,
+            values=values,
+            branchvalues="total",
+            marker=dict(colors=colors, line=dict(width=1, color="#1A1F2B")),
+            textinfo="label+value",
+            hovertemplate="<b>%{label}</b><br>"
+            + t("charts.patent_count")
+            + ": %{value:d}<extra></extra>",
+        )
     )
     _apply_layout(
         fig,
@@ -747,7 +768,7 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
         ),
         margin=dict(l=10, r=10, t=50, b=10),
     )
-    fig.update_layout(layout)
+    fig.layout.update(layout)
     fig.update_traces(
         marker_line_width=0.6,
         marker_line_color="rgba(200,209,220,0.35)",
@@ -872,7 +893,7 @@ def render_tt_europe_overview_chart(
         margin=dict(l=40, r=70, t=50, b=40),
         showlegend=False,
     )
-    fig.update_layout(layout)
+    fig.layout.update(layout)
     return fig
 
 
@@ -911,7 +932,7 @@ def render_tt_vs_leader_chart(
         legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0.0),
         margin=dict(l=40, r=40, t=70, b=40),
     )
-    fig.update_layout(layout)
+    fig.layout.update(layout)
     return fig
 
 
@@ -951,7 +972,7 @@ def render_tt_office_chart(counts: Dict[str, int]) -> go.Figure:
         bargap=0.35,
         margin=dict(l=40, r=20, t=50, b=110),
     )
-    fig.update_layout(layout)
+    fig.layout.update(layout)
     return fig
 
 
@@ -994,7 +1015,7 @@ def render_academic_bar_chart(
         bargap=0.28,
         margin=dict(l=40, r=70, t=50, b=40),
     )
-    fig.update_layout(layout)
+    fig.layout.update(layout)
     return fig
 
 
@@ -1065,7 +1086,7 @@ def render_country_rank_chart(
         bargap=0.28,
         margin=dict(l=40, r=110, t=50, b=40),
     )
-    fig.update_layout(layout)
+    fig.layout.update(layout)
     return fig
 
 
@@ -1121,6 +1142,6 @@ def render_academic_grouped_bar(
         legend=dict(orientation="h", y=1.12, font=dict(size=11)),
         margin=dict(l=40, r=40, t=70, b=40),
     )
-    fig.update_layout(layout)
+    fig.layout.update(layout)
     return fig
 
