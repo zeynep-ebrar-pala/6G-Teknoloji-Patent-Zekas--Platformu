@@ -445,6 +445,25 @@ def _lens_count(query: str) -> Optional[int]:
     return n
 
 
+def peek_lens_count(query: str) -> Optional[int]:
+    """Disk önbelleği — ağ yok. Sayfa kilitlemesin."""
+    q = (query or "").strip()
+    if not q:
+        return None
+    return _cache_get(f"lens:{q}")
+
+
+def peek_lens_count_map() -> Dict[str, int]:
+    """Tüm disk Lens sayıları (ağ yok)."""
+    out: Dict[str, int] = {}
+    for key, item in (_load().get("counts") or {}).items():
+        if not isinstance(key, str) or not key.startswith("lens:"):
+            continue
+        if isinstance(item, dict) and isinstance(item.get("n"), int):
+            out[key[5:]] = int(item["n"])
+    return out
+
+
 @st.cache_data(ttl=3600, show_spinner=False)
 def lens_assignee_bundle(topic: str, company: str, _keys: str = "") -> Dict[str, Any]:
     """Bir firma: API toplamı + çekilen kayıt. İkisi toplanmaz."""

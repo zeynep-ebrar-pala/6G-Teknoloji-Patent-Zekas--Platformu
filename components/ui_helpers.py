@@ -77,16 +77,16 @@ def _link_key(text: str) -> str:
 
 def render_source_totals(kind: str, topic: Optional[str], key_suffix: str) -> None:
     """Konu seçimine göre şartname DB toplamı. API yoksa —."""
-    from backend.patent_apis import key_fingerprint as patent_key_fingerprint
     from backend.publisher_apis import key_fingerprint
-    from backend.source_totals import fetch_patent_source_totals, fetch_pub_source_totals
+    from backend.source_totals import fetch_pub_source_totals
     from i18n.core import format_int
 
-    rows = (
-        fetch_patent_source_totals(topic, patent_key_fingerprint())
-        if kind == "patent"
-        else fetch_pub_source_totals(topic, key_fingerprint())
-    )
+    if kind == "patent":
+        from backend.source_totals import peek_patent_source_totals
+
+        rows = peek_patent_source_totals(topic)
+    else:
+        rows = fetch_pub_source_totals(topic, key_fingerprint())
     st.caption(_t("sources.totals_caption_pat" if kind == "patent" else "sources.totals_caption_pub"))
     table = []
     config = {}

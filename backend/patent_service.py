@@ -121,45 +121,14 @@ def _from_lens(raw: Dict[str, Any], domain: str) -> Optional[Dict[str, Any]]:
 
 
 def _fetch_live_vendor_patents(domain: Optional[str] = None) -> List[Dict[str, Any]]:
-    """Yedi 6G konusu × şartname firmaları. Konu = arama; Unclassified yok."""
-    from backend.config import get_lens_token
-    from backend.patent_apis import key_fingerprint, lens_topic_vendor_bundle
+    """Arka plan önbelleği. Ağ burada yok — sayfa kilitlemesin."""
+    from backend.patent_prefetch import load_vendor_rows
 
-    if not get_lens_token():
-        return []
-    topic = _norm_domain(domain)
-    topics = [topic] if topic else list(TECHNOLOGY_DOMAINS)
-    keys = key_fingerprint()
-    out: List[Dict[str, Any]] = []
-    seen: set = set()
-    for name in topics:
-        bundle = lens_topic_vendor_bundle(name, tuple(SPEC_COMPANIES), keys)
-        for raw in bundle.get("rows") or []:
-            payload = dict(raw)
-            company = _company_match(payload.get("assignee") or "")
-            if not company:
-                continue
-            payload["assignee"] = company
-            pub = payload.get("publication_number") or ""
-            if not pub or pub in seen:
-                continue
-            rec = _from_lens(payload, name)
-            if not rec:
-                continue
-            seen.add(pub)
-            out.append(rec)
-    return out
-
-
-@st.cache_data(ttl=3600, show_spinner=False)
-def _cached_vendor_patents(domain: Optional[str], _keys: str) -> List[Dict[str, Any]]:
-    return _fetch_live_vendor_patents(domain)
+    return load_vendor_rows(_norm_domain(domain))
 
 
 def _live_vendor_patents(domain: Optional[str] = None) -> List[Dict[str, Any]]:
-    from backend.patent_apis import key_fingerprint
-
-    return _cached_vendor_patents(_norm_domain(domain), key_fingerprint())
+    return _fetch_live_vendor_patents(_norm_domain(domain))
 
 
 def _patents(domain: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -360,10 +329,7 @@ class PatentService:
 
         if not get_lens_token():
             return "Lens.org (token yok)"
-        live_n = len(_live_vendor_patents(None))
-        if live_n:
-            return f"Lens.org ({live_n} çekilen kayıt)"
-        return "Lens.org (yanıt yok)"
+        return "Lens.org"
 
     @staticmethod
     def get_summary(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, Any]:

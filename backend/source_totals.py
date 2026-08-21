@@ -38,6 +38,25 @@ def _patent_method(source_id: str, n: Optional[int], keys: Dict[str, bool]) -> s
     return "api_empty"
 
 
+def peek_patent_source_totals(topic: Optional[str]) -> List[Dict[str, Any]]:
+    """Disk önbelleği — ağ yok."""
+    from backend.patent_apis import lens_explorer_dsl, lens_topic_dsl, peek_lens_count
+
+    label = topic or "6G"
+    links = topic_patent_searches(label)
+    keys = patent_key_status()
+    q = lens_topic_dsl(topic) if topic else lens_explorer_dsl()
+    n = peek_lens_count(q)
+    return [
+        _row(
+            "lens",
+            _search_url(links, "lens"),
+            n,
+            _patent_method("lens", n, keys),
+        )
+    ]
+
+
 @st.cache_data(ttl=21600, show_spinner=False)
 def fetch_patent_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[str, Any]]:
     """Yalnızca Lens.org patent/search. Yanıt yoksa None (UI —)."""

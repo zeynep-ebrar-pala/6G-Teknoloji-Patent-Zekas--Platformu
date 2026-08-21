@@ -11,8 +11,8 @@ env/
 venv/
 ENV/
 
-# Streamlit secrets
-.streamlit/secrets.toml
+data/cache/patent_prefetch_status.json
+data/cache/patent_vendor_rows.json
 
 # IDE & OS
 .vscode/
