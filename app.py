@@ -4,6 +4,12 @@ Giriş yalnızca streamlit + i18n.core/styles — Cloud ImportError olmasın.
 Dil seçici burada sabit TR / EN. Cloud eski paket önbelleği bu dosyayı etkilemesin.
 """
 
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parent / ".env", override=True)
+
 import streamlit as st
 
 st.set_page_config(

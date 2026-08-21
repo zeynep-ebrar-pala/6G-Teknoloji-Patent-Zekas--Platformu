@@ -92,7 +92,7 @@ def render_patent_intelligence_module():
         render_tt_europe_patent_section(domain=topic)
         return
 
-    from backend.patent_apis import key_fingerprint, live_assignee_counts
+    from backend.patent_apis import key_fingerprint, lens_last_error, live_assignee_counts
     from backend.source_links import assignee_patent_links, topic_query
 
     spec = PatentService.get_spec_companies()
@@ -112,6 +112,9 @@ def render_patent_intelligence_module():
         xhr_totals = live_assignee_counts(query, tuple(spec) if not company_arg else (company_arg,), keys)
         summary = PatentService.get_summary(company_arg, topic)
         patents = PatentService.get_top_patents(company_arg, topic)
+    api_err = lens_last_error()
+    if api_err:
+        st.warning(t("patent.api_error", detail=api_err.replace("{", "(").replace("}", ")")))
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:

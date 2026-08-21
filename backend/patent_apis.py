@@ -31,6 +31,15 @@ GP_UA = (
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 )
 UA = "6G-Patent-Platform/1.3 (mailto:zeynep.ebrar.pala@example.com)"
+_LAST_LENS: Dict[str, Any] = {"code": None, "detail": ""}
+
+
+def lens_last_error() -> str:
+    """Son patent/search HTTP hatası. 200 veya çağrı yoksa boş."""
+    code = _LAST_LENS.get("code")
+    if not code or code == 200:
+        return ""
+    return str(_LAST_LENS.get("detail") or f"HTTP {code}").strip()
 
 
 def _gp_get(url: str, timeout: int = 18) -> Optional[Dict[str, Any]]:
@@ -171,6 +180,8 @@ def _as_list(value: Any) -> List[Any]:
 def _lens_post(payload: Dict[str, Any], timeout: int = 30) -> Optional[Dict[str, Any]]:
     token = get_lens_token()
     if not token:
+        _LAST_LENS["code"] = 401
+        _LAST_LENS["detail"] = "Missing Authorization"
         return None
     body = json.dumps(payload).encode("utf-8")
     headers = {
@@ -179,18 +190,29 @@ def _lens_post(payload: Dict[str, Any], timeout: int = 30) -> Optional[Dict[str,
         "Accept": "application/json",
         "User-Agent": UA,
     }
-    req = urllib.request.Request(
-        "https://api.lens.org/patent/search",
-        data=body,
-        headers=headers,
-        method="POST",
-    )
+    _LAST_LENS["code"] = None
+    _LAST_LENS["detail"] = ""
     for attempt in range(3):
+        req = urllib.request.Request(
+            "https://api.lens.org/patent/search",
+            data=body,
+            headers=headers,
+            method="POST",
+        )
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
+            _LAST_LENS["code"] = 200
+            _LAST_LENS["detail"] = ""
             return data if isinstance(data, dict) else None
         except urllib.error.HTTPError as exc:
+            err_body = ""
+            try:
+                err_body = exc.read().decode("utf-8", errors="replace")[:240]
+            except Exception:
+                err_body = ""
+            _LAST_LENS["code"] = exc.code
+            _LAST_LENS["detail"] = err_body or f"HTTP {exc.code}"
             if exc.code == 404:
                 return {"total": 0, "data": []}
             if exc.code == 429 and attempt < 2:
@@ -203,7 +225,9 @@ def _lens_post(payload: Dict[str, Any], timeout: int = 30) -> Optional[Dict[str,
                 time.sleep(min(wait, 45))
                 continue
             return None
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError):
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError) as exc:
+            _LAST_LENS["code"] = 0
+            _LAST_LENS["detail"] = type(exc).__name__
             return None
     return None
 
@@ -268,13 +292,20 @@ def _applicant_names(biblio: Dict[str, Any]) -> str:
 
 def _pub_ref(biblio: Dict[str, Any], rec: Dict[str, Any]) -> Dict[str, Any]:
     refs = _as_list(biblio.get("publication_reference"))
-    if refs and isinstance(refs[0], dict):
-        return refs[0]
+    raw = refs[0] if refs and isinstance(refs[0], dict) else {}
+    nested = raw.get("document_id") if isinstance(raw.get("document_id"), dict) else {}
     return {
-        "country": rec.get("country") or rec.get("jurisdiction"),
-        "doc_number": rec.get("doc_number"),
-        "kind": rec.get("kind"),
-        "date": rec.get("date_published") or rec.get("date_publ"),
+        "country": (
+            raw.get("country")
+            or raw.get("jurisdiction")
+            or nested.get("country")
+            or nested.get("jurisdiction")
+            or rec.get("country")
+            or rec.get("jurisdiction")
+        ),
+        "doc_number": raw.get("doc_number") or nested.get("doc_number") or rec.get("doc_number"),
+        "kind": raw.get("kind") or nested.get("kind") or rec.get("kind"),
+        "date": raw.get("date") or nested.get("date") or rec.get("date_published") or rec.get("date_publ"),
     }
 
 
@@ -311,6 +342,8 @@ def _rows_from_lens(payload: Dict[str, Any]) -> List[Dict[str, Any]]:
                 if lang.startswith("en") or not abstract:
                     if lang.startswith("en"):
                         break
+        if not pub:
+            pub = str(rec.get("lens_id") or "").replace("-", "")
         if not pub or not title or year is None:
             continue
         source_url = f"https://www.lens.org/lens/patent/{lens_id}" if lens_id else ""

@@ -9,12 +9,22 @@ from typing import Literal, Optional
 from dotenv import load_dotenv
 
 _ROOT = Path(__file__).resolve().parent.parent
-load_dotenv(_ROOT / ".env")
+
+
+def reload_env() -> None:
+    """Her okumada .env'i yeniden yükle. Boş LENS_TOKEN eski süreci kilitlemesin."""
+    path = _ROOT / ".env"
+    if path.is_file():
+        load_dotenv(path, override=True)
+
+
+reload_env()
 
 Provider = Literal["groq", "gemini"]
 
 def _secret(name: str) -> Optional[str]:
-    value = (os.getenv(name) or "").strip()
+    reload_env()
+    value = (os.getenv(name) or "").strip().strip('"').strip("'")
     if value:
         return value
     try:
