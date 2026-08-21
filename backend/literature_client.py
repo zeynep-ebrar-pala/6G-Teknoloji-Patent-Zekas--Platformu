@@ -73,6 +73,128 @@ EU_AFFIL: Dict[str, str] = {
 }
 
 TREND_EU = ("DE", "FR", "IT", "ES", "GB", "FI", "GR", "CZ")
+EU_CCS = frozenset(EU_AFFIL.keys())
+TR_INST_HINTS = (
+    "turkey",
+    "türkiye",
+    "turkiye",
+    "istanbul",
+    "ankara",
+    "izmir",
+    "boğaziçi",
+    "bogazici",
+    "odtü",
+    "metu",
+    "middle east technical",
+    "bilkent",
+    "koç ünivers",
+    "koc university",
+    "sabancı",
+    "sabanci",
+    "hacettepe",
+    "yıldız",
+    "yildiz",
+    "gazi ünivers",
+    "ege university",
+    "türk telekom",
+    "turk telekom",
+    "turkcell",
+    "vodafone türkiye",
+    "vodafone turkey",
+    "netsia",
+    "tübitak",
+    "tubitak",
+    "istanbul technical",
+    "itu ",
+)
+
+
+def _norm(text: str) -> str:
+    return (text or "").casefold()
+
+
+def _is_tr_institution(name: str) -> bool:
+    n = _norm(name)
+    return any(hint in n for hint in TR_INST_HINTS)
+
+
+def _is_eu_institution(name: str) -> bool:
+    n = _norm(name)
+    if _is_tr_institution(name):
+        return False
+    for cc, label in EU_AFFIL.items():
+        if _norm(label) in n or f", {cc.lower()}" in n or n.endswith(f" {cc.lower()}"):
+            return True
+    from data.eu_operators import EU_COUNTRY_MNOS
+
+    for row in EU_COUNTRY_MNOS:
+        if row.get("cc") == "TR":
+            continue
+        if _norm(str(row.get("name_en") or "")) in n or _norm(str(row.get("name_tr") or "")) in n:
+            return True
+        for op in row.get("operators") or []:
+            if any(_norm(p) and _norm(p) in n for p in op.get("patterns") or ()):
+                return True
+            if _norm(str(op.get("name") or "")) and _norm(str(op["name"])) in n:
+                return True
+    return False
+
+
+def _filter_countries(rows: List[Dict[str, Any]], region: str) -> List[Dict[str, Any]]:
+    if region == "tr":
+        return [r for r in rows if str(r.get("cc") or "") == "TR"]
+    if region == "eu":
+        return [r for r in rows if str(r.get("cc") or "") in EU_CCS]
+    return list(rows)
+
+
+def _filter_institutions(rows: List[Dict[str, Any]], region: str) -> List[Dict[str, Any]]:
+    if region == "tr":
+        return [r for r in rows if _is_tr_institution(str(r.get("name") or ""))]
+    if region == "eu":
+        return [r for r in rows if _is_eu_institution(str(r.get("name") or ""))]
+    return list(rows)
+
+
+def _apply_region(payload: Dict[str, Any], region: str) -> Dict[str, Any]:
+    """Springer overlay küreseldir; bölge tuşu ülke/kurum/toplamı keser. Sayı uydurulmaz."""
+    payload["countries"] = _filter_countries(payload.get("countries") or [], region)
+    payload["institutions"] = _filter_institutions(payload.get("institutions") or [], region)
+    by_cc = payload.get("countries_by_topic") or {}
+    by_inst = payload.get("institutions_by_topic") or {}
+    payload["countries_by_topic"] = {
+        name: _filter_countries(rows, region) for name, rows in by_cc.items()
+    }
+    payload["institutions_by_topic"] = {
+        name: _filter_institutions(rows, region) for name, rows in by_inst.items()
+    }
+    turkey_map = payload.get("turkey_by_topic") or {}
+    topic = payload.get("topic")
+    if region == "tr":
+        if topic:
+            info = payload.get("turkey") or turkey_map.get(topic) or {}
+            n = info.get("count") if isinstance(info.get("count"), int) else None
+            payload["total"] = n
+            payload["topics"] = {topic: n} if isinstance(n, int) else {}
+        else:
+            payload["total"] = None
+            payload["topics"] = {
+                name: int(info["count"])
+                for name, info in turkey_map.items()
+                if isinstance((info or {}).get("count"), int)
+            }
+        payload["year_counts"] = {}
+        payload["year_series"] = {}
+        payload["cited"] = []
+    elif region == "eu":
+        eu_n = sum(int(r["count"]) for r in payload["countries"] if isinstance(r.get("count"), int))
+        payload["total"] = eu_n if payload["countries"] else None
+        payload["topics"] = {}
+        payload["year_counts"] = {}
+        payload["year_series"] = {}
+        payload["cited"] = []
+        payload["turkey"] = {}
+    return payload
 
 
 def _load_disk() -> Dict[str, Any]:
@@ -244,7 +366,7 @@ def literature_bundle(
     if tpc:
         springer_ok = {tpc: springer_ok[tpc]} if tpc in springer_ok else {}
     payload["springer_topics"] = springer_ok
-    return payload
+    return _apply_region(payload, region)
 
 
 def country_year_df(region: str = "both", topic: Optional[str] = None) -> Optional[pd.DataFrame]:

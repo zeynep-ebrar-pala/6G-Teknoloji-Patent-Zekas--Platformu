@@ -293,7 +293,6 @@ def render_patent_intelligence_module():
     company = st.selectbox(
         t("patent.filter"),
         options=filter_options,
-        index=0,
         format_func=lambda x: t("patent.all") if x == "all" else x,
         key="patent_company_filter",
     )

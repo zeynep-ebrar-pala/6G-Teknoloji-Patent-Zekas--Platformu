@@ -73,9 +73,9 @@ def _tenth_count(rows: list) -> int | None:
         return None
 
 
-def _country_list_items(rows: list, turkey: dict | None = None) -> list:
+def _country_list_items(rows: list, turkey: dict | None = None, *, region: str = "both") -> list:
     items = _as_bar_rows("countries", rows)
-    if not items or _turkey_in_top(rows):
+    if region != "both" or not items or _turkey_in_top(rows):
         return items
     items.append({"name": t("pub.cc_ellipsis"), "count": None, "gap": True})
     info = turkey or {}
@@ -89,7 +89,7 @@ def _country_list_items(rows: list, turkey: dict | None = None) -> list:
     return items
 
 
-def _country_rank_table(rows: list, turkey: dict | None = None) -> list:
+def _country_rank_table(rows: list, turkey: dict | None = None, *, region: str = "both") -> list:
     table = []
     for i, row in enumerate(rows[:10], 1):
         table.append(
@@ -99,25 +99,39 @@ def _country_rank_table(rows: list, turkey: dict | None = None) -> list:
                 t("pub.cc_col_count"): _fmt(int(row["count"])),
             }
         )
-    if rows and not _turkey_in_top(rows):
-        table.append(
-            {
-                t("pub.cc_col_rank"): t("pub.cc_ellipsis"),
-                t("pub.cc_col_country"): t("pub.cc_ellipsis"),
-                t("pub.cc_col_count"): t("pub.cc_ellipsis"),
-            }
-        )
-        info = turkey or {}
-        rank = info.get("rank") if isinstance(info.get("rank"), int) else None
-        count = info.get("count") if isinstance(info.get("count"), int) else None
-        table.append(
-            {
-                t("pub.cc_col_rank"): str(rank) if rank else t("pub.cc_tr_rank_gt10"),
-                t("pub.cc_col_country"): _cc_name("TR"),
-                t("pub.cc_col_count"): _fmt(count) if isinstance(count, int) else t("pub.cc_tr_not_measured"),
-            }
-        )
+    if region != "both" or not rows or _turkey_in_top(rows):
+        return table
+    table.append(
+        {
+            t("pub.cc_col_rank"): t("pub.cc_ellipsis"),
+            t("pub.cc_col_country"): t("pub.cc_ellipsis"),
+            t("pub.cc_col_count"): t("pub.cc_ellipsis"),
+        }
+    )
+    info = turkey or {}
+    rank = info.get("rank") if isinstance(info.get("rank"), int) else None
+    count = info.get("count") if isinstance(info.get("count"), int) else None
+    table.append(
+        {
+            t("pub.cc_col_rank"): str(rank) if rank else t("pub.cc_tr_rank_gt10"),
+            t("pub.cc_col_country"): _cc_name("TR"),
+            t("pub.cc_col_count"): _fmt(count) if isinstance(count, int) else t("pub.cc_tr_not_measured"),
+        }
+    )
     return table
+
+
+def _region_country_rows(bundle: dict) -> list:
+    rows = list(bundle.get("countries") or [])
+    if rows:
+        return rows
+    seen: dict = {}
+    for group in (bundle.get("countries_by_topic") or {}).values():
+        for row in group or []:
+            cc = str(row.get("cc") or "")
+            if cc and cc not in seen:
+                seen[cc] = row
+    return list(seen.values())
 
 
 def _turkey_info(bundle: dict, topic: str | None) -> dict:
@@ -147,11 +161,15 @@ def _tr_rank_metric(topic: str | None, bundle: dict) -> tuple[str, str | None]:
     return "—", None
 
 
-def _render_breakdown(kind: str, topic: str | None, bundle: dict) -> None:
+def _render_breakdown(kind: str, topic: str | None, bundle: dict, region: str = "both") -> None:
     from backend.springer_live import TOPIC_ORDER
     from components.ui_helpers import show_empty, show_plotly
 
     cap_one = t("pub.cc_caption") if kind == "countries" else t("pub.inst_caption")
+    if region == "tr":
+        cap_one = t("pub.cc_caption_tr") if kind == "countries" else t("pub.inst_caption_tr")
+    elif region == "eu":
+        cap_one = t("pub.cc_caption_eu") if kind == "countries" else t("pub.inst_caption_eu")
     cap_all = t("pub.cc_caption_all") if kind == "countries" else t("pub.inst_caption_all")
     title_one = t("pub.chart_cc") if kind == "countries" else t("pub.chart_inst")
     empty = t("pub.empty_cc") if kind == "countries" else t("pub.empty_inst")
@@ -161,13 +179,13 @@ def _render_breakdown(kind: str, topic: str | None, bundle: dict) -> None:
         raw = bundle.get("countries" if kind == "countries" else "institutions") or []
         turkey = bundle.get("turkey") or {}
         st.caption(cap_one)
-        rows = _country_list_items(raw, turkey) if kind == "countries" else _as_bar_rows(kind, raw)
+        rows = _country_list_items(raw, turkey, region=region) if kind == "countries" else _as_bar_rows(kind, raw)
         if not rows:
             show_empty(empty)
             return
         if kind == "countries":
             show_plotly(render_country_rank_chart(rows, f"{title_one} — {topic}"))
-            table = _country_rank_table(raw, turkey)
+            table = _country_rank_table(raw, turkey, region=region)
             if table:
                 st.caption(t("pub.cc_rank_caption"))
                 st.dataframe(table, hide_index=True, use_container_width=True)
@@ -175,26 +193,48 @@ def _render_breakdown(kind: str, topic: str | None, bundle: dict) -> None:
             show_plotly(render_academic_bar_chart(rows, f"{title_one} — {topic}"))
         return
 
-    st.caption(cap_all)
+    st.caption(cap_all if region == "both" else cap_one)
     by_topic = bundle.get("countries_by_topic" if kind == "countries" else "institutions_by_topic") or {}
     drawn = False
     for name in TOPIC_ORDER:
         raw = by_topic.get(name) or []
         turkey = turkey_map.get(name) or {}
-        rows = _country_list_items(raw, turkey) if kind == "countries" else _as_bar_rows(kind, raw)
+        rows = _country_list_items(raw, turkey, region=region) if kind == "countries" else _as_bar_rows(kind, raw)
         if not rows:
             continue
         drawn = True
         st.markdown(f"#### {name}")
         if kind == "countries":
             show_plotly(render_country_rank_chart(rows, f"{title_one} — {name}"))
-            table = _country_rank_table(raw, turkey)
+            table = _country_rank_table(raw, turkey, region=region)
             if table:
                 st.dataframe(table, hide_index=True, use_container_width=True)
         else:
             show_plotly(render_academic_bar_chart(rows, f"{title_one} — {name}"))
     if not drawn:
         show_empty(empty)
+
+
+def _render_region_operators(region: str) -> None:
+    from data.eu_operators import countries_for_region
+
+    if region not in ("tr", "eu"):
+        return
+    rows = countries_for_region(region)
+    if not rows:
+        return
+    st.caption(t("pub.mno_caption"))
+    chips = []
+    for country in rows:
+        ops = ", ".join(str(op.get("name") or "") for op in (country.get("operators") or []) if op.get("name"))
+        if not ops:
+            continue
+        label = country.get("name_tr") if get_lang() == "tr" else country.get("name_en")
+        chips.append(f"**{label}:** {ops}")
+    if region == "tr":
+        st.markdown(" · ".join(chips))
+        return
+    st.markdown("\n".join(f"- {line}" for line in chips[:8]))
 
 
 def render_academic_publication_module():
@@ -206,7 +246,6 @@ def render_academic_publication_module():
         render_link_row,
         render_module_header,
         render_paper_card,
-        render_spec_pub_sources,
         select_section,
         show_empty,
         show_plotly,
@@ -240,9 +279,16 @@ def render_academic_publication_module():
             unsafe_allow_html=True,
         )
 
-    render_spec_pub_sources()
     ensure_prefetch()
     topic, region = render_pub_topic_panel("pub")
+    _labels = [t(f"pub.section.{k}") for k in PUB_SECTION_KEYS]
+    _map = dict(zip(_labels, PUB_SECTION_KEYS))
+    section = _map.get(
+        select_section(t("pub.view"), _labels, key=f"academic_section_story_{get_lang()}"),
+        PUB_SECTION_KEYS[0],
+    )
+    _render_region_operators(region)
+
     bundle = AcademicService.get_bundle(region, topic)
     status = prefetch_status()
     if status.get("running") and int(status.get("total") or 0) > 0:
@@ -252,39 +298,34 @@ def render_academic_publication_module():
     if status.get("error"):
         st.warning(t("pub.api_error", detail=str(status["error"]).replace("{", "(").replace("}", ")")))
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3 = st.columns(3)
     with c1:
-        st.metric(t("pub.metric_springer"), _fmt(bundle.get("total") if topic else None))
+        st.metric(t("pub.metric_springer"), _fmt(bundle.get("total")))
     with c2:
-        rank_val, rank_delta = _tr_rank_metric(topic, bundle)
-        st.metric(t("pub.metric_tr_rank"), rank_val, rank_delta)
-    with c3:
-        years = bundle.get("year_counts") or {}
-        years = {str(y): int(years.get(str(y), 0) or 0) for y in TREND_YEARS if int(years.get(str(y), 0) or 0)}
-        if years:
-            peak = max(years, key=lambda y: years[y])
-            st.metric(t("pub.metric_peak_year"), peak, t("pub.metric_peak_delta", n=_fmt(years[peak])))
+        if region == "eu":
+            eu_rows = _region_country_rows(bundle)
+            st.metric(t("pub.metric_eu_n"), _fmt(len(eu_rows) if eu_rows else None))
         else:
-            st.metric(t("pub.metric_peak_year"), "—")
-    with c4:
-        info = _turkey_info(bundle, topic)
-        st.metric(t("pub.metric_tr_count"), _fmt(info.get("count") if isinstance(info.get("count"), int) else None))
-    st.caption(t("pub.source_metric_caption"))
-    if bundle.get("fetched_at"):
-        st.caption(t("pub.snapshot", ts=bundle["fetched_at"]))
+            rank_val, _rank_delta = _tr_rank_metric(topic, bundle)
+            st.metric(t("pub.metric_tr_rank"), rank_val)
+    with c3:
+        if region == "eu":
+            rows = _region_country_rows(bundle)
+            top = rows[0] if rows else None
+            label = _country_label(top) if top else "—"
+            st.metric(t("pub.metric_eu_top"), label)
+        else:
+            info = _turkey_info(bundle, topic)
+            st.metric(
+                t("pub.metric_tr_count"),
+                _fmt(info.get("count") if isinstance(info.get("count"), int) else None),
+            )
 
     from backend.source_links import topic_pub_searches
 
     render_link_row(
         topic_pub_searches(topic or "6G", region),
         key_suffix=f"pub_src_{region}_{topic or 'all'}",
-    )
-
-    _labels = [t(f"pub.section.{k}") for k in PUB_SECTION_KEYS]
-    _map = dict(zip(_labels, PUB_SECTION_KEYS))
-    section = _map.get(
-        select_section(t("pub.view"), _labels, key=f"academic_section_story_{get_lang()}"),
-        PUB_SECTION_KEYS[0],
     )
 
     if section == "tt_eu":
@@ -298,18 +339,18 @@ def render_academic_publication_module():
         return render_academic_trends_chart(df, t("pub.chart_trend"))
 
     if section == "year":
-        st.markdown(t("pub.year_heading"))
-        st.caption(t("pub.year_caption"))
+        st.caption(t("pub.year_caption") if region == "both" else t("pub.year_caption_region"))
         years = bundle.get("year_counts") or {}
         years = {str(y): int(years.get(str(y), 0) or 0) for y in TREND_YEARS}
+        shown = False
         if any(years.values()):
             show_plotly(render_academic_database_chart(years, t("pub.chart_year"), t("pub.chart_year_x")))
+            shown = True
         else:
             fig = _trend_fig()
             if fig is not None:
                 show_plotly(fig)
-            else:
-                show_empty(t("pub.empty_year"))
+                shown = True
         topics = bundle.get("topics") or {}
         if topics:
             show_plotly(
@@ -318,34 +359,29 @@ def render_academic_publication_module():
                     t("pub.chart_topic"),
                 )
             )
+            shown = True
+        if not shown:
+            show_empty(t("pub.empty_year_region") if region != "both" else t("pub.empty_year"))
 
     elif section == "inst":
-        st.markdown(t("pub.inst_heading"))
-        _render_breakdown("institutions", topic, bundle)
+        _render_breakdown("institutions", topic, bundle, region)
 
     elif section == "country":
-        st.markdown(t("pub.cc_heading"))
-        _render_breakdown("countries", topic, bundle)
+        _render_breakdown("countries", topic, bundle, region)
 
     elif section == "cited":
-        st.markdown(t("pub.cited_heading"))
-        st.caption(t("pub.cited_caption"))
+        st.caption(t("pub.cited_caption") if region == "both" else t("pub.cited_caption_region"))
         papers = bundle.get("cited") or []
         if not papers:
-            show_empty(t("pub.empty_cited"))
+            show_empty(t("pub.empty_cited_region") if region != "both" else t("pub.empty_cited"))
         else:
             for paper in papers:
                 render_paper_card(_with_source(paper))
 
     else:
-        st.markdown(t("pub.trend_heading"))
-        st.caption(t("pub.trend_caption"))
+        st.caption(t("pub.trend_caption") if region == "both" else t("pub.year_caption_region"))
         fig = _trend_fig()
         if fig is not None:
             show_plotly(fig)
         else:
-            show_empty(t("pub.empty_year"))
-        render_link_row(
-            topic_pub_searches(topic or "6G", region),
-            key_suffix=f"pub_tr_{region}_{topic or 'all'}",
-        )
+            show_empty(t("pub.empty_year_region") if region != "both" else t("pub.empty_year"))

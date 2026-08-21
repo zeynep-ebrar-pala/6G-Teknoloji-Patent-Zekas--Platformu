@@ -405,6 +405,16 @@ def country_choices() -> List[Dict[str, Any]]:
     return list(EU_COUNTRY_MNOS)
 
 
+def countries_for_region(region: str) -> List[Dict[str, Any]]:
+    """tr → Türkiye MNO’ları; eu → diğer Avrupa; both → hepsi."""
+    code = (region or "both").lower()
+    if code == "tr":
+        return [row for row in EU_COUNTRY_MNOS if row["cc"] == "TR"]
+    if code == "eu":
+        return [row for row in EU_COUNTRY_MNOS if row["cc"] != "TR"]
+    return list(EU_COUNTRY_MNOS)
+
+
 def country_by_cc(cc: str) -> Dict[str, Any] | None:
     code = (cc or "").upper()
     return next((row for row in EU_COUNTRY_MNOS if row["cc"] == code), None)

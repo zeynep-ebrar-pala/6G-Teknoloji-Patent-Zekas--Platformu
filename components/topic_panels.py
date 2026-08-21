@@ -15,8 +15,6 @@ def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
     from components.ui_helpers import render_link_row, render_source_totals
     from i18n.core import format_int, get_lang, t
 
-    st.markdown(t("sources.topic_pat_heading"))
-    st.caption(t("sources.topic_pat_caption"))
     options = ["all"] + list(SPEC_PUB_TOPICS.keys())
     topic = st.selectbox(
         t("sources.topic_search"),
@@ -52,14 +50,10 @@ def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
 
 
 def render_pub_topic_panel(key_suffix: str = "pub") -> Tuple[Optional[str], str]:
-    """Konu + bölge: Türkiye / Avrupa 6G yayın taraması. Kilitli örnek yok."""
-    from backend.academic_service import AcademicService
-    from backend.source_links import SPEC_PUB_TOPICS, topic_pub_searches
-    from components.ui_helpers import render_link_row, render_source_totals
-    from i18n.core import format_int, get_lang, t
+    """Bölge + konu. Grafik kutusu hemen altında (academic_views)."""
+    from backend.source_links import SPEC_PUB_TOPICS
+    from i18n.core import get_lang, t
 
-    st.markdown(t("sources.topic_pub_heading"))
-    st.caption(t("sources.topic_pub_caption"))
     region_labels = {
         t("pub.region.both"): "both",
         t("pub.region.tr"): "tr",
@@ -80,22 +74,4 @@ def render_pub_topic_panel(key_suffix: str = "pub") -> Tuple[Optional[str], str]
         key=f"spec_pub_topic_{key_suffix}_{get_lang()}",
     )
     picked = None if topic == "all" else topic
-    bundle = AcademicService.get_bundle(region, picked)
-    n = bundle.get("total")
-    shown = format_int(n) if isinstance(n, int) else "—"
-    if picked is None:
-        st.info(t("sources.topic_live_all_pub", n=shown))
-    else:
-        st.info(
-            t(
-                "sources.topic_live_one_pub",
-                n=shown,
-                tr=shown,
-                topic=picked,
-                q=bundle.get("query") or SPEC_PUB_TOPICS[picked],
-            )
-        )
-    st.caption(t("sources.topic_buttons_hint_pub"))
-    render_link_row(topic_pub_searches(picked or "6G", region), key_suffix=f"{key_suffix}_{picked or 'all'}_{region}")
-    render_source_totals("pub", picked, f"{key_suffix}_{picked or 'all'}")
     return picked, region

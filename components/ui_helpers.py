@@ -225,8 +225,8 @@ def first_text(*vals) -> str:
 
 
 def select_section(label: str, options: list[str], key: str) -> str:
-    """Tek bölüm seçer. selectbox bütün seçenekleri gösterir; haplar uzun etiketleri keser."""
-    choice = st.selectbox(label, options, index=0, key=key)
+    """Tek bölüm seçer. index verilmez: her rerun ilk seçeneğe dönmesin."""
+    choice = st.selectbox(label, options, key=key)
     return choice or options[0]
 
 
