@@ -16,6 +16,10 @@ FALLBACK_LANG = "tr"
 
 _MISSING: set[tuple[str, str]] = set()
 _FLAT: dict[str, dict[str, str]] | None = None
+_FLAT_MTIME: int = 0
+
+
+def flatten(data: dict[str, Any], prefix: str = "") -> dict[str, str]:
 
 
 def flatten(data: dict[str, Any], prefix: str = "") -> dict[str, str]:
@@ -30,11 +34,18 @@ def flatten(data: dict[str, Any], prefix: str = "") -> dict[str, str]:
 
 
 def _catalogs() -> dict[str, dict[str, str]]:
-    global _FLAT
-    if _FLAT is None:
-        from i18n.strings import UI
+    """strings.py değişince eski metin kilitlenmesin (Streamlit süreç içi önbellek)."""
+    global _FLAT, _FLAT_MTIME
+    import importlib
+    from pathlib import Path
 
-        _FLAT = {lang: flatten(UI[lang]) for lang in SUPPORTED_LANGS}
+    import i18n.strings as strings_mod
+
+    mtime = Path(strings_mod.__file__).stat().st_mtime_ns
+    if _FLAT is None or _FLAT_MTIME != mtime:
+        strings_mod = importlib.reload(strings_mod)
+        _FLAT = {lang: flatten(strings_mod.UI[lang]) for lang in SUPPORTED_LANGS}
+        _FLAT_MTIME = mtime
     return _FLAT
 
 
