@@ -18,6 +18,7 @@ from components.charts import (
     tt_vs_comparable_rows,
 )
 from components import ui_helpers as _uh
+from data.tt_europe import place_sort_key
 from i18n.core import format_int, get_lang, t
 
 
@@ -43,6 +44,20 @@ def show_empty(message):
 
 def show_plotly(fig):
     return _uh.show_plotly(fig)
+
+
+def _positive_rows(rows: list, key: str) -> list:
+    return [r for r in rows if int(r.get(key) or 0) > 0]
+
+
+def _metric_row(items: list[tuple[str, int]]) -> None:
+    shown = [(lab, n) for lab, n in items if int(n or 0) > 0]
+    if not shown:
+        return
+    cols = st.columns(len(shown))
+    for col, (lab, n) in zip(cols, shown):
+        with col:
+            st.metric(lab, format_int(n))
 
 
 def _explainer(kind: str) -> None:
@@ -76,26 +91,22 @@ def _explainer(kind: str) -> None:
 def _metrics(kind: str, domain: str | None = None) -> None:
     s = TTEuropeService.summary(domain)
     if kind == "patent":
-        c1, c2, c3, c4 = st.columns(4)
-        with c1:
-            st.metric(t("tt_eu.metric_pat"), format_int(s["patent_n"]))
-        with c2:
-            st.metric(t("tt_eu.metric_ep"), format_int(s["ep_n"]))
-        with c3:
-            st.metric(t("tt_eu.metric_us"), format_int(s["us_n"]))
-        with c4:
-            st.metric(t("tt_eu.metric_tr"), format_int(s.get("tr_n") or 0))
+        _metric_row(
+            [
+                (t("tt_eu.metric_us"), s["us_n"]),
+                (t("tt_eu.metric_ep"), s["ep_n"]),
+                (t("tt_eu.metric_tr"), s.get("tr_n") or 0),
+            ]
+        )
         return
     pos = TTEuropeService.europe_position(include_pubs=True)
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        st.metric(t("tt_eu.metric_papers"), format_int(s["paper_n"]))
-    with c2:
-        st.metric(t("tt_eu.position_m_pub"), "—" if pos["tr_pub_rank"] is None else format_int(pos["tr_pub_rank"]))
-    with c3:
-        st.metric(t("tt_eu.position_m_out"), format_int(pos["pub_outside_tr"]))
-    with c4:
-        st.metric(t("tt_eu.metric_named"), format_int(s["wholesale_named_n"]))
+    _metric_row(
+        [
+            (t("tt_eu.metric_papers"), s["paper_n"]),
+            (t("tt_eu.position_m_out"), pos["pub_outside_tr"]),
+            (t("tt_eu.metric_named"), s["wholesale_named_n"]),
+        ]
+    )
 
 
 def _named_country_cards(rows: list, lang: str) -> None:
@@ -103,7 +114,10 @@ def _named_country_cards(rows: list, lang: str) -> None:
     st.caption(t("tt_eu.named_caption"))
     ranked = sorted(
         rows,
-        key=lambda r: (0 if r.get("layer") == "kktc_infra" else 1, r.get("name_tr") or r.get("iso3") or ""),
+        key=lambda r: place_sort_key(
+            str((r.get("name_tr") if lang == "tr" else r.get("name_en")) or ""),
+            lang,
+        ),
     )
     for row in ranked:
         name = row["name_tr"] if lang == "tr" else row["name_en"]
@@ -132,6 +146,7 @@ def _europe_position_banner(kind: str, domain: str | None = None) -> None:
             **pos,
             "ep_n": int(offices.get("EP") or 0),
             "us_n": int(offices.get("US") or 0),
+            "tr_n": int(offices.get("TR") or 0),
         }
     lead_key = "name_tr" if lang == "tr" else "name_en"
     leaders = pos.get("europe_pub_leaders") or []
@@ -141,44 +156,27 @@ def _europe_position_banner(kind: str, domain: str | None = None) -> None:
     ) or "—"
     st.markdown(t("tt_eu.position_heading"))
     if kind == "patent":
-        m1, m2, m3, m4 = st.columns(4)
-        with m1:
-            st.metric(
-                t("tt_eu.position_m_pat"),
-                "—" if pos["tr_pat_rank"] is None else format_int(pos["tr_pat_rank"]),
-                help=t("tt_eu.position_m_pat_help", n=format_int(pos["tr_pat_n"])),
-            )
-        with m2:
-            st.metric(t("tt_eu.position_m_ep"), format_int(pos["ep_n"]))
-        with m3:
-            st.metric(t("tt_eu.position_m_us"), format_int(pos["us_n"]))
-        with m4:
-            st.metric(t("tt_eu.position_m_pat_out"), format_int(pos["pat_outside_tr"]))
+        _metric_row(
+            [
+                (t("tt_eu.position_m_us"), pos["us_n"]),
+                (t("tt_eu.position_m_ep"), pos["ep_n"]),
+                (t("tt_eu.metric_tr"), pos.get("tr_n") or 0),
+            ]
+        )
         st.markdown(
             t(
                 "tt_eu.position_body_pat",
-                pat_n=format_int(pos["tr_pat_n"]),
-                pat_rank="—" if pos["tr_pat_rank"] is None else format_int(pos["tr_pat_rank"]),
-                ep=format_int(pos["ep_n"]),
                 us=format_int(pos["us_n"]),
-                pat_out=format_int(pos["pat_outside_tr"]),
             ),
             unsafe_allow_html=True,
         )
         return
-    m1, m2, m3, m4 = st.columns(4)
-    with m1:
-        st.metric(
-            t("tt_eu.position_m_pub"),
-            "—" if pos["tr_pub_rank"] is None else format_int(pos["tr_pub_rank"]),
-            help=t("tt_eu.position_m_pub_help", n=format_int(pos["tr_pub_n"])),
-        )
-    with m2:
-        st.metric(t("tt_eu.metric_papers"), format_int(pos["tr_pub_n"]))
-    with m3:
-        st.metric(t("tt_eu.position_m_out"), format_int(pos["pub_outside_tr"]))
-    with m4:
-        st.metric(t("tt_eu.position_m_ep"), format_int(pos["ep_n"]))
+    pub_items = [(t("tt_eu.metric_papers"), pos["tr_pub_n"])]
+    if pos["tr_pub_rank"] is not None:
+        pub_items.insert(0, (t("tt_eu.position_m_pub"), pos["tr_pub_rank"]))
+    if int(pos["pub_outside_tr"] or 0) > 0:
+        pub_items.append((t("tt_eu.position_m_out"), pos["pub_outside_tr"]))
+    _metric_row(pub_items)
     st.markdown(
         t(
             "tt_eu.position_body_pub",
@@ -279,13 +277,11 @@ def _country_rank(kind: str) -> None:
                         {
                             t("tt_eu.named_col_place"): row[name_key],
                             t("tt_eu.overview_hits_pat"): _fmt_pat_hits(row.get("pat_top3")),
-                            t("tt_eu.overview_tt_pat"): row["tt_pat_n"] if row["tt_pat_n"] else "—",
-                            t("tt_eu.rank_col_rank_pat"): (
-                                row["tt_pat_rank"] if row["tt_pat_rank"] is not None else "—"
-                            ),
+                            t("tt_eu.overview_tt_pat"): row["tt_pat_n"],
                         }
                     )
-                st.dataframe(table, hide_index=True, width="stretch")
+                if table:
+                    st.dataframe(table, hide_index=True, width="stretch")
             else:
                 show_empty(t("tt_eu.overview_empty_pat"))
         else:
@@ -326,10 +322,7 @@ def _country_rank(kind: str) -> None:
                         t("tt_eu.overview_pub_1"): _fmt_firm(top[0] if len(top) > 0 else None),
                         t("tt_eu.overview_pub_2"): _fmt_firm(top[1] if len(top) > 1 else None),
                         t("tt_eu.overview_pub_3"): _fmt_firm(top[2] if len(top) > 2 else None),
-                        t("tt_eu.overview_tt_pub"): (
-                            row["tt_pub_n"] if row.get("tt_pub_resolved") else "—"
-                        ),
-                        t("tt_eu.rank_col_rank_pub"): row["tt_pub_rank"] if row["tt_pub_rank"] is not None else "—",
+                        t("tt_eu.overview_tt_pub"): row["tt_pub_n"],
                         t("ui.source").replace(" ↗", ""): row.get("pub_search_url") or "",
                     }
                 )
@@ -362,35 +355,33 @@ def _country_rank(kind: str) -> None:
         return
     rows = payload["rows"]
     tt_row = next((r for r in rows if r.get("is_tt")), {})
-    pub_rank = payload.get("tt_pub_rank")
-    pat_rank = payload.get("tt_pat_rank")
     if is_pat:
+        drawn = _positive_rows(rows, "pat_n")
+        pat_n = int(tt_row.get("pat_n") or 0)
+        if not drawn:
+            st.info(t("tt_eu.rank_empty_pat"))
+            render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
+            return
         st.markdown(
             t(
                 "tt_eu.rank_tt_pat",
-                pat="—" if pat_rank is None else format_int(pat_rank),
-                pat_n=format_int(tt_row.get("pat_n") or 0),
-                n=format_int(payload.get("field_n") or 0),
+                pat_n=format_int(pat_n),
             )
         )
         show_plotly(
             render_tt_country_rank_chart(
-                rows, "pat_n", t("tt_eu.rank_pat_title"), t("tt_eu.rank_pat_x")
+                drawn, "pat_n", t("tt_eu.rank_pat_title"), t("tt_eu.rank_pat_x")
             )
         )
         from backend.source_links import assignee_patent_links
 
         table = []
-        for row in sorted(
-            rows,
-            key=lambda r: (r["pat_rank"] is None, r["pat_rank"] or 99, r["name"]),
-        ):
+        for row in sorted(drawn, key=lambda r: (-int(r.get("pat_n") or 0), r["name"])):
             pat_links = {item["id"]: item["url"] for item in assignee_patent_links(row["name"])}
             table.append(
                 {
                     t("tt_eu.rank_col_firm"): row["name"],
-                    t("tt_eu.rank_col_rank_pat"): row["pat_rank"] if row["pat_rank"] is not None else "—",
-                    t("tt_eu.rank_col_pat"): row["pat_n"] if row["pat_n"] else "—",
+                    t("tt_eu.rank_col_pat"): row["pat_n"],
                     t("sources.open_google_patents").replace(" ↗", ""): pat_links.get("google_patents")
                     or row.get("patents_url")
                     or "",
@@ -408,37 +399,32 @@ def _country_rank(kind: str) -> None:
         render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
         return
 
+    pub_drawn = _positive_rows(rows, "pub_n") if payload.get("pub_ok") else []
     st.markdown(
         t(
             "tt_eu.rank_tt_pub",
-            pub="—" if pub_rank is None else format_int(pub_rank),
             pub_n=format_int(tt_row.get("pub_n") or 0),
-            n=format_int(payload.get("field_n") or 0),
         )
     )
-    if payload.get("pub_ok"):
-        drawn = [r for r in rows if r.get("pub_resolved") and int(r.get("pub_n") or 0) > 0]
-        if drawn:
-            show_plotly(
-                render_tt_country_rank_chart(
-                    drawn, "pub_n", t("tt_eu.rank_pub_title"), t("tt_eu.rank_pub_x")
-                )
+    if pub_drawn:
+        show_plotly(
+            render_tt_country_rank_chart(
+                pub_drawn, "pub_n", t("tt_eu.rank_pub_title"), t("tt_eu.rank_pub_x")
             )
-        else:
-            st.info(t("tt_eu.rank_oa_fail"))
+        )
     else:
         st.info(t("tt_eu.rank_oa_fail"))
+    if not pub_drawn:
+        render_source_button(payload.get("pub_search_url") or "", t("tt_eu.rank_open_oa"))
+        render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
+        return
     src_col = t("ui.source").replace(" ↗", "")
     table = []
-    for row in sorted(
-        rows,
-        key=lambda r: (r["pub_rank"] is None, r["pub_rank"] or 99, r["name"]),
-    ):
+    for row in sorted(pub_drawn, key=lambda r: (-int(r.get("pub_n") or 0), r["name"])):
         table.append(
             {
                 t("tt_eu.rank_col_firm"): row["name"],
-                t("tt_eu.rank_col_rank_pub"): row["pub_rank"] if row["pub_rank"] is not None else "—",
-                t("tt_eu.rank_col_pub"): row["pub_n"] if row.get("pub_resolved") else "—",
+                t("tt_eu.rank_col_pub"): row["pub_n"],
                 src_col: row.get("pub_search_url") or payload.get("pub_search_url") or "",
             }
         )
@@ -480,28 +466,17 @@ def render_tt_europe_patent_section(domain: str | None = None) -> None:
     _explainer("patent")
     _metrics("patent", domain)
     offices = TTEuropeService.office_counts(domain)
+    positive_offices = {k: n for k, n in offices.items() if int(n or 0) > 0}
     st.markdown(t("tt_eu.office_heading"))
     st.caption(t("tt_eu.office_caption"))
-    if domain:
-        st.info(
-            t(
-                "tt_eu.office_lock_one",
-                topic=domain,
-                ep=format_int(offices.get("EP") or 0),
-                us=format_int(offices.get("US") or 0),
-                tr=format_int(offices.get("TR") or 0),
-            )
-        )
+    if positive_offices:
+        if domain:
+            st.info(t("tt_eu.office_lock_one", topic=domain, us=format_int(offices.get("US") or 0)))
+        else:
+            st.info(t("tt_eu.office_lock_all", us=format_int(offices.get("US") or 0)))
+        show_plotly(render_tt_office_chart(positive_offices))
     else:
-        st.info(
-            t(
-                "tt_eu.office_lock_all",
-                ep=format_int(offices.get("EP") or 0),
-                us=format_int(offices.get("US") or 0),
-                tr=format_int(offices.get("TR") or 0),
-            )
-        )
-    show_plotly(render_tt_office_chart(offices))
+        show_empty(t("tt_eu.empty_topic", topic=domain or "—"))
     st.markdown(t("tt_eu.pat_list_heading"))
     st.caption(t("tt_eu.pat_list_caption"))
     pats = TTEuropeService.get_patents()
@@ -513,9 +488,15 @@ def render_tt_europe_patent_section(domain: str | None = None) -> None:
         for pat in pats:
             render_patent_card(pat)
     _europe_position_banner("patent", domain)
-    st.markdown(t("tt_eu.vs_heading"))
-    st.caption(t("tt_eu.vs_caption"))
-    show_plotly(render_tt_vs_vendors_chart(TTEuropeService.vendor_sample_vs_tt(domain)))
+    vs = {
+        name: n
+        for name, n in TTEuropeService.vendor_sample_vs_tt(domain).items()
+        if int(n or 0) > 0
+    }
+    if vs:
+        st.markdown(t("tt_eu.vs_heading"))
+        st.caption(t("tt_eu.vs_caption"))
+        show_plotly(render_tt_vs_vendors_chart(vs))
     _country_rank("patent")
     _geo_presence()
     _collab_block()

@@ -98,6 +98,7 @@ class TTEuropeService:
             return {"ok": False, "cc": cc}
         ops = operators_with_tt(country)
         sample_patents = PatentService.get_top_patents(None, None)
+        tt_group = _patents()
         ranked: List[Dict[str, Any]] = []
         pub_any = False
         for op in ops:
@@ -117,12 +118,17 @@ class TTEuropeService:
                     pub_hits = ["DOI-locked TT affiliation (this country)"]
             pat_n = 0
             pat_ids: List[str] = []
-            for pat in sample_patents:
-                if name_matches(pat.get("assignee") or "", patterns):
-                    if op.get("is_tt") and country["cc"] != "TR":
-                        continue
-                    pat_n += 1
-                    pat_ids.append(pat.get("publication_number") or pat.get("id") or "")
+            if op.get("is_tt"):
+                # Netsia USPTO tescilleri grup merkezinde (TR) sayılır; EP/HU boyası değildir.
+                if country["cc"] == "TR":
+                    for pat in tt_group:
+                        pat_n += 1
+                        pat_ids.append(pat.get("publication_number") or pat.get("id") or "")
+            else:
+                for pat in sample_patents:
+                    if name_matches(pat.get("assignee") or "", patterns):
+                        pat_n += 1
+                        pat_ids.append(pat.get("publication_number") or pat.get("id") or "")
             ranked.append(
                 {
                     "id": op["id"],
@@ -178,7 +184,7 @@ class TTEuropeService:
     @staticmethod
     def europe_overview(include_pubs: bool = True) -> List[Dict[str, Any]]:
         """Kilitli ülkelerin tamamı. Patent sekmesi include_pubs=False."""
-        return _europe_overview_cached(include_pubs)
+        return _europe_overview_cached(include_pubs, "v3-tt-group-pat")
 
     @staticmethod
     def europe_position(include_pubs: bool = True) -> Dict[str, Any]:
@@ -187,7 +193,11 @@ class TTEuropeService:
         tr = next((r for r in overview if r["cc"] == "TR"), {})
         offices = TTEuropeService.office_counts()
         pub_out = [r for r in overview if r["cc"] != "TR" and int(r.get("tt_pub_n") or 0) > 0]
-        pat_out = [r for r in overview if r["cc"] != "TR" and int(r.get("tt_pat_n") or 0) > 0]
+        pat_out = [
+            key
+            for key, n in offices.items()
+            if key != "TR" and int(n or 0) > 0
+        ]
         leaders = [
             {
                 "cc": r["cc"],
@@ -207,6 +217,7 @@ class TTEuropeService:
             "tr_pat_rank": tr.get("tt_pat_rank"),
             "ep_n": int(offices.get("EP") or 0),
             "us_n": int(offices.get("US") or 0),
+            "tr_n": int(offices.get("TR") or 0),
             "pub_outside_tr": len(pub_out),
             "pat_outside_tr": len(pat_out),
             "europe_pub_leaders": leaders,
@@ -378,7 +389,7 @@ class TTEuropeService:
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
-def _europe_overview_cached(include_pubs: bool = True) -> List[Dict[str, Any]]:
+def _europe_overview_cached(include_pubs: bool = True, _v: str = "v3-tt-group-pat") -> List[Dict[str, Any]]:
     """Kilitli ülkelerin tamamı. Her satır country_rank; sayı uydurulmaz."""
     out: List[Dict[str, Any]] = []
     for country in country_choices():

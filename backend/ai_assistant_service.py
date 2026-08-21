@@ -109,8 +109,10 @@ def _corpus() -> List[Dict[str, str]]:
                     _strip_html(t("tt_eu.expert_body")),
                     f"Google Patents Netsia {tt_sum['patent_n']} papers {tt_sum['paper_n']}",
                     (
-                        f"Türk Telekom Europe position: Türkiye publication rank {pos['tr_pub_rank']} "
-                        f"({pos['tr_pub_n']} DOI), patent rank {pos['tr_pat_rank']} ({pos['tr_pat_n']} Netsia Google Patents). "
+                        f"Türk Telekom Europe position: {pos['tr_pub_n']} locked DOI papers in Türkiye "
+                        f"(rival MNO publication API not available, rank not invented); "
+                        f"{pos['tr_pat_n']} Netsia grants at USPTO in this sample "
+                        f"(no EPO or Turkish PTO grant here). "
                         f"Non-TR countries with TT papers {pos['pub_outside_tr']}. "
                         f"In-country publication leaders: {lead_txt}. "
                         "Countries are separate leagues; no invented pan-Europe rank."

@@ -513,7 +513,7 @@ Firma filtresindeki Nokia–ZTE kümesi rakip örneklemdir; burası TT grubu ör
             "expert_body": """<p style="color:#E2E8F0;font-size:0.9rem;line-height:1.65;margin:8px 0 0 0;">
 Google Patents’te bu platformun kilitlediği TT-grup 6G-komşu tesciller <strong>Netsia Inc.</strong> altındadır.
 Netsia, Argela/Türk Telekom ABD Ar-Ge iştirakidir; hukuki assignee Netsia’dır.
-<strong>EP yayın numarası bu örnekte 0’dır</strong> — gizlenmez, uydurulmaz.
+Bu örnekte Avrupa Patent Ofisi ve Türkiye Patent ve Marka Kurumu kaydı yoktur — uydurulmaz, boş çubuk da çizilmez.
 Yayınlarda ham bağlılık «Türk Telekom, Ankara/İstanbul, Türkiye». Kurum grafı
 bazı kaydı DE/MY/CZ şirketine yanlış düşürebilir; ülke çubuğu o hatayı TT Avrupa yayını diye okumaz.
 </p>""",
@@ -536,14 +536,14 @@ bu platformda o ülke adı kilitlenmedi.
             "map_caption": "Boyanan ülke TTI (Türk Telekom International) About’taki ilk giren toptan pazar, operatör merkezi, 6G Ar-Ge (Araştırma ve Geliştirme) ortağı, ETSI (European Telecommunications Standards Institute — Avrupa Telekomünikasyon Standartları Enstitüsü) merkezi veya MoU (Memorandum of Understanding — mutabakat zaptı) imza yeridir. KKTC ISO üç harfli kodu olmadığı için boyanmaz; KAP kararındaki konum işaretlenir. Abone veya pazar payı değildir.",
             "map_fail": "Harita çizilemedi; aşağıdaki liste kaynakta adı geçen yerlerin tam kümesidir.",
             "role_heading": "### Kanıt türü (kaç ülkede adı geçti)",
-            "role_caption": "EP (European Patent — Avrupa patenti) tescil çubuğu 0’dır. Toptan 6 ülke TTI About «ilk giren pazar» listesidir; 19 veya 24’ün tamamı değildir.",
+            "role_caption": "Toptan 6 ülke TTI About «ilk giren pazar» listesidir; 19 veya 24’ün tamamı değildir. EP tescil çubuğu bu kümede olmadığı için çizilmez.",
             "vs_heading": "### Bu platformun kilitli 6G örnek kümesi",
             "vs_caption": "Çubuklar bu platformun kilitli 6G örnek kaydıdır (Google Patents). Ericsson 5, Qualcomm 4, ZTE 4, Nokia 3, TT-grup (Netsia) 3, Huawei 2, Samsung 1. Küresel SEP, gelir veya Avrupa ofis payı değildir. Sıra kayıt adedine göredir.",
             "office_heading": "### Patent ofisi (doğrulanmış küme)",
-            "office_caption": "Çubuklar kilitli Netsia tescilleridir (Google Patents). Anadolu Ajansı milli başvuru sıralaması (921, «Türkiye zirvede») bu grafik değildir ve bu bölümde açılmaz. Türkiye Patent ve Marka Kurumu bu örnekte 0 — ABD Patent ve Marka Ofisi’nde 3 tescil var, Avrupa Patent Ofisi’nde yok.",
-            "office_lock_all": "Konu taraması: tüm konular. Avrupa Patent Ofisi {ep} · ABD Patent ve Marka Ofisi {us} · Türkiye Patent ve Marka Kurumu {tr}.",
-            "office_lock_one": "Konu taraması kilitledi: «{topic}». Avrupa Patent Ofisi {ep} · ABD Patent ve Marka Ofisi {us} · Türkiye Patent ve Marka Kurumu {tr}.",
-            "empty_topic": "Kilitli Netsia kümesinde «{topic}» tescili yok; üç ofis çubuğu 0’dır. Konu taramasındaki ofis düğmeleri aynı sorguyu dış sitede açar.",
+            "office_caption": "Çubuklar kilitli Netsia tescilleridir (Google Patents). Anadolu Ajansı milli başvuru sıralaması (921, «Türkiye zirvede») bu grafik değildir. Bu örnek ABD Patent ve Marka Ofisi’ndedir; Avrupa Patent Ofisi ve Türkiye Patent ve Marka Kurumu kaydı yok — boş ofis çubuğu çizilmez.",
+            "office_lock_all": "Konu taraması: tüm konular. ABD Patent ve Marka Ofisi {us} tescil (Netsia). Avrupa Patent Ofisi ve Türkiye Patent ve Marka Kurumu bu örnekte yok.",
+            "office_lock_one": "Konu taraması kilitledi: «{topic}». ABD Patent ve Marka Ofisi {us} tescil (Netsia). Diğer ofisler bu konuda yok; boş çubuk çizilmez.",
+            "empty_topic": "Kilitli Netsia kümesinde «{topic}» tescili yok. Boş ofis çubuğu çizilmez; konu taramasındaki ofis düğmeleri aynı sorguyu dış sitede açar.",
             "pat_list_heading": "### Netsia Inc. (Türk Telekom grubu) — Google Patents",
             "pat_list_caption": "Hak sahibi (assignee): Netsia Inc. Kartlar yıla göre yeniden eskiye (2025 → 2023). Rakip (Nokia–ZTE) kümesine karıştırılmaz.",
             "named_heading": "### Kaynakta adı geçen yerler — TT burada ne yapıyor?",
@@ -591,13 +591,14 @@ Bu abone/gelir payı veya EPO PATSTAT tam taraması değildir. 0 kayıt sıra al
 </div>""",
             "position_body_pat": """<div class="glass-card" style="border-left:6px solid #E20074;margin-bottom:12px;">
 <p style="color:#F8FAFC;font-size:0.95rem;line-height:1.65;margin:0;">
-<strong>Türkiye:</strong> kilitli Google Patents kümesinde <em>{pat_rank}. sıra</em> ({pat_n} Netsia kaydı; 3 MNO + TT).
-<strong>Avrupa:</strong> EP tescil bu kümede <strong>{ep}</strong> — EP patent lideri değildir.
-Netsia Google Patents {us} kayıt yalnız TR satırında sayılır. TR dışı örnek patent ülkesi: {pat_out}.
-Ülkeler ayrı ligdir; tek bir Avrupa sıra sayısı üretilmez.
+Kilitli 6G-komşu kümede Türk Telekom grubu (hukuki hak sahibi: <strong>Netsia Inc.</strong>)
+<strong>ABD Patent ve Marka Ofisi</strong>’nde {us} tescildir (Google Patents).
+Avrupa Patent Ofisi ve Türkiye Patent ve Marka Kurumu bu örnekte yoktur — sayı uydurulmaz.
+Anadolu Ajansı milli başvuru açıklaması (921) bu ölçüm değildir; çubuğa işlenmez.
+Rakip MNO’ların bu örnekte kaydı olmadığı için «TR patent sırası» üretilmez.
 </p>
 <p style="color:#94A3B8;font-size:0.82rem;margin:8px 0 0 0;">
-Bu EPO PATSTAT taraması veya abone payı değildir. 0 kayıt sıra almaz (—). Yayın tabloları Akademik Yayın Analizi sayfasındadır.
+Bu EPO PATSTAT taraması veya abone payı değildir. Avrupa’daki yer aşağıdaki haritada kaynakta adı geçen ülkelerdir.
 </p>
 </div>""",
             "position_body_pub": """<div class="glass-card" style="border-left:6px solid #E20074;margin-bottom:12px;">
@@ -623,7 +624,7 @@ Patent ofisleri bu sayfada yoktur — Patent Zekası’ndadır.
             "overview_heading_pat": "### Avrupa geneli — patent (kilitli örnek küme)",
             "overview_heading_pub": "### Avrupa geneli — yayın",
             "overview_caption": "Her ülkede Wikipedia MNO listesindeki 3 işletmeci, 6G konu aramasında kurum kimliği (veya bağlılık dizesi) ile sayıldı. 1./2./3. bu üç firmanın kendi iç sıralamasıdır; abone payı değildir. TT ayrı sütundadır. Ölçülmüş 0 (kurum bulundu, konu kaydı yok) 0’dır. Sorgulanamayan sayı — olarak kalır, uydurulmaz. Patent sütunu bu platformun kilitli örnek kümesidir (EPO PATSTAT taraması değil).",
-            "overview_caption_pat": "Kilitli örnek kümede en az bir patenti olan ülkeler. 0’lık 2./3. operatör sütunu yok; yayın sütunu bu sayfada yok. Netsia Google Patents yalnız TR. 0 kayıt sıra almaz (—).",
+            "overview_caption_pat": "Kilitli örnek kümede en az bir patenti olan ülkeler. 0’lık operatör sütunu ve boş sıra (—) yok. Netsia Google Patents yalnız TR’de sayılır.",
             "overview_caption_pub": "Türk Telekom satırı kilitli DOI bağlılığıdır (bu ülkede yazar adresi). Turkcell, Vodafone ve diğer MNO’ların yayın API’si bu platformda yok; 0 çizilmez, tabloda — kalır. «1. operatör vs TT» yalnızca her iki sayı da ayrı ölçüldüyse çizilir.",
             "overview_spin": "Operatör yayın sayıları yükleniyor (önbellek varsa beklenmez)",
             "overview_spin_pat": "Kilitli patent örnek kümesi yükleniyor",
@@ -653,7 +654,7 @@ Patent ofisleri bu sayfada yoktur — Patent Zekası’ndadır.
             "rank_heading_pat": "### Ülke detayı — patent (3 MNO + Türk Telekom)",
             "rank_heading_pub": "### Ülke detayı — yayın (3 MNO + Türk Telekom)",
             "rank_caption": "Üç operatör Wikipedia Avrupa MNO listesindeki bu ülke satırından kilitlendi; abone/gelir «en yüksek 3» bu platformda ölçülmedi. Yayın = 6G konu + kurum ID (yoksa bağlılık dizesi). Patent = Google Patents (Netsia yalnız TR). 0 kayıt sıra almaz (—). Küresel SEP veya pazar payı değildir.",
-            "rank_caption_pat": "Bu ülkede Wikipedia’daki 3 MNO + TT. Patent = Google Patents (Netsia yalnız TR). Operatör yayın API’si yok. 0 kayıt sıra almaz (—). Kartlarda Google Patents açılır.",
+            "rank_caption_pat": "Bu ülkede Wikipedia’daki 3 MNO + TT. Patent = Google Patents (Netsia yalnız TR). Kaydı 0 olan firma çizilmez; sıra uydurulmaz. Kartlarda Google Patents açılır.",
             "rank_caption_pub": "Üç operatör Wikipedia Avrupa MNO listesinden kilitlendi. Yayın = 6G konu + kurum ID. 0 kayıt sıra almaz (—). Patent ofis sütunu bu sayfada yok.",
             "rank_country": "Avrupa ülkesi",
             "rank_spin": "Ülke sıralaması yükleniyor",
@@ -663,8 +664,9 @@ Patent ofisleri bu sayfada yoktur — Patent Zekası’ndadır.
             "rank_pub_x": "Yayın sayısı",
             "rank_pat_x": "Örnek küme patent kaydı",
             "rank_tt": "Türk Telekom bu ülkede: yayın {pub}. sıra ({pub_n} yayın kaydı) · patent {pat}. sıra ({pat_n} örnek kayıt) — {n} firma",
-            "rank_tt_pat": "Türk Telekom bu ülkede: patent {pat}. sıra ({pat_n} örnek kayıt) — {n} firma",
-            "rank_tt_pub": "Türk Telekom bu ülkede: yayın {pub}. sıra ({pub_n} yayın kaydı) — {n} firma",
+            "rank_tt_pat": "Türk Telekom bu ülkede: {pat_n} kilitli Netsia kaydı (Google Patents). Kaydı olmayan rakip çizilmez; tek firma 1. ilan edilmez.",
+            "rank_empty_pat": "Bu ülkede kilitli örnek kümede patent kaydı yok. Boş çubuk ve tire tablo çizilmez.",
+            "rank_tt_pub": "Türk Telekom bu ülkede: {pub_n} kilitli DOI bağlılığı. Kaydı olmayan rakip çizilmez; sıra üretilmez.",
             "rank_oa_fail": "Bu ülke için yayın yanıtı gelmedi; yayın çubuğu çizilmez.",
             "rank_col_rank_pub": "Yayın sırası",
             "rank_col_pub": "Yayın",
@@ -1525,7 +1527,7 @@ The Nokia–ZTE filter is a vendor sample; this tab is the TT-group sample.
             "expert_body": """<p style="color:#E2E8F0;font-size:0.9rem;line-height:1.65;margin:8px 0 0 0;">
 Google Patents records locked here for the TT group sit under <strong>Netsia Inc.</strong>.
 Netsia is Argela/Türk Telekom’s US R&amp;D affiliate; the legal assignee is Netsia.
-<strong>EP publication count in this sample is 0</strong> — it is shown, not invented.
+This sample has no European Patent Office or Turkish Patent and Trademark Office grant — counts are not invented and empty office bars are not drawn.
 Papers’ raw affiliation is “Türk Telekom, Ankara/Istanbul, Türkiye”. The institution graph
 can mis-map a record to a DE/MY/CZ company; the country bar on the global tab is not read as TT’s European output.
 </p>""",
@@ -1548,14 +1550,14 @@ An unpainted European country is not a claim of absence — its name was not loc
             "map_caption": "Painted countries are TTI (Türk Telekom International) About first-mover wholesale markets, operator HQ, a 6G R&amp;D (research and development) partner, the ETSI (European Telecommunications Standards Institute) seat, or an MoU (memorandum of understanding) venue. Northern Cyprus has no ISO-3166-1 code, so it is marked from the KAP decision rather than painted. Not subscriber or revenue share.",
             "map_fail": "The map could not be drawn; the list below is the complete set of places named in a source.",
             "role_heading": "### Evidence type (how many named countries)",
-            "role_caption": "The EP-grant bar is 0. Wholesale 6 is TTI About’s first-mover list, not the full 19 or 24.",
+            "role_caption": "Wholesale 6 is TTI About’s first-mover list, not the full 19 or 24. There is no EP-grant bar in this set, so none is drawn.",
             "vs_heading": "### This platform’s locked 6G sample",
             "vs_caption": "Bars are this platform’s locked 6G sample (Google Patents). Ericsson 5, Qualcomm 4, ZTE 4, Nokia 3, TT-group (Netsia) 3, Huawei 2, Samsung 1. Not global SEP, revenue, or European-office share. Rank is by record count.",
             "office_heading": "### Patent office (verified set)",
-            "office_caption": "Bars are locked Netsia grants (Google Patents). The Anadolu Ajansı national-filing ranking (921, “Türkiye on top”) is not this chart and is not opened in this section. Turkish Patent and Trademark Office is 0 in this sample — three grants sit at the U.S. Patent and Trademark Office, none at the European Patent Office.",
-            "office_lock_all": "Topic search: all topics. European Patent Office {ep} · U.S. Patent and Trademark Office {us} · Turkish Patent and Trademark Office {tr}.",
-            "office_lock_one": "Topic search locked to “{topic}”. European Patent Office {ep} · U.S. Patent and Trademark Office {us} · Turkish Patent and Trademark Office {tr}.",
-            "empty_topic": "The locked Netsia set has no “{topic}” grant; all three office bars are 0. The office buttons in Topic search open the same query on the external site.",
+            "office_caption": "Bars are locked Netsia grants (Google Patents). The Anadolu Ajansı national-filing ranking (921, “Türkiye on top”) is not this chart. This sample sits at the U.S. Patent and Trademark Office; there is no European Patent Office or Turkish Patent and Trademark Office grant here — empty office bars are not drawn.",
+            "office_lock_all": "Topic search: all topics. U.S. Patent and Trademark Office {us} grants (Netsia). No European Patent Office or Turkish Patent and Trademark Office record in this sample.",
+            "office_lock_one": "Topic search locked to “{topic}”. U.S. Patent and Trademark Office {us} grants (Netsia). Other offices have no record on this topic; empty bars are not drawn.",
+            "empty_topic": "The locked Netsia set has no “{topic}” grant. Empty office bars are not drawn. The office buttons in Topic search open the same query on the external site.",
             "pat_list_heading": "### Netsia Inc. (Türk Telekom group) — Google Patents",
             "pat_list_caption": "Assignee: Netsia Inc. Cards are newest to oldest (2025 → 2023). These cards are not mixed into the Nokia–ZTE vendor set.",
             "named_heading": "### Places named in a source — what TT does there",
@@ -1603,13 +1605,14 @@ This is not subscriber/revenue share or a full EPO PATSTAT extract. A zero count
 </div>""",
             "position_body_pat": """<div class="glass-card" style="border-left:6px solid #E20074;margin-bottom:12px;">
 <p style="color:#F8FAFC;font-size:0.95rem;line-height:1.65;margin:0;">
-<strong>Türkiye:</strong> locked Google Patents sample rank <em>{pat_rank}</em> ({pat_n} Netsia records among 3 MNOs + TT).
-<strong>Europe:</strong> EP grants in this set: <strong>{ep}</strong> — TT is not the EP-patent leader.
-Netsia Google Patents {us} records are counted on the TR row only. Sample-patent countries outside TR: {pat_out}.
-Countries are separate leagues; a pan-Europe rank is not invented.
+In the locked 6G-adjacent set the Türk Telekom group (legal assignee: <strong>Netsia Inc.</strong>)
+has {us} grants at the <strong>U.S. Patent and Trademark Office</strong> (Google Patents).
+There is no European Patent Office or Turkish Patent and Trademark Office grant in this sample — counts are not invented.
+The Anadolu Ajansı national-filing figure (921) is not this measurement and is not plotted.
+A “TR patent rank” is not produced: rival MNOs have no records in this sample, so a single firm is not declared 1st.
 </p>
 <p style="color:#94A3B8;font-size:0.82rem;margin:8px 0 0 0;">
-This is not an EPO PATSTAT extract or subscriber share. A zero count is unranked (—). Publication tables sit on Publication Trends.
+This is not an EPO PATSTAT extract or subscriber share. The European footprint is the map of places named in a source, below.
 </p>
 </div>""",
             "position_body_pub": """<div class="glass-card" style="border-left:6px solid #E20074;margin-bottom:12px;">
@@ -1635,7 +1638,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "overview_heading_pat": "### Europe-wide — patents (locked sample)",
             "overview_heading_pub": "### Europe-wide — publications",
             "overview_caption": "In each country the three MNOs from the Wikipedia list are counted via a 6G topic search on institution IDs (or affiliation strings). 1st/2nd/3rd rank those three firms, not subscriber share. TT is a separate column. A measured 0 (institution found, no topic hits) stays 0. A count that could not be queried stays — and is not invented. Patent columns are this platform’s locked sample, not an EPO PATSTAT extract.",
-            "overview_caption_pat": "Only countries with at least one patent in the locked sample. No empty 2nd/3rd operator columns; publication columns are not on this page. Netsia Google Patents is counted on TR only. A zero count is unranked (—).",
+            "overview_caption_pat": "Only countries with at least one patent in the locked sample. No empty operator columns and no dash ranks. Netsia Google Patents is counted on TR only.",
             "overview_caption_pub": "The Türk Telekom row is locked DOI affiliation (author address in that country). Turkcell, Vodafone and other MNOs have no publication API here; 0 is not drawn and the table keeps —. Leader-vs-TT bars are drawn only when both counts were measured separately.",
             "overview_spin": "Loading operator publication counts (skipped when cached)",
             "overview_spin_pat": "Loading the locked patent sample",
@@ -1665,7 +1668,7 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "rank_heading_pat": "### Country detail — patents (3 MNOs + Türk Telekom)",
             "rank_heading_pub": "### Country detail — publications (3 MNOs + Türk Telekom)",
             "rank_caption": "The three operators are locked from that country’s row in the Wikipedia European MNO list; subscriber/revenue “top 3” was not measured here. Publication counts are a 6G topic search. Patent counts are Google Patents (Netsia on TR only). A zero count is unranked (—); zeros are not labelled “2nd”. Not global SEP or market share.",
-            "rank_caption_pat": "The three Wikipedia MNOs + TT in this country. Patents = Google Patents (Netsia on TR only). There is no operator publication API on this tab. A zero count is unranked (—). Cards open Google Patents.",
+            "rank_caption_pat": "The three Wikipedia MNOs + TT in this country. Patents = Google Patents (Netsia on TR only). Firms with 0 records are not drawn; rank is not invented. Cards open Google Patents.",
             "rank_caption_pub": "The three operators are locked from the Wikipedia European MNO list. Publications are a 6G topic search. A zero count is unranked (—). Patent-office columns are not on this page.",
             "rank_country": "European country",
             "rank_spin": "Loading the country ranking",
@@ -1675,8 +1678,9 @@ Patent-office tables are not on this page — they sit on Patent Intelligence.
             "rank_pub_x": "Publication count",
             "rank_pat_x": "Sample patent records",
             "rank_tt": "Türk Telekom in this country: publications rank {pub} ({pub_n} publication records) · patents rank {pat} ({pat_n} sample records) — {n} firms",
-            "rank_tt_pat": "Türk Telekom in this country: patents rank {pat} ({pat_n} sample records) — {n} firms",
-            "rank_tt_pub": "Türk Telekom in this country: publications rank {pub} ({pub_n} publication records) — {n} firms",
+            "rank_tt_pat": "Türk Telekom in this country: {pat_n} locked Netsia records (Google Patents). Rivals with no records are not drawn; a single firm is not declared 1st.",
+            "rank_empty_pat": "The locked sample has no patents in this country. Empty bars and dash tables are not drawn.",
+            "rank_tt_pub": "Türk Telekom in this country: {pub_n} locked DOI affiliations. Rivals with no records are not drawn; rank is not invented.",
             "rank_oa_fail": "No publication answer for this country; the publication bars are not drawn.",
             "rank_col_rank_pub": "Pub. rank",
             "rank_col_pub": "Publications",

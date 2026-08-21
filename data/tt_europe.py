@@ -23,8 +23,60 @@ TT_COUNTRY_COLORS = {
     "SWE": "#818CF8",
     "ESP": "#14B8A6",
     "FRA": "#FFB020",
-    "KKTC": "#F43F5E",
+    "KKTC": "#E85A9A",
 }
+
+_TR_ALPHA = "abcçdefgğhıijklmnoöprsştuüvyz"
+_TR_FOLD = str.maketrans(
+    {
+        "A": "a",
+        "B": "b",
+        "C": "c",
+        "Ç": "ç",
+        "D": "d",
+        "E": "e",
+        "F": "f",
+        "G": "g",
+        "Ğ": "ğ",
+        "H": "h",
+        "I": "ı",
+        "İ": "i",
+        "J": "j",
+        "K": "k",
+        "L": "l",
+        "M": "m",
+        "N": "n",
+        "O": "o",
+        "Ö": "ö",
+        "P": "p",
+        "R": "r",
+        "S": "s",
+        "Ş": "ş",
+        "T": "t",
+        "U": "u",
+        "Ü": "ü",
+        "V": "v",
+        "Y": "y",
+        "Z": "z",
+    }
+)
+
+
+def place_sort_key(name: str, lang: str = "tr") -> tuple:
+    """Ülke adı sıralaması. TR: Türk abece; EN: casefold."""
+    raw = name or ""
+    if lang != "tr":
+        return (raw.casefold(),)
+    folded = raw.translate(_TR_FOLD)
+    idxs: list[int] = []
+    for ch in folded:
+        if ch in _TR_ALPHA:
+            idxs.append(_TR_ALPHA.index(ch))
+        elif ch == " ":
+            idxs.append(-1)
+        else:
+            idxs.append(200 + ord(ch.lower()) if ch.isalpha() else 400 + ord(ch))
+    return tuple(idxs)
 
 # Hukuki assignee Netsia Inc. (Türk Telekom grubu ABD Ar-Ge iştiraki).
 # Verdict.co.uk bu aileleri TT'ye atfeder; Google Patents kaydı Netsia'dır.
@@ -278,7 +330,7 @@ TT_KKTC_POINT = {
         "This is not a 6G paper count. ISO choropleths do not paint Northern Cyprus as a country; "
         "the marker is that decision. The Republic of Cyprus (CYP) is not in this source."
     ),
-    "color": "#F43F5E",
+    "color": "#E85A9A",
     "source_url": TT_KKTC_SOURCE_URL,
 }
 

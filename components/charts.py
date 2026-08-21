@@ -9,6 +9,7 @@ import plotly.express as px
 import pandas as pd
 from typing import Dict, Any, List, Optional
 
+from data.tt_europe import place_sort_key
 from i18n.core import get_lang, t
 
 # Defensive import for networkx
@@ -715,28 +716,58 @@ def render_patent_wordcloud(keywords_dict: Dict[str, int]):
 
 
 def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") -> go.Figure:
-    """Yalnızca adı doğrulanmış ülkeler; KKTC ISO boyası değil nokta. 19/24 iddiası boyanmaz."""
-    painted = [r for r in rows if len(str(r.get("iso3") or "")) == 3]
-    points = [r for r in rows if r.get("lat") is not None and r.get("lon") is not None]
-    df = pd.DataFrame(painted)
+    """Yalnızca adı doğrulanmış ülkeler; KKTC ISO boyası değil kare işaret. 19/24 iddiası boyanmaz."""
     name_col = "name_tr" if lang == "tr" else "name_en"
     label_col = "label_tr" if lang == "tr" else "label_en"
     place_col = t("tt_eu.named_col_place")
     layer_col = t("tt_eu.map_col_layer")
-    note_col = t("tt_eu.map_col_note")
-    df[place_col] = df[name_col]
-    df[layer_col] = df["layer"].map(lambda k: t(f"tt_eu.layer.{k}"))
-    df[note_col] = df[label_col]
-    color_map = {row[place_col]: (row.get("color") or "#64748B") for _, row in df.iterrows()}
-    fig = px.choropleth(
-        df,
-        locations="iso3",
-        color=place_col,
-        hover_name=place_col,
-        hover_data={"iso3": False, place_col: False, layer_col: True, note_col: False},
-        color_discrete_map=color_map,
-        locationmode="ISO-3",
-    )
+    ordered = sorted(rows, key=lambda r: place_sort_key(str(r.get(name_col) or ""), lang))
+    fig = go.Figure()
+    for row in ordered:
+        nm = str(row.get(name_col) or "")
+        color = row.get("color") or "#64748B"
+        layer = t(f"tt_eu.layer.{row.get('layer')}")
+        iso = str(row.get("iso3") or "")
+        if len(iso) == 3:
+            fig.add_trace(
+                go.Choropleth(
+                    locations=[iso],
+                    z=[1],
+                    zmin=0,
+                    zmax=1,
+                    locationmode="ISO-3",
+                    colorscale=[[0, color], [1, color]],
+                    showscale=False,
+                    name=nm,
+                    showlegend=True,
+                    hovertext=nm,
+                    customdata=[[layer]],
+                    hovertemplate="<b>%{hovertext}</b><br>" + layer_col + ": %{customdata[0]}<extra></extra>",
+                    marker_line_width=0.6,
+                    marker_line_color="rgba(200,209,220,0.35)",
+                )
+            )
+            continue
+        if row.get("lat") is None or row.get("lon") is None:
+            continue
+        fig.add_trace(
+            go.Scattergeo(
+                lon=[row["lon"]],
+                lat=[row["lat"]],
+                text=[nm],
+                mode="markers+text",
+                textposition="top center",
+                marker=dict(
+                    size=13,
+                    color=color,
+                    symbol="square",
+                    line=dict(width=1.2, color="#FFFFFF"),
+                ),
+                name=nm,
+                hovertext=[row.get(label_col) or ""],
+                hovertemplate="<b>%{text}</b><br>%{hovertext}<extra></extra>",
+            )
+        )
     fig.update_geos(
         bgcolor="#1A1F2B",
         landcolor="#121620",
@@ -754,25 +785,6 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
         lonaxis_range=[-12, 46],
         lataxis_range=[33.2, 72],
     )
-    if points:
-        fig.add_trace(
-            go.Scattergeo(
-                lon=[p["lon"] for p in points],
-                lat=[p["lat"] for p in points],
-                text=[p[name_col] for p in points],
-                mode="markers+text",
-                textposition="top center",
-                marker=dict(
-                    size=14,
-                    color=[p.get("color") or "#F43F5E" for p in points],
-                    line=dict(width=1.2, color="#FFFFFF"),
-                    symbol="diamond",
-                ),
-                name=t("tt_eu.layer.kktc_infra"),
-                hovertext=[p[label_col] for p in points],
-                hovertemplate="<b>%{text}</b><br>%{hovertext}<extra></extra>",
-            )
-        )
     layout = _layout()
     layout.update(
         title=dict(text=f"<b>{t('charts.tt_map')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
@@ -786,28 +798,20 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
             x=0.0,
             bgcolor="rgba(18, 22, 32, 0.92)",
             font=dict(color="#FFFFFF", size=11),
+            traceorder="normal",
         ),
         margin=dict(l=10, r=10, t=50, b=10),
+        coloraxis_showscale=False,
     )
     fig.layout.update(layout)
-    fig.update_traces(
-        selector=dict(type="choropleth"),
-        marker_line_width=0.6,
-        marker_line_color="rgba(200,209,220,0.35)",
-        customdata=df[[layer_col]].to_numpy(),
-        hovertemplate=(
-            "<b>%{hovertext}</b><br>"
-            + layer_col
-            + ": %{customdata[0]}<extra></extra>"
-        ),
-    )
     return fig
 
 
 def render_tt_role_kind_chart(items: List[Dict[str, Any]]) -> go.Figure:
-    """Kanıt türü adedi — pazar payı değil."""
-    names = [t(f"tt_eu.layer.{i['id']}") for i in items]
-    counts = [i["count"] for i in items]
+    """Kanıt türü adedi — pazar payı değil. 0 çubuk çizilmez."""
+    drawn = [i for i in items if int(i.get("count") or 0) > 0]
+    names = [t(f"tt_eu.layer.{i['id']}") for i in drawn]
+    counts = [int(i["count"]) for i in drawn]
     fig = go.Figure(go.Bar(
         x=counts,
         y=names,
@@ -819,14 +823,18 @@ def render_tt_role_kind_chart(items: List[Dict[str, Any]]) -> go.Figure:
         title=dict(text=f"<b>{t('charts.tt_role')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
         xaxis=dict(title=t("charts.tt_role_x"), gridcolor="rgba(200, 209, 220, 0.1)", dtick=1),
         yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
-        height=max(320, 36 * max(len(items), 1) + 80),
+        height=max(320, 36 * max(len(drawn), 1) + 80),
     )
     return fig
 
 
 def render_tt_vs_vendors_chart(counts: Dict[str, int]) -> go.Figure:
     """Kilitli örnek küme. Küresel pazar veya SEP payı değildir."""
-    sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+    sorted_items = sorted(
+        ((n, v) for n, v in counts.items() if int(v or 0) > 0),
+        key=lambda x: x[1],
+        reverse=True,
+    )
     names = [c for c, _ in sorted_items]
     vals = _ints(n for _, n in sorted_items)
     fig = go.Figure(_count_bar(names, vals, unit_key="charts.patent_count"))
@@ -844,8 +852,12 @@ def render_tt_vs_vendors_chart(counts: Dict[str, int]) -> go.Figure:
 def render_tt_country_rank_chart(
     rows: List[Dict[str, Any]], value_key: str, title: str, x_title: str
 ) -> go.Figure:
-    """Kilitli 3 MNO + TT. Yayın: kilitli DOI (TT). Patent: kilitli örnek."""
-    ordered = sorted(rows, key=lambda r: int(r.get(value_key) or 0), reverse=True)
+    """Kilitli 3 MNO + TT. Yayın: kilitli DOI (TT). Patent: kilitli örnek. 0 çubuk yok."""
+    ordered = sorted(
+        [r for r in rows if int(r.get(value_key) or 0) > 0],
+        key=lambda r: int(r.get(value_key) or 0),
+        reverse=True,
+    )
     names = [r["name"] for r in ordered]
     vals = [int(r.get(value_key) or 0) for r in ordered]
     colors = [TT_BAR if r.get("is_tt") or _is_tt_name(r.get("name") or "") else OTHER_BAR for r in ordered]
@@ -996,7 +1008,8 @@ def render_tt_office_chart(counts: Dict[str, int]) -> go.Figure:
         "TR": t("charts.office_turkpatent"),
     }
     order = ["EP", "US", "TR"]
-    keys = [k for k in order if k in counts] + [k for k in counts if k not in order]
+    keys = [k for k in order if int(counts.get(k) or 0) > 0]
+    keys += [k for k in counts if k not in order and int(counts.get(k) or 0) > 0]
     names = [label.get(k, k) for k in keys]
     vals = [int(counts[k]) for k in keys]
     fig = go.Figure(
