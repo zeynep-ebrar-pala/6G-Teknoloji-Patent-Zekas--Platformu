@@ -373,12 +373,22 @@ def render_academic_publication_module():
 
         st.markdown(f"### {t('pub.chart_two_heading')}")
         st.caption(t("pub.chart_two_body"))
-        topics = bundle.get("topics") or {}
-        topic_rows = [
-            {"name": topic_label(k), "count": v}
-            for k, v in topics.items()
-            if k in TOPIC_ORDER and isinstance(v, int)
-        ]
+        if current_view_mode() == "expert":
+            st.caption(t("pub.chart_two_body_expert"))
+        series = bundle.get("year_series") or {}
+        topic_rows = []
+        for name in TOPIC_ORDER:
+            years = series.get(name) or {}
+            n = sum(int(years.get(str(y), 0) or 0) for y in trend_years())
+            if n > 0:
+                topic_rows.append({"name": topic_label(name), "count": n})
+        if not topic_rows:
+            topics = bundle.get("topics") or {}
+            topic_rows = [
+                {"name": topic_label(k), "count": v}
+                for k, v in topics.items()
+                if k in TOPIC_ORDER and isinstance(v, int)
+            ]
         if topic_rows:
             show_plotly(render_academic_bar_chart(topic_rows, t("pub.chart_two_title")))
         else:
