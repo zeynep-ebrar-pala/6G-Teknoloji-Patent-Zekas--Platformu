@@ -359,7 +359,6 @@ def render_academic_publication_module():
         return render_academic_trends_chart(df, t("pub.chart_one_title"))
 
     if section == "year":
-        st.markdown(f"### {t('pub.chart_one_heading')}")
         st.caption(t("pub.chart_one_body"))
         years = bundle.get("year_counts") or {}
         years = {str(y): int(years.get(str(y), 0) or 0) for y in trend_years()}
@@ -371,7 +370,6 @@ def render_academic_publication_module():
         else:
             show_empty(t("pub.empty_year_region") if region != "both" else t("pub.empty_year"))
 
-        st.markdown(f"### {t('pub.chart_two_heading')}")
         st.caption(t("pub.chart_two_body"))
         if current_view_mode() == "expert":
             st.caption(t("pub.chart_two_body_expert"))
