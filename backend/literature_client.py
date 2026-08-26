@@ -227,7 +227,7 @@ def literature_bundle(
     region: str = "both",
     topic: Optional[str] = None,
     _keys: str = "",
-    _v: str = "sp4",
+    _v: str = "sp5",
     _live: str = "",
 ) -> Dict[str, Any]:
     """Yedi 6G konusu. Grafikler Springer Meta; konular toplanmaz."""
@@ -358,19 +358,10 @@ def literature_bundle(
             payload["publishers"]["springer"] = overlay.get("total")
         payload["source"] = (
             "Springer Nature Meta API: «6G {{token}}», {span}. "
-            "Yıl / ülke: facet. Kurum ve atıf: çekilen kayıt + Crossref. Konular toplanmaz."
+            "Yıl / ülke: facet. Kurum: çekilen Springer kayıt. Atıf: Crossref. Konular toplanmaz."
         ).format(span=span_label())
         if overlay.get("fetched_at"):
             payload["fetched_at"] = overlay["fetched_at"]
-
-    if region == "both":
-        from backend.openalex_inst import ensure_prefetch as oa_prefetch, inst_payload
-
-        oa_prefetch()
-        oa = inst_payload(tpc)
-        if oa.get("institutions_by_topic") or oa.get("institutions"):
-            payload["institutions"] = oa.get("institutions") or []
-            payload["institutions_by_topic"] = oa.get("institutions_by_topic") or {}
 
     springer_topics = fetch_springer_topic_totals(_keys or key_fingerprint())
     springer_ok = {
@@ -389,7 +380,7 @@ def country_year_df(region: str = "both", topic: Optional[str] = None) -> Option
         region,
         topic,
         key_fingerprint(),
-        "sp4",
+        "sp5",
         str(load_live().get("fetched_at") or ""),
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}

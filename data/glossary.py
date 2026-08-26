@@ -408,7 +408,7 @@ GLOSSARY: dict[str, dict[str, str]] = {
         "tr": "Springer Nature Meta API",
         "definition": (
             "Springer Nature’ın yayın üstveri arayüzüdür. Bu sayfadaki yıl ve ülke grafikleri "
-            "facet çıktısıdır; kurum ve atıf çekilen kayıt + Crossref’tir."
+            "facet çıktısıdır; kurum çekilen kaydın Springer bağlılığıdır; atıf Crossref’tir."
         ),
         "why": "Yedi 6G konusu «6G {token}», 2020’den içinde bulunulan yıla kadar sayılır; konular toplanmaz. Pencere her yıl genişler.",
     },

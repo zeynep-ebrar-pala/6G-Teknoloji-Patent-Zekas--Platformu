@@ -396,11 +396,6 @@ def render_academic_publication_module():
             _render_eu_mno_panel(topic)
 
     elif section == "inst":
-        if region == "both":
-            from backend.openalex_inst import ensure_prefetch as oa_ensure
-
-            oa_ensure()
-            render_watch("oa_inst", "oa_inst")
         _render_breakdown("institutions", topic, bundle, region)
 
     elif section == "country":

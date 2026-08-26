@@ -1,21 +1,24 @@
 """
 Springer Nature Meta API — yedi 6G konusu.
-Yıl ve ülke: facet. Kurum / atıf: çekilen kayıtlardan (facet yok).
-Sayı gelmezse None; uydurulmaz.
+Yıl ve ülke: facet. Kurum: çekilen kaydın Springer bağlılığı (JATS/JSON).
+Atıf: çekilen DOI + Crossref. Sayı gelmezse None; uydurulmaz.
 """
 
 from __future__ import annotations
 
 import threading
 import time
+import urllib.error
 import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from backend.config import get_springer_api_key, reload_env
 from backend.years import should_refresh
-from backend.publisher_apis import _cache_put, _json, _q6g, _springer_count
+from backend.publisher_apis import UA, _cache_put, _json, _q6g, _springer_count
 from backend.topic_filter import filter_cited
 from backend.years import end_year, read_json, trend_years, write_json, year_window
 
@@ -71,6 +74,8 @@ COUNTRY_CC = {
     "TÜRKIYE": "TR",
 }
 
+SKIP_INST = frozenset({"unknown", "unaffiliated", "n/a", "na", "none", "null"})
+
 _lock = threading.Lock()
 _work_lock = threading.Lock()
 _thread: Optional[threading.Thread] = None
@@ -113,6 +118,93 @@ def _meta(query: str, *, page: int = 1, start: int = 1, facet: bool = False) -> 
         params["facet"] = "true"
     url = "https://api.springernature.com/meta/v2/json?" + urllib.parse.urlencode(params)
     return _json(url, timeout=28)
+
+
+def _jats_xml(query: str, *, page: int = 50, start: int = 1) -> Optional[str]:
+    key = get_springer_api_key()
+    if not key:
+        return None
+    params = {"q": query, "api_key": key, "p": str(page), "s": str(start)}
+    url = "https://api.springernature.com/meta/v2/jats?" + urllib.parse.urlencode(params)
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/xml, text/xml"})
+    try:
+        with urllib.request.urlopen(req, timeout=40) as resp:
+            return resp.read().decode("utf-8", errors="replace")
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, UnicodeError, ValueError):
+        return None
+
+
+def _xml_local(tag: str) -> str:
+    return tag.split("}", 1)[-1] if "}" in tag else tag
+
+
+def _xml_text(el: Optional[ET.Element]) -> str:
+    if el is None:
+        return ""
+    return " ".join("".join(el.itertext()).split())
+
+
+def _short_inst(label: str) -> str:
+    raw = " ".join(str(label or "").split())
+    if not raw:
+        return ""
+    head = raw.split(",")[0].strip()
+    if len(head) < 4 or head.casefold() in SKIP_INST:
+        return ""
+    return head
+
+
+def _uniq_inst(names: List[str]) -> List[str]:
+    out: List[str] = []
+    seen: set[str] = set()
+    for raw in names:
+        name = _short_inst(raw)
+        key = name.casefold()
+        if not name or key in seen:
+            continue
+        seen.add(key)
+        out.append(name)
+    return out
+
+
+def _affs_from_json_rec(rec: Dict[str, Any]) -> List[str]:
+    names: List[str] = []
+
+    def _take(val: Any) -> None:
+        if isinstance(val, str) and val.strip():
+            names.append(val.strip())
+        elif isinstance(val, list):
+            for item in val:
+                _take(item)
+        elif isinstance(val, dict):
+            for key in ("name", "affiliation", "organization", "orgName", "institution"):
+                text = str(val.get(key) or "").strip()
+                if text:
+                    names.append(text)
+
+    for key in ("affiliations", "affiliation", "organization", "organizations", "institutions"):
+        _take(rec.get(key))
+    for creator in rec.get("creators") or []:
+        if isinstance(creator, dict):
+            for key in ("affiliation", "affiliations", "organization"):
+                _take(creator.get(key))
+    return _uniq_inst(names)
+
+
+def _affs_from_jats_article(article: ET.Element) -> List[str]:
+    inst: List[str] = []
+    aff_fallback: List[str] = []
+    for el in article.iter():
+        loc = _xml_local(el.tag).lower()
+        if loc == "institution":
+            text = _xml_text(el)
+            if text:
+                inst.append(text)
+        elif loc == "aff":
+            text = _xml_text(el)
+            if text:
+                aff_fallback.append(text)
+    return _uniq_inst(inst or aff_fallback)
 
 
 def _total_of(data: Optional[Dict[str, Any]]) -> Optional[int]:
@@ -212,9 +304,100 @@ def _records(data: Optional[Dict[str, Any]], topic: str) -> List[Dict[str, Any]]
                 "source_url": url,
                 "url": url,
                 "topic": topic,
+                "affiliations": _affs_from_json_rec(rec),
             }
         )
     return [p for p in out if p.get("title")]
+
+
+def _records_jats(xml_text: Optional[str], topic: str) -> List[Dict[str, Any]]:
+    if not xml_text or "<" not in xml_text:
+        return []
+    try:
+        root = ET.fromstring(xml_text)
+    except ET.ParseError:
+        return []
+    articles = [
+        el
+        for el in root.iter()
+        if _xml_local(el.tag).lower() in {"article", "journal-article", "book-part", "preprint"}
+    ]
+    out: List[Dict[str, Any]] = []
+    for art in articles:
+        doi = ""
+        title = ""
+        journal = ""
+        year: Optional[int] = None
+        authors: List[str] = []
+        abstract = ""
+        for el in art.iter():
+            loc = _xml_local(el.tag).lower()
+            if loc == "article-id" and str(el.attrib.get("pub-id-type") or "").lower() == "doi":
+                doi = _xml_text(el)
+            elif loc == "doi" and not doi:
+                doi = _xml_text(el)
+            elif loc == "article-title" and not title:
+                title = _xml_text(el)
+            elif loc == "source" and not journal:
+                journal = _xml_text(el)
+            elif loc in {"year", "pub-date"} and year is None:
+                raw = _xml_text(el)[:4]
+                try:
+                    y = int(raw)
+                except ValueError:
+                    y = 0
+                if 1990 <= y <= 2035:
+                    year = y
+            elif loc == "contrib" and str(el.attrib.get("contrib-type") or "author") in {"author", ""}:
+                surname = given = ""
+                for child in el.iter():
+                    cl = _xml_local(child.tag).lower()
+                    if cl == "surname":
+                        surname = _xml_text(child)
+                    elif cl in {"given-names", "given-name"}:
+                        given = _xml_text(child)
+                name = ", ".join(x for x in (surname, given) if x)
+                if name:
+                    authors.append(name)
+            elif loc == "abstract" and not abstract:
+                abstract = _xml_text(el)[:1200]
+        doi = doi.removeprefix("https://doi.org/").removeprefix("http://doi.org/")
+        url = f"https://doi.org/{doi}" if doi.startswith("10.") else ""
+        if not title:
+            continue
+        out.append(
+            {
+                "title": title,
+                "authors": ", ".join(authors[:8]),
+                "journal": journal,
+                "year": year,
+                "doi": doi if doi.startswith("10.") else "",
+                "citations": None,
+                "abstract": abstract,
+                "source": "Springer",
+                "source_url": url,
+                "url": url,
+                "topic": topic,
+                "affiliations": _affs_from_jats_article(art),
+            }
+        )
+    return out
+
+
+def _inst_rows(papers: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    counts: Dict[str, int] = {}
+    for paper in papers:
+        seen: set[str] = set()
+        for aff in paper.get("affiliations") or []:
+            name = _short_inst(str(aff))
+            key = name.casefold()
+            if not name or key in seen:
+                continue
+            seen.add(key)
+            counts[name] = counts.get(name, 0) + 1
+    rows = [{"name": k, "count": v} for k, v in counts.items()]
+    rows.sort(key=lambda r: (-int(r["count"]), str(r["name"])))
+    return rows[:10]
 
 
 def _crossref_work(doi: str) -> Dict[str, Any]:
@@ -308,8 +491,12 @@ def _work() -> None:
                 )
                 done += 1
                 _status(running=True, done=done, total=total_jobs)
-                rec_data = _meta(q, page=50, start=1, facet=False)
-                papers = filter_cited(_records(rec_data, name), name, limit=50) if rec_data else []
+                rec_data = None
+                papers = _records_jats(_jats_xml(q, page=50, start=1), name)
+                if not papers:
+                    rec_data = _meta(q, page=50, start=1, facet=False)
+                    papers = _records(rec_data, name) if rec_data else []
+                papers = filter_cited(papers, name, limit=50) if papers else []
                 done += 1
                 _status(running=True, done=done, total=total_jobs)
                 if not papers:
@@ -334,17 +521,19 @@ def _work() -> None:
                 inst_counts: Dict[str, int] = {}
                 for paper in papers:
                     doi = str(paper.get("doi") or "")
-                    if not doi:
-                        continue
-                    work = _crossref_work(doi)
-                    if isinstance(work.get("cites"), int):
-                        paper["citations"] = work["cites"]
-                    for aff in work.get("aff") or []:
-                        short = aff.split(",")[0].strip()
-                        if len(short) < 4:
+                    if doi:
+                        work = _crossref_work(doi)
+                        if isinstance(work.get("cites"), int):
+                            paper["citations"] = work["cites"]
+                        time.sleep(0.05)
+                    seen: set[str] = set()
+                    for aff in paper.get("affiliations") or []:
+                        short = _short_inst(str(aff))
+                        key = short.casefold()
+                        if not short or key in seen:
                             continue
+                        seen.add(key)
                         inst_counts[short] = inst_counts.get(short, 0) + 1
-                    time.sleep(0.05)
                 papers.sort(key=lambda p: (-int(p.get("citations") or 0), str(p.get("title") or "")))
                 inst = [{"name": k, "count": v} for k, v in inst_counts.items()]
                 inst.sort(key=lambda r: (-int(r["count"]), str(r["name"])))
