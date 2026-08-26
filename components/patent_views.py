@@ -109,11 +109,7 @@ def _draw_count_charts(payload: Dict[str, Any], *, heavy: bool) -> None:
     df_tree = payload["df_tree"]
     patents: List[Dict[str, Any]] = payload["patents"]
 
-    if not snap.get("complete"):
-        total = max(int(snap.get("total") or 1), 1)
-        done = min(int(snap.get("done") or 0), total)
-        st.info(t("patent.bg_wait", done=format_int(done), total=format_int(total)))
-        st.progress(done / total)
+    if snap.get("running") or not snap.get("complete"):
         st.caption(t("patent.bg_partial"))
     api_err = (snap.get("error") or "") or lens_last_error()
     if api_err:
@@ -289,10 +285,12 @@ def render_patent_intelligence_module():
     st.session_state["_pat_topic"] = topic
     st.session_state["_pat_company"] = company_arg
     from backend.config import get_lens_token
+    from backend.live_refresh import render_watch
     from backend.patent_prefetch import ensure_prefetch
 
     if get_lens_token():
-        ensure_prefetch(topic, tuple(spec))
+        ensure_prefetch(topic, tuple(spec), force=True)
+    render_watch("lens", "patent")
     payload = _chart_payload()
     complete = bool(payload["snap"].get("complete"))
     if not complete:

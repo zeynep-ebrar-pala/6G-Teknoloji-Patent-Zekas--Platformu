@@ -400,9 +400,10 @@ class PatentService:
     @staticmethod
     def get_patent_trends_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
         from backend.patent_apis import key_fingerprint, live_company_year_counts
+        from backend.years import year_tuple
 
         firms = tuple([company] if company else SPEC_COMPANIES)
-        years = tuple(range(2020, 2027))
+        years = year_tuple()
         raw = live_company_year_counts(domain or "", firms, years, key_fingerprint())
         rows: Dict[str, List[int]] = {"Years": list(years)}
         for comp in firms:
@@ -438,9 +439,10 @@ class PatentService:
             return pd.DataFrame()
         from backend.patent_apis import peek_topic_year_counts
         from backend.patent_prefetch import ensure_topic_year_prefetch
+        from backend.years import year_tuple
 
-        ensure_topic_year_prefetch(domain)
-        years = tuple(range(2020, 2027))
+        ensure_topic_year_prefetch(domain, force=True)
+        years = year_tuple()
         raw = peek_topic_year_counts(domain, years)
         axis = [y for y in years if isinstance(raw.get(y), int)]
         if not axis:

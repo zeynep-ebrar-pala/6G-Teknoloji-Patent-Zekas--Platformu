@@ -397,7 +397,7 @@ GLOSSARY: dict[str, dict[str, str]] = {
             "Springer Nature’ın yayın üstveri arayüzüdür. Bu sayfadaki yıl ve ülke grafikleri "
             "facet çıktısıdır; kurum ve atıf çekilen kayıt + Crossref’tir."
         ),
-        "why": "Yedi 6G konusu «6G {token}», 2020–2026 penceresinde sayılır; konular toplanmaz.",
+        "why": "Yedi 6G konusu «6G {token}», 2020’den içinde bulunulan yıla kadar sayılır; konular toplanmaz. Pencere her yıl genişler.",
     },
 }
 

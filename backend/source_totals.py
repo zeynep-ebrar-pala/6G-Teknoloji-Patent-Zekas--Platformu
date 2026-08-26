@@ -74,9 +74,8 @@ def fetch_patent_source_totals(topic: Optional[str], _keys: str = "") -> List[Di
     ]
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
-def fetch_pub_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[str, Any]]:
-    """Springer Nature Meta API. Anahtar yoksa None."""
+def peek_pub_source_totals(topic: Optional[str]) -> List[Dict[str, Any]]:
+    """Springer — disk önbelleği, ağ yok."""
     from backend.springer_live import live_topic_row, springer_overlay
     from backend.publisher_apis import fetch_springer_topic_totals
 
@@ -90,7 +89,7 @@ def fetch_pub_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[
             overlay = springer_overlay(topic) or {}
             n = overlay.get("total") if isinstance(overlay.get("total"), int) else None
         if n is None:
-            springer_topics = fetch_springer_topic_totals(_keys or key_fingerprint())
+            springer_topics = fetch_springer_topic_totals(key_fingerprint())
             hit = (springer_topics or {}).get(topic)
             n = hit if isinstance(hit, int) else None
     return [
@@ -101,3 +100,7 @@ def fetch_pub_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[
             "native_springer" if isinstance(n, int) else "none",
         )
     ]
+
+
+def fetch_pub_source_totals(topic: Optional[str], _keys: str = "") -> List[Dict[str, Any]]:
+    return peek_pub_source_totals(topic)

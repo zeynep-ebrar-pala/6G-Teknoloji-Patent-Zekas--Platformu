@@ -9,6 +9,13 @@ import os
 import sys
 from typing import Any, Iterable
 
+
+class _FormatDict(dict):
+    """Eksik yer tutucu kırılmasın: {token} belgelerde olduğu gibi kalsın."""
+
+    def __missing__(self, key: str) -> str:
+        return "{" + key + "}"
+
 SESSION_KEY = "ui_lang"
 SUPPORTED_LANGS: tuple[str, ...] = ("tr", "en")
 DEFAULT_LANG = "tr"
@@ -81,6 +88,16 @@ def get_lang() -> str:
     return DEFAULT_LANG
 
 
+def _year_fields() -> dict[str, Any]:
+    try:
+        from backend.years import format_fields
+
+        return format_fields()
+    except Exception:
+        y = 2026
+        return {"y0": 2020, "y1": y, "l0": y - 4, "l1": y, "end": y}
+
+
 def t(key: str, **kwargs: Any) -> str:
     """Çeviri anahtarı. Eksikte fallback dile, o da yoksa anahtarın kendisine düşer."""
     lang = get_lang()
@@ -91,11 +108,12 @@ def t(key: str, **kwargs: Any) -> str:
         if os.environ.get("I18N_DEBUG"):
             print(f"[i18n] missing {lang}: {key}", file=sys.stderr)
         text = catalogs.get(FALLBACK_LANG, {}).get(key, key)
-    if kwargs:
-        try:
-            text = text.format(**kwargs)
-        except (KeyError, IndexError, ValueError):
-            pass
+    if "{" not in text:
+        return text
+    try:
+        text = text.format_map(_FormatDict({**_year_fields(), **kwargs}))
+    except (KeyError, IndexError, ValueError):
+        pass
     return text
 
 

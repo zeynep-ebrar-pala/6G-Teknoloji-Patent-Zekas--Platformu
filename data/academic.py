@@ -3,12 +3,20 @@ Akademik yayın veri kümesi — DOI ile doğrulanabilir kayıtlar.
 Kaynak hücreleri Springer Nature Meta API.
 """
 
-ACADEMIC_DATA_SOURCE = (
-    "Springer Nature Meta API: «6G {konu}», 2020–2026. "
-    "Yıl ve ülke facet; kurum ve atıf çekilen kayıt + Crossref. Yedi konu toplanmaz."
-)
-
 ACADEMIC_SOURCES = ["Springer"]
+
+
+def academic_data_source() -> str:
+    from backend.years import span_label
+
+    return (
+        f"Springer Nature Meta API: «6G {{konu}}», {span_label()}. "
+        "Yıl ve ülke facet; kurum ve atıf çekilen kayıt + Crossref. Yedi konu toplanmaz."
+    )
+
+
+# Geriye dönük: import edenler dize beklerse ilk yüklemede o anki pencere.
+ACADEMIC_DATA_SOURCE = academic_data_source()
 
 # DOI ile doğrulanmış makaleler — uydurma atıf sayısı yok
 MOST_CITED_PAPERS = [

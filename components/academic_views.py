@@ -238,7 +238,9 @@ def _render_region_operators(region: str) -> None:
 
 
 def render_academic_publication_module():
-    from backend.springer_live import TOPIC_ORDER, TREND_YEARS, ensure_prefetch, prefetch_status
+    from backend.live_refresh import render_watch
+    from backend.springer_live import TOPIC_ORDER, ensure_prefetch
+    from backend.years import trend_years
     from components.topic_panels import render_pub_topic_panel
     from components.tt_europe_views import render_tt_europe_pub_section
     from components.ui_helpers import (
@@ -280,6 +282,7 @@ def render_academic_publication_module():
         )
 
     ensure_prefetch()
+    render_watch("springer", "pub")
     topic, region = render_pub_topic_panel("pub")
     _labels = [t(f"pub.section.{k}") for k in PUB_SECTION_KEYS]
     _map = dict(zip(_labels, PUB_SECTION_KEYS))
@@ -290,13 +293,9 @@ def render_academic_publication_module():
     _render_region_operators(region)
 
     bundle = AcademicService.get_bundle(region, topic)
-    status = prefetch_status()
-    if status.get("running") and int(status.get("total") or 0) > 0:
-        done = min(int(status.get("done") or 0), int(status["total"]))
-        st.info(t("pub.bg_wait", done=format_int(done), total=format_int(status["total"])))
-        st.progress(done / max(int(status["total"]), 1))
-    if status.get("error"):
-        st.warning(t("pub.api_error", detail=str(status["error"]).replace("{", "(").replace("}", ")")))
+    fetched = str(bundle.get("fetched_at") or "")
+    if fetched:
+        st.caption(t("app.live_cached", ts=fetched))
 
     c1, c2, c3 = st.columns(3)
     with c1:
@@ -341,7 +340,7 @@ def render_academic_publication_module():
     if section == "year":
         st.caption(t("pub.year_caption") if region == "both" else t("pub.year_caption_region"))
         years = bundle.get("year_counts") or {}
-        years = {str(y): int(years.get(str(y), 0) or 0) for y in TREND_YEARS}
+        years = {str(y): int(years.get(str(y), 0) or 0) for y in trend_years()}
         shown = False
         if any(years.values()):
             show_plotly(render_academic_database_chart(years, t("pub.chart_year"), t("pub.chart_year_x")))

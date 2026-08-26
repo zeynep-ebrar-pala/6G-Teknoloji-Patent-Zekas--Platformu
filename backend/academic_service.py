@@ -16,7 +16,7 @@ from backend.literature_client import (
 )
 from backend.publisher_apis import key_fingerprint
 from backend.springer_live import load_live
-from data.academic import ACADEMIC_DATA_SOURCE, ACADEMIC_SOURCES
+from data.academic import ACADEMIC_SOURCES, academic_data_source
 
 
 def _norm_topic(topic: Optional[str]) -> Optional[str]:
@@ -38,7 +38,7 @@ class AcademicService:
 
     @staticmethod
     def get_data_source() -> str:
-        return ACADEMIC_DATA_SOURCE
+        return academic_data_source()
 
     @staticmethod
     def get_bundle(region: str = "both", topic: Optional[str] = None) -> Dict[str, Any]:
@@ -65,7 +65,7 @@ class AcademicService:
             "top_topic": top_topic,
             "top_topic_count": top_n,
             "verified_paper_count": len(bundle.get("cited") or []),
-            "source": ACADEMIC_DATA_SOURCE,
+            "source": academic_data_source(),
             "snapshot_at": meta.get("fetched_at") or bundle.get("fetched_at") or "",
         }
 
@@ -76,7 +76,8 @@ class AcademicService:
     @staticmethod
     def get_topic_yearly_df(topic: str) -> Optional[pd.DataFrame]:
         """Springer Nature Meta year facet. Overlay yoksa None — Crossref yedek yok."""
-        from backend.springer_live import TREND_YEARS, ensure_prefetch, live_topic_row
+        from backend.springer_live import ensure_prefetch, live_topic_row
+        from backend.years import trend_years
 
         name = _norm_topic(topic)
         if not name:
@@ -84,7 +85,7 @@ class AcademicService:
         ensure_prefetch()
         row = live_topic_row(name)
         years = row.get("years") if isinstance(row.get("years"), dict) else {}
-        axis = [y for y in TREND_YEARS if isinstance(years.get(str(y)), int)]
+        axis = [y for y in trend_years() if isinstance(years.get(str(y)), int)]
         if not axis:
             return None
         return pd.DataFrame({"Years": axis, name: [int(years[str(y)]) for y in axis]})

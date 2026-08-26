@@ -4,7 +4,6 @@ Lens sayımlarını arka planda doldurur. Streamlit betiği bitince menü serbes
 
 from __future__ import annotations
 
-import json
 import threading
 import time
 from datetime import datetime, timezone
@@ -13,6 +12,8 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from data.patents import SPEC_COMPANIES, TECHNOLOGY_DOMAINS
 
+from backend.years import end_year, read_json, trend_years, write_json
+
 _ROOT = Path(__file__).resolve().parents[1]
 _STATUS = _ROOT / "data" / "cache" / "patent_prefetch_status.json"
 _ROWS = _ROOT / "data" / "cache" / "patent_vendor_rows.json"
@@ -20,7 +21,9 @@ _lock = threading.Lock()
 _work_lock = threading.Lock()
 _threads: Dict[str, threading.Thread] = {}
 
-_YEARS = tuple(range(2020, 2027))
+
+def _years() -> tuple[int, ...]:
+    return tuple(trend_years())
 
 
 def _job_key(topic: Optional[str], companies: Tuple[str, ...]) -> str:
@@ -28,18 +31,11 @@ def _job_key(topic: Optional[str], companies: Tuple[str, ...]) -> str:
 
 
 def _write_json(path: Path, payload: Dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    write_json(path, payload)
 
 
 def _read_json(path: Path) -> Dict[str, Any]:
-    if not path.exists():
-        return {}
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
-    return data if isinstance(data, dict) else {}
+    return read_json(path)
 
 
 def _status_set(**fields: Any) -> None:
@@ -66,7 +62,7 @@ def _queries(topic: Optional[str], companies: Tuple[str, ...]) -> List[str]:
         for name in names:
             out.append(lens_assignee_dsl(axis, name))
     for name in names:
-        for year in _YEARS:
+        for year in _years():
             out.append(f"{dsl} AND {_applicant_clause(name)} AND year_published:{year}")
     return out
 
@@ -91,7 +87,7 @@ def _work(topic: Optional[str], companies: Tuple[str, ...]) -> None:
             total = len(queries) + (1 if topic else len(TECHNOLOGY_DOMAINS))
             _status_set(running=True, done=0, total=total, error="", job=_job_key(topic, companies))
             for q in queries:
-                _lens_count(q)
+                _lens_count(q, force=True)
                 done += 1
                 _status_set(running=True, done=done, total=total)
                 time.sleep(0.08)
@@ -120,21 +116,45 @@ def _work(topic: Optional[str], companies: Tuple[str, ...]) -> None:
                     seen.add(pub)
                     rows_out.append(rec)
             blob = _read_json(_ROWS)
-            blob[_job_key(topic, tuple(SPEC_COMPANIES))] = rows_out
-            _write_json(_ROWS, blob)
-            _status_set(running=False, done=total, total=total)
+            key = _job_key(topic, tuple(SPEC_COMPANIES))
+            if rows_out:
+                blob[key] = rows_out
+                _write_json(_ROWS, blob)
+            _status_set(
+                running=False,
+                done=total,
+                total=total,
+                fetched_at=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+                year_end=end_year(),
+            )
         except Exception as exc:
             _status_set(running=False, error=str(exc)[:240], done=done, total=total)
 
 
-def ensure_prefetch(topic: Optional[str], companies: Tuple[str, ...]) -> None:
+def ensure_prefetch(topic: Optional[str], companies: Tuple[str, ...], *, force: bool = False) -> None:
+    from backend.years import should_refresh
+
     key = _job_key(topic, companies)
-    if snapshot(topic, companies).get("complete"):
-        return
+    snap = snapshot(topic, companies)
+    st = _read_json(_STATUS)
+    stored = st.get("year_end")
+    try:
+        stored_end = int(stored) if stored is not None else None
+    except (TypeError, ValueError):
+        stored_end = None
     with _lock:
         alive = _threads.get(key)
         if alive is not None and alive.is_alive():
             return
+        if not should_refresh(
+            complete=bool(snap.get("complete")),
+            fetched_at=str(st.get("fetched_at") or ""),
+            year_end=stored_end,
+            force=force,
+            running=False,
+        ):
+            return
+        _status_set(running=True, done=0, total=max(int(snap.get("total") or 1), 1), error="", job=key)
         t = threading.Thread(target=_work, args=(topic, companies), daemon=True, name=f"lens-{key[:24]}")
         _threads[key] = t
         t.start()
@@ -145,13 +165,19 @@ def _topic_year_work(topic: str) -> None:
     from backend.patent_apis import _lens_count, lens_topic_year_query
 
     reload_env()
-    for year in _YEARS:
-        _lens_count(lens_topic_year_query(topic, int(year)))
+    for year in _years():
+        _lens_count(lens_topic_year_query(topic, int(year)), force=True)
         time.sleep(0.05)
+    st = _read_json(_STATUS)
+    stamps = st.get("topic_years") if isinstance(st.get("topic_years"), dict) else {}
+    stamps[topic] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    _status_set(topic_years=stamps, year_end=end_year())
 
 
-def ensure_topic_year_prefetch(topic: str) -> None:
+def ensure_topic_year_prefetch(topic: str, *, force: bool = False) -> None:
     """Teknoloji sayfası: konu × yıl Lens total. Firma süzgeci yok."""
+    from backend.years import should_refresh
+
     name = (topic or "").strip()
     if not name:
         return
@@ -160,12 +186,30 @@ def ensure_topic_year_prefetch(topic: str) -> None:
 
     if not get_lens_token():
         return
-    if all(isinstance(n, int) for n in peek_topic_year_counts(name, _YEARS).values()):
-        return
+    years = _years()
+    counts = peek_topic_year_counts(name, years)
+    complete = all(isinstance(n, int) for n in counts.values())
     key = f"ty|{name}"
     with _lock:
         alive = _threads.get(key)
         if alive is not None and alive.is_alive():
+            return
+        fetched = ""
+        stamps = _read_json(_STATUS).get("topic_years")
+        if isinstance(stamps, dict):
+            fetched = str(stamps.get(name) or "")
+        stored_end = _read_json(_STATUS).get("year_end")
+        try:
+            year_end = int(stored_end) if stored_end is not None else None
+        except (TypeError, ValueError):
+            year_end = None
+        if not should_refresh(
+            complete=complete,
+            fetched_at=fetched,
+            year_end=year_end,
+            force=force,
+            running=False,
+        ):
             return
         t = threading.Thread(target=_topic_year_work, args=(name,), daemon=True, name=f"lens-year-{name}")
         _threads[key] = t
@@ -209,7 +253,7 @@ def snapshot(topic: Optional[str], companies: Tuple[str, ...]) -> Dict[str, Any]
     for name in names:
         years[name] = {
             y: _n(f"{dsl} AND {_applicant_clause(name)} AND year_published:{y}")
-            for y in _YEARS
+            for y in _years()
         }
     st = _read_json(_STATUS)
     queries = _queries(topic, companies)
@@ -227,7 +271,7 @@ def snapshot(topic: Optional[str], companies: Tuple[str, ...]) -> Dict[str, Any]
         "years": years,
         "rows": rows,
         "complete": complete,
-        "year_list": list(_YEARS),
+        "year_list": list(_years()),
     }
 
 
@@ -254,7 +298,7 @@ def frames_from_snapshot(
             dens_rows.append(row)
     df_density = pd.DataFrame(dens_rows)
     years = snap.get("years") or {}
-    year_list = list(snap.get("year_list") or _YEARS)
+    year_list = list(snap.get("year_list") or _years())
     ready = [
         comp
         for comp in names

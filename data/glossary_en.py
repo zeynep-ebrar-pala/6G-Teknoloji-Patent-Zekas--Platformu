@@ -243,7 +243,7 @@ GLOSSARY_EN: dict[str, dict[str, str]] = {
             "Springer Nature’s publication metadata API. Year and country charts on this page "
             "come from facets; institution and citation counts come from pulled records plus Crossref."
         ),
-        "why": "The seven 6G topics are counted as «6G {token}» for 2020–2026; topics are not summed.",
+        "why": "The seven 6G topics are counted as «6G {token}» from 2020 through the current year; topics are not summed. The window widens each year.",
     },
 }
 

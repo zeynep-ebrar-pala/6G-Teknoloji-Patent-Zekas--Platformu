@@ -160,10 +160,12 @@ def lens_topic_year_query(topic: str, year: int) -> str:
     return f"{lens_topic_dsl(topic)} AND year_published:{int(year)}"
 
 
-def peek_topic_year_counts(topic: str, years: tuple = (2020, 2021, 2022, 2023, 2024, 2025, 2026)) -> Dict[int, Optional[int]]:
+def peek_topic_year_counts(topic: str, years: Optional[tuple] = None) -> Dict[int, Optional[int]]:
     """Disk önbelleği — ağ yok. Ölçülmeyen yıl None (0 uydurulmaz)."""
+    from backend.years import year_tuple
+
     out: Dict[int, Optional[int]] = {}
-    for raw in years:
+    for raw in years or year_tuple():
         try:
             y = int(raw)
         except (TypeError, ValueError):
@@ -444,20 +446,20 @@ def lens_scope_count(topic: Optional[str] = None) -> Optional[int]:
     return _lens_count(dsl)
 
 
-def _lens_count(query: str) -> Optional[int]:
+def _lens_count(query: str, *, force: bool = False) -> Optional[int]:
     token = get_lens_token()
     if not token:
         return None
     cache_key = f"lens:{query}"
     hit = _cache_get(cache_key)
-    if hit is not None:
+    if hit is not None and not force:
         return hit
     data = lens_search(query, size=0)
     if not data:
-        return None
+        return hit
     n = _lens_total(data)
     if n is None:
-        return None
+        return hit
     _cache_put(cache_key, n)
     return n
 
@@ -678,14 +680,14 @@ def google_patents_records(query: str, num: int = 10, pages: int = 3) -> List[Di
     return rows
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def fetch_office_counts(query: str, _keys: str = "") -> Dict[str, Optional[int]]:
-    """Yalnızca Lens.org. Ham «6G» yerine Explorer DSL."""
+    """Yalnızca Lens.org — disk peek. Ağ yok; arka plan doldurur."""
     q = (query or "").strip()
     dsl = lens_topic_dsl(q) if q and q not in ("6G", "all") else lens_explorer_dsl()
+    n = peek_lens_count(dsl)
     return {
         "google_patents": None,
-        "lens": _lens_count(dsl),
+        "lens": n,
         "espacenet": None,
         "wipo": None,
         "uspto": None,

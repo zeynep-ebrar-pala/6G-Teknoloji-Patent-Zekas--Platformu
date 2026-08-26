@@ -6,7 +6,6 @@ Sayı gelmezse None; uydurulmaz.
 
 from __future__ import annotations
 
-import json
 import threading
 import time
 import urllib.parse
@@ -15,8 +14,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from backend.config import get_springer_api_key, reload_env
-from backend.publisher_apis import TOPIC_TOKEN, UA, YEARS, _cache_get, _cache_put, _json, _q6g, _springer_count
+from backend.years import should_refresh
+from backend.publisher_apis import _cache_put, _json, _q6g, _springer_count
 from backend.topic_filter import filter_cited
+from backend.years import end_year, read_json, trend_years, write_json, year_window
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "springer_live.json"
 STATUS_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "springer_prefetch_status.json"
@@ -30,7 +31,13 @@ TOPIC_ORDER = (
     "NTN",
     "Ambient IoT",
 )
-TREND_YEARS = list(range(2020, 2027))
+
+
+def __getattr__(name: str):
+    if name == "TREND_YEARS":
+        return trend_years()
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
 
 COUNTRY_CC = {
     "CHINA": "CN",
@@ -70,18 +77,11 @@ _thread: Optional[threading.Thread] = None
 
 
 def _read(path: Path) -> Dict[str, Any]:
-    if not path.exists():
-        return {}
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {}
-    return data if isinstance(data, dict) else {}
+    return read_json(path)
 
 
 def _write(path: Path, payload: Dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json(path, payload)
 
 
 def _status(**fields: Any) -> None:
@@ -97,7 +97,7 @@ def load_live() -> Dict[str, Any]:
 
 def _query(topic: str, extra: str = "") -> str:
     q = _q6g(topic)
-    y0, y1 = YEARS
+    y0, y1 = year_window()
     out = f"{q} onlinedatefrom:{y0}-01-01 onlinedateto:{y1}-12-31"
     if extra:
         out = f"{out} {extra}"
@@ -151,7 +151,7 @@ def _facets(data: Optional[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
 
 
 def _year_map(rows: List[Dict[str, Any]]) -> Dict[str, int]:
-    out = {str(y): 0 for y in TREND_YEARS}
+    out = {str(y): 0 for y in trend_years()}
     for row in rows:
         key = str(row.get("name") or "")
         if key in out:
@@ -252,6 +252,7 @@ def _save_topic(name: str, patch: Dict[str, Any]) -> None:
     blob["topics"] = topics
     blob["source"] = "Springer Nature Meta API"
     blob["fetched_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    blob["year_end"] = end_year()
     _write(CACHE_PATH, blob)
 
 
@@ -264,12 +265,23 @@ def _work() -> None:
         try:
             for name in TOPIC_ORDER:
                 q = _query(name)
+                prev = live_topic_row(name)
                 data = _meta(q, page=1, start=1, facet=True)
+                if not data:
+                    done += 3
+                    _status(running=True, done=min(done, total_jobs), total=total_jobs)
+                    continue
                 facets = _facets(data)
                 total = _total_of(data)
+                if total is None and isinstance(prev.get("total"), int):
+                    total = int(prev["total"])
                 years = _year_map(facets.get("year") or [])
+                if not any(years.values()) and isinstance(prev.get("years"), dict):
+                    years = {str(y): int((prev["years"].get(str(y), 0) or 0)) for y in trend_years()}
                 countries = _countries(facets.get("country") or [])
-                turkey_n = _springer_count(_q6g(name), "Turkey", YEARS)
+                turkey_n = _springer_count(_q6g(name), "Turkey", year_window(), force=True)
+                if turkey_n is None and isinstance(prev.get("turkey_count"), int):
+                    turkey_n = int(prev["turkey_count"])
                 turkey_rank = None
                 if isinstance(turkey_n, int):
                     merged = list(countries)
@@ -281,13 +293,15 @@ def _work() -> None:
                             turkey_rank = i
                             break
                     countries = merged
+                elif isinstance(prev.get("turkey_rank"), int):
+                    turkey_rank = int(prev["turkey_rank"])
                 _save_topic(
                     name,
                     {
                         "total": total,
                         "query": q,
                         "years": years,
-                        "countries": countries,
+                        "countries": countries or prev.get("countries") or [],
                         "turkey_count": turkey_n,
                         "turkey_rank": turkey_rank,
                     },
@@ -295,9 +309,28 @@ def _work() -> None:
                 done += 1
                 _status(running=True, done=done, total=total_jobs)
                 rec_data = _meta(q, page=50, start=1, facet=False)
-                papers = filter_cited(_records(rec_data, name), name, limit=50)
+                papers = filter_cited(_records(rec_data, name), name, limit=50) if rec_data else []
                 done += 1
                 _status(running=True, done=done, total=total_jobs)
+                if not papers:
+                    papers = [p for p in (prev.get("cited") or []) if isinstance(p, dict)]
+                    inst = [x for x in (prev.get("institutions") or []) if isinstance(x, dict)]
+                    _save_topic(
+                        name,
+                        {
+                            "total": total,
+                            "query": q,
+                            "years": years,
+                            "countries": countries or prev.get("countries") or [],
+                            "institutions": inst[:10],
+                            "cited": papers[:10],
+                            "turkey_count": turkey_n,
+                            "turkey_rank": turkey_rank,
+                        },
+                    )
+                    done += 1
+                    _status(running=True, done=done, total=total_jobs)
+                    continue
                 inst_counts: Dict[str, int] = {}
                 for paper in papers:
                     doi = str(paper.get("doi") or "")
@@ -335,18 +368,37 @@ def _work() -> None:
             _status(running=False, done=done, total=total_jobs, error=str(exc)[:240])
 
 
-def ensure_prefetch() -> None:
+def _cache_complete(live: Dict[str, Any]) -> bool:
+    topics = live.get("topics") if isinstance(live.get("topics"), dict) else {}
+    if not all(isinstance((topics.get(n) or {}).get("total"), int) for n in TOPIC_ORDER):
+        return False
+    return all((topics.get(n) or {}).get("cited") for n in TOPIC_ORDER)
+
+
+def ensure_prefetch(*, force: bool = False) -> None:
     if not get_springer_api_key():
         return
     global _thread
     with _lock:
-        if _thread is not None and _thread.is_alive():
+        alive = _thread is not None and _thread.is_alive()
+        if alive:
             return
         live = load_live()
-        topics = live.get("topics") if isinstance(live.get("topics"), dict) else {}
-        if all(isinstance((topics.get(n) or {}).get("total"), int) for n in TOPIC_ORDER):
-            if all((topics.get(n) or {}).get("cited") for n in TOPIC_ORDER):
-                return
+        complete = _cache_complete(live)
+        year_end = live.get("year_end")
+        try:
+            stored_end = int(year_end) if year_end is not None else None
+        except (TypeError, ValueError):
+            stored_end = None
+        if not should_refresh(
+            complete=complete,
+            fetched_at=str(live.get("fetched_at") or ""),
+            year_end=stored_end,
+            force=force,
+            running=False,
+        ):
+            return
+        _status(running=True, done=0, total=len(TOPIC_ORDER) * 3, error="")
         _thread = threading.Thread(target=_work, daemon=True, name="springer-live")
         _thread.start()
 
@@ -387,7 +439,7 @@ def springer_overlay(topic: Optional[str] = None) -> Optional[Dict[str, Any]]:
         if isinstance(row.get("total"), int):
             totals[name] = int(row["total"])
         years = row.get("years") if isinstance(row.get("years"), dict) else {}
-        series[name] = {str(y): int(years.get(str(y), 0) or 0) for y in TREND_YEARS}
+        series[name] = {str(y): int(years.get(str(y), 0) or 0) for y in trend_years()}
         inst = row.get("institutions") if isinstance(row.get("institutions"), list) else []
         cc = row.get("countries") if isinstance(row.get("countries"), list) else []
         if inst:

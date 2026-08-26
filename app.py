@@ -119,6 +119,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+try:
+    from backend.live_refresh import kickoff_on_visit
+
+    kickoff_on_visit()
+except Exception:
+    pass
+
 _nav = st.navigation(
     [
         st.Page("views/home.py", title=t("nav.home"), icon="🏠", default=True),

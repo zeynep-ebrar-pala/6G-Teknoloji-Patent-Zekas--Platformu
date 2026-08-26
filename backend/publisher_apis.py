@@ -15,8 +15,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import streamlit as st
-
 from backend.config import (
     get_elsevier_api_key,
     get_elsevier_inst_token,
@@ -24,11 +22,18 @@ from backend.config import (
     get_serpapi_key,
     get_springer_api_key,
 )
+from backend.years import last5_window, year_window
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "publisher_native.json"
 UA = "6G-Patent-Platform/1.3 (mailto:zeynep.ebrar.pala@example.com)"
-YEARS = (2020, 2026)
-LAST5 = (2022, 2026)
+
+
+def YEARS() -> tuple[int, int]:
+    return year_window()
+
+
+def LAST5() -> tuple[int, int]:
+    return last5_window()
 
 TOPIC_TOKEN: Dict[str, str] = {
     "ISAC": "ISAC",
@@ -117,20 +122,21 @@ def key_fingerprint() -> str:
     return "|".join(f"{name}={int(ok)}" for name, ok in sorted(key_status().items()))
 
 
-def _ieee_count(query: str, affiliation: Optional[str]) -> Optional[int]:
+def _ieee_count(query: str, affiliation: Optional[str], *, force: bool = False) -> Optional[int]:
     key = get_ieee_api_key()
     if not key:
         return None
-    cache_key = f"ieee:{affiliation or 'all'}:{query}"
+    y0, y1 = year_window()
+    cache_key = f"ieee:{affiliation or 'all'}:{query}:{y0}-{y1}"
     hit = _cache_get(cache_key)
-    if hit is not None:
+    if hit is not None and not force:
         return hit
     params = {
         "apikey": key,
         "format": "json",
         "max_records": "1",
-        "start_year": str(YEARS[0]),
-        "end_year": str(YEARS[1]),
+        "start_year": str(y0),
+        "end_year": str(y1),
         "querytext": query,
     }
     if affiliation:
@@ -138,14 +144,14 @@ def _ieee_count(query: str, affiliation: Optional[str]) -> Optional[int]:
     url = "https://ieeexploreapi.ieee.org/api/v1/search/articles?" + urllib.parse.urlencode(params)
     data = _json(url)
     if not data:
-        return None
+        return hit
     total = data.get("total_records")
     if total is None:
         total = data.get("totalfound")
     try:
         n = int(total)
     except (TypeError, ValueError):
-        return None
+        return hit
     _cache_put(cache_key, n)
     return n
 
@@ -153,15 +159,18 @@ def _ieee_count(query: str, affiliation: Optional[str]) -> Optional[int]:
 def _springer_count(
     query: str,
     affiliation: Optional[str] = None,
-    years: tuple = YEARS,
+    years: Optional[tuple] = None,
+    *,
+    force: bool = False,
 ) -> Optional[int]:
     key = get_springer_api_key()
     if not key:
         return None
-    y0, y1 = int(years[0]), int(years[1])
+    span = years or year_window()
+    y0, y1 = int(span[0]), int(span[1])
     cache_key = f"springer:{affiliation or 'all'}:{query}:{y0}-{y1}"
     hit = _cache_get(cache_key)
-    if hit is not None:
+    if hit is not None and not force:
         return hit
     q = f"{query} onlinedatefrom:{y0}-01-01 onlinedateto:{y1}-12-31"
     if affiliation:
@@ -173,7 +182,7 @@ def _springer_count(
     )
     data = _json(url)
     if not data:
-        return None
+        return hit
     result = data.get("result") or []
     if isinstance(result, list) and result:
         total = result[0].get("total")
@@ -184,18 +193,29 @@ def _springer_count(
     try:
         n = int(str(total).replace(",", ""))
     except (TypeError, ValueError):
-        return None
+        return hit
     _cache_put(cache_key, n)
     return n
 
 
-def _elsevier_count(query: str, affiliation: Optional[str]) -> Optional[int]:
+def peek_springer_count(
+    query: str,
+    affiliation: Optional[str] = None,
+    years: Optional[tuple] = None,
+) -> Optional[int]:
+    span = years or year_window()
+    y0, y1 = int(span[0]), int(span[1])
+    return _cache_get(f"springer:{affiliation or 'all'}:{query}:{y0}-{y1}")
+
+
+def _elsevier_count(query: str, affiliation: Optional[str], *, force: bool = False) -> Optional[int]:
     key = get_elsevier_api_key()
     if not key:
         return None
-    cache_key = f"elsevier:{affiliation or 'all'}:{query}"
+    y0, y1 = year_window()
+    cache_key = f"elsevier:{affiliation or 'all'}:{query}:{y0}-{y1}"
     hit = _cache_get(cache_key)
-    if hit is not None:
+    if hit is not None and not force:
         return hit
     headers = {"X-ELS-APIKey": key, "Accept": "application/json"}
     inst = get_elsevier_inst_token()
@@ -204,32 +224,32 @@ def _elsevier_count(query: str, affiliation: Optional[str]) -> Optional[int]:
     if affiliation:
         q = (
             f"TITLE({query}) AND AFFILCOUNTRY({affiliation}) "
-            f"AND PUBYEAR > {YEARS[0] - 1} AND PUBYEAR < {YEARS[1] + 1}"
+            f"AND PUBYEAR > {y0 - 1} AND PUBYEAR < {y1 + 1}"
         )
         url = (
             "https://api.elsevier.com/content/search/scopus?"
             + urllib.parse.urlencode({"query": q, "count": "1", "httpAccept": "application/json"})
         )
     else:
-        q = f"TITLE({query}) AND PUBYEAR > {YEARS[0] - 1} AND PUBYEAR < {YEARS[1] + 1}"
+        q = f"TITLE({query}) AND PUBYEAR > {y0 - 1} AND PUBYEAR < {y1 + 1}"
         url = (
             "https://api.elsevier.com/content/search/sciencedirect?"
             + urllib.parse.urlencode({"query": q, "count": "1"})
         )
     data = _json(url, headers=headers)
     if not data:
-        return None
+        return hit
     block = data.get("search-results") or data
     total = block.get("opensearch:totalResults")
     try:
         n = int(str(total))
     except (TypeError, ValueError):
-        return None
+        return hit
     _cache_put(cache_key, n)
     return n
 
 
-def _scholar_count(query: str, affiliation: Optional[str]) -> Optional[int]:
+def _scholar_count(query: str, affiliation: Optional[str], *, force: bool = False) -> Optional[int]:
     """Google Scholar HTML kazınmaz. Yalnız isteğe bağlı SerpAPI."""
     key = get_serpapi_key()
     if not key:
@@ -237,60 +257,60 @@ def _scholar_count(query: str, affiliation: Optional[str]) -> Optional[int]:
     q = query
     if affiliation:
         q = f"{query} {affiliation}"
-    cache_key = f"scholar:{affiliation or 'all'}:{q}"
+    y0, y1 = year_window()
+    cache_key = f"scholar:{affiliation or 'all'}:{q}:{y0}-{y1}"
     hit = _cache_get(cache_key)
-    if hit is not None:
+    if hit is not None and not force:
         return hit
     params = {
         "engine": "google_scholar",
         "q": q,
-        "as_ylo": str(YEARS[0]),
-        "as_yhi": str(YEARS[1]),
+        "as_ylo": str(y0),
+        "as_yhi": str(y1),
         "num": "1",
         "api_key": key,
     }
     url = "https://serpapi.com/search.json?" + urllib.parse.urlencode(params)
     data = _json(url)
     if not data:
-        return None
+        return hit
     info = data.get("search_information") or {}
     total = info.get("total_results")
     try:
         n = int(str(total).replace(",", ""))
     except (TypeError, ValueError):
-        return None
+        return hit
     _cache_put(cache_key, n)
     return n
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def fetch_springer_topic_totals(_keys: str = "") -> Dict[str, Optional[int]]:
-    """Küresel Springer Meta API toplamı: «6G {token}», 2020–2026. Türkiye süzgeci yok."""
-    return {name: _springer_count(_q6g(name), None) for name in TOPIC_TOKEN}
+    """Disk önbelleği — ağ yok. Arka plan doldurur."""
+    return {name: peek_springer_count(_q6g(name), None) for name in TOPIC_TOKEN}
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def fetch_springer_turkey_topics(_keys: str = "") -> Dict[str, Optional[int]]:
-    """Springer Meta: «6G {token} Turkey», son 5 yıl (2022–2026). Bağlılık facet değil; metin Turkey."""
-    return {name: _springer_count(_q6g(name), "Turkey", LAST5) for name in TOPIC_TOKEN}
+    """Disk: «6G {token} Turkey», son 5 takvim yılı. Ağ yok."""
+    span = last5_window()
+    return {name: peek_springer_count(_q6g(name), "Turkey", span) for name in TOPIC_TOKEN}
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
 def fetch_native_counts(
     region: str = "tr",
     topic: Optional[str] = None,
     _keys: str = "",
 ) -> Dict[str, Optional[int]]:
-    """IEEE / Springer / Elsevier / Scholar. Anahtar yoksa None."""
+    """IEEE / Springer / Elsevier / Scholar — yalnız disk. Anahtar yoksa veya önbellek yoksa None."""
     q = _q6g(topic)
     empty = {"ieee": None, "springer": None, "elsevier": None, "scholar": None}
+    y0, y1 = year_window()
     if region == "eu":
         out = dict(empty)
-        out["scholar"] = _scholar_count(q, "Europe")
+        out["scholar"] = _cache_get(f"scholar:Europe:{q}:{y0}-{y1}")
         return out
     return {
-        "ieee": _ieee_count(q, "Turkey"),
-        "springer": _springer_count(q, "Turkey"),
-        "elsevier": _elsevier_count(q, "turkey"),
-        "scholar": _scholar_count(q, "Turkey"),
+        "ieee": _cache_get(f"ieee:Turkey:{q}:{y0}-{y1}"),
+        "springer": peek_springer_count(q, "Turkey"),
+        "elsevier": _cache_get(f"elsevier:turkey:{q}:{y0}-{y1}"),
+        "scholar": _cache_get(f"scholar:Turkey:{q}:{y0}-{y1}"),
     }

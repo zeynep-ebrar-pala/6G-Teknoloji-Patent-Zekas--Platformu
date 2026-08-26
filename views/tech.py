@@ -167,12 +167,11 @@ else:
     from backend.academic_service import AcademicService
     from backend.config import get_lens_token, get_springer_api_key
     from backend.patent_service import PatentService, TECH_ID_TO_DOMAIN
-    from backend.springer_live import ensure_prefetch as ensure_springer, prefetch_status as springer_status
+    from backend.springer_live import ensure_prefetch as ensure_springer
     from components.charts import (
         render_academic_trends_chart,
         render_technology_record_counts_chart,
     )
-    from i18n.core import format_int
 
     _section_label("tech.perf_heading")
     _teach_note(t("tech.perf_caption"))
@@ -192,11 +191,10 @@ else:
     if not get_springer_api_key():
         show_empty(t("tech.empty_pub_token"))
     elif pub_topic:
+        from backend.live_refresh import render_watch
+
         ensure_springer()
-        sp = springer_status()
-        if sp.get("running") and int(sp.get("total") or 0) > 0:
-            done = min(int(sp.get("done") or 0), int(sp["total"]))
-            st.info(t("pub.bg_wait", done=format_int(done), total=format_int(sp["total"])))
+        render_watch("springer", "pub")
         df_pub = AcademicService.get_topic_yearly_df(pub_topic)
         if df_pub is None or df_pub.empty:
             show_empty(t("tech.pub_fail"))

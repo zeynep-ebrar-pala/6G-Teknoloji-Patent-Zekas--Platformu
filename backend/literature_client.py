@@ -1,5 +1,5 @@
 """
-Modül 3 literatür sayımı — yedi 6G konusu, Springer Nature Meta API, 2020–2026.
+Modül 3 literatür sayımı — yedi 6G konusu, Springer Nature Meta API, 2020’den içinde bulunulan yıla.
 """
 
 from __future__ import annotations
@@ -17,10 +17,10 @@ from backend.publisher_apis import (
     key_fingerprint,
     key_status,
 )
-from backend.springer_live import TOPIC_ORDER, TREND_YEARS, ensure_prefetch, load_live, springer_overlay
+from backend.springer_live import TOPIC_ORDER, ensure_prefetch, load_live, springer_overlay
+from backend.years import span_label, trend_years
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "tr_eu_6g.json"
-TREND_YEARS = list(range(2020, 2027))
 
 TOPIC_QUERIES: Dict[str, str] = {
     "ISAC": "ISAC",
@@ -208,7 +208,7 @@ def _load_disk() -> Dict[str, Any]:
 
 def _ordered_years(years: Dict[str, Any]) -> Dict[str, int]:
     out: Dict[str, int] = {}
-    for year in TREND_YEARS:
+    for year in trend_years():
         key = str(year)
         try:
             out[key] = int(years.get(key) or 0)
@@ -351,8 +351,10 @@ def literature_bundle(
         if isinstance(overlay.get("total"), int):
             payload["publishers"]["springer"] = overlay.get("total")
         payload["source"] = (
-            "Springer Nature Meta API: «6G {konu}», 2020–2026. "
-            "Yıl / ülke: facet. Kurum ve atıf: çekilen kayıt + Crossref. Konular toplanmaz."
+            "Springer Nature Meta API: «6G {konu}», {span}. "
+            "Yıl / ülke: facet. Kurum ve atıf: çekilen kayıt + Crossref. Konular toplanmaz.".format(
+                span=span_label()
+            )
         )
         if overlay.get("fetched_at"):
             payload["fetched_at"] = overlay["fetched_at"]
@@ -378,7 +380,7 @@ def country_year_df(region: str = "both", topic: Optional[str] = None) -> Option
         str(load_live().get("fetched_at") or ""),
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}
-    axis = list(TREND_YEARS)
+    axis = list(trend_years())
     if bundle.get("chart_source") != "springer":
         return None
     keep = [name for name in TOPIC_ORDER if name in series]
