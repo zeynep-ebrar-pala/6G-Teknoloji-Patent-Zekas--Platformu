@@ -227,7 +227,7 @@ def literature_bundle(
     region: str = "both",
     topic: Optional[str] = None,
     _keys: str = "",
-    _v: str = "sp2",
+    _v: str = "sp3",
     _live: str = "",
 ) -> Dict[str, Any]:
     """Yedi 6G konusu. Grafikler Springer Meta; konular toplanmaz."""
@@ -310,7 +310,7 @@ def literature_bundle(
         cited = sorted(by_doi.values(), key=lambda p: -int(p.get("citations") or 0))[:10]
         year_counts = tr_years
         country_rows = countries
-        inst_rows = inst
+        inst_rows = []
         total = tr_total
 
     payload = {
@@ -343,7 +343,7 @@ def literature_bundle(
         ov_by_inst = overlay.get("institutions_by_topic") or {}
         if ov_inst:
             payload["institutions"] = ov_inst
-        elif tpc:
+        elif region != "tr":
             payload["institutions"] = []
         if ov_by_inst:
             payload["institutions_by_topic"] = ov_by_inst
@@ -380,7 +380,7 @@ def country_year_df(region: str = "both", topic: Optional[str] = None) -> Option
         region,
         topic,
         key_fingerprint(),
-        "sp2",
+        "sp3",
         str(load_live().get("fetched_at") or ""),
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}

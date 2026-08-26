@@ -122,6 +122,11 @@ def _render_breakdown(kind: str, topic: str | None, bundle: dict, region: str = 
     cap_all = t("pub.cc_caption_all") if kind == "countries" else t("pub.inst_caption_all")
     title_one = t("pub.chart_cc") if kind == "countries" else t("pub.chart_inst")
     empty = t("pub.empty_cc") if kind == "countries" else t("pub.empty_inst")
+    if kind != "countries":
+        if region == "both":
+            empty = t("pub.empty_inst_global")
+        elif region == "eu":
+            empty = t("pub.empty_inst_eu")
     turkey_map = bundle.get("turkey_by_topic") or {}
     st.markdown(f"### {title_one}")
 
@@ -146,13 +151,6 @@ def _render_breakdown(kind: str, topic: str | None, bundle: dict, region: str = 
         st.caption(cap_one)
         if _draw_inst_or_cc(raw, f"{title_one} — {topic_label(topic)}"):
             return
-        if kind != "countries":
-            wide = AcademicService.get_bundle("both", None)
-            wide_raw = wide.get("institutions") or []
-            if wide_raw:
-                st.caption(t("pub.inst_region_fallback"))
-                if _draw_inst_or_cc(wide_raw, title_one):
-                    return
         show_empty(empty)
         return
 
@@ -179,11 +177,11 @@ def _render_breakdown(kind: str, topic: str | None, bundle: dict, region: str = 
     pooled = bundle.get("countries" if kind == "countries" else "institutions") or []
     if pooled and _draw_inst_or_cc(pooled, title_one):
         return
-    if region != "both":
+    if region != "both" and kind == "countries":
         wide = AcademicService.get_bundle("both", topic)
-        wide_raw = wide.get("countries" if kind == "countries" else "institutions") or []
+        wide_raw = wide.get("countries") or []
         if wide_raw:
-            st.caption(t("pub.inst_region_fallback") if kind != "countries" else t("pub.cc_region_fallback"))
+            st.caption(t("pub.cc_region_fallback"))
             if _draw_inst_or_cc(wide_raw, title_one):
                 return
     show_empty(empty)
