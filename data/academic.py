@@ -7,12 +7,9 @@ ACADEMIC_SOURCES = ["Springer"]
 
 
 def academic_data_source() -> str:
-    from backend.years import span_label
+    from i18n.core import t
 
-    return (
-        f"Springer Nature Meta API: «6G {{konu}}», {span_label()}. "
-        "Yıl ve ülke facet; kurum ve atıf çekilen kayıt + Crossref. Yedi konu toplanmaz."
-    )
+    return t("pub.data_source")
 
 
 # Geriye dönük: import edenler dize beklerse ilk yüklemede o anki pencere.

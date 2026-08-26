@@ -10,7 +10,6 @@ from backend.tt_europe_service import TTEuropeService
 from components.charts import (
     render_tt_country_rank_chart,
     render_tt_europe_choropleth,
-    render_tt_europe_overview_chart,
     render_tt_office_chart,
     render_tt_role_kind_chart,
     render_tt_vs_leader_chart,
@@ -209,11 +208,12 @@ def _geo_presence() -> None:
         render_source_button(ir["tti_url"], t("tt_eu.open_tti"))
 
 
-def _collab_block() -> None:
+def _collab_block(*, draw_chart: bool = True) -> None:
     """İşbirliği / standart / basın — tescil değildir."""
     st.markdown(t("tt_eu.role_heading"))
     st.caption(t("tt_eu.role_caption"))
-    show_plotly(render_tt_role_kind_chart(TTEuropeService.role_kind_counts()))
+    if draw_chart:
+        show_plotly(render_tt_role_kind_chart(TTEuropeService.role_kind_counts()))
     _rd_touchpoints()
 
 
@@ -285,31 +285,8 @@ def _country_rank(kind: str) -> None:
             else:
                 show_empty(t("tt_eu.overview_empty_pat"))
         else:
-            vs_rows = tt_vs_comparable_rows(overview)
-            if vs_rows:
-                show_plotly(
-                    render_tt_vs_leader_chart(
-                        vs_rows,
-                        name_key,
-                        t("tt_eu.overview_vs_title"),
-                        t("tt_eu.rank_pub_x"),
-                    )
-                )
-            else:
-                st.info(t("tt_eu.overview_vs_empty"))
             tt_only = [r for r in overview if int(r.get("tt_pub_n") or 0) > 0]
-            if tt_only:
-                show_plotly(
-                    render_tt_europe_overview_chart(
-                        tt_only,
-                        "tt_pub_n",
-                        "tt_pub_rank",
-                        name_key,
-                        t("tt_eu.overview_tt_only_title"),
-                        t("tt_eu.rank_pub_x"),
-                    )
-                )
-            else:
+            if not tt_only:
                 show_empty(t("tt_eu.overview_empty_pub"))
             table = []
             for row in overview:
@@ -406,15 +383,8 @@ def _country_rank(kind: str) -> None:
             pub_n=format_int(tt_row.get("pub_n") or 0),
         )
     )
-    if pub_drawn:
-        show_plotly(
-            render_tt_country_rank_chart(
-                pub_drawn, "pub_n", t("tt_eu.rank_pub_title"), t("tt_eu.rank_pub_x")
-            )
-        )
-    else:
-        st.info(t("tt_eu.rank_oa_fail"))
     if not pub_drawn:
+        st.info(t("tt_eu.rank_oa_fail"))
         render_source_button(payload.get("pub_search_url") or "", t("tt_eu.rank_open_oa"))
         render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
         return
@@ -520,5 +490,4 @@ def render_tt_europe_pub_section(topic: str | None = None) -> None:
                 st.caption(note)
     _europe_position_banner("pub")
     _country_rank("pub")
-    _geo_presence()
-    _collab_block()
+    _collab_block(draw_chart=False)

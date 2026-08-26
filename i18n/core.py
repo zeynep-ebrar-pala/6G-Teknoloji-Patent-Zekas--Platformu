@@ -117,6 +117,16 @@ def t(key: str, **kwargs: Any) -> str:
     return text
 
 
+def topic_label(name: str) -> str:
+    """Grafik/menü konu adı — arayüz dilinde; anahtar yoksa ham ad."""
+    raw = (name or "").strip()
+    if not raw:
+        return raw
+    key = f"pub.topic.{raw}"
+    labeled = t(key)
+    return raw if labeled == key else labeled
+
+
 def missing_keys() -> frozenset[tuple[str, str]]:
     return frozenset(_MISSING)
 

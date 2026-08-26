@@ -10,7 +10,7 @@ import pandas as pd
 from typing import Dict, Any, List, Optional
 
 from data.tt_europe import place_sort_key
-from i18n.core import get_lang, t
+from i18n.core import get_lang, t, topic_label
 
 # Defensive import for networkx
 try:
@@ -428,7 +428,7 @@ def render_academic_trends_chart(
             x=labels,
             y=y_vals,
             mode="lines+markers",
-            name=col,
+            name=topic_label(col),
             line=dict(width=3, color=color),
             marker=dict(size=9, color=color, symbol=markers[idx % len(markers)], line=dict(width=1, color="#FFFFFF")),
             hovertemplate=t("charts.hover_v", unit=t("charts.paper_count")),

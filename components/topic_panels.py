@@ -13,13 +13,13 @@ def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
     from backend.patent_prefetch import load_vendor_rows
     from backend.source_links import SPEC_PUB_TOPICS, topic_patent_searches, topic_query
     from components.ui_helpers import render_link_row, render_source_totals
-    from i18n.core import format_int, get_lang, t
+    from i18n.core import format_int, get_lang, t, topic_label
 
     options = ["all"] + list(SPEC_PUB_TOPICS.keys())
     topic = st.selectbox(
         t("sources.topic_search"),
         options,
-        format_func=lambda x: t("sources.topic_all") if x == "all" else x,
+        format_func=lambda x: t("sources.topic_all") if x == "all" else topic_label(x),
         key=f"spec_pat_topic_{key_suffix}_{get_lang()}",
     )
     picked = None if topic == "all" else topic
@@ -52,7 +52,7 @@ def render_patent_topic_panel(key_suffix: str = "pat") -> Optional[str]:
 def render_pub_topic_panel(key_suffix: str = "pub") -> Tuple[Optional[str], str]:
     """Bölge + konu. Grafik kutusu hemen altında (academic_views)."""
     from backend.source_links import SPEC_PUB_TOPICS
-    from i18n.core import get_lang, t
+    from i18n.core import get_lang, t, topic_label
 
     region_labels = {
         t("pub.region.both"): "both",
@@ -70,7 +70,7 @@ def render_pub_topic_panel(key_suffix: str = "pub") -> Tuple[Optional[str], str]
     topic = st.selectbox(
         t("sources.topic_search"),
         options,
-        format_func=lambda x: t("sources.topic_all") if x == "all" else x,
+        format_func=lambda x: t("sources.topic_all") if x == "all" else topic_label(x),
         key=f"spec_pub_topic_{key_suffix}_{get_lang()}",
     )
     picked = None if topic == "all" else topic

@@ -227,7 +227,7 @@ def literature_bundle(
     region: str = "both",
     topic: Optional[str] = None,
     _keys: str = "",
-    _v: str = "sp1",
+    _v: str = "sp2",
     _live: str = "",
 ) -> Dict[str, Any]:
     """Yedi 6G konusu. Grafikler Springer Meta; konular toplanmaz."""
@@ -339,9 +339,15 @@ def literature_bundle(
         payload["topics"] = overlay.get("topics") or {}
         payload["year_counts"] = overlay.get("year_counts") or {}
         payload["year_series"] = overlay.get("year_series") or {}
-        payload["institutions"] = overlay.get("institutions") or []
+        ov_inst = [x for x in (overlay.get("institutions") or []) if isinstance(x, dict)]
+        ov_by_inst = overlay.get("institutions_by_topic") or {}
+        if ov_inst:
+            payload["institutions"] = ov_inst
+        elif tpc:
+            payload["institutions"] = []
+        if ov_by_inst:
+            payload["institutions_by_topic"] = ov_by_inst
         payload["countries"] = overlay.get("countries") or []
-        payload["institutions_by_topic"] = overlay.get("institutions_by_topic") or {}
         payload["countries_by_topic"] = overlay.get("countries_by_topic") or {}
         payload["cited"] = overlay.get("cited") or []
         payload["total"] = overlay.get("total")
@@ -374,7 +380,7 @@ def country_year_df(region: str = "both", topic: Optional[str] = None) -> Option
         region,
         topic,
         key_fingerprint(),
-        "sp1",
+        "sp2",
         str(load_live().get("fetched_at") or ""),
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}
