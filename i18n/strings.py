@@ -299,26 +299,23 @@ Radar / yoğunluk / ağaç ekseni kayıt sayısıdır (yüzde değil). Başlık 
         },
         "pub": {
             "title": "Akademik Yayın Analizi",
-            "subtitle": "Yedi 6G konusu: ISAC, RIS, hücresiz MIMO, THz, AI-RAN, NTN, ortam IoT. Yıl, kurum, ülke, atıf. Kaynak: {source}",
-            "data_source": "Springer Nature Meta API: «6G {token}», {y0}–{y1}. Yıl ve ülke: facet. Kurum: çekilen Springer kayıt (JATS bağlılık). Atıf: Crossref. Yedi konu toplanmaz.",
+            "subtitle": "Yedi 6G konusu: ISAC, RIS, hücresiz MIMO, THz, AI-RAN, NTN, ortam IoT. Yıl, ülke, atıf. Kaynak: {source}",
+            "data_source": "Springer Nature Meta API: «6G {token}», {y0}–{y1}. Yıl ve ülke: facet. Atıf: çekilen kayıt + Crossref. Yedi konu toplanmaz.",
             "what_title": "Bu sayfa neyi sayıyor?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
 <strong>Akademik Yayın Analizi</strong> yedi 6G konusunda yayını sayar:
 ISAC, RIS, hücresiz MIMO, THz, AI-RAN, NTN, ortam IoT.
 <strong>Kaynak:</strong> Springer Nature Meta API (<code>6G {token}</code>, {y0}–{y1}). Konular toplanmaz.
-<strong>Grafikler:</strong> yıllara göre yayın, en çok yayın yapan kurumlar, en çok yayın yapan ülkeler, en çok atıf alan makaleler.
+<strong>Grafikler:</strong> yıllara göre yayın, en çok yayın yapan ülkeler, en çok atıf alan makaleler.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
 Yıl ve ülke: Meta <code>facet</code>. Türkiye listede yoksa metin «Türkiye» sayısı eklenir (facet değil).
-Kurum: çekilen Springer kaydın bağlılığı (JATS). Tam külliyat kurum facet’i yoktur.
 Atıf: çekilen kayıt + Crossref. Sayı uydurulmaz.
 </p>""",
             "expert_title": "API adı, filtre, sınır",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
 <strong>Springer Nature Meta API</strong> (<code>meta/v2/json</code>): sorgu <code>6G {token} onlinedatefrom:{y0}-01-01 onlinedateto:{y1}-12-31</code>.
 Yıl = <code>year</code> facet; ülke = <code>country</code> facet (ilk 20).
-Kurum (Tüm ülkeler) = çekilen Springer kaydın JATS bağlılığı (<code>institution</code>/<code>aff</code>, örneklem).
-Türkiye kapsamı = bağlılık örneklemi. Springer kurum facet’i yoktur.
 Atıf = Crossref <code>is-referenced-by-count</code> (çekilen DOI).
 Anahtar yoksa hücre —. Sayı uydurulmaz.
 </p>""",
@@ -339,10 +336,6 @@ Bu sayfa <strong>Springer Nature Meta API</strong> kullanır. Bireysel e-posta y
             "metric_tr_all_live": "Türkiye sırası ölçülen konu / 7 konu.",
             "metric_tr_count": "Türkiye (metin araması)",
             "cc_caption_all": "Her konuda Springer ülke facet’i (ilk 20). Türkiye listede yoksa metin «Türkiye» satırı eklenir; yöntem dipnotta yazılır. Yedi konu toplanmaz.",
-            "inst_caption_all": "Her konuda çekilen Springer kaydın bağlılığı (JATS aff/institution, konu başına en fazla 50 kayıt). Tam külliyat kurum facet’i yoktur. Yedi konu toplanmaz.",
-            "empty_inst": "Kurum adı çıkmadı (çekilen Springer kaydında bağlılık yok).",
-            "empty_inst_global": "Çekilen Springer kaydında kurum adı yok. Sayı uydurulmaz.",
-            "empty_inst_eu": "Avrupa için kurum sıralaması yok (küresel çekilen kayıtlarda Avrupa bağlılığı çıkmadı). Sayı uydurulmaz.",
             "chart_trend": "Yıllara göre konu serisi (çizgiler toplanmaz)",
 
             "metric_elsevier": "Springer",
@@ -435,22 +428,18 @@ Bu sayfa <strong>Springer Nature Meta API</strong> kullanır. Bireysel e-posta y
             "metric_eu_top": "En yüksek Avrupa ülkesi",
             "cc_caption_tr": "Springer ülke facet’inde Türkiye satırı (metin «Türkiye» eklentisi dahil). Başka ülke yok.",
             "cc_caption_eu": "Springer ülke facet penceresindeki Avrupa ülkeleri. Pencere dışı ülke uydurulmaz.",
-            "inst_caption_tr": "Türkiye bağlılık örneklemi (Crossref, ülke=Türkiye). Tam külliyat kurum facet’i değil; sayı uydurulmaz.",
-            "inst_caption_eu": "Çekilen kayıtlarda Avrupa ülkesi veya Avrupa MNO geçen bağlılıklar. Yoksa çubuk yok.",
             "year_caption_region": "Yıl kırılımı küresel Springer year facet’tir; Türkiye/Avrupa dilimi bu API’de yok. Konu çubuğu bölge süzgecidir.",
             "cited_caption_region": "Atıf listesi küresel çekilen DOI’dir; ülke süzgeci yazar bağlılığında yoksa boş bırakılır.",
             "empty_cited_region": "Bu bölge için atıf sıralı DOI yok (bağlılık etiketi yok). Sayı uydurulmaz.",
             "empty_year_region": "Bu bölge için yıl serisi yok. Ülke grafiğine bakın; yıl uydurulmaz.",
             "section": {
                 "year": "Yıllara göre yayın",
-                "inst": "En çok yayın yapan kurumlar",
                 "country": "En çok yayın yapan ülkeler",
                 "cited": "En çok atıf alan makaleler",
                 "tt_eu": "Türk Telekom yayın izi",
             },
             "year_heading": "### Yıllara göre yayın",
             "year_caption": "Yıl kırılımı, 6G konusu, {y0}–{y1}. Tümü görünümünde yedi seri ayrıdır; toplanmaz. {end} eksik yıldır.",
-            "inst_caption": "Çekilen Springer kaydın bağlılığı (JATS, örneklem). Tam külliyat kurum facet’i yoktur; çubuklar toplanmaz.",
             "cc_caption": "Springer ülke facet (ilk 20). Türkiye yoksa metin «Türkiye» satırı eklenir. Ortak yazarlı kayıt birden fazla ülkede sayılır; çubuklar toplanmaz.",
             "cited_caption": "Sıra: çekilen Springer kaydının Crossref atıf sayısı. Başlık 6G veya kilitli yedi konudan (ISAC, RIS, hücresiz MIMO, THz, AI-RAN, NTN, ortam IoT) birine değmeyen makale düşer. Tam külliyat atıf facet’i değildir; 2 atıflık Nature/5G kaydı «en çok atıf» diye basılmaz.",
             "trend_caption": "Aynı Springer sorgusu, year facet. Yedi konu serisi toplanmaz. {end} devam eden yıldır.",
@@ -463,8 +452,6 @@ Bu sayfa <strong>Springer Nature Meta API</strong> kullanır. Bireysel e-posta y
             "chart_two_title": "Güncel ve Toplam Makaleler",
             "chart_two_body": "Yıl sen seçmiyorsun. Aralık sabittir: {y0}–{y1}. Her çubuk, üstteki çizgide aynı konunun yıllarını toplar. Yedi çubuk birbirine eklenmez.",
             "chart_two_body_expert": "Çubuk year facet toplamıdır. Springer total (aynı sorgunun hit sayısı) ile year toplamı her kayıtta denk düşmez; yıl alanı boş kayıt year’a girmez. Sayı uydurulmaz.",
-            "chart_inst": "Kurumlara göre yayın — çekilen Springer kayıt",
-            "chart_inst_world": "Dünyada en çok yayın yapan kurumlar",
             "chart_cc": "İlk 10 ülke — Springer Meta country facet",
             "cited_heading": "### En çok atıf alan makaleler",
             "trend_heading": "### Trend analizi",
@@ -482,10 +469,6 @@ Bu sayfa <strong>Springer Nature Meta API</strong> kullanır. Bireysel e-posta y
             "open_oa_counts": "Springer’da aç ↗",
             "scholar_heading": "### Trend + dış arama",
             "scholar_caption": "Springer düğmesi sorguyu yeni sekmede açar; sonuç sayısını buraya yazmayız.",
-            "inst_heading": "### En çok yayın yapan kurumlar",
-            "open_inst": "Kurum aramasını aç ↗",
-            "empty_inst": "Kurum adı çıkmadı (çekilen Springer kaydında bağlılık yok).",
-            "inst_region_fallback": "Bu bölge süzgecinde kurum adı eşleşmedi. Aşağıda süzgeçsiz çekilen kayıtlardaki kurumlar var; sayı uydurulmaz.",
             "cc_region_fallback": "Bu bölge süzgecinde ülke satırı yok. Aşağıda süzgeçsiz ülke listesi var; sayı uydurulmaz.",
             "cc_heading": "### En çok yayın yapan ülkeler",
             "open_cc": "Ülke aramasını aç ↗",
@@ -953,7 +936,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
 - **Ana Sayfa** — 7 teknolojinin TRL radar haritası; Dual-Depth (Temel/Uzman) giriş metnini değiştirir
 - **6G Teknoloji Rehberi** — tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL
 - **Patent Zekası** — Nokia–Intel (9 firma); yedi 6G konusu; Lens.org; grafik: firma, yıl, konu, radar, bulut, ağaç, yoğunluk, harita
-- **Akademik Yayın Analizi** — Springer Nature Meta API; yıl / kurum / ülke / atıf / trend
+- **Akademik Yayın Analizi** — Springer Nature Meta API; yıl / ülke / atıf
             """,
             "mod_right": """
 - **Türk Telekom Görünümü** — saha senaryo çözümleyici
@@ -1358,26 +1341,23 @@ On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
         },
         "pub": {
             "title": "Academic Publication Analysis",
-            "subtitle": "Seven 6G topics: ISAC, RIS, cell-free MIMO, THz, AI-RAN, NTN, ambient IoT. Year, institution, country, citations. Source: {source}",
-            "data_source": "Springer Nature Meta API: “6G {token}”, {y0}–{y1}. Year and country: facet. Institution: pulled Springer records (JATS affiliation). Citations: Crossref. The seven topics are not summed.",
+            "subtitle": "Seven 6G topics: ISAC, RIS, cell-free MIMO, THz, AI-RAN, NTN, ambient IoT. Year, country, citations. Source: {source}",
+            "data_source": "Springer Nature Meta API: “6G {token}”, {y0}–{y1}. Year and country: facet. Citations: pulled records + Crossref. The seven topics are not summed.",
             "what_title": "What this page counts",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
 <strong>Academic Publication Analysis</strong> counts papers on seven 6G topics:
 ISAC, RIS, cell-free MIMO, THz, AI-RAN, NTN, ambient IoT.
 <strong>Source:</strong> Springer Nature Meta API (<code>6G {token}</code>, {y0}–{y1}). Topics are not summed.
-<strong>Charts:</strong> publications by year, top institutions, top countries, most-cited papers.
+<strong>Charts:</strong> publications by year, top countries, most-cited papers.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
 Year and country: Meta <code>facet</code>. If Türkiye is missing, a text-Türkiye count is added (not a facet).
-Institution: affiliation on the pulled Springer record (JATS). There is no full-corpus institution facet.
 Citations: pulled records + Crossref. Counts are not invented.
 </p>""",
             "expert_title": "API name, filter, limit",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
 <strong>Springer Nature Meta API</strong> (<code>meta/v2/json</code>): query <code>6G {token} onlinedatefrom:{y0}-01-01 onlinedateto:{y1}-12-31</code>.
 Year = <code>year</code> facet; country = <code>country</code> facet (top 20).
-Institution (All countries) = affiliation on the pulled Springer record (JATS <code>institution</code>/<code>aff</code>, sample).
-Türkiye scope = affiliation sample. Springer has no institution facet.
 Citations = Crossref <code>is-referenced-by-count</code> on pulled DOIs.
 No key → —. Counts are not invented.
 </p>""",
@@ -1398,10 +1378,6 @@ This page uses the <strong>Springer Nature Meta API</strong>. A personal email i
             "metric_tr_all_live": "Topics with a Türkiye rank / 7 topics.",
             "metric_tr_count": "Türkiye (text search)",
             "cc_caption_all": "Per topic: Springer country facet (top 20). If Türkiye is missing, a text-Türkiye row is added. Topics are not summed.",
-            "inst_caption_all": "Per topic: affiliation on pulled Springer records (JATS aff/institution, at most 50 records). There is no full-corpus institution facet. The seven topics are not summed.",
-            "empty_inst": "No institution name (no affiliation on the pulled Springer records).",
-            "empty_inst_global": "No institution name on the pulled Springer records. Counts are not invented.",
-            "empty_inst_eu": "No institution ranking for Europe (no European affiliation on the pulled global records). Counts are not invented.",
             "chart_trend": "Topic series by year (lines are not summed)",
 
             "metric_elsevier": "Springer",
@@ -1494,22 +1470,18 @@ This page uses the <strong>Springer Nature Meta API</strong>. A personal email i
             "metric_eu_top": "Top European country",
             "cc_caption_tr": "Türkiye row from the Springer country facet (including the text-Türkiye add-on). No other country is shown.",
             "cc_caption_eu": "European countries that appear in the Springer country-facet window. Countries outside that window are not invented.",
-            "inst_caption_tr": "Türkiye affiliation sample (Crossref, country=Türkiye). Not a full-corpus institution facet; counts are not invented.",
-            "inst_caption_eu": "Affiliations in the pulled records that mention a European country or European MNO. Empty if none.",
             "year_caption_region": "The year split is the global Springer year facet; a Türkiye/Europe year slice is not in this API. Topic bars follow the region filter.",
             "cited_caption_region": "The cited list is pulled global DOIs; it stays empty when author affiliation has no country tag to filter.",
             "empty_cited_region": "No cited DOI for this region (no affiliation tag). Counts are not invented.",
             "empty_year_region": "No year series for this region. Use the country chart; years are not invented.",
             "section": {
                 "year": "Publications by year",
-                "inst": "Top publishing institutions",
                 "country": "Top publishing countries",
                 "cited": "Most cited papers",
                 "tt_eu": "Türk Telekom publication footprint",
             },
             "year_heading": "### Publications by year",
             "year_caption": "Year split, 6G topic, {y0}–{y1}. In the all-topics view the seven series are separate and not summed. {end} is incomplete.",
-            "inst_caption": "Affiliation on pulled Springer records (JATS, sample). There is no full-corpus institution facet; bars are not summed.",
             "cc_caption": "Springer country facet (top 20). If Türkiye is missing, a text-Türkiye row is added. A co-authored record can count in more than one country; bars are not summed.",
             "cited_caption": "Ranked by Crossref citation count on pulled Springer records. A paper whose title does not mention 6G or one of the seven locked topics (ISAC, RIS, cell-free MIMO, THz, AI-RAN, NTN, ambient IoT) is dropped. This is not a full-corpus citation facet; a 2-cite Nature/5G record is not shown as “most cited”.",
             "trend_caption": "The same Springer query, year facet. The seven topic series are not summed. {end} is an incomplete year.",
@@ -1522,8 +1494,6 @@ This page uses the <strong>Springer Nature Meta API</strong>. A personal email i
             "chart_two_title": "Current and total papers",
             "chart_two_body": "You do not pick the years. The range is fixed: {y0}–{y1}. Each bar adds that topic’s yearly counts from the line chart above. The seven bars are not added together.",
             "chart_two_body_expert": "The bar is the year-facet sum. Springer’s total (hit count for the same query) can differ from the year sum; a record with no year does not enter the year series. Counts are not invented.",
-            "chart_inst": "Publications by institution — pulled Springer records",
-            "chart_inst_world": "Top publishing institutions worldwide",
             "chart_cc": "Top 10 countries — Springer Meta country facet",
             "cited_heading": "### Most cited papers",
             "trend_heading": "### Trend analysis",
@@ -1541,10 +1511,6 @@ This page uses the <strong>Springer Nature Meta API</strong>. A personal email i
             "open_oa_counts": "Open on Springer ↗",
             "scholar_heading": "### Trend + external search",
             "scholar_caption": "A Springer button opens the query in a new tab; the hit count is not copied here.",
-            "inst_heading": "### Top publishing institutions",
-            "open_inst": "Open an institution search ↗",
-            "empty_inst": "No institution name (no affiliation on the pulled Springer records).",
-            "inst_region_fallback": "No institution matched this region filter. Below are institutions from pulled records without the region cut; counts are not invented.",
             "cc_region_fallback": "No country row matched this region filter. Below is the unfiltered country list; counts are not invented.",
             "cc_heading": "### Top publishing countries",
             "open_cc": "Open a country search ↗",
@@ -2011,7 +1977,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
 - **Home** — TRL radar for the seven technologies; dual-depth (foundation/expert) switches the intro
 - **6G Technology Explorer** — definition, operating principle, block diagram, architecture, use cases, advantages/disadvantages, global work, TT scenarios, TRL
 - **Patent Intelligence** — Nokia–Intel (9 firms); seven 6G topics; Lens.org; charts: firms, year, topic, radar, cloud, tree, density, map
-- **Academic Publication Analysis** — Springer Nature Meta API; year / institution / country / cited / trend
+- **Academic Publication Analysis** — Springer Nature Meta API; year / country / cited
             """,
             "mod_right": """
 - **Türk Telekom View** — field scenario engine

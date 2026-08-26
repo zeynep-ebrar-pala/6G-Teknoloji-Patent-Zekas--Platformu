@@ -1,6 +1,6 @@
 """
 Modül 3 — Akademik Yayın Analizi.
-Yedi 6G konusu, Springer Nature Meta API: yıl, kurum, ülke, atıf.
+Yedi 6G konusu, Springer Nature Meta API: yıl, ülke, atıf.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from components.charts import (
     render_eu_mno_leader_chart,
 )
 
-PUB_SECTION_KEYS = ["year", "inst", "country", "cited", "tt_eu"]
+PUB_SECTION_KEYS = ["year", "country", "cited", "tt_eu"]
 
 
 def _fmt(n) -> str:
@@ -110,81 +110,68 @@ def _country_rank_table(rows: list, turkey: dict | None = None, *, region: str =
     return table
 
 
-def _render_breakdown(kind: str, topic: str | None, bundle: dict, region: str = "both") -> None:
+def _render_breakdown(topic: str | None, bundle: dict, region: str = "both") -> None:
     from backend.springer_live import TOPIC_ORDER
     from components.ui_helpers import show_empty, show_plotly
 
-    cap_one = t("pub.cc_caption") if kind == "countries" else t("pub.inst_caption")
+    cap_one = t("pub.cc_caption")
     if region == "tr":
-        cap_one = t("pub.cc_caption_tr") if kind == "countries" else t("pub.inst_caption_tr")
+        cap_one = t("pub.cc_caption_tr")
     elif region == "eu":
-        cap_one = t("pub.cc_caption_eu") if kind == "countries" else t("pub.inst_caption_eu")
-    cap_all = t("pub.cc_caption_all") if kind == "countries" else t("pub.inst_caption_all")
-    title_one = t("pub.chart_cc") if kind == "countries" else t("pub.chart_inst")
-    if kind != "countries" and region == "both":
-        title_one = t("pub.chart_inst_world")
-    empty = t("pub.empty_cc") if kind == "countries" else t("pub.empty_inst")
-    if kind != "countries":
-        if region == "both":
-            empty = t("pub.empty_inst_global")
-        elif region == "eu":
-            empty = t("pub.empty_inst_eu")
+        cap_one = t("pub.cc_caption_eu")
+    cap_all = t("pub.cc_caption_all")
+    title_one = t("pub.chart_cc")
+    empty = t("pub.empty_cc")
     turkey_map = bundle.get("turkey_by_topic") or {}
     st.markdown(f"### {title_one}")
 
-    def _draw_inst_or_cc(raw: list, chart_title: str | None = None, turkey: dict | None = None) -> bool:
+    def _draw_cc(raw: list, chart_title: str | None = None, turkey: dict | None = None) -> bool:
         info = turkey if turkey is not None else (bundle.get("turkey") or {})
-        rows = _country_list_items(raw, info, region=region) if kind == "countries" else _as_bar_rows(kind, raw)
+        rows = _country_list_items(raw, info, region=region)
         if not rows:
             return False
         title = chart_title or title_one
-        if kind == "countries":
-            show_plotly(render_country_rank_chart(rows, title))
-            table = _country_rank_table(raw, info, region=region)
-            if table:
-                st.caption(t("pub.cc_rank_caption"))
-                st.dataframe(table, hide_index=True, use_container_width=True)
-        else:
-            show_plotly(render_academic_bar_chart(rows, title))
+        show_plotly(render_country_rank_chart(rows, title))
+        table = _country_rank_table(raw, info, region=region)
+        if table:
+            st.caption(t("pub.cc_rank_caption"))
+            st.dataframe(table, hide_index=True, use_container_width=True)
         return True
 
     if topic:
-        raw = bundle.get("countries" if kind == "countries" else "institutions") or []
+        raw = bundle.get("countries") or []
         st.caption(cap_one)
-        if _draw_inst_or_cc(raw, f"{title_one} — {topic_label(topic)}"):
+        if _draw_cc(raw, f"{title_one} — {topic_label(topic)}"):
             return
         show_empty(empty)
         return
 
     st.caption(cap_all if region == "both" else cap_one)
-    by_topic = bundle.get("countries_by_topic" if kind == "countries" else "institutions_by_topic") or {}
+    by_topic = bundle.get("countries_by_topic") or {}
     drawn = False
     for name in TOPIC_ORDER:
         raw = by_topic.get(name) or []
         turkey = turkey_map.get(name) or {}
-        rows = _country_list_items(raw, turkey, region=region) if kind == "countries" else _as_bar_rows(kind, raw)
+        rows = _country_list_items(raw, turkey, region=region)
         if not rows:
             continue
         drawn = True
         st.markdown(f"#### {topic_label(name)}")
-        if kind == "countries":
-            show_plotly(render_country_rank_chart(rows, f"{title_one} — {topic_label(name)}"))
-            table = _country_rank_table(raw, turkey, region=region)
-            if table:
-                st.dataframe(table, hide_index=True, use_container_width=True)
-        else:
-            show_plotly(render_academic_bar_chart(rows, f"{title_one} — {topic_label(name)}"))
+        show_plotly(render_country_rank_chart(rows, f"{title_one} — {topic_label(name)}"))
+        table = _country_rank_table(raw, turkey, region=region)
+        if table:
+            st.dataframe(table, hide_index=True, use_container_width=True)
     if drawn:
         return
-    pooled = bundle.get("countries" if kind == "countries" else "institutions") or []
-    if pooled and _draw_inst_or_cc(pooled, title_one):
+    pooled = bundle.get("countries") or []
+    if pooled and _draw_cc(pooled, title_one):
         return
-    if region != "both" and kind == "countries":
+    if region != "both":
         wide = AcademicService.get_bundle("both", topic)
         wide_raw = wide.get("countries") or []
         if wide_raw:
             st.caption(t("pub.cc_region_fallback"))
-            if _draw_inst_or_cc(wide_raw, title_one):
+            if _draw_cc(wide_raw, title_one):
                 return
     show_empty(empty)
 
@@ -341,7 +328,7 @@ def render_academic_publication_module():
     _labels = [t(f"pub.section.{k}") for k in PUB_SECTION_KEYS]
     _map = dict(zip(_labels, PUB_SECTION_KEYS))
     section = _map.get(
-        select_section(t("pub.view"), _labels, key=f"academic_section_story_{get_lang()}_v3"),
+        select_section(t("pub.view"), _labels, key=f"academic_section_story_{get_lang()}_v4"),
         PUB_SECTION_KEYS[0],
     )
     if region == "tr":
@@ -395,11 +382,8 @@ def render_academic_publication_module():
         if region == "eu":
             _render_eu_mno_panel(topic)
 
-    elif section == "inst":
-        _render_breakdown("institutions", topic, bundle, region)
-
     elif section == "country":
-        _render_breakdown("countries", topic, bundle, region)
+        _render_breakdown(topic, bundle, region)
 
     elif section == "cited":
         st.markdown(f"### {t('pub.section.cited')}")
