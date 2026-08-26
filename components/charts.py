@@ -1078,7 +1078,7 @@ def render_academic_bar_chart(
         yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
         height=max(360, 28 * max(len(items), 1) + 80),
         bargap=0.28,
-        margin=dict(l=40, r=70, t=50, b=40),
+        margin=dict(l=min(340, max(90, int(max((len(n) for n in names), default=8) * 7))), r=70, t=50, b=40),
     )
     fig.layout.update(layout)
     return fig

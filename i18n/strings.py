@@ -297,10 +297,14 @@ Radar / yoğunluk / ağaç ekseni kayıt sayısıdır (yüzde değil). Başlık 
             "bg_wait": "Ülke başına kilitli 3 MNO (Türkiye dahil) Springer metin sayımı arka planda ({done}/{total}). Menü kilitlenmez; sayı uydurulmaz.",
             "api_error": "MNO yayın sayımı yanıt vermedi ({detail}). Sayı uydurulmaz.",
         },
+        "oa_inst": {
+            "bg_wait": "Dünya kurum sıralaması OpenAlex’ten arka planda ({done}/{total} konu). Menü kilitlenmez; sayı uydurulmaz.",
+            "api_error": "OpenAlex kurum sayımı yanıt vermedi ({detail}). Sayı uydurulmaz.",
+        },
         "pub": {
             "title": "Akademik Yayın Analizi",
             "subtitle": "Yedi 6G konusu: ISAC, RIS, hücresiz MIMO, THz, AI-RAN, NTN, ortam IoT. Yıl, kurum, ülke, atıf. Kaynak: {source}",
-            "data_source": "Springer Nature Meta API: «6G {token}», {y0}–{y1}. Yıl ve ülke kırılımı; kurum ve atıf çekilen kayıt + Crossref. Yedi konu toplanmaz.",
+            "data_source": "Yıl/ülke: Springer Nature Meta API («6G {token}», {y0}–{y1}). Dünya kurum: OpenAlex bağlılık group_by. Atıf: çekilen kayıt + Crossref. Yedi konu toplanmaz.",
             "what_title": "Bu sayfa neyi sayıyor?",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
 <strong>Akademik Yayın Analizi</strong> yedi 6G konusunda yayını sayar:
@@ -310,19 +314,22 @@ ISAC, RIS, hücresiz MIMO, THz, AI-RAN, NTN, ortam IoT.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
 Yıl ve ülke: Meta <code>facet</code>. Türkiye listede yoksa metin «Türkiye» sayısı eklenir (facet değil).
-Kurum ve atıf: çekilen kayıt + Crossref. Tam külliyat kurum facet’i yoktur; sayı uydurulmaz.
+Dünya kurum sırası: OpenAlex (başlık+özet, yazar bağlılığı). Springer’de kurum facet’i yoktur.
+Atıf: çekilen kayıt + Crossref. Sayı uydurulmaz.
 </p>""",
             "expert_title": "API adı, filtre, sınır",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
 <strong>Springer Nature Meta API</strong> (<code>meta/v2/json</code>): sorgu <code>6G {token} onlinedatefrom:{y0}-01-01 onlinedateto:{y1}-12-31</code>.
 Yıl = <code>year</code> facet; ülke = <code>country</code> facet (ilk 20).
-Kurum = çekilen kaydın Crossref <code>affiliation</code> alanı (örneklem).
+Kurum (Tüm ülkeler) = OpenAlex <code>group_by=authorships.institutions.id</code> (başlık+özet <code>6G {token}</code>, {y0}–{y1}).
+Türkiye kapsamı = bağlılık örneklemi. Springer kurum facet’i yoktur.
 Atıf = Crossref <code>is-referenced-by-count</code> (çekilen DOI).
 Anahtar yoksa hücre —. Sayı uydurulmaz.
 </p>""",
             "access_title": "Anahtar nerede gerekir?",
             "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
 Bu sayfa <strong>Springer Nature Meta API</strong> kullanır. Bireysel e-posta yeter. Anahtar: <code>SPRINGER_API_KEY</code>.
+Dünya kurum sırası <strong>OpenAlex</strong> üzerindendir; anahtar gerekmez.
 </p>""",
             "empty": "Yayın kaydı yok.",
             "empty_topic": "«{topic}» için ölçülen kayıt yok. Sayı uydurulmaz. Düğmeler aynı konuyu dış sitede arar.",
@@ -337,9 +344,9 @@ Bu sayfa <strong>Springer Nature Meta API</strong> kullanır. Bireysel e-posta y
             "metric_tr_all_live": "Türkiye sırası ölçülen konu / 7 konu.",
             "metric_tr_count": "Türkiye (metin araması)",
             "cc_caption_all": "Her konuda Springer ülke facet’i (ilk 20). Türkiye listede yoksa metin «Türkiye» satırı eklenir; yöntem dipnotta yazılır. Yedi konu toplanmaz.",
-            "inst_caption_all": "Tüm ülkeler: küresel Springer kaydı. Kurum facet’i yok; çekilen kayıtlarda bağlılık adı da yoksa çubuk çizilmez. Türkiye örneklemi bu sekmede basılmaz.",
+            "inst_caption_all": "Dünya kurum sırası OpenAlex’tendir (başlık+özet «6G {token}», {y0}–{y1}; yazar bağlılığı group_by). Springer kurum facet’i yoktur. Yedi konu toplanmaz.",
             "empty_inst": "Kurum adı çıkmadı (çekilen kayıtta Crossref bağlılığı yok).",
-            "empty_inst_global": "Tüm ülkeler için küresel kurum sıralaması yok. Springer’de kurum facet’i yoktur; çekilen kayıtlarda Crossref bağlılığı da çıkmadı. Ericsson / Türk Telekom listesi Türkiye bağlılık örneklemidir — kapsamı Türkiye yapın. Sayı uydurulmaz.",
+            "empty_inst_global": "Dünya kurum sırası henüz yok (OpenAlex yanıtı veya önbellek boş). Sayı uydurulmaz.",
             "empty_inst_eu": "Avrupa için kurum sıralaması yok (küresel çekilen kayıtlarda Avrupa bağlılığı çıkmadı). Sayı uydurulmaz.",
             "chart_trend": "Yıllara göre konu serisi (çizgiler toplanmaz)",
 
@@ -462,6 +469,7 @@ Bu sayfa <strong>Springer Nature Meta API</strong> kullanır. Bireysel e-posta y
             "chart_two_body": "Yıl sen seçmiyorsun. Aralık sabittir: {y0}–{y1}. Her çubuk, üstteki çizgide aynı konunun yıllarını toplar. Yedi çubuk birbirine eklenmez.",
             "chart_two_body_expert": "Çubuk year facet toplamıdır. Springer total (aynı sorgunun hit sayısı) ile year toplamı her kayıtta denk düşmez; yıl alanı boş kayıt year’a girmez. Sayı uydurulmaz.",
             "chart_inst": "Kurumlara göre yayın — çekilen kayıt + Crossref",
+            "chart_inst_world": "Dünyada en çok yayın yapan kurumlar",
             "chart_cc": "İlk 10 ülke — Springer Meta country facet",
             "cited_heading": "### En çok atıf alan makaleler",
             "trend_heading": "### Trend analizi",
@@ -1353,10 +1361,14 @@ On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
             "bg_wait": "Locked 3 MNOs per country (including Türkiye) — Springer text counts in the background ({done}/{total}). The sidebar stays free; counts are not invented.",
             "api_error": "MNO publication count did not respond ({detail}). Counts are not invented.",
         },
+        "oa_inst": {
+            "bg_wait": "World institution ranks from OpenAlex in the background ({done}/{total} topics). The sidebar stays free; counts are not invented.",
+            "api_error": "OpenAlex institution count did not respond ({detail}). Counts are not invented.",
+        },
         "pub": {
             "title": "Academic Publication Analysis",
             "subtitle": "Seven 6G topics: ISAC, RIS, cell-free MIMO, THz, AI-RAN, NTN, ambient IoT. Year, institution, country, citations. Source: {source}",
-            "data_source": "Springer Nature Meta API: “6G {token}”, {y0}–{y1}. Year and country splits; institution and citations from pulled records + Crossref. The seven topics are not summed.",
+            "data_source": "Year/country: Springer Nature Meta API (“6G {token}”, {y0}–{y1}). World institutions: OpenAlex affiliation group_by. Citations: pulled records + Crossref. The seven topics are not summed.",
             "what_title": "What this page counts",
             "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
 <strong>Academic Publication Analysis</strong> counts papers on seven 6G topics:
@@ -1366,19 +1378,22 @@ ISAC, RIS, cell-free MIMO, THz, AI-RAN, NTN, ambient IoT.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
 Year and country: Meta <code>facet</code>. If Türkiye is missing, a text-Türkiye count is added (not a facet).
-Institution and citations: pulled records + Crossref. There is no full-corpus institution facet; counts are not invented.
+World institution rank: OpenAlex (title+abstract, author affiliation). Springer has no institution facet.
+Citations: pulled records + Crossref. Counts are not invented.
 </p>""",
             "expert_title": "API name, filter, limit",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
 <strong>Springer Nature Meta API</strong> (<code>meta/v2/json</code>): query <code>6G {token} onlinedatefrom:{y0}-01-01 onlinedateto:{y1}-12-31</code>.
 Year = <code>year</code> facet; country = <code>country</code> facet (top 20).
-Institution = Crossref <code>affiliation</code> on pulled records (sample).
+Institution (All countries) = OpenAlex <code>group_by=authorships.institutions.id</code> (title+abstract <code>6G {token}</code>, {y0}–{y1}).
+Türkiye scope = affiliation sample. Springer has no institution facet.
 Citations = Crossref <code>is-referenced-by-count</code> on pulled DOIs.
 No key → —. Counts are not invented.
 </p>""",
             "access_title": "Where a key is needed",
             "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
 This page uses the <strong>Springer Nature Meta API</strong>. A personal email is enough. Key: <code>SPRINGER_API_KEY</code>.
+World institution rank is from <strong>OpenAlex</strong>; no key is required.
 </p>""",
             "empty": "No publication records.",
             "empty_topic": "No measured records for “{topic}”. Counts are not invented. The buttons search the same topic on the external site.",
@@ -1393,9 +1408,9 @@ This page uses the <strong>Springer Nature Meta API</strong>. A personal email i
             "metric_tr_all_live": "Topics with a Türkiye rank / 7 topics.",
             "metric_tr_count": "Türkiye (text search)",
             "cc_caption_all": "Per topic: Springer country facet (top 20). If Türkiye is missing, a text-Türkiye row is added. Topics are not summed.",
-            "inst_caption_all": "All countries: global Springer records. There is no institution facet; if pulled records have no affiliation name, no bars are drawn. The Türkiye affiliation sample is not shown on this tab.",
+            "inst_caption_all": "World institution rank is from OpenAlex (title+abstract “6G {token}”, {y0}–{y1}; author affiliation group_by). Springer has no institution facet. The seven topics are not summed.",
             "empty_inst": "No institution name (no Crossref affiliation on pulled records).",
-            "empty_inst_global": "There is no global institution ranking for All countries. Springer has no institution facet, and pulled records have no Crossref affiliation. The Ericsson / Türk Telekom list is a Türkiye affiliation sample — switch scope to Türkiye. Counts are not invented.",
+            "empty_inst_global": "No world institution rank yet (OpenAlex empty or cache empty). Counts are not invented.",
             "empty_inst_eu": "No institution ranking for Europe (no European affiliation on the pulled global records). Counts are not invented.",
             "chart_trend": "Topic series by year (lines are not summed)",
 
@@ -1518,6 +1533,7 @@ This page uses the <strong>Springer Nature Meta API</strong>. A personal email i
             "chart_two_body": "You do not pick the years. The range is fixed: {y0}–{y1}. Each bar adds that topic’s yearly counts from the line chart above. The seven bars are not added together.",
             "chart_two_body_expert": "The bar is the year-facet sum. Springer’s total (hit count for the same query) can differ from the year sum; a record with no year does not enter the year series. Counts are not invented.",
             "chart_inst": "Publications by institution — pulled records + Crossref",
+            "chart_inst_world": "Top publishing institutions worldwide",
             "chart_cc": "Top 10 countries — Springer Meta country facet",
             "cited_heading": "### Most cited papers",
             "trend_heading": "### Trend analysis",

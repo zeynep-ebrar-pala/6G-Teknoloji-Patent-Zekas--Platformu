@@ -15,6 +15,7 @@ ENV/
 data/cache/springer_prefetch_status.json
 data/cache/patent_prefetch_status.json
 data/cache/mno_pub_status.json
+data/cache/openalex_inst_status.json
 
 # IDE & OS
 .vscode/

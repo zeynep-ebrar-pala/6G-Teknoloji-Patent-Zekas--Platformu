@@ -121,6 +121,8 @@ def _render_breakdown(kind: str, topic: str | None, bundle: dict, region: str = 
         cap_one = t("pub.cc_caption_eu") if kind == "countries" else t("pub.inst_caption_eu")
     cap_all = t("pub.cc_caption_all") if kind == "countries" else t("pub.inst_caption_all")
     title_one = t("pub.chart_cc") if kind == "countries" else t("pub.chart_inst")
+    if kind != "countries" and region == "both":
+        title_one = t("pub.chart_inst_world")
     empty = t("pub.empty_cc") if kind == "countries" else t("pub.empty_inst")
     if kind != "countries":
         if region == "both":
@@ -394,6 +396,11 @@ def render_academic_publication_module():
             _render_eu_mno_panel(topic)
 
     elif section == "inst":
+        if region == "both":
+            from backend.openalex_inst import ensure_prefetch as oa_ensure
+
+            oa_ensure()
+            render_watch("oa_inst", "oa_inst")
         _render_breakdown("institutions", topic, bundle, region)
 
     elif section == "country":

@@ -26,7 +26,9 @@ def _norm_topic(topic: Optional[str]) -> Optional[str]:
 
 
 def _live_fp() -> str:
-    return str(load_live().get("fetched_at") or "")
+    from backend.openalex_inst import load_live as oa_live
+
+    return f"{load_live().get('fetched_at') or ''}|{oa_live().get('fetched_at') or ''}"
 
 
 class AcademicService:
@@ -42,11 +44,11 @@ class AcademicService:
 
     @staticmethod
     def get_bundle(region: str = "both", topic: Optional[str] = None) -> Dict[str, Any]:
-        return literature_bundle(region, _norm_topic(topic), key_fingerprint(), "sp3", _live_fp())
+        return literature_bundle(region, _norm_topic(topic), key_fingerprint(), "sp4", _live_fp())
 
     @staticmethod
     def get_summary(topic: Optional[str] = None) -> Dict[str, Any]:
-        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint(), "sp3", _live_fp())
+        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint(), "sp4", _live_fp())
         meta = snapshot_meta()
         years = bundle.get("year_counts") or {}
         peak_year, peak_n = "—", None
@@ -93,7 +95,7 @@ class AcademicService:
     @staticmethod
     def get_most_cited_papers(topic: Optional[str] = None) -> List[Dict[str, Any]]:
         return list(
-            literature_bundle("both", _norm_topic(topic), key_fingerprint(), "sp3", _live_fp()).get("cited") or []
+            literature_bundle("both", _norm_topic(topic), key_fingerprint(), "sp4", _live_fp()).get("cited") or []
         )
 
     @staticmethod

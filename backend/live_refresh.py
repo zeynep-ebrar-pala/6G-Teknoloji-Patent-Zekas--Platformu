@@ -35,6 +35,9 @@ def _start(*, force: bool) -> None:
         from data.patents import SPEC_COMPANIES
 
         ensure_prefetch(None, tuple(SPEC_COMPANIES), force=force)
+    from backend.openalex_inst import ensure_prefetch as oa_ensure
+
+    oa_ensure(force=force)
 
 
 def _springer_status() -> Tuple[bool, int, int, str]:
@@ -67,7 +70,7 @@ def _lens_status() -> Tuple[bool, int, int, str]:
 def _watch_fragment(source: str, wait_key: str) -> None:
     from i18n.core import format_int, t
 
-    reader = {"springer": _springer_status, "lens": _lens_status, "mno": _mno_status}[source]
+    reader = {"springer": _springer_status, "lens": _lens_status, "mno": _mno_status, "oa_inst": _oa_inst_status}[source]
     now_running, now_done, now_total, err = reader()
     flag = f"_live_wait_{source}"
     if err:
@@ -100,9 +103,21 @@ def _mno_status() -> Tuple[bool, int, int, str]:
     )
 
 
+def _oa_inst_status() -> Tuple[bool, int, int, str]:
+    from backend.openalex_inst import prefetch_status
+
+    data = prefetch_status()
+    return (
+        bool(data.get("running")),
+        int(data.get("done") or 0),
+        int(data.get("total") or 0),
+        str(data.get("error") or ""),
+    )
+
+
 def render_watch(source: str, wait_key: str) -> None:
     """Çalışırken 10 sn’de bir durum; bitince tek rerun. İlk boya ağ beklemez."""
-    reader = {"springer": _springer_status, "lens": _lens_status, "mno": _mno_status}[source]
+    reader = {"springer": _springer_status, "lens": _lens_status, "mno": _mno_status, "oa_inst": _oa_inst_status}[source]
     running, _, _, _ = reader()
     flag = f"_live_wait_{source}"
     if not running and not st.session_state.get(flag):
