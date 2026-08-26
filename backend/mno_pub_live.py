@@ -44,10 +44,10 @@ def _place(country: Dict[str, Any]) -> str:
 
 
 def _jobs(topic: Optional[str]) -> List[Dict[str, str]]:
-    """Avrupa ülkesi × kilitli 3 MNO + Türk Telekom (Türkiye). TR üçlüsü bu eksende yok."""
+    """Türkiye + Avrupa: ülke başına kilitli 3 MNO (TR: Turkcell, Vodafone Türkiye, TT)."""
     out: List[Dict[str, str]] = []
     seen: set[tuple[str, str]] = set()
-    for country in countries_for_region("eu"):
+    for country in countries_for_region("both"):
         place = _place(country)
         cc = str(country.get("cc") or "")
         for op in country.get("operators") or []:
@@ -69,18 +69,6 @@ def _jobs(topic: Optional[str]) -> List[Dict[str, str]]:
                     "query": _query(topic, search, place),
                 }
             )
-    tt_search = str(TT_OPERATOR.get("search") or "Turk Telekom")
-    tt_key = (tt_search.casefold(), "turkey")
-    if tt_key not in seen:
-        out.append(
-            {
-                "cc": "TR",
-                "op_id": "tt",
-                "search": tt_search,
-                "place": "Turkey",
-                "query": _query(topic, tt_search, "Turkey"),
-            }
-        )
     return out
 
 
@@ -219,9 +207,9 @@ def tt_count(topic: Optional[str]) -> Optional[int]:
 
 
 def europe_leader_rows(topic: Optional[str] = None) -> List[Dict[str, Any]]:
-    """Her Avrupa ülkesi: kilitli 3 MNO içinden en yüksek Springer sayısı."""
+    """Türkiye + Avrupa: kilitli 3 MNO içinden en yüksek Springer sayısı."""
     rows: List[Dict[str, Any]] = []
-    for country in countries_for_region("eu"):
+    for country in countries_for_region("both"):
         hit = country_leader(country, topic)
         if hit and int(hit.get("lead_n") or 0) > 0:
             rows.append(hit)
@@ -230,17 +218,18 @@ def europe_leader_rows(topic: Optional[str] = None) -> List[Dict[str, Any]]:
 
 
 def tt_europe_place(topic: Optional[str] = None) -> Dict[str, Any]:
-    """TT sayısı, Avrupa ülke liderleri arasında sıra. Rakip ölçülmediyse sıra yok."""
+    """TT sayısı, ülke liderleri arasında sıra. Rakip ölçülmediyse sıra yok."""
     leaders = europe_leader_rows(topic)
     tt_n = tt_count(topic)
     field = [int(r["lead_n"]) for r in leaders if isinstance(r.get("lead_n"), int)]
+    tt_is_leader = any(bool(r.get("is_tt")) for r in leaders)
     rank = None
     if isinstance(tt_n, int) and field:
         better = sum(1 for n in field if n > tt_n)
         rank = better + 1
-        field_n = len(field) + 1
+        field_n = len(field) if tt_is_leader else len(field) + 1
     else:
-        field_n = len(field)
+        field_n = len(field) if tt_is_leader else len(field)
     top = leaders[0] if leaders else None
     return {
         "tt_n": tt_n,
@@ -255,7 +244,7 @@ def tt_europe_place(topic: Optional[str] = None) -> Dict[str, Any]:
 
 
 def chart_rows(topic: Optional[str] = None) -> List[Dict[str, Any]]:
-    """Ülke liderleri + Türk Telekom (Türkiye) aynı eksende."""
+    """Ülke liderleri (Türkiye kilitli 3 dahil) aynı eksende."""
     rows: List[Dict[str, Any]] = []
     for hit in europe_leader_rows(topic):
         rows.append(
@@ -267,19 +256,6 @@ def chart_rows(topic: Optional[str] = None) -> List[Dict[str, Any]]:
                 "n": hit["lead_n"],
                 "is_tt": bool(hit.get("is_tt")),
                 "query": hit.get("query") or "",
-            }
-        )
-    tt_n = tt_count(topic)
-    if isinstance(tt_n, int):
-        rows.append(
-            {
-                "cc": "TR",
-                "name_tr": "Türkiye",
-                "name_en": "Türkiye",
-                "firm": "Türk Telekom",
-                "n": tt_n,
-                "is_tt": True,
-                "query": _query(topic, str(TT_OPERATOR.get("search") or "Turk Telekom"), "Turkey"),
             }
         )
     rows.sort(key=lambda r: (-int(r["n"]), str(r.get("cc") or "")))

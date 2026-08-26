@@ -3,7 +3,8 @@ Avrupa ülkesi başına kilitli üç MNO.
 Abone/gelir «en yüksek 3» iddiası değildir: Wikipedia Avrupa MNO listesindeki
 bu ülke girdilerinden kilitlendi. Patent sayısı kilitli örnek küme + Google Patents.
 Yayın sayısı: Akademik Yayın Analizi Avrupa yüzünde Springer Meta metin
-«6G {firma} {ülke}». Bağlılık facet değildir. TT bağlılıklı DOI kümesi ayrıdır.
+«6G {firma} {ülke}». Bağlılık facet değildir. Türkiye kilitli üçlü:
+Turkcell, Vodafone Türkiye, Türk Telekom. TT bağlılıklı DOI kümesi ayrıdır.
 """
 
 from __future__ import annotations

@@ -1212,7 +1212,7 @@ def render_academic_grouped_bar(
 
 
 def render_eu_mno_leader_chart(rows: List[Dict[str, Any]], title: str, x_title: str) -> go.Figure:
-    """Her Avrupa ülkesi: kilitli 3 MNO içinden en yüksek Springer sayısı + TT."""
+    """Türkiye + Avrupa: kilitli 3 MNO içinden en yüksek Springer sayısı."""
     lang = get_lang()
     ordered = sorted(rows, key=lambda r: int(r.get("n") or 0), reverse=True)
     labels: List[str] = []

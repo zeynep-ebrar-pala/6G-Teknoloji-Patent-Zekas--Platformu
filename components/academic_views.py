@@ -252,7 +252,7 @@ def _mno_ops_line(ops: list) -> str:
 
 
 def _render_eu_mno_panel(topic: str | None) -> None:
-    """Avrupa yüzü: ülke başına 3 MNO’dan en çok yayınlayan + TT sırası."""
+    """Avrupa yüzü: ülke başına kilitli 3 MNO (Türkiye dahil) + TT sırası."""
     from backend.config import get_springer_api_key
     from backend.live_refresh import render_watch
     from backend.mno_pub_live import chart_rows, ensure_prefetch, prefetch_status, tt_europe_place
@@ -299,10 +299,8 @@ def _render_eu_mno_panel(topic: str | None) -> None:
     for row in rows:
         cc = str(row.get("cc") or "")
         country = row.get("name_tr") if lang == "tr" else row.get("name_en")
-        hit = by_cc.get(cc) if cc != "TR" else None
+        hit = by_cc.get(cc)
         ops_line = _mno_ops_line(hit.get("ops") or []) if hit else "—"
-        if cc == "TR":
-            ops_line = t("pub.mno_tt_row")
         table.append(
             {
                 t("pub.mno_col_country"): country,
@@ -312,7 +310,13 @@ def _render_eu_mno_panel(topic: str | None) -> None:
             }
         )
     st.caption(t("pub.mno_table_caption"))
-    st.dataframe(table, hide_index=True, width="stretch")
+    three = t("pub.mno_col_three")
+    st.dataframe(
+        table,
+        hide_index=True,
+        width="stretch",
+        column_config={three: st.column_config.TextColumn(three, width="large")},
+    )
 
 
 def render_academic_publication_module():
