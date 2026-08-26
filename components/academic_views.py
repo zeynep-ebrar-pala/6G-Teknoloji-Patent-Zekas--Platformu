@@ -14,6 +14,7 @@ from components.charts import (
     render_academic_database_chart,
     render_academic_trends_chart,
     render_country_rank_chart,
+    render_eu_mno_leader_chart,
 )
 
 PUB_SECTION_KEYS = ["year", "inst", "country", "cited", "trend", "tt_eu"]
@@ -237,6 +238,83 @@ def _render_region_operators(region: str) -> None:
     st.markdown("\n".join(f"- {line}" for line in chips[:8]))
 
 
+def _mno_ops_line(ops: list) -> str:
+    measured = [r for r in ops if isinstance(r.get("n"), int)]
+    measured.sort(key=lambda r: (-int(r["n"]), str(r.get("name") or "")))
+    bits = []
+    for i, row in enumerate(measured, 1):
+        bits.append(f"{i}. {row['name']} ({_fmt(int(row['n']))})")
+    for row in ops:
+        if isinstance(row.get("n"), int):
+            continue
+        bits.append(f"{row.get('name') or '—'} (—)")
+    return " · ".join(bits) if bits else "—"
+
+
+def _render_eu_mno_panel(topic: str | None) -> None:
+    """Avrupa yüzü: ülke başına 3 MNO’dan en çok yayınlayan + TT sırası."""
+    from backend.config import get_springer_api_key
+    from backend.live_refresh import render_watch
+    from backend.mno_pub_live import chart_rows, ensure_prefetch, prefetch_status, tt_europe_place
+    from components.ui_helpers import current_view_mode, show_empty, show_plotly
+
+    st.markdown(f"### {t('pub.mno_heading')}")
+    st.caption(t("pub.mno_body"))
+    if current_view_mode() == "expert":
+        st.caption(t("pub.mno_body_expert"))
+    if not get_springer_api_key():
+        show_empty(t("pub.mno_need_key"))
+        return
+    ensure_prefetch(topic)
+    render_watch("mno", "mno_live")
+    rows = chart_rows(topic)
+    place = tt_europe_place(topic)
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.metric(t("pub.metric_eu_tt"), _fmt(place.get("tt_n")))
+    with c2:
+        rank = place.get("rank")
+        field = place.get("field_n")
+        if isinstance(rank, int) and isinstance(field, int) and field > 0:
+            st.metric(t("pub.metric_eu_tt_rank"), t("pub.metric_eu_tt_rank_n", rank=rank, field=field))
+        else:
+            st.metric(t("pub.metric_eu_tt_rank"), "—")
+    with c3:
+        top = rows[0] if rows else None
+        if top:
+            country = top.get("name_tr") if get_lang() == "tr" else top.get("name_en")
+            label = f"{top.get('firm') or '—'} ({country})"
+        else:
+            label = "—"
+        st.metric(t("pub.metric_eu_mno_top"), label)
+    if not rows:
+        if not prefetch_status().get("running"):
+            show_empty(t("pub.mno_empty"))
+        return
+    show_plotly(render_eu_mno_leader_chart(rows, t("pub.mno_chart_title"), t("pub.mno_chart_x")))
+    table = []
+    lang = get_lang()
+    leaders = place.get("leaders") or []
+    by_cc = {str(r.get("cc") or ""): r for r in leaders}
+    for row in rows:
+        cc = str(row.get("cc") or "")
+        country = row.get("name_tr") if lang == "tr" else row.get("name_en")
+        hit = by_cc.get(cc) if cc != "TR" else None
+        ops_line = _mno_ops_line(hit.get("ops") or []) if hit else "—"
+        if cc == "TR":
+            ops_line = t("pub.mno_tt_row")
+        table.append(
+            {
+                t("pub.mno_col_country"): country,
+                t("pub.mno_col_lead"): row.get("firm") or "—",
+                t("pub.mno_col_n"): _fmt(row.get("n") if isinstance(row.get("n"), int) else None),
+                t("pub.mno_col_three"): ops_line,
+            }
+        )
+    st.caption(t("pub.mno_table_caption"))
+    st.dataframe(table, hide_index=True, width="stretch")
+
+
 def render_academic_publication_module():
     from backend.live_refresh import render_watch
     from backend.springer_live import TOPIC_ORDER, ensure_prefetch
@@ -290,7 +368,8 @@ def render_academic_publication_module():
         select_section(t("pub.view"), _labels, key=f"academic_section_story_{get_lang()}"),
         PUB_SECTION_KEYS[0],
     )
-    _render_region_operators(region)
+    if region == "tr":
+        _render_region_operators(region)
 
     bundle = AcademicService.get_bundle(region, topic)
     fetched = str(bundle.get("fetched_at") or "")
@@ -326,6 +405,9 @@ def render_academic_publication_module():
         topic_pub_searches(topic or "6G", region),
         key_suffix=f"pub_src_{region}_{topic or 'all'}",
     )
+
+    if region == "eu":
+        _render_eu_mno_panel(topic)
 
     if section == "tt_eu":
         render_tt_europe_pub_section(topic)

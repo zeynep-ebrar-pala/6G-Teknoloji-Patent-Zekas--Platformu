@@ -1210,3 +1210,46 @@ def render_academic_grouped_bar(
     fig.layout.update(layout)
     return fig
 
+
+def render_eu_mno_leader_chart(rows: List[Dict[str, Any]], title: str, x_title: str) -> go.Figure:
+    """Her Avrupa ülkesi: kilitli 3 MNO içinden en yüksek Springer sayısı + TT."""
+    lang = get_lang()
+    ordered = sorted(rows, key=lambda r: int(r.get("n") or 0), reverse=True)
+    labels: List[str] = []
+    vals: List[int] = []
+    colors: List[str] = []
+    hovers: List[str] = []
+    unit = t("charts.paper_count")
+    for r in ordered:
+        country = str(r.get("name_tr") if lang == "tr" else r.get("name_en") or "")
+        firm = str(r.get("firm") or "")
+        labels.append(f"{country} · {firm}")
+        n = int(r.get("n") or 0)
+        vals.append(n)
+        colors.append(TT_BAR if r.get("is_tt") or _is_tt_name(firm) else OTHER_BAR)
+        hovers.append(f"{country} · {firm}<br>{n} {unit}<extra></extra>")
+    fig = go.Figure(
+        go.Bar(
+            x=vals or [0],
+            y=labels or ["—"],
+            orientation="h",
+            marker=dict(color=colors or [OTHER_BAR]),
+            text=[str(v) for v in (vals or [0])],
+            textposition="outside",
+            cliponaxis=False,
+            hovertemplate="%{customdata}<extra></extra>",
+            customdata=hovers or ["—"],
+        )
+    )
+    layout = _layout()
+    layout.update(
+        title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
+        xaxis=_count_axis(x_title, vals or [0]),
+        yaxis=dict(autorange="reversed", gridcolor="rgba(200, 209, 220, 0.1)"),
+        height=max(420, 28 * max(len(ordered), 1) + 90),
+        showlegend=False,
+        margin=dict(l=40, r=70, t=50, b=40),
+    )
+    fig.layout.update(layout)
+    return fig
+

@@ -351,11 +351,9 @@ def literature_bundle(
         if isinstance(overlay.get("total"), int):
             payload["publishers"]["springer"] = overlay.get("total")
         payload["source"] = (
-            "Springer Nature Meta API: «6G {konu}», {span}. "
-            "Yıl / ülke: facet. Kurum ve atıf: çekilen kayıt + Crossref. Konular toplanmaz.".format(
-                span=span_label()
-            )
-        )
+            "Springer Nature Meta API: «6G {{token}}», {span}. "
+            "Yıl / ülke: facet. Kurum ve atıf: çekilen kayıt + Crossref. Konular toplanmaz."
+        ).format(span=span_label())
         if overlay.get("fetched_at"):
             payload["fetched_at"] = overlay["fetched_at"]
 

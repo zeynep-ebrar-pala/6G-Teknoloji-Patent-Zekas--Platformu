@@ -67,7 +67,7 @@ def _lens_status() -> Tuple[bool, int, int, str]:
 def _watch_fragment(source: str, wait_key: str) -> None:
     from i18n.core import format_int, t
 
-    reader = _springer_status if source == "springer" else _lens_status
+    reader = {"springer": _springer_status, "lens": _lens_status, "mno": _mno_status}[source]
     now_running, now_done, now_total, err = reader()
     flag = f"_live_wait_{source}"
     if err:
@@ -77,14 +77,32 @@ def _watch_fragment(source: str, wait_key: str) -> None:
         shown = min(int(now_done), int(now_total))
         st.info(t(f"{wait_key}.bg_wait", done=format_int(shown), total=format_int(now_total)))
         st.progress(shown / max(int(now_total), 1))
+        if source == "mno":
+            seen = st.session_state.get("_mno_done_seen")
+            if seen != shown:
+                st.session_state["_mno_done_seen"] = shown
+                if shown > 0:
+                    st.rerun()
         return
     if st.session_state.pop(flag, False):
         st.rerun()
 
 
+def _mno_status() -> Tuple[bool, int, int, str]:
+    from backend.mno_pub_live import prefetch_status
+
+    data = prefetch_status()
+    return (
+        bool(data.get("running")),
+        int(data.get("done") or 0),
+        int(data.get("total") or 0),
+        str(data.get("error") or ""),
+    )
+
+
 def render_watch(source: str, wait_key: str) -> None:
     """Çalışırken 10 sn’de bir durum; bitince tek rerun. İlk boya ağ beklemez."""
-    reader = _springer_status if source == "springer" else _lens_status
+    reader = {"springer": _springer_status, "lens": _lens_status, "mno": _mno_status}[source]
     running, _, _, _ = reader()
     flag = f"_live_wait_{source}"
     if not running and not st.session_state.get(flag):

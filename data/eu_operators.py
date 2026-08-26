@@ -2,7 +2,8 @@
 Avrupa ülkesi başına kilitli üç MNO.
 Abone/gelir «en yüksek 3» iddiası değildir: Wikipedia Avrupa MNO listesindeki
 bu ülke girdilerinden kilitlendi. Patent sayısı kilitli örnek küme + Google Patents.
-Yayın sayısı kilitli DOI (TT bağlılığı); operatör yayın API’si yoktur.
+Yayın sayısı: Akademik Yayın Analizi Avrupa yüzünde Springer Meta metin
+«6G {firma} {ülke}». Bağlılık facet değildir. TT bağlılıklı DOI kümesi ayrıdır.
 """
 
 from __future__ import annotations
@@ -14,6 +15,7 @@ EU_MNO_LIST_URL = "https://en.wikipedia.org/wiki/List_of_mobile_network_operator
 TT_OPERATOR = {
     "id": "tt",
     "name": "Türk Telekom",
+    "search": "Turk Telekom",
     "patterns": ("türk telekom", "turk telekom", "turktelekom", "netsia"),
     "patents_url": "https://patents.google.com/?assignee=Netsia",
     "is_tt": True,
@@ -25,14 +27,16 @@ def _op(
     name: str,
     patterns: tuple[str, ...],
     patents_q: str,
+    search: str | None = None,
 ) -> Dict[str, Any]:
     q = patents_q.replace(" ", "+")
     return {
         "id": op_id,
         "name": name,
+        "search": (search or patents_q).strip(),
         "patterns": patterns,
         "patents_url": f"https://patents.google.com/?assignee={q}",
-        "is_tt": False,
+        "is_tt": op_id == "tt",
     }
 
 
@@ -55,6 +59,7 @@ EU_COUNTRY_MNOS: List[Dict[str, Any]] = [
                 "Türk Telekom",
                 ("türk telekom", "turk telekom", "turktelekom", "netsia"),
                 "Netsia",
+                search="Turk Telekom",
             ),
         ],
     },

@@ -61,6 +61,19 @@ GLOSSARY: dict[str, dict[str, str]] = {
         ),
         "why": "Spektrumu çoğaltmadan kapasite ve bağlantı güvenilirliğini artırır.",
     },
+    "MNO": {
+        "abbr": "MNO",
+        "en": "Mobile Network Operator",
+        "tr": "Mobil Şebeke İşletmecisi",
+        "definition": (
+            "Kendi radyo spektrumu ve erişim şebekesiyle aboneye mobil hizmet veren lisanslı işletmecidir "
+            "(sanal operatör MVNO değildir)."
+        ),
+        "why": (
+            "Avrupa yayın grafiğinde ülke başına kilitli üç firmanın hangisinin 6G literatüründe "
+            "daha görünür olduğunu karşılaştırmanın birimidir."
+        ),
+    },
     "OFDM": {
         "abbr": "OFDM",
         "en": "Orthogonal Frequency-Division Multiplexing",
