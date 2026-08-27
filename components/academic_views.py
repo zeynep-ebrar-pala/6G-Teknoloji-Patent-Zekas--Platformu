@@ -335,27 +335,31 @@ def render_academic_publication_module():
 
     if section == "year":
         eu = region == "eu"
-        st.caption(t("pub.chart_one_body_eu") if eu else t("pub.chart_one_body"))
-        line_title = t("pub.chart_one_title_eu") if eu else t("pub.chart_one_title")
         eu_from_years = False
+        series = bundle.get("year_series") or {}
         if eu:
             from backend.springer_live import europe_year_charts
 
-            with st.spinner(t("pub.eu_year_wait")):
-                series, eu_totals = europe_year_charts(topic)
+            series, eu_totals = europe_year_charts(topic)
             eu_from_years = bool(eu_totals)
-            fig = _trend_fig(line_title) if eu_from_years else None
+            fig = _trend_fig(t("pub.chart_one_title_eu")) if eu_from_years else None
+            if eu_from_years:
+                st.caption(t("pub.chart_one_body_eu"))
+            if fig is not None:
+                show_plotly(fig)
         else:
-            series = bundle.get("year_series") or {}
+            st.caption(t("pub.chart_one_body"))
             years = bundle.get("year_counts") or {}
             years = {str(y): int(years.get(str(y), 0) or 0) for y in trend_years()}
-            fig = _trend_fig(line_title)
+            fig = _trend_fig(t("pub.chart_one_title"))
             if fig is None and any(int(v or 0) for v in years.values()):
-                fig = render_academic_database_chart(years, line_title, t("pub.chart_year_x"))
-        if fig is not None:
-            show_plotly(fig)
-        else:
-            show_empty(t("pub.empty_year_region") if eu else t("pub.empty_year"))
+                fig = render_academic_database_chart(
+                    years, t("pub.chart_one_title"), t("pub.chart_year_x")
+                )
+            if fig is not None:
+                show_plotly(fig)
+            else:
+                show_empty(t("pub.empty_year"))
 
         topic_rows = []
         for name in TOPIC_ORDER:
@@ -387,8 +391,8 @@ def render_academic_publication_module():
         bar_title = t("pub.chart_two_title_eu") if eu else t("pub.chart_two_title")
         if topic_rows:
             show_plotly(render_academic_bar_chart(topic_rows, bar_title))
-        else:
-            show_empty(t("pub.empty_year_region") if eu else t("pub.empty_year"))
+        elif not eu:
+            show_empty(t("pub.empty_year"))
 
         if eu:
             _render_eu_mno_panel(topic)
