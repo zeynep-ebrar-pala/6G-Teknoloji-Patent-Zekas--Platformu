@@ -78,38 +78,6 @@ def _country_list_items(rows: list, turkey: dict | None = None, *, region: str =
     return items
 
 
-def _country_rank_table(rows: list, turkey: dict | None = None, *, region: str = "both") -> list:
-    table = []
-    for i, row in enumerate(rows[:10], 1):
-        table.append(
-            {
-                t("pub.cc_col_rank"): str(i),
-                t("pub.cc_col_country"): _country_label(row),
-                t("pub.cc_col_count"): _fmt(int(row["count"])),
-            }
-        )
-    if region != "both" or not rows or _turkey_in_top(rows):
-        return table
-    table.append(
-        {
-            t("pub.cc_col_rank"): t("pub.cc_ellipsis"),
-            t("pub.cc_col_country"): t("pub.cc_ellipsis"),
-            t("pub.cc_col_count"): t("pub.cc_ellipsis"),
-        }
-    )
-    info = turkey or {}
-    rank = info.get("rank") if isinstance(info.get("rank"), int) else None
-    count = info.get("count") if isinstance(info.get("count"), int) else None
-    table.append(
-        {
-            t("pub.cc_col_rank"): str(rank) if rank else t("pub.cc_tr_rank_gt10"),
-            t("pub.cc_col_country"): _cc_name("TR"),
-            t("pub.cc_col_count"): _fmt(count) if isinstance(count, int) else t("pub.cc_tr_not_measured"),
-        }
-    )
-    return table
-
-
 def _render_breakdown(topic: str | None, bundle: dict, region: str = "both") -> None:
     from backend.springer_live import TOPIC_ORDER
     from components.ui_helpers import show_empty, show_plotly
@@ -132,10 +100,6 @@ def _render_breakdown(topic: str | None, bundle: dict, region: str = "both") -> 
             return False
         title = chart_title or title_one
         show_plotly(render_country_rank_chart(rows, title))
-        table = _country_rank_table(raw, info, region=region)
-        if table:
-            st.caption(t("pub.cc_rank_caption"))
-            st.dataframe(table, hide_index=True, use_container_width=True)
         return True
 
     if topic:
@@ -158,9 +122,6 @@ def _render_breakdown(topic: str | None, bundle: dict, region: str = "both") -> 
         drawn = True
         st.markdown(f"#### {topic_label(name)}")
         show_plotly(render_country_rank_chart(rows, f"{title_one} — {topic_label(name)}"))
-        table = _country_rank_table(raw, turkey, region=region)
-        if table:
-            st.dataframe(table, hide_index=True, use_container_width=True)
     if drawn:
         return
     pooled = bundle.get("countries") or []

@@ -1149,7 +1149,12 @@ def render_country_rank_chart(
         ),
         height=max(400, 28 * max(len(labels), 1) + 90),
         bargap=0.28,
-        margin=dict(l=40, r=110, t=50, b=40),
+        margin=dict(
+            l=min(340, max(90, int(max((len(n) for n in labels), default=8) * 7))),
+            r=110,
+            t=50,
+            b=40,
+        ),
     )
     fig.layout.update(layout)
     return fig
