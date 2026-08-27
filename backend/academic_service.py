@@ -42,11 +42,11 @@ class AcademicService:
 
     @staticmethod
     def get_bundle(region: str = "both", topic: Optional[str] = None) -> Dict[str, Any]:
-        return literature_bundle(region, _norm_topic(topic), key_fingerprint(), "sp9", _live_fp())
+        return literature_bundle(region, _norm_topic(topic), key_fingerprint(), "sp10", _live_fp())
 
     @staticmethod
     def get_summary(topic: Optional[str] = None) -> Dict[str, Any]:
-        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint(), "sp9", _live_fp())
+        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint(), "sp10", _live_fp())
         meta = snapshot_meta()
         years = bundle.get("year_counts") or {}
         peak_year, peak_n = "—", None

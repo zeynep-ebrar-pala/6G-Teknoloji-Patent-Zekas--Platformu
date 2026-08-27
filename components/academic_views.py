@@ -47,9 +47,10 @@ def _country_label(row: dict) -> str:
     return str(row.get("name") or "")
 
 
-def _as_bar_rows(kind: str, rows: list) -> list:
+def _as_bar_rows(kind: str, rows: list, *, limit: int | None = 10) -> list:
     ranked = []
-    for i, row in enumerate(rows[:10], 1):
+    take = rows if limit is None else rows[:limit]
+    for i, row in enumerate(take, 1):
         if kind == "countries":
             label = f"{i}. {_country_label(row)}"
         else:
@@ -87,16 +88,28 @@ def _sorted_cc(rows: list) -> list:
     return out
 
 
+def _with_turkey_row(rows: list, turkey: dict | None) -> list:
+    """Facet’te yoksa metin-Türkiye kaydını aynı eksene ekle; sayı uydurulmaz."""
+    working = _sorted_cc(rows)
+    if not working:
+        return working
+    if _tr_row(working) is not None:
+        return working
+    extra = (turkey or {}).get("count")
+    if isinstance(extra, int):
+        return _sorted_cc(working + [{"cc": "TR", "name": "Turkey", "count": extra}])
+    return working
+
+
 def _country_list_items(rows: list, turkey: dict | None = None, *, region: str = "both") -> list:
     """Aynı eksendeki kayıt sayısına göre sıra. Daha uzun çubuk alta yazılmaz."""
-    working = _sorted_cc(rows)
     info = turkey or {}
-    if region == "both" and working and _tr_row(working) is None:
-        extra = info.get("count")
-        if isinstance(extra, int):
-            working = _sorted_cc(working + [{"cc": "TR", "name": "Turkey", "count": extra}])
-    items = _as_bar_rows("countries", working)
-    if region != "both" or not items or _turkey_in_top(working):
+    if region == "eu":
+        working = _with_turkey_row(rows, info)
+        return _as_bar_rows("countries", working, limit=None)
+    working = _with_turkey_row(rows, info)
+    items = _as_bar_rows("countries", working, limit=10)
+    if not items or _turkey_in_top(working):
         return items
     items.append({"name": t("pub.cc_ellipsis"), "count": None, "gap": True})
     tr = _tr_row(working)
@@ -112,11 +125,9 @@ def _render_breakdown(topic: str | None, bundle: dict, region: str = "both") -> 
     from backend.springer_live import TOPIC_ORDER
     from components.ui_helpers import show_empty, show_plotly
 
-    cap_one = t("pub.cc_caption")
-    if region == "eu":
-        cap_one = t("pub.cc_caption_eu")
+    cap_one = t("pub.cc_caption_eu") if region == "eu" else t("pub.cc_caption")
     cap_all = t("pub.cc_caption_all")
-    title_one = t("pub.chart_cc")
+    title_one = t("pub.chart_cc_eu") if region == "eu" else t("pub.chart_cc")
     empty = t("pub.empty_cc")
     turkey_map = bundle.get("turkey_by_topic") or {}
     st.markdown(f"### {title_one}")

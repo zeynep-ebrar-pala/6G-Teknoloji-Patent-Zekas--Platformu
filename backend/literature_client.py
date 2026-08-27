@@ -154,7 +154,6 @@ def _apply_region(payload: Dict[str, Any], region: str) -> Dict[str, Any]:
     elif region == "eu":
         eu_n = sum(int(r["count"]) for r in payload["countries"] if isinstance(r.get("count"), int))
         payload["total"] = eu_n if payload["countries"] else None
-        payload["turkey"] = {}
         payload["year_counts"] = {}
         payload["year_series"] = {}
         by = payload.get("countries_by_topic") or {}
@@ -206,7 +205,7 @@ def literature_bundle(
     region: str = "both",
     topic: Optional[str] = None,
     _keys: str = "",
-    _v: str = "sp9",
+    _v: str = "sp10",
     _live: str = "",
 ) -> Dict[str, Any]:
     """Yedi 6G konusu. Grafikler Springer Meta; konular toplanmaz."""
@@ -363,7 +362,7 @@ def country_year_df(region: str = "both", topic: Optional[str] = None) -> Option
         region,
         topic,
         key_fingerprint(),
-        "sp9",
+        "sp10",
         str(load_live().get("fetched_at") or ""),
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}
