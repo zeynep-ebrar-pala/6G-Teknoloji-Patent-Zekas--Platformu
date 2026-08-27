@@ -174,6 +174,8 @@ class DataService:
         return {
             "beginner": _plain_foundation(extra),
             "expert": _plain_foundation(expert),
+            "beginner_block": dict(extra) if extra else {},
+            "expert_block": dict(expert) if expert else {},
             "formulas": " ".join(formula_bits),
             "comparison": cmp_text,
         }

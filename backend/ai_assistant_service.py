@@ -124,44 +124,101 @@ def _glossary_line(abbr: str) -> str:
     ).strip()
 
 
+def _steps_text(steps: Any) -> str:
+    if not steps:
+        return ""
+    if isinstance(steps, list):
+        return "\n".join(f"- {str(s).strip()}" for s in steps if str(s).strip())
+    return str(steps)
+
+
 def _tech_structured(tech_id: str, beginner: bool, *, compact: bool = False) -> str:
-    """Dual-Depth + donanım blokları; LLM ve yerel yanıt aynı kaynaktan."""
+    """Dual-Depth + donanım; Temel'de beginner_copy sahne dili, Uzman'da formül+terim."""
     tech = DataService.get_technology_by_id(tech_id)
     if not tech:
         return ""
     layers = DataService.teaching_layers(tech_id)
-    foundation = layers["beginner"] if beginner else (layers["beginner"] + " " + layers["expert"])
-    hw_cap = 900 if compact else 1600
-    use_cap = 600 if compact else 1100
-    parts = [
+    block = layers.get("beginner_block") or {}
+    if not isinstance(block, dict):
+        block = {}
+
+    parts: List[str] = [
         f"## {tech['acronym']} — {tech['title']} (TRL {tech['trl']})",
         _glossary_line(tech["acronym"]),
-        "",
-        f"### {t('ai.sec_what')}",
-        _strip_html(tech.get("executive_summary", ""))[: (700 if compact else 1200)],
-        _strip_html(foundation)[: (900 if compact else 1600)],
-        "",
-        f"### {t('ai.sec_how_hw')}",
-        _strip_html(tech.get("beginner_principle", ""))[:700],
-        _strip_html(tech.get("working_principle", ""))[:hw_cap],
-        _strip_html(tech.get("system_architecture", ""))[:hw_cap],
-        "",
-        f"### {t('ai.sec_use')}",
-        _list_bits(tech.get("use_cases"))[:use_cap],
-        _list_bits(tech.get("tt_scenarios"))[: (500 if compact else 900)],
-        "",
-        f"### {t('ai.sec_limit')}",
-        " · ".join(tech.get("disadvantages") or []),
-        str(tech.get("trl_desc") or ""),
     ]
-    if not beginner:
+
+    if beginner:
+        what = str(block.get("what") or "")
+        problem = str(block.get("problem") or "")
+        why = str(block.get("why_needed") or "")
+        analogy = str(block.get("analogy") or block.get("mental_model") or "")
+        how = _steps_text(block.get("how_steps"))
+        principle = _strip_html(block.get("principle_html") or tech.get("beginner_principle", ""))
+        arch = _strip_html(block.get("arch_html") or tech.get("beginner_arch", ""))
+        when_u = str(block.get("when_used") or "")
+        when_n = str(block.get("when_not") or "")
+        confuse = str(block.get("not_to_confuse") or "")
+        world = str(block.get("real_world") or "")
+        tt = str(block.get("tt_impact") or "")
         parts.extend(
             [
+                "",
+                f"### {t('ai.sec_what')}",
+                what[: (650 if compact else 1100)],
+                "",
+                f"### {t('ai.sec_why')}",
+                problem[: (500 if compact else 800)],
+                why[: (500 if compact else 800)],
+                "",
+                f"### {t('ai.sec_picture')}",
+                analogy[: (450 if compact else 700)],
+                "",
+                f"### {t('ai.sec_how_hw')}",
+                how[: (700 if compact else 1100)],
+                principle[: (600 if compact else 900)],
+                arch[: (600 if compact else 900)],
+                "",
+                f"### {t('ai.sec_use')}",
+                when_u[: (450 if compact else 700)],
+                (tt[:400] if not compact else ""),
+                "",
+                f"### {t('ai.sec_limit')}",
+                when_n[: (450 if compact else 700)],
+                confuse[: (400 if compact else 600)],
+                str(tech.get("trl_desc") or ""),
+                (world[:350] if not compact else ""),
+            ]
+        )
+    else:
+        expert_block = layers.get("expert_block") or {}
+        if not isinstance(expert_block, dict):
+            expert_block = {}
+        foundation = (
+            str(block.get("what") or "")
+            + " "
+            + str(expert_block.get("what") or layers.get("expert") or "")
+        )
+        hw_cap = 900 if compact else 1500
+        parts.extend(
+            [
+                "",
+                f"### {t('ai.sec_what')}",
+                foundation[: (900 if compact else 1400)],
+                "",
+                f"### {t('ai.sec_how_hw')}",
+                _strip_html(tech.get("working_principle", ""))[:hw_cap],
+                _strip_html(tech.get("system_architecture", ""))[:hw_cap],
+                "",
+                f"### {t('ai.sec_use')}",
+                _list_bits(tech.get("use_cases"))[: (600 if compact else 1000)],
+                "",
+                f"### {t('ai.sec_limit')}",
+                " · ".join(tech.get("disadvantages") or []),
+                str(tech.get("trl_desc") or ""),
                 "",
                 f"### {t('ai.sec_expert')}",
                 _strip_html(layers.get("formulas", ""))[:900],
                 _strip_html(layers.get("comparison", ""))[:700],
-                " · ".join(tech.get("advantages") or [])[:500],
             ]
         )
     return "\n".join(p for p in parts if str(p).strip())
@@ -452,6 +509,7 @@ def _format_context(question: str, view_mode: str = "", budget: int = _CTX_BUDGE
         [
             t("ai.ctx_header"),
             t("ai.pedagogy"),
+            t("ai.style_tr"),
             depth,
             t("ai.ctx_rule"),
             t("ai.complete_rule"),
@@ -464,7 +522,13 @@ def _format_context(question: str, view_mode: str = "", budget: int = _CTX_BUDGE
 
 
 def _system_preamble() -> str:
-    return t("ai.system") + "\n" + t("ai.complete_rule")
+    return "\n".join(
+        [
+            t("ai.system"),
+            t("ai.style_tr"),
+            t("ai.complete_rule"),
+        ]
+    )
 
 
 GROQ_CHAT_MODELS = (

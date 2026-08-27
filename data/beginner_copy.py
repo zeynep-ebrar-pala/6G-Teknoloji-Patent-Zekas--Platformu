@@ -7,45 +7,44 @@ Akış: problem → ihtiyaç → yöntem → mekanizma → sonuç → uygulama.
 BEGINNER_COPY = {
     "isac": {
         "card": (
-            "Baz istasyonu veri taşır; çevreyi ölçmez. Kamera sis ve karanlıkta körleşir; "
-            "ayrı radar ikinci spektrum ve ikinci anten ister. "
+            "Baz istasyonu konuşur ama çevreyi görmez. Kamera sis ve karanlıkta zayıflar. "
+            "Ayrı bir radar ise ikinci spektrum ve ikinci anten ister. "
             "ISAC (Integrated Sensing and Communication — Entegre Algılama ve İletişim) "
-            "aynı RF zincirinde hem bit hem yankı işler: gecikme mesafe, Doppler hız verir. "
-            "TRL 4 — Rel-19 çalışma kalemi (TR 22.837); laboratuvar doğrulaması, TT sahası değil."
+            "aynı radyo zincirinde hem veri taşır hem yankıdan mesafe ve hız çıkarır. "
+            "TRL 4 — Rel-19 çalışma kalemi; laboratuvar seviyesidir, abone sahası değildir."
         ),
         "kicker": "Sorun: kule konuşur, göremez",
         "what": (
             "ISAC (Integrated Sensing and Communication — Entegre Algılama ve İletişim), "
-            "aynı taşıyıcı, aynı anten ve çoğu zaman aynı dalga şekli üzerinde hem kullanıcıya "
-            "veri iletmeyi hem yansıyan enerjiden mesafe, hız ve açı çıkarmayı birlikte tasarlayan "
-            "radyo mimarisidir. Yanına radar kutusu eklemek değildir."
+            "aynı anten ve çoğu zaman aynı dalga şekliyle iki işi birden yapan radyo mimarisidir: "
+            "kullanıcıya bit gönderir ve dönen yankıdan mesafe, hız ile açı okur. "
+            "Yanına ayrı bir radar kutusu koymak değildir."
         ),
         "why_needed": (
-            "Spektrum ve kent arazisi pahalıdır. Trafik, alçak irtifa dron koridoru ve kamerasız "
-            "farkındalık ayrı bir radar şebekesi isterse CAPEX ve EMI (Electromagnetic Interference — "
-            "elektromanyetik girişim) birlikte büyür. Şebeke zaten RF basıyorsa, aynı enerjiyi ikinci "
-            "görev için kullanmak operatör için rasyonel bir ihtiyaçtır."
+            "Spektrum ve kent arazisi pahalıdır. Trafik, alçak irtifa dron koridoru veya "
+            "kamerasız farkındalık için ayrı radar şebekesi kurulursa maliyet ve girişim birlikte artar. "
+            "Şebeke zaten RF basıyorsa, aynı enerjiyi ikinci görev için kullanmak operatör için "
+            "anlamlı bir ihtiyaçtır."
         ),
         "problem": (
-            "Klasik gNB (next-generation Node B — 5G/6G baz istasyonu) yalnızca haberleşme kanalını "
-            "optimize eder. Kamera yağmur ve siste düşer; gizlilik maliyeti yüksektir. Komşu "
-            "otomotiv/askeri radar spektrumu şebekeye girişim basar. Sonuç: kör nokta kalır ya da "
-            "çift altyapı ödenir."
+            "Klasik gNB (next-generation Node B — 5G/6G baz istasyonu) yalnızca haberleşmeyi optimize eder. "
+            "Kamera yağmur ve siste düşer; gizlilik maliyeti de yüksektir. Komşu otomotiv veya askeri radar "
+            "spektrumu şebekeye girişim basar. Sonuç ya kör nokta kalır ya da çift altyapı ödenir."
         ),
         "how_steps": [
-            "Yayın: gNB, kullanıcıya giden OFDM veya OTFS çerçevesini basar; ayrı radar kamyonu yoktur.",
-            "Yankı: Araç, duvar veya drondan dönen eko gecikme (mesafe), Doppler (hız) ve dizi faz farkı AoA (Angle of Arrival — geliş açısı) verir.",
-            "Paylaşım: Zaman, frekans veya kodda dik (orthogonal) ayırım, bit ile yankının birbirini bozmamasını hedefler.",
-            "Kenar: Mesafe/hız/açı özeti kenar sunucuya gider; ham I/Q her zaman merkeze taşınmaz.",
+            "Yayın: gNB, kullanıcıya giden çerçeveyi basar; sokakta ayrı bir radar kamyonu yoktur.",
+            "Yankı: Araç, duvar veya drondan dönen eko gecikmeyle mesafe, Doppler ile hız, dizi faz farkıyla AoA (Angle of Arrival — geliş açısı) verir.",
+            "Paylaşım: Zaman, frekans veya kodda bit ile yankı birbirini bozmasın diye ayrılır.",
+            "Kenar: Mesafe, hız ve açı özeti kenar sunucuya gider; ham I/Q her zaman merkeze taşınmaz.",
         ],
         "mental_model": (
-            "Tek RF zinciri, iki görev. Gidiş yolu Shannon kanalıdır; dönüş yolu radar denklemidir. "
+            "Tek RF zinciri, iki görev. Gidiş yolu haberleşme kanalıdır; dönüş yolu radar yankısıdır. "
             "Güç ve zaman aynı bütçeden bölünür: iletişime ayrılan enerji artınca yankının SNR'ı düşer. "
             "Menzil iletişim menzilinden kısa kalır, çünkü eko R⁴ ile zayıflar."
         ),
         "analogy": (
-            "Monostatik radarın eko zinciri ile hücresel down-link'in aynı taşıyıcıyı paylaşması. "
-            "İki bağımsız sistem yan yana değildir."
+            "Fener hem yolu aydınlatır hem yansıyan ışıktan önündeki cismin uzaklığını sezersin. "
+            "ISAC'ta da aynı radyo hem konuşur hem yankıyı dinler; iki ayrı cihaz yan yana değildir."
         ),
         "analogy_technical_map": (
             "Gecikme τ = 2R/c menzili, Doppler kayması hızı, çok antenli faz farkı AoA'yı verir. "
@@ -53,19 +52,18 @@ BEGINNER_COPY = {
             "Shannon kapasitesi aynı P ve B'yi paylaşır. Clutter ve gizlilik, denklem dışındaki tasarım kısıtıdır."
         ),
         "when_used": (
-            "Görüşün bozulduğu geometride (sis, gece), kameranın istenmediği yerde, mevcut kule "
-            "hattının yolu veya koridoru kestiği operatör şebekesinde; ayrı radar spektrumunun "
-            "pahalı veya düzenleme olarak zor olduğu durumda."
+            "Sis, gece veya kameranın istenmediği yerde; mevcut kule hattının yolu veya koridoru kestiği "
+            "operatör şebekesinde; ayrı radar spektrumunun pahalı veya düzenleme olarak zor olduğu durumda."
         ),
         "when_not": (
-            "Santimetre altı 'her mahallede' vaadi için değil — literatür hedefidir, bu platformda "
+            "Santimetre altı 'her mahallede' vaadi için değil — bu literatür hedefidir; bu platformda "
             "saha ölçümü yoktur. Yoğun çoklu yansıma ve KVKK çözülmeden kamusal izleme ürünü sayılmaz. "
-            "B dar ise menzil çözünürlüğü fiziken kaba kalır."
+            "Bant dar ise menzil çözünürlüğü fiziken kaba kalır."
         ),
         "not_to_confuse": (
-            "Yanına radar konmuş 5G kulesi ISAC değildir; o iki sistemdir. Kamerayla bilgisayarla görme "
-            "değildir: RF yankısı piksel üretmez. Ambient IoT geri saçılımı kasıtlı etikettir; "
-            "ISAC hedefi çoğu zaman işbirlikçi olmayan yansıtıcıdır."
+            "Yanına radar konmuş 5G kulesi ISAC değildir; o iki ayrı sistemdir. "
+            "Kamerayla bilgisayarla görme de değildir: RF yankısı piksel üretmez. "
+            "Ambient IoT geri saçılımı kasıtlı etikettir; ISAC hedefi çoğu zaman işbirlikçi olmayan yansıtıcıdır."
         ),
         "real_world": (
             "3GPP Rel-19 ISAC çalışma kalemi (TR 22.837), Hexa-X-II mimari raporları, V2X ve alçak irtifa "
@@ -97,60 +95,61 @@ BEGINNER_COPY = {
     },
     "ris": {
         "card": (
-            "Yüksek frekansta dalga köşeyi dönmez; her kör nokta için yeni gNB dikmek CAPEX ve kent "
-            "yüküdür. RIS (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey) "
-            "cephedeki programlanabilir yansıtıcıdır: eleman fazı θ_n hüzmeyi UE'ye çevirir, kendi "
-            "yüksek güçlü vericisi yoktur. TRL 5 — ETSI RIS ISG ve Rel-19/20; operatör PoC sınıfı, "
-            "TT sahası değil."
+            "Yüksek frekansta dalga köşeyi kolay dönmez. Her kör noktaya yeni kule dikmek hem pahalıdır "
+            "hem kenti yorar. RIS (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey) "
+            "cepheye asılan programlanabilir bir yansıtıcıdır: eleman fazını kaydırır, hüzmeyi telefona çevirir; "
+            "kendi yüksek güçlü vericisi yoktur. TRL 5 — ETSI RIS ISG ve Rel-19/20; operatör PoC sınıfıdır, "
+            "TT abone sahası değildir."
         ),
         "kicker": "Sorun: dalga köşeyi dönemez",
         "what": (
             "RIS (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey), "
-            "yüzlerce veya binlerce ayarlanabilir elemandan oluşan bir yüzeydir. PIN diyot veya varaktör "
-            "gelen dalganın fazını 0–2π aralığında kaydırır. Yüzey internet üretmez; gNB yayınını "
-            "hedeflenen UE'ye (User Equipment — kullanıcı cihazı) yönlendirir."
+            "yüzlerce veya binlerce küçük elemandan oluşan ince bir paneldir. "
+            "PIN diyot veya varaktör, gelen dalganın fazını 0–2π arasında kaydırır. "
+            "Panel internet üretmez; gNB yayınını hedeflenen UE'ye (User Equipment — kullanıcı cihazı) yönlendirir."
         ),
         "why_needed": (
-            "mmWave ve üzeri bantlarda duvar ve köşe kaybı şiddetlidir. Her kör noktaya kule hem CAPEX "
-            "hem EMC yüküdür. Pasif veya yarı-pasif yüzey, ortamı kontrol edilebilir bir kanal haline "
-            "getirerek kapsama deliğini aktif röleden düşük enerjiyle kapatma adayıdır."
+            "mmWave ve üzeri bantlarda duvar ve köşe kaybı serttir. Her kör noktaya kule dikmek "
+            "hem yatırım hem elektromanyetik yük getirir. Bu yüzden operatör, aktif röleden daha az "
+            "enerjiyle kapsama deliğini kapatacak bir yüzey ister. RIS bu ihtiyaca adaydır."
         ),
         "problem": (
-            "Yüksek frekansta yol, görüş hattı (LoS) yoksa kopar veya hız düşer. Plaza camı, avlu ve "
-            "tünel kıvrımı bu fiziğin sahadaki karşılığıdır. Aktif röle kendi RF zinciri, güç kaynağı "
-            "ve girişimini taşır."
+            "Yüksek frekansta görüş hattı (LoS) yoksa yol kopar veya hız düşer. "
+            "Plaza camı, avlu ve tünel kıvrımı bu fiziğin sahadaki karşılığıdır. "
+            "Aktif röle ise kendi RF zincirini, güç kaynağını ve girişimini beraberinde taşır."
         ),
         "how_steps": [
-            "Yüzey: cephe, cam veya tünel duvarı — RIS baz istasyonu değildir.",
-            "Faz: her eleman θ_n kayması uygular; dizi faktörü hüzmeyi şekillendirir.",
+            "Yüzey: cephe, cam veya tünel duvarına ince panel asılır — bu bir baz istasyonu değildir.",
+            "Faz: her eleman θ_n kadar faz kaydırır; dizi hüzmeyi şekillendirir.",
             "Komut: gNB denetleyiciye hedef UE'yi bildirir; kontrol hattı düşük bit hızlıdır.",
-            "Sonuç: engellenen doğrudan yol yerine kontrollü yansıma yolu oluşur.",
+            "Sonuç: engellenen doğrudan yol yerine kontrollü bir yansıma yolu oluşur.",
         ],
         "mental_model": (
-            "RIS verici değil, sınır koşulunu programlayan yansıtıcıdır. Kanal iki hoptur: "
+            "RIS verici değil, yansıma sınırını programlayan yüzeydir. Kanal iki sıçramalıdır: "
             "gNB→RIS→UE. Çift yol kaybı vardır; N eleman ideal koşullarda güç ~N² ölçeklenir. "
             "Kanal kestirilemezse faz tablosu yanlış yazılır ve kazanç düşer."
         ),
         "analogy": (
-            "Pasif faz dizisi: her eleman bir gecikme hattıdır, ortak bir aydınlatıcı (gNB) vardır. "
-            "Aktif röle veya küçük hücre değildir."
+            "Duvara asılı, her parçası ayrı ayarlanabilen bir ayna düşün. "
+            "Işık kaynağı baz istasyonudur; ayna ışığı senin telefonuna çevirir. "
+            "Ayna kendi başına lamba değildir; aktif röle veya küçük hücre de değildir."
         ),
         "analogy_technical_map": (
             "θ_n eleman fazı, Φ = diag(e^{jθ_n}) yüzey, G Tx–RIS kanalı, h_r RIS–UE kanalıdır. "
             "Etkin kanal h_rᴴ Φ G. Çift yol kaybı Tx→RIS→Rx çarpımıdır; menzili sihirle uzatmaz."
         ),
         "when_used": (
-            "N-LoS sokak, tünel kıvrımı, tribün, plaza içi mmWave, kule dikilemeyen tarihi doku. "
-            "Aktif röleden düşük enerji ve CAPEX istenen geometri."
+            "Görüş hattı olmayan sokak, tünel kıvrımı, tribün, plaza içi mmWave ve "
+            "kule dikilemeyen tarihi dokuda. Aktif röleden daha düşük enerji ve yatırım istenen geometride."
         ),
         "when_not": (
             "Yüzey kanalı kestiremiyorsa (pasif eleman alıcı değildir) ve denetleyici gecikmesi "
-            "kullanıcı hızına yetmiyorsa kazanç düşer. '%90 enerji tasarrufu' literatür/hedeftir; "
+            "kullanıcı hızına yetmiyorsa kazanç düşer. '%90 enerji tasarrufu' literatür hedefidir; "
             "bu platformda saha faturası ölçülmemiştir."
         ),
         "not_to_confuse": (
             "Aktif röle veya small cell değildir — yüksek güçlü vericisi yoktur. "
-            "Metamalzeme 'görünmez pelerin' iddiası Maxwell'i iptal etmez; yalnızca sınır koşulu "
+            "Metamalzeme 'görünmez pelerin' iddiası Maxwell yasasını iptal etmez; yalnızca sınır koşulu "
             "programlanır. ISAC ile birlikte kullanılabilir; RIS tek başına radar değildir."
         ),
         "real_world": (
@@ -158,8 +157,8 @@ BEGINNER_COPY = {
             "Tak-çalıştır ticari emtia her binada yoktur."
         ),
         "tt_impact": (
-            "Yarımada, tünel, plaza camı: kule dikmeden kapsama adayı. TRL 5 — ilgili ortamda prototip; "
-            "abone şebekesinin varsayılan parçası değil."
+            "Yarımada, tünel, plaza camı: kule dikmeden kapsama adayıdır. TRL 5 — ilgili ortamda prototip; "
+            "abone şebekesinin varsayılan parçası değildir."
         ),
         "principle_html": (
             "<p><strong>1. Yüzey:</strong> Cepheye ince yansıtıcı asılır. Bu bir baz istasyonu değildir.</p>"
@@ -399,62 +398,66 @@ BEGINNER_COPY = {
     },
     "ntn": {
         "card": (
-            "Karasal gNB şehir ve asfaltı kapsar; dağ, deniz ve enkaz boş kalır. "
+            "Karasal kule şehir ve asfaltı kapsar; dağ, deniz ve enkaz boş kalır. "
             "NTN (Non-Terrestrial Network — Karasal Olmayan Ağ) LEO ve HAPS düğümlerini Rel-17+ "
             "prosedürüyle çekirdeğe bağlar. Bedeli gecikme ve Doppler'dir. "
-            "TRL 6 — TR 38.811; kamuya açık direct-to-cell denemeleri. Şehir kulesinin rakibi değil, tamamlayıcısı."
+            "TRL 6 — TR 38.811; kamuya açık direct-to-cell denemeleri vardır. "
+            "Şehir kulesinin rakibi değil, tamamlayıcısıdır."
         ),
         "kicker": "Sorun: kule her yere ulaşmaz",
         "what": (
-            "NTN, LEO (Low Earth Orbit — alçak dünya yörüngesi), GEO ve HAPS "
-            "(High-Altitude Platform Station — yüksek irtifa platformu) düğümlerini karasal çekirdeğe "
-            "3GPP Rel-17+ ile bağlayan mimaridir. Direct-to-cell: özel çanak yerine standart UE'nin "
-            "uydu hücresini görmesi."
+            "NTN (Non-Terrestrial Network — Karasal Olmayan Ağ), LEO "
+            "(Low Earth Orbit — alçak dünya yörüngesi), GEO ve HAPS "
+            "(High-Altitude Platform Station — yüksek irtifa platformu) düğümlerini "
+            "karasal çekirdeğe 3GPP Rel-17+ ile bağlayan mimaridir. "
+            "Direct-to-cell demek, özel çanak yerine standart telefonun uydu hücresini görmesidir."
         ),
         "why_needed": (
-            "Kapsama kule ve fiberin ulaştığı yer kadardır. Kırsal CAPEX, deniz, havacılık ve afet "
-            "(kule yıkılınca) karasal modeli kırar. Aynı kimlik ve numara ile boşluğu kapatma ihtiyacıdır."
+            "Kapsama, kule ve fiberin ulaştığı yer kadardır. Kırsal yatırım, deniz, havacılık ve afet "
+            "(kule yıkılınca) bu modeli kırar. Bu yüzden aynı kimlik ve numara ile boşluğu kapatmak gerekir."
         ),
         "problem": (
-            "Mesafe FSPL'yi büyütür; LEO ~7,5 km/s Doppler ve sık handover üretir. GEO gecikmesi "
-            "konuşmayı zorlar. Spektrum, yer kapısı ve düzenleme operatör işidir."
+            "Mesafe serbest uzay kaybını büyütür. LEO yaklaşık 7,5 km/s hızla Doppler ve sık handover üretir. "
+            "GEO gecikmesi konuşmayı zorlar. Spektrum, yer kapısı ve düzenleme operatör işidir."
         ),
         "how_steps": [
-            "Öncelik: şehirde gNB; boşlukta uydu/HAPS hücresi.",
+            "Öncelik: şehirde gNB; boş coğrafyada uydu veya HAPS hücresi.",
             "Yer kapısı: feeder link → gateway → çekirdek.",
-            "Telafi: PHY'de Doppler ve gecikme ön düzeltmesi; aksi halde PRACH tutmaz.",
-            "Servis sınıfı: acil SMS/ses önce; terabit şehir deneyimi vaadi değil.",
+            "Telafi: PHY katmanında Doppler ve gecikme ön düzeltmesi; aksi halde PRACH tutmaz.",
+            "Servis sınıfı: acil SMS ve ses önce gelir; terabit şehir deneyimi vaadi değildir.",
         ],
         "mental_model": (
-            "Karasal birincil yoldur; NTN kapsama deliğini kapatır. Gecikme ~d/c (LEO onlarca ms, "
-            "GEO gidiş-dönüş ~250 ms mertebesi, literatür). Direct-to-cell, telefon anteninin link "
-            "bütçesine sığmasıdır — VSAT çanak değildir."
+            "Karasal yol birincildir; NTN kapsama deliğini kapatır. "
+            "Gecikme ~d/c mertebesindedir (LEO onlarca ms; GEO gidiş-dönüş ~250 ms, literatür). "
+            "Direct-to-cell, telefon anteninin link bütçesine sığmasıdır — VSAT çanak değildir."
         ),
         "analogy": (
-            "Aynı 3GPP kimliği, farklı radyo geometrisi. Tüketici LEO genişbantı (ör. Starlink) "
-            "ile NTN hücresi aynı ürün olmak zorunda değildir."
+            "Şehirde yol asfalttır; dağda helikopter iner. NTN de öyledir: "
+            "aynı abone kimliğiyle boş coğrafyaya uydu veya yüksek irtifa platformundan hizmet gelir. "
+            "Bu, şehirdeki her kuleyi kaldırmak demek değildir."
         ),
         "analogy_technical_map": (
             "Feeder link + çekirdek = yer tarafı. Doppler f_d = f_c (v/c) cosθ. "
             "Link bütçesi FSPL + atmosfer + anten kazancı. Rel-17 NTN şartnamesi (TR 38.811) çerçevedir."
         ),
         "when_used": (
-            "Kırsal, dağ, deniz, havacılık, afet yedek hattı, kulesiz IoT. Karasalın ekonomik olmadığı yer."
+            "Kırsal, dağ, deniz, havacılık, afet yedek hattı ve kulesiz IoT. "
+            "Karasalın ekonomik olmadığı yerde."
         ),
         "when_not": (
             "Şehir içi kapasite ve milisaniye altı URLLC için birincil yol değildir. "
-            "'%100 küresel sıfır boşluk' pazarlamadır. Bu platformda uydu gecikmesi saha ölçülmedi."
+            "'%100 küresel sıfır boşluk' pazarlama dilidir. Bu platformda uydu gecikmesi saha ölçülmedi."
         ),
         "not_to_confuse": (
-            "VSAT çanak ≠ direct-to-cell. HAPS uydu değildir (stratosfer). "
+            "VSAT çanak, direct-to-cell değildir. HAPS uydu değildir (stratosfer). "
             "ISAC 'gökyüzünü radar yapmak' NTN değildir."
         ),
         "real_world": (
             "3GPP TR 38.811, Rel-17/18 NTN iş kalemi, kamuya açık direct-to-cell denemeleri. "
-            "Afet yedek hattı operatör stratejisidir, saha garantisi değil."
+            "Afet yedek hattı operatör stratejisidir, saha garantisi değildir."
         ),
         "tt_impact": (
-            "Afet hattı, filo, kırsal. TRL 6 — yedi teknoloji arasında en olgun dilim. Tamamlayıcı."
+            "Afet hattı, filo, kırsal. TRL 6 — yedi teknoloji arasında en olgun dilimdir. Tamamlayıcıdır."
         ),
         "principle_html": (
             "<p><strong>1. Öncelik:</strong> Şehir kulede kalır. Boş coğrafyada <strong>LEO</strong> / <strong>HAPS</strong>.</p>"
