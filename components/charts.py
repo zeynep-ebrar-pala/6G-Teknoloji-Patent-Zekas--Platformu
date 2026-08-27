@@ -318,88 +318,62 @@ def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
     return fig
 
 
-def render_evidence_radar_chart(rows: List[Dict[str, Any]]) -> go.Figure:
-    """Çift halka: Lens patent + Springer yayın (log10 göreli, peak=100); hover ham total."""
+def _evidence_one_spider(
+    rows: List[Dict[str, Any]],
+    *,
+    raw_key: str,
+    r_key: str,
+    title: str,
+    series_name: str,
+    hover: str,
+    line: str,
+    marker: str,
+    fill: str,
+    text_color: str,
+) -> go.Figure:
+    """Tek halka: r = tablo sütunu ile doğrusal oran (peak=100); etiket = ham total."""
     if not rows:
         return go.Figure()
 
-    def _r(key: str) -> List[float]:
-        out: List[float] = []
-        for row in rows:
-            v = row.get(key)
-            out.append(float(v) if isinstance(v, (int, float)) else 0.0)
-        return out
-
-    def _raw(key: str) -> List[str]:
-        out: List[str] = []
-        for row in rows:
-            v = row.get(key)
-            out.append(f"{int(v):,}" if isinstance(v, int) else "—")
-        return out
-
-    def _label(vals: List[float]) -> List[str]:
-        return [f"{v:.0f}" if v > 0 else "" for v in vals]
-
     categories = [str(row.get("domain") or "") for row in rows]
-    r_pat = _r("r_patent")
-    r_pub = _r("r_pub")
-    raw_pat = _raw("patent")
-    raw_pub = _raw("pub")
+    r_vals: List[float] = []
+    raw_labels: List[str] = []
+    for row in rows:
+        rv = row.get(r_key)
+        r_vals.append(float(rv) if isinstance(rv, (int, float)) else 0.0)
+        n = row.get(raw_key)
+        raw_labels.append(f"{int(n):,}" if isinstance(n, int) else "—")
 
     cat_c = categories + [categories[0]]
-    pat_c = r_pat + [r_pat[0]]
-    pub_c = r_pub + [r_pub[0]]
-    raw_pat_c = raw_pat + [raw_pat[0]]
-    raw_pub_c = raw_pub + [raw_pub[0]]
-    pat_text = _label(r_pat) + [""]
-    pub_text = _label(r_pub) + [""]
+    r_c = r_vals + [r_vals[0]]
+    raw_c = raw_labels + [raw_labels[0]]
+    text_c = raw_labels + [""]
 
     fig = go.Figure()
     fig.add_trace(go.Scatterpolar(
-        r=pat_c,
+        r=r_c,
         theta=cat_c,
         fill="toself",
         mode="lines+markers+text",
-        name=t("charts.evidence_patent"),
-        fillcolor="rgba(0, 153, 255, 0.35)",
-        line=dict(color="#00E5FF", width=4),
-        marker=dict(size=10, color="#0099FF"),
-        text=pat_text,
+        name=series_name,
+        fillcolor=fill,
+        line=dict(color=line, width=4),
+        marker=dict(size=10, color=marker),
+        text=text_c,
         textposition="top center",
-        textfont=dict(color="#7DD3FC", size=11),
-        customdata=raw_pat_c,
-        hovertemplate=t("charts.evidence_hover_patent"),
+        textfont=dict(color=text_color, size=11),
+        customdata=raw_c,
+        hovertemplate=hover,
     ))
-    fig.add_trace(go.Scatterpolar(
-        r=pub_c,
-        theta=cat_c,
-        fill="toself",
-        mode="lines+markers+text",
-        name=t("charts.evidence_pub"),
-        fillcolor="rgba(34, 197, 94, 0.35)",
-        line=dict(color="#22C55E", width=4),
-        marker=dict(size=10, color="#22C55E"),
-        text=pub_text,
-        textposition="bottom center",
-        textfont=dict(color="#86EFAC", size=11),
-        customdata=raw_pub_c,
-        hovertemplate=t("charts.evidence_hover_pub"),
-    ))
-
     _apply_layout(
         fig,
-        title=dict(
-            text=f"<b>{t('charts.evidence_title')}</b>",
-            x=0.02,
-            y=0.95,
-            font=dict(size=15, color="#FFFFFF"),
-        ),
+        title=dict(text=f"<b>{title}</b>", x=0.02, y=0.98, font=dict(size=14, color="#FFFFFF")),
         polar=dict(
             radialaxis=dict(
                 visible=True,
                 range=[0, 100],
                 tickvals=[0, 25, 50, 75, 100],
-                ticksuffix="",
+                ticksuffix="%",
                 gridcolor="rgba(200, 209, 220, 0.15)",
                 linecolor="rgba(200, 209, 220, 0.2)",
                 tickfont=dict(color="#94A3B8", size=11),
@@ -407,25 +381,60 @@ def render_evidence_radar_chart(rows: List[Dict[str, Any]]) -> go.Figure:
             angularaxis=dict(
                 gridcolor="rgba(200, 209, 220, 0.15)",
                 linecolor="rgba(200, 209, 220, 0.2)",
-                tickfont=dict(color="#FFFFFF", size=13),
+                tickfont=dict(color="#FFFFFF", size=12),
             ),
             bgcolor="#121620",
         ),
-        showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="top",
-            y=-0.12,
-            x=0.0,
-            bgcolor="rgba(18, 22, 32, 0.92)",
-            bordercolor="rgba(200, 209, 220, 0.15)",
-            borderwidth=1,
-            font=dict(color="#C8D1DC", size=12),
-        ),
-        height=520,
-        margin=dict(l=40, r=40, t=50, b=90),
+        showlegend=False,
+        height=460,
+        margin=dict(l=36, r=36, t=48, b=36),
     )
     return fig
+
+
+def render_evidence_radar_chart(rows: List[Dict[str, Any]]) -> go.Figure:
+    """Geriye uyum: yalnızca patent halkası (tercihen render_evidence_radar_pair kullan)."""
+    return _evidence_one_spider(
+        rows,
+        raw_key="patent",
+        r_key="r_patent",
+        title=t("charts.evidence_title_patent"),
+        series_name=t("charts.evidence_patent"),
+        hover=t("charts.evidence_hover_patent"),
+        line="#00E5FF",
+        marker="#0099FF",
+        fill="rgba(0, 153, 255, 0.35)",
+        text_color="#7DD3FC",
+    )
+
+
+def render_evidence_radar_pair(rows: List[Dict[str, Any]]) -> tuple:
+    """İki örümcek: patent ve yayın ayrı; her biri kendi tablo sütununa doğrusal orantılı."""
+    pat = _evidence_one_spider(
+        rows,
+        raw_key="patent",
+        r_key="r_patent",
+        title=t("charts.evidence_title_patent"),
+        series_name=t("charts.evidence_patent"),
+        hover=t("charts.evidence_hover_patent"),
+        line="#00E5FF",
+        marker="#0099FF",
+        fill="rgba(0, 153, 255, 0.35)",
+        text_color="#7DD3FC",
+    )
+    pub = _evidence_one_spider(
+        rows,
+        raw_key="pub",
+        r_key="r_pub",
+        title=t("charts.evidence_title_pub"),
+        series_name=t("charts.evidence_pub"),
+        hover=t("charts.evidence_hover_pub"),
+        line="#22C55E",
+        marker="#22C55E",
+        fill="rgba(34, 197, 94, 0.35)",
+        text_color="#86EFAC",
+    )
+    return pat, pub
 
 def render_technology_record_counts_chart(df_counts: pd.DataFrame, tech_label: str) -> go.Figure:
     """Doğrulanmış patent kayıtlarının yıla göre sayısı — temsili hedef metriği yok."""

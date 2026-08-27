@@ -52,13 +52,18 @@ st.markdown(t("home.radar_heading"))
 
 rows = []
 try:
-    from components.charts import render_evidence_radar_chart
+    from components.charts import render_evidence_radar_pair
 
     rows = topic_evidence_rows(evidence_fingerprint())
     if rows and any(
         isinstance(r.get("patent"), int) or isinstance(r.get("pub"), int) for r in rows
     ):
-        show_plotly(render_evidence_radar_chart(rows))
+        pat_fig, pub_fig = render_evidence_radar_pair(rows)
+        c1, c2 = st.columns(2)
+        with c1:
+            show_plotly(pat_fig)
+        with c2:
+            show_plotly(pub_fig)
     else:
         st.caption(t("home.radar_empty"))
 except Exception as exc:
@@ -92,24 +97,22 @@ render_trl_explainer()
 
 if beginner:
     _radar_caption = (
-        "Each axis is one of the seven 6G topics. The cyan ring is Lens.org patent totals; "
-        "the green ring is Springer Nature publication totals. Values use log10 relative intensity "
-        "within each ring (100 = the strongest topic). Hover shows the raw count. This is activity "
-        "intensity, not TRL — readiness levels stay on the cards."
+        "Each spider matches one table column. Radius is linear: 100% = the max in that column; "
+        "vertex labels are the raw totals. Cyan = Lens patents, green = Springer publications. "
+        "This is activity intensity, not TRL — readiness levels stay on the cards."
         if get_lang() == "en"
-        else "Her eksen yedi 6G konusundan biridir. Camgöbeği halka Lens.org patent toplamı, "
-        "yeşil halka Springer Nature yayın toplamıdır. Sayılar her halka içinde log10 göreli "
-        "yoğunluktur (100 = o kaynaktaki en yüksek konu). Üzerine gelince ham toplam görünür. Bu grafik "
-        "etkinlik yoğunluğudur, TRL değildir — hazırlık seviyeleri kartlardaki sayılardır."
+        else "Her örümcek bir tablo sütununa doğrusal orantılıdır: 100% = o sütundaki en yüksek değer; "
+        "köşe etiketleri ham toplamdır. Camgöbeği = Lens patent, yeşil = Springer yayın. "
+        "Bu grafik etkinlik yoğunluğudur, TRL değildir — hazırlık seviyeleri kartlardaki sayılardır."
     )
 else:
     _radar_caption = (
-        "Dual spider: Lens patent/search topic totals vs Springer Meta API topic totals. "
-        "Each series is log10-normalized to 100 for a shared radial axis; hover keeps absolute totals. "
+        "Two spiders: Lens patent topic totals and Springer Meta topic totals. "
+        "Each is linearly proportional to its table column (100% = column max); vertex labels = raw totals. "
         "Corpus intensity ≠ NASA/EU TRL (card pills)."
         if get_lang() == "en"
-        else "Çift halka: Lens patent/search konu total’leri × Springer Meta API konu total’leri. "
-        "Her seri log10 ile kendi maksimumuna göre 100’e ölçeklenir (ortak radyal eksen); hover ham total’i korur. "
+        else "İki örümcek: Lens patent konu total’leri ve Springer Meta konu total’leri. "
+        "Her biri kendi tablo sütununa doğrusal orantılıdır (100% = sütun max); köşe etiketleri = ham total. "
         "Külliyat yoğunluğu ≠ NASA/AB TRL (kartlardaki haplar)."
     )
 st.markdown(
