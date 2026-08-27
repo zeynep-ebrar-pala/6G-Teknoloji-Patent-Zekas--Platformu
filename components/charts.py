@@ -1089,7 +1089,7 @@ def render_country_rank_chart(
     title: str,
     name_key: str = "name",
 ) -> go.Figure:
-    """İlk 10 çubuk, sonra …, sonra Türkiye sırası. None sayım 0 yazılmaz."""
+    """İlk 10 çubuk aynı kayıt sayısına göre; varsa … ve Türkiye, kendi facet kaydıyla. None 0 yazılmaz."""
     unit = t("charts.paper_count")
     hover_n = t("charts.hover_h", unit=unit)
     labels: List[str] = []

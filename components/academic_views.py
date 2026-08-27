@@ -62,17 +62,43 @@ def _turkey_in_top(rows: list) -> bool:
     return any(str(r.get("cc") or "") == "TR" for r in rows[:10])
 
 
+def _tr_row(rows: list) -> dict | None:
+    for row in rows:
+        if str(row.get("cc") or "") == "TR":
+            return row
+    return None
+
+
+def _sorted_cc(rows: list) -> list:
+    out = []
+    for row in rows:
+        try:
+            n = int(row["count"])
+        except (TypeError, ValueError, KeyError):
+            continue
+        item = dict(row)
+        item["count"] = n
+        out.append(item)
+    out.sort(key=lambda r: (-int(r["count"]), str(r.get("cc") or r.get("name") or "")))
+    return out
+
+
 def _country_list_items(rows: list, turkey: dict | None = None, *, region: str = "both") -> list:
-    items = _as_bar_rows("countries", rows)
-    if region != "both" or not items or _turkey_in_top(rows):
+    """Aynı eksendeki kayıt sayısına göre sıra. Daha uzun çubuk alta yazılmaz."""
+    working = _sorted_cc(rows)
+    info = turkey or {}
+    if region == "both" and working and _tr_row(working) is None:
+        extra = info.get("count")
+        if isinstance(extra, int):
+            working = _sorted_cc(working + [{"cc": "TR", "name": "Turkey", "count": extra}])
+    items = _as_bar_rows("countries", working)
+    if region != "both" or not items or _turkey_in_top(working):
         return items
     items.append({"name": t("pub.cc_ellipsis"), "count": None, "gap": True})
-    info = turkey or {}
-    rank = info.get("rank") if isinstance(info.get("rank"), int) else None
-    count = info.get("count") if isinstance(info.get("count"), int) else None
-    if isinstance(count, int):
-        label = t("pub.cc_tr_list_label_n", n=rank) if rank else t("pub.cc_tr_list_label")
-        items.append({"name": label, "count": count, "cc": "TR"})
+    tr = _tr_row(working)
+    if tr is not None:
+        rank = next(i for i, row in enumerate(working, 1) if str(row.get("cc") or "") == "TR")
+        items.append({"name": t("pub.cc_tr_list_label_n", n=rank), "count": int(tr["count"]), "cc": "TR"})
         return items
     items.append({"name": t("pub.cc_tr_list_label"), "count": None, "cc": "TR", "out": True})
     return items
