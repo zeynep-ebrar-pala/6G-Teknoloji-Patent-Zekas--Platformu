@@ -28,7 +28,7 @@ cols = st.columns(3, gap="large")
 for idx, (tech_id, tech) in enumerate(TECHNOLOGIES.items()):
     col = cols[idx % 3]
     with col:
-        card = home_card(tech_id)
+        card = home_card(tech_id, beginner=beginner)
         trl_class = "trl-low" if tech["trl"] <= 4 else ("trl-mid" if tech["trl"] == 5 else "trl-high")
         blurb = card.get("blurb") or ""
         kicker = card.get("kicker") or ""
@@ -58,11 +58,21 @@ with col_radar:
 with col_info:
     render_trl_explainer()
 
-_radar_caption = (
-    "Slices use the NASA/EU TRL 1–9 scale; each integer is mapped from a 3GPP technical report or a public trial class."
-    if get_lang() == "en"
-    else "Dilimler NASA/AB TRL 1–9 ölçeğidir; her tam sayı, 3GPP teknik raporu veya kamuya açık deneme sınıfına göre eşlenir."
-)
+if beginner:
+    _radar_caption = (
+        "Each slice is a Technology Readiness Level (TRL) from 1 to 9: how close the idea is to a real product. "
+        "Higher is closer to the field; none of these seven is a shelf product yet."
+        if get_lang() == "en"
+        else "Her dilim TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) 1–9 ölçeğidir: "
+        "fikrin ürüne ne kadar yakın olduğunu gösterir. Sayı büyüdükçe sahaya yaklaşır; "
+        "bu yedisinin hiçbiri henüz market rafı ürünü değildir."
+    )
+else:
+    _radar_caption = (
+        "Slices use the NASA/EU TRL 1–9 scale; each integer is mapped from a 3GPP technical report or a public trial class."
+        if get_lang() == "en"
+        else "Dilimler NASA/AB TRL 1–9 ölçeğidir; her tam sayı, 3GPP teknik raporu veya kamuya açık deneme sınıfına göre eşlenir."
+    )
 st.markdown(
     f'<div class="home-radar-note">{_radar_caption}</div>',
     unsafe_allow_html=True,
