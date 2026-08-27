@@ -34,7 +34,7 @@ def render_ai_assistant_module(view_mode: str = ""):
 
     st.caption(t("ai.caption"))
 
-    c1, c2, c3 = st.columns(3)
+    c1, c2, c3, c4 = st.columns(4)
     prompt_clicked = None
     with c1:
         if st.button(t("ai.chip_ris"), width="stretch"):
@@ -43,8 +43,15 @@ def render_ai_assistant_module(view_mode: str = ""):
         if st.button(t("ai.chip_diff"), width="stretch"):
             prompt_clicked = t("ai.chip_diff")
     with c3:
+        if st.button(t("ai.chip_how"), width="stretch"):
+            prompt_clicked = t("ai.chip_how_q")
+    with c4:
         if st.button(t("ai.chip_patents"), width="stretch"):
             prompt_clicked = t("ai.chip_patents_q")
+
+    if st.button(t("ai.clear"), key="ai_clear_chat"):
+        st.session_state.pop("chat_messages", None)
+        st.rerun()
 
     st.divider()
 
@@ -62,25 +69,32 @@ def render_ai_assistant_module(view_mode: str = ""):
     for msg in st.session_state["chat_messages"]:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
+            sources = msg.get("sources") or []
+            if sources and msg.get("role") == "assistant":
+                with st.expander(t("ai.sources")):
+                    for title in sources:
+                        st.markdown(f"- {title}")
 
     user_input = st.chat_input(t("ai.placeholder"))
     query = user_input or prompt_clicked
 
     if query:
+        history = list(st.session_state["chat_messages"])
         st.session_state["chat_messages"].append({"role": "user", "content": query})
-        with st.chat_message("user"):
-            st.markdown(query)
-
         with st.spinner(t("ai.spinner")):
             res = AIAssistantService.answer_question(
                 query,
                 provider=provider,
                 api_key=api_key,
                 view_mode=view_mode,
+                history=history,
             )
-
         st.session_state["chat_messages"].append(
-            {"role": "assistant", "content": res["response"]}
+            {
+                "role": "assistant",
+                "content": res["response"],
+                "sources": res.get("sources") or [],
+                "type": res.get("type") or "",
+            }
         )
-        with st.chat_message("assistant"):
-            st.markdown(res["response"])
+        st.rerun()

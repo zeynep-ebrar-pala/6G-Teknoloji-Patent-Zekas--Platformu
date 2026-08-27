@@ -1,20 +1,31 @@
 """
 Türk Telekom 6G AI Assistant Service
 sklearn TF-IDF yerel geri getirme + Groq / Gemini.
-LLM yalnızca getirilen doğrulanmış parçaları kullanır.
+LLM yalnızca getirilen doğrulanmış parçaları kullanır; yanıt Dual-Depth ve donanımı atlamaz.
 """
 
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Sequence
 
 from backend.academic_service import AcademicService
 from backend.data_service import DataService
 from backend.patent_service import PatentService
 from backend.tt_europe_service import TTEuropeService
-from data.glossary import glossary_plain_corpus
+from data.glossary import GLOSSARY, localized_entry
 from i18n.core import format_int, t
+
+_TECH_HINTS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("ai_ran", ("AI-RAN", "AIRAN", "AI RAN", "YAPAY ZEKA TABANLI")),
+    ("cell_free", ("CELL-FREE", "CELL FREE", "HUCRESIZ", "CF MIMO", "CF-MIMO")),
+    ("ambient_iot", ("AMBIENT", "PILSIZ", "PİLSİZ", "ORTAM ENERJI", "ORTAM ENERJİ")),
+    ("isac", ("ISAC",)),
+    ("ris", ("RIS",)),
+    ("ntn", ("NTN",)),
+    ("thz", ("THZ", "TERAHERTZ", "THZ")),
+)
+
 
 def _is_beginner(view_mode: str) -> bool:
     text = str(view_mode or "beginner")
@@ -29,18 +40,96 @@ def _strip_html(text: str) -> str:
     return re.sub(r"<[^>]+>", " ", text or "").replace("\n", " ").strip()
 
 
-def _corpus() -> List[Dict[str, str]]:
-    """Modül 1–3 doğrulanmış metin parçaları + sözlük + formül açıklaması."""
+def _list_bits(items: Any) -> str:
+    bits: List[str] = []
+    for item in items or []:
+        if isinstance(item, dict):
+            bits.append(
+                " ".join(
+                    str(item.get(k) or "")
+                    for k in ("title", "description", "how", "when_not", "text")
+                )
+            )
+        else:
+            bits.append(_strip_html(str(item)))
+    return " ".join(b for b in bits if b.strip())
+
+
+def _fold(text: str) -> str:
+    table = {
+        ord("İ"): "I",
+        ord("I"): "I",
+        ord("ı"): "I",
+        ord("Ş"): "S",
+        ord("ş"): "S",
+        ord("Ğ"): "G",
+        ord("ğ"): "G",
+        ord("Ü"): "U",
+        ord("ü"): "U",
+        ord("Ö"): "O",
+        ord("ö"): "O",
+        ord("Ç"): "C",
+        ord("ç"): "C",
+    }
+    return (text or "").translate(table).upper().replace("-", " ")
+
+
+def _mentioned_tech_ids(question: str) -> List[str]:
+    folded = _fold(question)
+    found: List[str] = []
+    for tech_id, aliases in _TECH_HINTS:
+        if any(_fold(alias) in folded for alias in aliases):
+            found.append(tech_id)
+    return found
+
+
+def _is_compare(question: str) -> bool:
+    folded = _fold(question)
+    return any(tok in folded for tok in ("FARK", "VS", "KARSILASTIR", "KARŞILAŞTIR", "BETWEEN", "VERSUS"))
+
+
+def _glossary_chunks() -> List[Dict[str, str]]:
     chunks: List[Dict[str, str]] = []
-    chunks.append(
-        {
-            "id": "glossary",
-            "title": t("ai.glossary_title"),
-            "text": glossary_plain_corpus(),
-        }
-    )
+    from i18n.core import get_lang
+
+    lang = get_lang()
+    for key, item in GLOSSARY.items():
+        loc = localized_entry(key) or item
+        if lang == "en":
+            text = f"{item['abbr']} ({item['en']}): {loc['definition']} {loc['why']}"
+        else:
+            text = (
+                f"{item['abbr']} ({item['en']} — {item['tr']}): "
+                f"{loc['definition']} {loc['why']}"
+            )
+        chunks.append({"id": f"glossary:{item['abbr']}", "title": item["abbr"], "text": text})
+    return chunks
+
+
+def _tech_chunks() -> List[Dict[str, str]]:
+    chunks: List[Dict[str, str]] = []
     for tech in DataService.get_all_technologies().values():
         layers = DataService.teaching_layers(tech["id"])
+        uses = _list_bits(tech.get("use_cases"))
+        hardware = " ".join(
+            [
+                _strip_html(tech.get("working_principle", "")),
+                _strip_html(tech.get("system_architecture", "")),
+                _strip_html(tech.get("beginner_principle", "")),
+                _strip_html(tech.get("beginner_arch", "")),
+                _strip_html(tech.get("mathematical_foundation", "")),
+            ]
+        )
+        field = " ".join(
+            [
+                uses,
+                _list_bits(tech.get("tt_scenarios")),
+                _list_bits(tech.get("global_research")),
+                " ".join(tech.get("advantages") or []),
+                " ".join(tech.get("disadvantages") or []),
+                str(tech.get("trl_desc") or ""),
+            ]
+        )
         chunks.append(
             {
                 "id": f"tech:{tech['id']}:temel",
@@ -51,8 +140,9 @@ def _corpus() -> List[Dict[str, str]]:
                         tech.get("acronym", ""),
                         layers["beginner"],
                         _strip_html(tech.get("beginner_card", "")),
-                        _strip_html(tech.get("beginner_principle", "")),
-                        _strip_html(tech.get("beginner_arch", "")),
+                        _strip_html(tech.get("executive_summary", "")),
+                        hardware,
+                        field,
                     ]
                 ),
             }
@@ -68,20 +158,29 @@ def _corpus() -> List[Dict[str, str]]:
                         layers["expert"],
                         layers["formulas"],
                         layers["comparison"],
-                        _strip_html(tech.get("working_principle", "")),
-                        _strip_html(tech.get("system_architecture", "")),
-                        " ".join(tech.get("advantages", [])),
-                        " ".join(tech.get("disadvantages", [])),
+                        hardware,
+                        field,
                     ]
                 ),
             }
         )
+    return chunks
+
+
+def _corpus() -> List[Dict[str, str]]:
+    """Modül 1–3 doğrulanmış metin parçaları + sözlük maddeleri + donanım/mimari."""
+    chunks: List[Dict[str, str]] = []
+    chunks.extend(_glossary_chunks())
+    chunks.extend(_tech_chunks())
     for pat in PatentService.get_top_patents():
         chunks.append(
             {
                 "id": f"patent:{pat['publication_number']}",
                 "title": f"{pat['publication_number']} — {pat['title']}",
-                "text": f"{pat['title']} {pat.get('assignee','')} {pat.get('domain','')} {pat.get('abstract','')}",
+                "text": (
+                    f"{pat['title']} {pat.get('assignee','')} {pat.get('domain','')} "
+                    f"{pat.get('year','')} {pat.get('abstract','')}"
+                ),
             }
         )
     for paper in AcademicService.get_most_cited_papers():
@@ -91,7 +190,11 @@ def _corpus() -> List[Dict[str, str]]:
             {
                 "id": f"paper:{paper.get('doi','')}",
                 "title": paper["title"],
-                "text": f"{paper['title']} {paper.get('authors','')} {paper.get('journal','')} {cite_txt} DOI {paper.get('doi','')}",
+                "text": (
+                    f"{paper['title']} {paper.get('authors','')} {paper.get('journal','')} "
+                    f"{paper.get('year','')} {cite_txt} DOI {paper.get('doi','')} "
+                    f"{paper.get('abstract') or paper.get('note') or ''}"
+                ),
             }
         )
     tt_sum = TTEuropeService.summary()
@@ -152,10 +255,12 @@ def _corpus() -> List[Dict[str, str]]:
     return chunks
 
 
-def _retrieve(question: str, k: int = 6, view_mode: str = "") -> List[Dict[str, str]]:
+def _retrieve(question: str, k: int = 10, view_mode: str = "") -> List[Dict[str, str]]:
     chunks = _corpus()
     if not chunks:
         return []
+    mentioned = _mentioned_tech_ids(question)
+    want = k + (2 if _is_compare(question) else 0)
     try:
         from sklearn.feature_extraction.text import TfidfVectorizer
         from sklearn.metrics.pairwise import cosine_similarity
@@ -164,39 +269,70 @@ def _retrieve(question: str, k: int = 6, view_mode: str = "") -> List[Dict[str, 
         scored = []
         for ch in chunks:
             hay = (ch["title"] + " " + ch["text"]).lower()
-            score = sum(1 for w in q.split() if len(w) > 3 and w in hay)
+            score = sum(1 for w in q.split() if len(w) > 2 and w.lower() in hay)
             scored.append((score, ch))
         scored.sort(key=lambda x: x[0], reverse=True)
-        return [c for s, c in scored[:k] if s > 0] or chunks[:k]
+        picked = [c for s, c in scored[:want] if s > 0] or chunks[:want]
+        return _merge_forced(picked, chunks, mentioned, view_mode, want)
 
     docs = [c["title"] + " " + c["text"] for c in chunks]
-    vectorizer = TfidfVectorizer(stop_words="english")
+    vectorizer = TfidfVectorizer(ngram_range=(1, 2), min_df=1, sublinear_tf=True)
     matrix = vectorizer.fit_transform(docs + [question])
     sims = cosine_similarity(matrix[-1], matrix[:-1]).flatten()
     ranked = sorted(enumerate(sims), key=lambda x: x[1], reverse=True)
-    q_upper = question.upper()
-    selected = []
+    q_upper = _fold(question)
+    selected: List[tuple[float, Dict[str, str]]] = []
+    beginner = _is_beginner(view_mode)
     for idx, score in ranked:
         cid = str(chunks[idx].get("id", ""))
-        title = str(chunks[idx].get("title", "")).upper()
-        if cid.startswith("tech:") or cid == "glossary":
-            score += 0.18
-        if cid.endswith(":temel") and _is_beginner(view_mode):
-            score += 0.14
-        if cid.endswith(":uzman") and not _is_beginner(view_mode):
-            score += 0.14
-        if any(tok in q_upper and tok in title for tok in ("RIS", "ISAC", "NTN", "THZ", "MIMO", "IOT", "AI-RAN", "AIRAN")):
-            score += 0.22
-        selected.append((score, chunks[idx]))
+        title = _fold(chunks[idx].get("title", ""))
+        if cid.startswith("tech:") or cid.startswith("glossary:"):
+            score += 0.16
+        if cid.endswith(":temel") and beginner:
+            score += 0.16
+        if cid.endswith(":uzman") and not beginner:
+            score += 0.16
+        for tok in ("RIS", "ISAC", "NTN", "THZ", "MIMO", "IOT", "AI-RAN", "AIRAN", "TRL"):
+            if tok in q_upper and tok in title:
+                score += 0.28
+                break
+        selected.append((float(score), chunks[idx]))
     selected.sort(key=lambda x: x[0], reverse=True)
-    out = []
-    for score, ch in selected[:k]:
+    picked: List[Dict[str, str]] = []
+    for score, ch in selected[:want]:
         if score <= 0:
             continue
         item = dict(ch)
         item["score"] = f"{score:.3f}"
-        out.append(item)
-    return out or chunks[: min(k, len(chunks))]
+        picked.append(item)
+    if not picked:
+        picked = [dict(c) for c in chunks[: min(want, len(chunks))]]
+    return _merge_forced(picked, chunks, mentioned, view_mode, want)
+
+
+def _merge_forced(
+    picked: List[Dict[str, str]],
+    chunks: List[Dict[str, str]],
+    tech_ids: Sequence[str],
+    view_mode: str,
+    limit: int,
+) -> List[Dict[str, str]]:
+    if not tech_ids:
+        return picked[:limit]
+    beginner = _is_beginner(view_mode)
+    suffix = "temel" if beginner else "uzman"
+    other = "uzman" if beginner else "temel"
+    by_id = {str(c.get("id")): c for c in chunks}
+    seen = {str(c.get("id")) for c in picked}
+    extra: List[Dict[str, str]] = []
+    for tid in tech_ids:
+        for end in (suffix, other):
+            cid = f"tech:{tid}:{end}"
+            row = by_id.get(cid)
+            if row and cid not in seen:
+                extra.append(dict(row))
+                seen.add(cid)
+    return (extra + picked)[: max(limit, len(extra) + min(4, len(picked)))]
 
 
 def _format_context(chunks: List[Dict[str, str]], view_mode: str = "") -> str:
@@ -206,30 +342,48 @@ def _format_context(chunks: List[Dict[str, str]], view_mode: str = "") -> str:
         t("ai.pedagogy"),
         depth,
         t("ai.ctx_rule"),
+        t("ai.complete_rule"),
         "",
     ]
     for ch in chunks:
         lines.append(f"[{ch['id']}] {ch['title']}")
-        limit = 2000 if str(ch.get("id", "")).startswith("tech:") else 1200
+        cid = str(ch.get("id", ""))
+        limit = 5000 if cid.startswith("tech:") else 1800
         lines.append(ch["text"][:limit])
         lines.append("")
     return "\n".join(lines)
 
 
 def _system_preamble() -> str:
-    return t("ai.system")
+    return t("ai.system") + "\n" + t("ai.complete_rule")
 
 
 GROQ_CHAT_MODELS = (
+    "llama-3.3-70b-versatile",
     "openai/gpt-oss-120b",
     "qwen/qwen3.6-27b",
+    "llama-3.1-8b-instant",
     "openai/gpt-oss-20b",
 )
 GEMINI_CHAT_MODELS = (
     "gemini-2.5-flash",
     "gemini-2.0-flash",
     "gemini-flash-latest",
+    "gemini-2.5-pro",
 )
+
+
+def _history_messages(history: Optional[Sequence[Dict[str, Any]]]) -> List[Dict[str, str]]:
+    out: List[Dict[str, str]] = []
+    for msg in list(history or [])[-8:]:
+        role = str(msg.get("role") or "")
+        content = str(msg.get("content") or "").strip()
+        if role not in ("user", "assistant") or not content:
+            continue
+        if role == "assistant" and len(out) == 0:
+            continue
+        out.append({"role": role, "content": content[:4000]})
+    return out[-8:]
 
 
 def _message_text(response) -> str:
@@ -240,12 +394,18 @@ def _message_text(response) -> str:
     return str(text)
 
 
-def _answer_with_groq(question: str, api_key: str, context: str) -> str:
+def _answer_with_groq(
+    question: str,
+    api_key: str,
+    context: str,
+    history: Optional[Sequence[Dict[str, Any]]] = None,
+) -> str:
     from groq import Groq
 
     client = Groq(api_key=api_key)
-    messages = [
+    messages: List[Dict[str, str]] = [
         {"role": "system", "content": _system_preamble() + "\n\n" + context},
+        *_history_messages(history),
         {"role": "user", "content": question},
     ]
     last_exc: Exception | None = None
@@ -255,7 +415,7 @@ def _answer_with_groq(question: str, api_key: str, context: str) -> str:
                 model=model,
                 messages=messages,
                 temperature=0.2,
-                max_tokens=1800,
+                max_tokens=4096,
             )
             text = _message_text(response)
             if text.strip():
@@ -267,12 +427,21 @@ def _answer_with_groq(question: str, api_key: str, context: str) -> str:
     return ""
 
 
-def _answer_with_gemini(question: str, api_key: str, context: str) -> str:
+def _answer_with_gemini(
+    question: str,
+    api_key: str,
+    context: str,
+    history: Optional[Sequence[Dict[str, Any]]] = None,
+) -> str:
     from google import genai
 
     client = genai.Client(api_key=api_key)
+    prior = "\n".join(
+        f"{m['role']}: {m['content']}" for m in _history_messages(history)
+    )
     prompt = (
-        f"{_system_preamble()}\n\n{context}\n\n{t('ai.user_wrap', question=question)}"
+        f"{_system_preamble()}\n\n{context}\n\n"
+        f"{prior}\n\n{t('ai.user_wrap', question=question)}"
     )
     last_exc: Exception | None = None
     for model in GEMINI_CHAT_MODELS:
@@ -288,17 +457,44 @@ def _answer_with_gemini(question: str, api_key: str, context: str) -> str:
     return ""
 
 
-def _fallback_from_chunks(question: str, chunks: List[Dict[str, str]]) -> str:
+def _fallback_from_chunks(question: str, chunks: List[Dict[str, str]], view_mode: str = "") -> str:
     if not chunks:
         return t("ai.fallback_none")
-    preferred = [c for c in chunks if str(c.get("id", "")).startswith("tech:") or c.get("id") == "glossary"]
-    ordered = preferred + [c for c in chunks if c not in preferred]
-    parts = [f"### {ordered[0]['title']}\n\n{ordered[0]['text'][:900]}"]
-    extras = [c for c in ordered[1:] if not str(c.get("id", "")).startswith("patent:")][:3]
+    tech = [c for c in chunks if str(c.get("id", "")).startswith("tech:")]
+    gloss = [c for c in chunks if str(c.get("id", "")).startswith("glossary:")]
+    other = [
+        c
+        for c in chunks
+        if not str(c.get("id", "")).startswith(("tech:", "glossary:", "patent:"))
+    ]
+    ordered = tech + gloss + other
+    if not ordered:
+        ordered = chunks
+    cap = 4200 if not _is_beginner(view_mode) else 3200
+    bodies: List[str] = []
+    seen_titles: set[str] = set()
+    for ch in ordered[:4]:
+        title = ch["title"]
+        if title in seen_titles:
+            continue
+        seen_titles.add(title)
+        bodies.append(f"### {title}\n\n{ch['text'][:cap]}")
+    extras = [c for c in ordered if c["title"] not in seen_titles][:5]
     if extras:
-        parts.append(f"\n\n{t('ai.related')}\n" + "\n".join(f"- {c['title']}" for c in extras))
-    parts.append(f"\n\n{t('ai.tfidf_note')}")
-    return "".join(parts)
+        bodies.append(f"\n\n{t('ai.related')}\n" + "\n".join(f"- {c['title']}" for c in extras))
+    bodies.append(f"\n\n{t('ai.tfidf_note')}")
+    return "\n\n".join(bodies)
+
+
+def _source_labels(chunks: List[Dict[str, str]]) -> List[str]:
+    out: List[str] = []
+    seen: set[str] = set()
+    for ch in chunks:
+        title = str(ch.get("title") or ch.get("id") or "").strip()
+        if title and title not in seen:
+            seen.add(title)
+            out.append(title)
+    return out[:8]
 
 
 class AIAssistantService:
@@ -311,24 +507,32 @@ class AIAssistantService:
         provider: Optional[str] = None,
         api_key: Optional[str] = None,
         view_mode: Optional[str] = None,
+        history: Optional[Sequence[Dict[str, Any]]] = None,
     ) -> Dict[str, Any]:
         if not (question or "").strip():
-            return {"response": t("ai.empty_q"), "type": "error"}
+            return {"response": t("ai.empty_q"), "type": "error", "sources": []}
 
-        chunks = _retrieve(question, view_mode=view_mode or "")
-        context = _format_context(chunks, view_mode or "")
+        mode = view_mode or ""
+        chunks = _retrieve(question, view_mode=mode)
+        context = _format_context(chunks, mode)
+        sources = _source_labels(chunks)
         provider = (provider or "groq").lower()
         key = (api_key or "").strip()
+        local = _fallback_from_chunks(question, chunks, mode)
 
         if key and provider in ("groq", "gemini"):
             try:
                 if provider == "gemini":
-                    text = _answer_with_gemini(question, key, context)
+                    text = _answer_with_gemini(question, key, context, history)
                 else:
-                    text = _answer_with_groq(question, key, context)
-                if text.strip():
-                    return {"response": text, "type": "llm"}
-            except Exception:
-                return {"response": _fallback_from_chunks(question, chunks), "type": "fallback"}
+                    text = _answer_with_groq(question, key, context, history)
+                if len(text.strip()) >= 280:
+                    return {"response": text.strip(), "type": "llm", "sources": sources}
+                if text.strip() and chunks:
+                    merged = text.strip() + "\n\n" + local
+                    return {"response": merged, "type": "llm", "sources": sources}
+            except Exception as exc:
+                note = t("ai.llm_fail", exc=str(exc)[:180])
+                return {"response": f"{local}\n\n{note}", "type": "fallback", "sources": sources}
 
-        return {"response": _fallback_from_chunks(question, chunks), "type": "fallback"}
+        return {"response": local, "type": "fallback", "sources": sources}
