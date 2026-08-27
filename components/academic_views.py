@@ -288,6 +288,7 @@ def render_academic_publication_module():
         t("pub.title"),
         t("pub.subtitle", source=AcademicService.get_data_source()),
         accent="#00C2FF",
+        lead=t("pub.lead"),
     )
     if current_view_mode() == "expert":
         st.markdown(

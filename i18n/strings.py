@@ -299,6 +299,7 @@ Radar / yoğunluk / ağaç ekseni kayıt sayısıdır (yüzde değil). Başlık 
         },
         "pub": {
             "title": "Akademik Yayın Analizi",
+            "lead": "Bu sayfa 6G’nin yedi konusundaki akademik yayınları sayar. Sayılar Springer Nature Meta API’den gelir; konular birbirine eklenmez.",
             "subtitle": "Yedi 6G konusu · Springer Nature Meta API · {y0}–{y1}",
             "data_source": "Springer Nature Meta API: «6G {token}», {y0}–{y1}. Yıl ve ülke: facet. Atıf: çekilen kayıt + Crossref. Yedi konu toplanmaz.",
             "what_title": "Bu sayfa neyi sayıyor?",
@@ -1349,6 +1350,7 @@ On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
         },
         "pub": {
             "title": "Academic Publication Analysis",
+            "lead": "This page counts academic papers on seven 6G topics. The counts come from the Springer Nature Meta API; the topics are not added together.",
             "subtitle": "Seven 6G topics · Springer Nature Meta API · {y0}–{y1}",
             "data_source": "Springer Nature Meta API: “6G {token}”, {y0}–{y1}. Year and country: facet. Citations: pulled records + Crossref. The seven topics are not summed.",
             "what_title": "What this page counts",

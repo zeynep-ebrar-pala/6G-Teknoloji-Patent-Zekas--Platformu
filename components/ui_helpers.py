@@ -24,11 +24,18 @@ def _format_int(value):
     return format_int(value)
 
 
-def render_module_header(title: str, subtitle: str, accent: str = "#0099FF") -> None:
+def render_module_header(title: str, subtitle: str, accent: str = "#0099FF", lead: str = "") -> None:
+    lead_html = ""
+    if lead:
+        lead_html = (
+            f'<p style="color:#E2E8F0;font-size:0.95rem;line-height:1.55;'
+            f'margin:10px 0 8px 0;overflow-wrap:anywhere;">{lead}</p>'
+        )
     st.markdown(
         f"""
         <div class="glass-card" style="border-left: 6px solid {accent}; margin-bottom: 8px;">
             <h2 style="margin: 0; color: #FFF; font-size: 1.45rem; overflow-wrap: anywhere;">{title}</h2>
+            {lead_html}
             <p style="color: #C8D1DC; font-size: 0.92rem; margin-top: 6px; margin-bottom: 0; overflow-wrap: anywhere;">{subtitle}</p>
         </div>
         """,
