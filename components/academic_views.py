@@ -362,11 +362,10 @@ def render_academic_publication_module():
         _render_breakdown(topic, bundle, region)
 
     elif section == "cited":
-        st.markdown(f"### {t('pub.section.cited')}")
         st.caption(t("pub.cited_caption") if region == "both" else t("pub.cited_caption_region"))
-        papers = bundle.get("cited") or []
+        papers = bundle.get("cited") or AcademicService.get_most_cited_papers(topic)
         if not papers:
-            show_empty(t("pub.empty_cited_region") if region != "both" else t("pub.empty_cited"))
+            show_empty(t("pub.empty_cited"))
         else:
             for paper in papers:
                 render_paper_card(_with_source(paper))
