@@ -11,7 +11,8 @@ BEGINNER_COPY = {
             "Ayrı bir radar ise ikinci spektrum ve ikinci anten ister. "
             "ISAC (Integrated Sensing and Communication — Entegre Algılama ve İletişim) "
             "aynı radyo zincirinde hem veri taşır hem yankıdan mesafe ve hız çıkarır. "
-            "TRL 4 — Rel-19 çalışma kalemi; laboratuvar seviyesidir, abone sahası değildir."
+            "TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) 4: "
+            "laboratuvar ortamında doğrulanmıştır; Türk Telekom şebekesinde henüz kullanılmamaktadır."
         ),
         "kicker": "Sorun: kule konuşur, göremez",
         "what": (
@@ -98,8 +99,9 @@ BEGINNER_COPY = {
             "Yüksek frekansta dalga köşeyi kolay dönmez. Her kör noktaya yeni kule dikmek hem pahalıdır "
             "hem kenti yorar. RIS (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey) "
             "cepheye asılan programlanabilir bir yansıtıcıdır: eleman fazını kaydırır, hüzmeyi telefona çevirir; "
-            "kendi yüksek güçlü vericisi yoktur. TRL 5 — ETSI RIS ISG ve Rel-19/20; operatör PoC sınıfıdır, "
-            "TT abone sahası değildir."
+            "kendi yüksek güçlü vericisi yoktur. "
+            "TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) 5: "
+            "ilgili ortamda prototip düzeyindedir; ticari dağıtım aşamasında değildir."
         ),
         "kicker": "Sorun: dalga köşeyi dönemez",
         "what": (
@@ -153,7 +155,7 @@ BEGINNER_COPY = {
             "programlanır. ISAC ile birlikte kullanılabilir; RIS tek başına radar değildir."
         ),
         "real_world": (
-            "ETSI RIS ISG, 3GPP Rel-19/20 çalışma kalemleri, cephe ve iç mekân operatör PoC'leri. "
+            "ETSI RIS ISG, 3GPP Rel-19/20 çalışma kalemleri, cephe ve iç mekân operatör denemeleri. "
             "Tak-çalıştır ticari emtia her binada yoktur."
         ),
         "tt_impact": (
@@ -179,7 +181,8 @@ BEGINNER_COPY = {
             "Hücresiz Massive MIMO (Multiple-Input Multiple-Output — Çok Girişli Çok Çıkışlı) "
             "yayılmış erişim noktalarının aynı anda, aynı frekansta ortak ön kodlama ile hizmet "
             "verdiği mimaridir: kenar tasarım hedefi olarak kalkar. Bedeli fronthaul fiberidir. "
-            "TRL 4 — Rel-19/20 dağıtık MIMO çalışma kalemi; literatür prototip, TT sahası değil."
+            "TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) 4: "
+            "literatür prototipi düzeyindedir; Türk Telekom şebekesinde henüz kullanılmamaktadır."
         ),
         "kicker": "Sorun: hücre sınırında zayıflar",
         "what": (
@@ -230,7 +233,7 @@ BEGINNER_COPY = {
         ),
         "real_world": (
             "Dağıtık MIMO literatürü, 3GPP Rel-19/20 dağıtık MIMO çalışma kalemi, satıcı laboratuvar "
-            "gösterimleri. Stadyum PoC adayı; şehir geneli ürün değil."
+            "gösterimleri. Stadyum denemesi adayıdır; kent geneli dağıtım aşamasında değildir."
         ),
         "tt_impact": (
             "Havalimanı, stadyum, depo: kenar şikâyeti. TRL 4. Önce yoğun mekân — fiber pahalıdır."
@@ -255,7 +258,9 @@ BEGINNER_COPY = {
             "Sub-6 GHz ve mmWave, veri merkezi içi mesh ve kule köprüsü için dar kalabilir. "
             "THz (terahertz) milimetre dalga ile kızılötesi arasındaki spektrumu açar; Shannon'da "
             "kapasite önce B ile büyür. Bedeli FSPL ve moleküler emilimdir: menzil kısalır. "
-            "TRL 3 — TR 38.807; laboratuvar, sokak şebekesi değil. 6G yalnızca THz değildir."
+            "TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) 3: "
+            "laboratuvar kanıtı düzeyindedir; saha şebekesinde kullanılmamaktadır. "
+            "6G yalnızca THz anlamına gelmez."
         ),
         "kicker": "Sorun: veri borusu hâlâ dar",
         "what": (
@@ -328,7 +333,8 @@ BEGINNER_COPY = {
             "Sabit RRM kuralı dolu stadyum ile boş geceyi aynı tarifeyle yönetir. "
             "AI-RAN (Artificial Intelligence-Native RAN — yapay zekâ tabanlı telsiz erişim ağı) "
             "ölçüme göre milisaniye–saniye döngüsünde kaynak kaydırır. Sohbet botu değildir. "
-            "TRL 5 — TR 38.843 ve O-RAN RIC deneme sınıfı; insansız saha kanıtı yok."
+            "TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) 5: "
+            "deneme aşamasındadır; insansız işletim için saha doğrulaması bulunmamaktadır."
         ),
         "kicker": "Sorun: şebeke sabit kural izler",
         "what": (
@@ -476,7 +482,8 @@ BEGINNER_COPY = {
         "card": (
             "Koli ve sera ölçeğinde pil değiştirmek ekonomik değildir. Ambient IoT ortam RF'sinden "
             "enerji toplayıp backscatter (geri saçılım) ile kısa kimlik bildirir; video taşımaz. "
-            "TRL 4 — TR 38.848; PoC sınıfı, raf ürünü değil."
+            "TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) 4: "
+            "laboratuvar doğrulaması düzeyindedir; ticari dağıtım aşamasında değildir."
         ),
         "kicker": "Sorun: her nesneye pil değiştirilemez",
         "what": (

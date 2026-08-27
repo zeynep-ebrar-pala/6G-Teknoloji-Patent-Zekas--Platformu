@@ -416,10 +416,10 @@ GLOSSARY: dict[str, dict[str, str]] = {
 
 TRL_SCALE: list[dict[str, str]] = [
     {"level": "1–2", "title": "Fikir ve kavram", "meaning": "Temel ilke veya uygulama kavramı; henüz laboratuvar doğrulaması yok."},
-    {"level": "3", "title": "Laboratuvar kanıtı", "meaning": "Kritik işlev deneysel gösterildi; sokak şebekesi değil."},
-    {"level": "4", "title": "Laboratuvar bileşeni", "meaning": "Alt sistem laboratuvarda doğrulandı; saha henüz sınırlı."},
-    {"level": "5", "title": "İlgili ortam / prototip", "meaning": "Prototip gerçekçi ortamda denendi; ticari kule kadar olgun değil."},
-    {"level": "6", "title": "İlgili ortamda sistem", "meaning": "Sistem prototipi ilgili ortamda gösterildi; erken ticari deneme mümkün."},
+    {"level": "3", "title": "Laboratuvar kanıtı", "meaning": "Kritik işlev deneysel olarak gösterilmiştir; saha şebekesinde kullanılmamaktadır."},
+    {"level": "4", "title": "Laboratuvar bileşeni", "meaning": "Alt sistem laboratuvarda doğrulanmıştır; saha uygulaması henüz sınırlıdır."},
+    {"level": "5", "title": "İlgili ortam / prototip", "meaning": "Prototip gerçekçi ortamda denenmiştir; ticari dağıtım aşamasında değildir."},
+    {"level": "6", "title": "İlgili ortamda sistem", "meaning": "Sistem prototipi ilgili ortamda gösterilmiştir; erken ticari deneme mümkündür."},
     {"level": "7–8", "title": "Operasyonel prototip / nitelikli sistem", "meaning": "Gerçek operasyon koşullarına yakın doğrulama."},
     {"level": "9", "title": "Saha ürünü", "meaning": "Gerçek görevde kanıtlanmış, satışa yakın veya satılan sistem."},
 ]

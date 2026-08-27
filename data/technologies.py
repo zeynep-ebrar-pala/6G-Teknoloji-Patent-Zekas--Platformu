@@ -26,7 +26,7 @@ TECHNOLOGIES = {
             "Yanına radar kutusu eklemek değildir.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
             "Güç ve zaman aynı bütçeden bölünür; eko R⁴ ile zayıflar. Santimetre hassasiyeti literatür hedefidir. "
-            "TRL 4 — Rel-19 (TR 22.837); laboratuvar, TT sahası değil."
+            "TRL 4 — Rel-19 (TR 22.837); laboratuvar doğrulaması. Türk Telekom şebekesinde henüz kullanılmamaktadır."
         ),
         "beginner_principle": (
             "1. gNB, kullanıcı çerçevesini basar; ayrı radar donanımı yoktur.<br>"
@@ -123,10 +123,10 @@ TECHNOLOGIES = {
         "acronym": "RIS",
         "icon": "🪞",
         "trl": 5,
-        "trl_desc": "ETSI RIS ISG ve 3GPP Rel-19/20 çalışma kalemi; kamuya açık operatör PoC sınıfı. TT sahası ölçülmedi.",
+        "trl_desc": "ETSI RIS ISG ve 3GPP Rel-19/20 çalışma kalemi; operatör deneme aşaması. Türk Telekom şebekesinde henüz ölçülmemiştir.",
         "card_summary": "Dalga köşeyi dönmez; RIS cephedeki programlanabilir yansıtıcıdır.",
         "beginner_one_liner": "Eleman fazı θ_n hüzmeyi UE'ye çevirir; yüzey yüksek güçlü verici değildir.",
-        "highlights": ["Faz kaydıran yüzey", "Aktif verici yok", "TRL 5, ticari değil"],
+        "highlights": ["Faz kaydıran yüzey", "Aktif verici yok", "TRL 5, ticari dağıtım değil"],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
             "mmWave ve üzeri bantlarda LoS yoksa yol kopar veya hız düşer. Her kör noktaya kule CAPEX ve EMC yüküdür.<br><br>"
@@ -135,7 +135,7 @@ TECHNOLOGIES = {
             "programlanabilir yansıtıcıdır. İnternet üretmez; gNB yayınını hedeflenen UE'ye yönlendirir.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
             "Çift yol kaybı vardır; kanal kestirilemezse kazanç düşer. '%90 enerji' literatür/hedeftir. "
-            "TRL 5 — ETSI RIS ISG ve Rel-19/20; PoC sınıfı, TT sahası değil."
+            "TRL 5 — ETSI RIS ISG ve Rel-19/20; operatör deneme aşaması. Türk Telekom şebekesinde henüz ölçülmemiştir."
         ),
         "beginner_principle": (
             "1. Cepheye ince yansıtıcı asılır. Bu bir baz istasyonu değildir.<br>"
@@ -244,7 +244,7 @@ TECHNOLOGIES = {
             "birlikte hizmet verdiği mimaridir. Hücre sınırı tasarım olarak kalkar.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
             "Fronthaul fiber ve senkron yoksa ortak hüzme yazılamaz. 5×–10× spektral kazanç literatür aralığıdır. "
-            "TRL 4 — Rel-19/20 dağıtık MIMO; TT sahası değil."
+            "TRL 4 — Rel-19/20 dağıtık MIMO; literatür prototipi. Türk Telekom şebekesinde henüz kullanılmamaktadır."
         ),
         "beginner_principle": (
             "1. AP'ler sık yerleştirilir; tek makro kuleye bel bağlanmaz.<br>"
@@ -340,7 +340,7 @@ TECHNOLOGIES = {
             "Shannon: C = B log₂(1+SNR); B birinci terimdir.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
             "FSPL ve su buharı emilimi menzili keser. '1 Tbps her aboneye' pazarlamadır. "
-            "TRL 3 — TR 38.807; laboratuvar, sokak şebekesi değil. 6G yalnızca THz değildir."
+            "TRL 3 — TR 38.807; laboratuvar. Saha şebekesinde kullanılmamaktadır. 6G yalnızca THz değildir."
         ),
         "beginner_principle": (
             "1. mmWave ile kızılötesi arasındaki spektrum açılır; B büyür.<br>"
@@ -444,7 +444,8 @@ TECHNOLOGIES = {
             "AI-native RAN, PHY/MAC ve kaynak yönetiminin bir kısmını öğrenilmiş modele alır. "
             "Bugün pratik giriş O-RAN RIC üzerindeki xApp/rApp'tir; hava arayüzünün tamamını sinir ağı yapmak araştırma ucudur.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
-            "'%50–70 enerji' ve 'sıfır insan' hedef/pazarlamadır. TRL 5 — TR 38.843 ve O-RAN RIC deneme sınıfı; insansız saha kanıtı yok."
+            "'%50–70 enerji' ve 'sıfır insan' hedef/pazarlamadır. TRL 5 — TR 38.843 ve O-RAN RIC deneme sınıfı; "
+            "insansız işletim için saha doğrulaması bulunmamaktadır."
         ),
         "beginner_principle": (
             "1. Yük, kanal, enerji, kopma ölçülür.<br>"
@@ -530,7 +531,7 @@ TECHNOLOGIES = {
         "acronym": "NTN Uyduları",
         "icon": "🛰️",
         "trl": 6,
-        "trl_desc": "3GPP Rel-17 NTN şartnamesi (TR 38.811) ve Rel-17/18 iş kalemi; kamuya açık direct-to-cell denemeleri. TT sahası değil.",
+        "trl_desc": "3GPP Rel-17 NTN şartnamesi (TR 38.811) ve Rel-17/18 iş kalemi; kamuya açık direct-to-cell denemeleri. Türk Telekom şebekesinde henüz ölçülmemiştir.",
         "card_summary": "Kule her yere yetişmez; NTN Rel-17+ ile LEO/HAPS hücresini çekirdeğe bağlar.",
         "beginner_one_liner": "Direct-to-cell: standart UE uydu hücresini görür; bedel gecikme ve Doppler'dir.",
         "highlights": ["Direct-to-cell", "Gecikme + Doppler", "TRL 6 tamamlayıcı"],
@@ -635,10 +636,10 @@ TECHNOLOGIES = {
         "acronym": "Pilsiz IoT",
         "icon": "🔋",
         "trl": 4,
-        "trl_desc": "3GPP Rel-19 çalışma kalemi (TR 38.848). PoC sınıfı; raf ürünü değil. TT sahası ölçülmedi.",
+        "trl_desc": "3GPP Rel-19 çalışma kalemi (TR 38.848). Erken deneme aşaması. Türk Telekom şebekesinde henüz ölçülmemiştir.",
         "card_summary": "Pil lojistiği ölçeklenmez; Ambient IoT ortam RF'sinden backscatter kimlik bildirir.",
         "beginner_one_liner": "Rectenna hasadı × backscatter = kısa kimlik; video taşımaz, telefonun yerini almaz.",
-        "highlights": ["Backscatter kimlik", "Video taşımaz", "TRL 4, raf ürünü değil"],
+        "highlights": ["Backscatter kimlik", "Video taşımaz", "TRL 4, ticari dağıtım değil"],
         "executive_summary": (
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Problem</strong><br>"
             "Koli, sera ve sayaç ölçeğinde pil değiştirmek ekonomik değildir. NB-IoT ve RedCap hâlâ bir enerji kaynağı ister.<br><br>"
@@ -647,7 +648,7 @@ TECHNOLOGIES = {
             "çoğunlukla backscatter ile kısa durum mesajı verdiği IoT sınıfıdır.<br><br>"
             "<strong style='color: #00E5FF; font-size: 1.05rem;'>Sınır</strong><br>"
             "Menzil kısa, bit hızı düşüktür. '1 sent, trilyon nesne' hedef/pazarlamadır. "
-            "TRL 4 — TR 38.848; PoC sınıfı, raf ürünü değil."
+            "TRL 4 — TR 38.848; erken deneme aşaması. Türk Telekom şebekesinde henüz ölçülmemiştir."
         ),
         "beginner_principle": (
             "1. Rectenna RF kırıntısını DC'ye çevirir.<br>"

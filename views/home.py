@@ -60,12 +60,13 @@ with col_info:
 
 if beginner:
     _radar_caption = (
-        "Each slice is a Technology Readiness Level (TRL) from 1 to 9: how close the idea is to a real product. "
-        "Higher is closer to the field; none of these seven is a shelf product yet."
+        "Each slice is a Technology Readiness Level (TRL) from 1 to 9: how close the technology is "
+        "to operational use. A higher number means closer to the field; none of these seven is in "
+        "commercial network deployment yet."
         if get_lang() == "en"
         else "Her dilim TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) 1–9 ölçeğidir: "
-        "fikrin ürüne ne kadar yakın olduğunu gösterir. Sayı büyüdükçe sahaya yaklaşır; "
-        "bu yedisinin hiçbiri henüz market rafı ürünü değildir."
+        "teknolojinin operasyonel kullanıma ne kadar yakın olduğunu gösterir. "
+        "Sayı yükseldikçe sahaya yaklaşır; bu yedi teknoloji henüz ticari şebeke dağıtımında değildir."
     )
 else:
     _radar_caption = (

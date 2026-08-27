@@ -111,7 +111,7 @@ EXPERT_COPY = {
         ),
         "when_not": (
             "Yüksek mobilite + yavaş denetleyici. CSI yok. Çift hop kaybının Friis tek hopu geçtiği uzun menzil. "
-            "Tak-çalıştır emtia her cephede yoktur. TT sahası ölçülmedi (TRL 5, PoC sınıfı)."
+            "Tak-çalıştır emtia her cephede yoktur. Türk Telekom şebekesinde henüz ölçülmemiştir (TRL 5, operatör denemesi)."
         ),
         "not_to_confuse": (
             "Small cell değildir. 'Görünmez pelerin' pazarlaması metamalzeme sınırını abartır. "
@@ -192,7 +192,7 @@ EXPERT_COPY = {
         "why_needed": (
             "Fiber her geometriye gitmez. THz, doğru hopta onlarca GHz B adayıdır. "
             "'1 Tbps her abone' pazarlamadır; C, SNR emilimde çökerse B yetmez. "
-            "TRL 3 — TR 38.807; sokak şebekesi değildir."
+            "TRL 3 — TR 38.807; saha şebekesinde kullanılmamaktadır."
         ),
         "what": (
             "THz / sub-THz: kabaca 0,1–10 THz, pratik 6G adayı çoğu zaman 100–300 GHz penceresi "
@@ -355,7 +355,7 @@ EXPERT_COPY = {
         ),
         "why_needed": (
             "'Nerede / kaç derece' işi bakım ekibi olmadan. Amaç video değil, seyrek kimlik. "
-            "'1 sent, trilyon nesne' hedef/pazarlamadır. TR 38.848 Rel-19 SI; raf ürünü değil."
+            "'1 sent, trilyon nesne' hedef/pazarlamadır. TR 38.848 Rel-19 SI; ticari dağıtım aşamasında değildir."
         ),
         "what": (
             "Ambient IoT: pilsiz veya mikro-kapasitörlü etiket; rectenna RF→DC; iletişim çoğunlukla "
