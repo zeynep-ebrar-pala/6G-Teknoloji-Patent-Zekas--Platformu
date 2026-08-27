@@ -32,11 +32,12 @@ for idx, (tech_id, tech) in enumerate(TECHNOLOGIES.items()):
         trl_class = "trl-low" if tech["trl"] <= 4 else ("trl-mid" if tech["trl"] == 5 else "trl-high")
         blurb = card.get("blurb") or ""
         kicker = card.get("kicker") or ""
+        pill = t("trl.pill", n=tech["trl"]) if beginner else t("trl.pill_expert", n=tech["trl"])
         st.markdown(
             f"""<div class="glass-card home-tech-card">
 <div class="home-tech-top">
 <span class="home-tech-icon">{tech['icon']}</span>
-<span class="trl-pill {trl_class}">{t("trl.pill", n=tech["trl"])}</span>
+<span class="trl-pill {trl_class}">{pill}</span>
 </div>
 <h4 class="home-tech-acronym">{tech['acronym']}</h4>
 <div class="home-tech-title">{tech['title']}</div>
@@ -60,13 +61,11 @@ with col_info:
 
 if beginner:
     _radar_caption = (
-        "Each slice is a Technology Readiness Level (TRL) from 1 to 9: how close the technology is "
-        "to operational use. A higher number means closer to the field; none of these seven is in "
-        "commercial network deployment yet."
+        "Each slice is a readiness level from 1 to 9: how close the technology is to operational use. "
+        "A higher number means closer to the field. None of these seven is in commercial network use yet."
         if get_lang() == "en"
-        else "Her dilim TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) 1–9 ölçeğidir: "
-        "teknolojinin operasyonel kullanıma ne kadar yakın olduğunu gösterir. "
-        "Sayı yükseldikçe sahaya yaklaşır; bu yedi teknoloji henüz ticari şebeke dağıtımında değildir."
+        else "Her dilim 1–9 arası bir hazırlık seviyesidir: teknolojinin sahada kullanıma ne kadar yakın "
+        "olduğunu gösterir. Sayı yükseldikçe sahaya yaklaşır. Bu yedi teknoloji henüz ticari şebekede değildir."
     )
 else:
     _radar_caption = (

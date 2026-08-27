@@ -45,23 +45,23 @@ UI = {
         },
         "home": {
             "intro_beginner": """<div class="home-intro">
-<h4>6G nedir</h4>
+<h4>6G nedir?</h4>
 <p>
-<strong>6G</strong>, 5G'nin yalnızca bit taşıyan erişim mimarisine yeni görevler ekler.
-Bugün kule konuşur; çevreyi ölçmez, köşeyi dönemez, kule olmayan coğrafyada susar.
-Yedi girdi bu boşlukları kapatma adayıdır:
-<strong>ISAC</strong> aynı RF zincirinde yankı işler;
-<strong>RIS</strong> cepheyi programlanabilir yansıtıcı yapar;
-<strong>hücresiz MIMO</strong> hücre kenarını tasarım nesnesi olmaktan çıkarır;
-<strong>NTN</strong> Rel-17+ ile LEO/HAPS hücresini çekirdeğe bağlar;
-<strong>AI-RAN</strong> RRM'i ölçüm döngüsüne alır;
-<strong>Ambient IoT</strong> pilsiz backscatter etiketi hedefler;
-<strong>THz</strong> kısa hopta bant açar.
+<strong>6G</strong>, bugünkü 5G şebekesinin üzerine yeni görevler ekleyen bir sonraki mobil kuşağıdır.
+Bugün kule telefona veri gönderir; çevreyi ölçmez, sinyal köşeyi kolay dönmez, kule olmayan yerde kapsama biter.
+Aşağıdaki yedi yaklaşım bu boşlukları kapatmayı hedefler:
+<strong>ISAC</strong> aynı sistemle hem iletişim hem algılama sağlar;
+<strong>RIS</strong> bina yüzeyinden sinyali yönlendirir;
+<strong>hücresiz MIMO</strong> birçok küçük anteni birlikte çalıştırır;
+<strong>NTN</strong> uydu veya yüksek irtifa platformunu şebekeye bağlar;
+<strong>AI-RAN</strong> şebeke kaynaklarını ölçüme göre ayarlar;
+<strong>Ambient IoT</strong> pilsiz küçük etiketlerle kimlik bildirir;
+<strong>THz</strong> daha geniş frekans aralığıyla kısa mesafede yüksek hız adayıdır.
 </p>
 <p class="home-intro-note">
-Hepsi aynı rafta durmaz. Her biri kendi
-<strong>TRL</strong> (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) basamağındadır;
-tam sayı 3GPP teknik raporu veya kamuya açık deneme sınıfına göre eşlenir.
+Hepsi aynı olgunlukta değildir. Her birinin
+<strong>hazırlık seviyesi</strong> (TRL — Technology Readiness Level) vardır;
+sayı yükseldikçe sahaya yaklaşır. Bu yedisi henüz ticari şebekede yaygın değildir.
 </p>
 </div>""",
             "intro_expert": """<div class="home-intro">
@@ -82,25 +82,31 @@ Yedi girdi tek bir ticari «6G ürünü» değildir; farklı olgunlukta standart
 Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong> uzman katmanındadır.
 </p>
 </div>""",
-            "cards_heading": "Yedi Yapı Taşı",
-            "cards_caption": "Kartta önce sahadaki sorun, sonra çözüm vardır. Adım adım anlatım, formül ve Türk Telekom senaryosu için soldan «6G Teknoloji Rehberi» menüsüne geçin.",
-            "card_cta": "Adım adım anlatım: 6G Teknoloji Rehberi → bu kartı seçin",
-            "cards_heading_expert": "Yedi Yapı Taşı",
-            "cards_caption_expert": "Kartta problem + teknik karşılık vardır. Shannon/CRB, 3GPP ve geçerlilik penceresi için «6G Teknoloji Rehberi»ne geçin.",
+            "cards_heading": "Yedi temel teknoloji",
+            "cards_caption": "Her kartta önce sorun, sonra çözüm vardır. Ayrıntılı anlatım için soldan «6G Teknoloji Rehberi»ni açın.",
+            "card_cta": "Adım adım anlatım: 6G Teknoloji Rehberi → bu teknolojiyi seçin",
+            "cards_heading_expert": "Yedi yapı taşı",
+            "cards_caption_expert": "Kartta problem + teknik karşılık vardır. Shannon/CRB, 3GPP ve geçerlilik için «6G Teknoloji Rehberi»ne geçin.",
             "card_cta_expert": "Denklem ve 3GPP bağlamı: 6G Teknoloji Rehberi → bu kartı seçin",
-            "radar_heading": "### TRL radar — 3GPP / kamuya açık deneme eşlemesi",
+            "radar_heading": "### Hazırlık seviyesi (TRL) özeti",
             "radar_caption": "Dilimler NASA/AB TRL 1–9 ölçeğidir; her tam sayı, 3GPP teknik raporu veya kamuya açık deneme sınıfına göre eşlenir.",
         },
         "trl": {
-            "pill": "TRL {n}",
-            "maturity": "TRL {n} Olgunluk Seviyesi",
-            "explainer_title": "TRL nedir?",
+            "pill": "Seviye {n}",
+            "pill_expert": "TRL {n}",
+            "maturity": "Hazırlık seviyesi {n}",
+            "explainer_title": "Hazırlık seviyesi nedir?",
             "explainer_lead": "{abbr} ({en} — {tr}): {definition} {why}",
-            "explainer_body": "1 = temel ilke, 9 = gerçek görevde kanıtlanmış ürün. Sayılar TT sahasında ölçülmedi: NASA/AB 1–9 ölçeği, 3GPP şartname/çalışma kalemi ve kamuya açık deneme sınıfına göre eşlenir.",
-            "explainer_ntn": "TRL 6 — Rel-17 NTN şartnamesi (TR 38.811) + kamuya açık direct-to-cell denemeleri",
-            "explainer_ris": "TRL 5 — ETSI RIS ISG / Rel-19–20 çalışma kalemi ve O-RAN RIC deneme sınıfı (RIS, AI-RAN)",
-            "explainer_lab": "TRL 4 — Rel-19 çalışma kalemi / laboratuvar: ISAC (TR 22.837), hücresiz MIMO, Ambient IoT (TR 38.848)",
-            "explainer_thz": "TRL 3 — TR 38.807 + laboratuvar spektrumu: THz henüz saha şebekesinde değildir",
+            "explainer_body": "Ölçek 1’den 9’a gider. 1 fikir aşaması, 9 sahada kanıtlanmış sistem demektir. Bu sayılar Türk Telekom şebekesinde ölçülmemiştir; uluslararası olgunluk ölçeğine göre yerleştirilir.",
+            "explainer_ntn": "Seviye 6 — NTN: kamuya açık denemeler vardır; şehir kulesini tamamlar.",
+            "explainer_ris": "Seviye 5 — RIS ve AI-RAN: prototip / deneme aşamasındadır.",
+            "explainer_lab": "Seviye 4 — ISAC, hücresiz MIMO, Ambient IoT: laboratuvarda doğrulanmıştır.",
+            "explainer_thz": "Seviye 3 — THz: laboratuvar kanıtı vardır; saha şebekesinde değildir.",
+            "explainer_body_expert": "1 = temel ilke, 9 = gerçek görevde kanıtlanmış ürün. Sayılar TT sahasında ölçülmedi: NASA/AB 1–9 ölçeği, 3GPP şartname/çalışma kalemi ve kamuya açık deneme sınıfına göre eşlenir.",
+            "explainer_ntn_expert": "TRL 6 — Rel-17 NTN şartnamesi (TR 38.811) + kamuya açık direct-to-cell denemeleri",
+            "explainer_ris_expert": "TRL 5 — ETSI RIS ISG / Rel-19–20 çalışma kalemi ve O-RAN RIC deneme sınıfı (RIS, AI-RAN)",
+            "explainer_lab_expert": "TRL 4 — Rel-19 çalışma kalemi / laboratuvar: ISAC (TR 22.837), hücresiz MIMO, Ambient IoT (TR 38.848)",
+            "explainer_thz_expert": "TRL 3 — TR 38.807 + laboratuvar spektrumu: THz henüz saha şebekesinde değildir",
             "scale_header": "Ölçek",
             "scale_title": "TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi)",
         },
@@ -1164,15 +1170,21 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
             "radar_caption": "Slices use the NASA/EU TRL 1–9 scale; each integer is mapped from a 3GPP technical report or a public trial class.",
         },
         "trl": {
-            "pill": "TRL {n}",
-            "maturity": "TRL {n} Maturity Level",
-            "explainer_title": "What TRL means",
+            "pill": "Level {n}",
+            "pill_expert": "TRL {n}",
+            "maturity": "Readiness level {n}",
+            "explainer_title": "What does readiness level mean?",
             "explainer_lead": "{abbr} ({en}): {definition} {why}",
-            "explainer_body": "1 is a basic principle; 9 is a product proven in an operational mission. These integers were not measured on a Türk Telekom network: the NASA/EU 1–9 scale is mapped from 3GPP specifications/work items and public trial class.",
-            "explainer_ntn": "TRL 6 — Rel-17 NTN specification (TR 38.811) plus public Direct-to-Cell trials",
-            "explainer_ris": "TRL 5 — ETSI RIS ISG / Rel-19–20 work item and O-RAN RIC trial class (RIS, AI-RAN)",
-            "explainer_lab": "TRL 4 — Rel-19 work item / laboratory: ISAC (TR 22.837), cell-free MIMO, Ambient IoT (TR 38.848)",
-            "explainer_thz": "TRL 3 — TR 38.807 plus laboratory spectrum: THz is not yet in field networks",
+            "explainer_body": "The scale runs from 1 to 9. 1 is an idea stage; 9 is a system proven in the field. These numbers were not measured on the Türk Telekom network; they follow the international readiness scale.",
+            "explainer_ntn": "Level 6 — NTN: public trials exist; it complements the city tower.",
+            "explainer_ris": "Level 5 — RIS and AI-RAN: prototype / trial stage.",
+            "explainer_lab": "Level 4 — ISAC, cell-free MIMO, Ambient IoT: laboratory-validated.",
+            "explainer_thz": "Level 3 — THz: laboratory evidence; not in a field network.",
+            "explainer_body_expert": "1 is a basic principle; 9 is a product proven in an operational mission. These integers were not measured on a Türk Telekom network: the NASA/EU 1–9 scale is mapped from 3GPP specifications/work items and public trial class.",
+            "explainer_ntn_expert": "TRL 6 — Rel-17 NTN specification (TR 38.811) plus public Direct-to-Cell trials",
+            "explainer_ris_expert": "TRL 5 — ETSI RIS ISG / Rel-19–20 work item and O-RAN RIC trial class (RIS, AI-RAN)",
+            "explainer_lab_expert": "TRL 4 — Rel-19 work item / laboratory: ISAC (TR 22.837), cell-free MIMO, Ambient IoT (TR 38.848)",
+            "explainer_thz_expert": "TRL 3 — TR 38.807 plus laboratory spectrum: THz is not yet in field networks",
             "scale_header": "Band",
             "scale_title": "Technology Readiness Level (TRL)",
         },

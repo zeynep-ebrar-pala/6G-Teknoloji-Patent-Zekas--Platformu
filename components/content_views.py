@@ -377,6 +377,9 @@ def render_global_tt_trl(tech: dict, *, beginner: bool, trl_class: str) -> None:
 def render_trl_explainer() -> None:
     from data.glossary import GLOSSARY, localized_entry
 
+    beginner = is_beginner()
+    suf = "" if beginner else "_expert"
+    body_key = "trl.explainer_body" if beginner else "trl.explainer_body_expert"
     trl = localized_entry("TRL") or GLOSSARY["TRL"]
     st.markdown(
         f"""<div class="glass-card">
@@ -385,13 +388,13 @@ def render_trl_explainer() -> None:
 <strong>{escape(t("trl.explainer_lead", abbr=trl["abbr"], en=trl["en"], tr=trl["tr"], definition=trl["definition"], why=trl["why"]))}</strong>
 </p>
 <p style="font-size:0.96rem;color:#94A3B8;line-height:1.6;">
-{escape(t("trl.explainer_body"))}
+{escape(t(body_key))}
 </p>
 <ul style="font-size:0.96rem;color:#CBD5E1;padding-left:20px;line-height:1.7;">
-<li><strong style="color:#00C853;">{escape(t("trl.explainer_ntn"))}</strong></li>
-<li><strong style="color:#FFB020;">{escape(t("trl.explainer_ris"))}</strong></li>
-<li><strong style="color:#FF5252;">{escape(t("trl.explainer_lab"))}</strong></li>
-<li><strong style="color:#FF7043;">{escape(t("trl.explainer_thz"))}</strong></li>
+<li><strong style="color:#00C853;">{escape(t(f"trl.explainer_ntn{suf}"))}</strong></li>
+<li><strong style="color:#FFB020;">{escape(t(f"trl.explainer_ris{suf}"))}</strong></li>
+<li><strong style="color:#FF5252;">{escape(t(f"trl.explainer_lab{suf}"))}</strong></li>
+<li><strong style="color:#FF7043;">{escape(t(f"trl.explainer_thz{suf}"))}</strong></li>
 </ul>
 </div>""",
         unsafe_allow_html=True,
