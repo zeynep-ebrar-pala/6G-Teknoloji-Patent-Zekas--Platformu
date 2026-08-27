@@ -192,41 +192,34 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
         },
         "patent": {
             "title": "Patent Zekası",
-            "subtitle": "Dokuz firma · yedi 6G konusu · kaynak: {source}",
+            "subtitle": "Dokuz firma, yedi 6G konusu — {source}",
             "filter": "Firma:",
             "all": "Tümü",
-            "what_title": "Bu sayfa ne gösterir?",
-            "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.55;margin:8px 0 0 0;">
-Dokuz firmanın (Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel)
-yedi 6G konusundaki patent başvurularını listeler:
-ISAC, RIS, hücresiz MIMO, THz, AI-RAN, NTN, Ambient IoT.
-</p>
-<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-Firma çubukları Lens.org toplamıdır; ham «6G» araması değildir.
-Kartlar çekilen kayıtlardır. Başvuru sahibi pazar liderliği anlamına gelmez.
-Eşleşmeyen kayıt eklenmez; yıl, yayın yılıdır.
-</p>""",
-            "access_title": "Veri kaynağı",
-            "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-Kaynak yalnızca <strong>Lens.org</strong> patent API’sidir.
-Site girişi yetmez; Access Token gerekir (<code>LENS_TOKEN</code> veya aşağıdaki kutu).
-Yanıt yoksa hücre boş kalır; sayı üretilmez.
-</p>""",
-            "expert_title": "Sorgulama sınırı",
-            "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-Firma çubuğu: yedi konu DSL’inin OR’u × <code>applicant.name</code> (Lens <code>total</code>).
-Çekilen satır: konu başı en fazla 100. Aynı yayın iki konuya düşerse listedeki ilk konu kalır.
-Radar / yoğunluk / ağaç ekseni kayıt sayısıdır. 429’da yeniden deneme süresi beklenir.
-</p>""",
+            "what_title": "Kapsam",
+            "what_body": (
+                "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT ve Intel firmalarının "
+                "ISAC, RIS, hücresiz MIMO, THz, AI-RAN, NTN ve Ambient IoT konularındaki patent başvuruları."
+            ),
+            "access_title": "Kaynak",
+            "access_body": (
+                "Veriler Lens.org patent API’sinden alınır. "
+                "API erişim anahtarı (`LENS_TOKEN`) gerekir."
+            ),
+            "expert_title": "Sorgulama ayrıntısı",
+            "expert_body": (
+                "Firma grafikleri: yedi konu sorgusunun birleşimi × başvuru sahibi (Lens toplamı). "
+                "Kartlar: konu başına en fazla 100 kayıt. "
+                "Aynı yayın iki konuya düşerse listedeki ilk konu kullanılır."
+            ),
             "key_gp": "Lens.org ↗",
             "key_lens": "Lens.org — API ve Data (token) ↗",
             "key_espacenet": "Lens.org ↗",
             "key_wipo": "Lens.org ↗",
             "key_uspto": "Lens.org ↗",
             "token_label": "Lens Access Token",
-            "token_missing": "Lens Access Token gerekli. Hesabınızda API ve Data → Create Token ile oluşturun; buraya veya .env dosyasına (LENS_TOKEN=) yapıştırın. Token’ı sohbete yazmayın.",
-            "token_help": "Trial veya Academic planı yeterlidir. Token kaydedildikten sonra sayıyı yenileyin.",
-            "api_error": "Lens API yanıt vermedi ({detail}). Sayı üretilmez.",
+            "token_missing": "Lens Access Token gerekli. Lens hesabında API ve Data → Create Token.",
+            "token_help": "Token’ı buraya veya `.env` içinde `LENS_TOKEN=` satırına yazın.",
+            "api_error": "Lens API yanıt vermedi ({detail}).",
             "live_gp_heading": "### Lens.org — hak sahibi (örnek küme değil)",
             "live_gp_spin": "Lens.org tam sayılar arka planda soruluyor (ilk sefer birkaç dakika; sonra önbellek)",
             "bg_wait": "Önbellekteki sayılar gösterilir; Lens arka planda yenileniyor ({done}/{total}). Menü kilitlenmez.",
@@ -1259,40 +1252,34 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
         },
         "patent": {
             "title": "Patent Intelligence",
-            "subtitle": "Nine firms · seven 6G topics · source: {source}",
+            "subtitle": "Nine firms, seven 6G topics — {source}",
             "filter": "Company:",
             "all": "All",
-            "what_title": "What this page shows",
-            "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.55;margin:8px 0 0 0;">
-Patent filings by nine firms (Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel)
-across seven 6G topics: ISAC, RIS, cell-free MIMO, THz, AI-RAN, NTN, Ambient IoT.
-</p>
-<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-Firm bars are Lens.org totals, not a raw “6G” keyword search.
-Cards are pulled records. An applicant is not market leadership.
-Unmatched rows are omitted; year is the publication year.
-</p>""",
-            "access_title": "Data source",
-            "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-Source is the <strong>Lens.org</strong> patent API only.
-A website login is not enough; an Access Token is required (<code>LENS_TOKEN</code> or the box below).
-If there is no response, the cell stays empty; counts are not invented.
-</p>""",
-            "expert_title": "Query limits",
-            "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
-Firm bars: OR of seven topic DSLs × <code>applicant.name</code> (Lens <code>total</code>).
-Pulled rows: up to 100 per topic. If a publication hits two topics, the first in list order is kept.
-Radar / density / tree axes are record counts. On 429 the client waits to retry.
-</p>""",
+            "what_title": "Scope",
+            "what_body": (
+                "Patent filings by Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT and Intel "
+                "in ISAC, RIS, cell-free MIMO, THz, AI-RAN, NTN and Ambient IoT."
+            ),
+            "access_title": "Source",
+            "access_body": (
+                "Data comes from the Lens.org patent API. "
+                "An API access token (`LENS_TOKEN`) is required."
+            ),
+            "expert_title": "Query detail",
+            "expert_body": (
+                "Firm charts: union of seven topic queries × applicant (Lens total). "
+                "Cards: up to 100 rows per topic. "
+                "If a publication matches two topics, the first in list order is kept."
+            ),
             "key_gp": "Lens.org ↗",
             "key_lens": "Lens.org — API & Data (token) ↗",
             "key_espacenet": "Lens.org ↗",
             "key_wipo": "Lens.org ↗",
             "key_uspto": "Lens.org ↗",
             "token_label": "Lens Access Token",
-            "token_missing": "A Lens Access Token is required. Create one under API & Data → Create Token; paste it here or as LENS_TOKEN= in .env. Do not paste the token in chat.",
-            "token_help": "Trial or Academic is enough. Reload after saving the token.",
-            "api_error": "Lens API did not respond ({detail}). Counts are not invented.",
+            "token_missing": "A Lens Access Token is required. Create one under API & Data → Create Token.",
+            "token_help": "Paste the token here or as `LENS_TOKEN=` in `.env`.",
+            "api_error": "Lens API did not respond ({detail}).",
             "live_gp_heading": "### Lens.org — applicant (not the sample)",
             "live_gp_spin": "Asking Lens.org for integer totals in the background (first load can be long; then cached)",
             "bg_wait": "Cached totals stay on screen; Lens is refreshing in the background ({done}/{total}). The sidebar stays free.",

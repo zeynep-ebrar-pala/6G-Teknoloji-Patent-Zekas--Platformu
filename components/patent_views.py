@@ -234,31 +234,13 @@ def render_patent_intelligence_module():
         t("patent.subtitle", source=PatentService.get_data_source()),
     )
 
-    def _card(html: str) -> None:
-        if hasattr(st, "html"):
-            st.html(html)
-        else:
-            st.markdown(html, unsafe_allow_html=True)
-
-    _card(
-        f"""<div class="glass-card">
-<div class="teach-label">{t("patent.what_title")}</div>
-{t("patent.what_body")}
-</div>"""
-    )
-    _card(
-        f"""<div class="glass-card">
-<div class="teach-label">{t("patent.access_title")}</div>
-{t("patent.access_body")}
-</div>"""
-    )
+    st.markdown(f"**{t('patent.what_title')}**")
+    st.markdown(t("patent.what_body"))
+    st.markdown(f"**{t('patent.access_title')}**")
+    st.markdown(t("patent.access_body"))
     if current_view_mode() == "expert":
-        _card(
-            f"""<div class="glass-card">
-<div class="teach-label">{t("patent.expert_title")}</div>
-{t("patent.expert_body")}
-</div>"""
-        )
+        with st.expander(t("patent.expert_title"), expanded=False):
+            st.markdown(t("patent.expert_body"))
         st.link_button(t("patent.key_lens"), "https://www.lens.org/lens/user/subscriptions")
 
     _lens_token_box()

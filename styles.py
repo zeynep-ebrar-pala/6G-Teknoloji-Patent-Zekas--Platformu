@@ -397,6 +397,13 @@ def inject_custom_styles():
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
+        .module-header-title {
+            margin: 0 !important;
+            color: #FFF !important;
+            font-size: 1.45rem !important;
+            overflow-wrap: anywhere;
+        }
+
         .home-tech-card {
             min-height: 0 !important;
             height: calc(100% - 14px) !important;

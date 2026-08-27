@@ -25,23 +25,17 @@ def _format_int(value):
 
 
 def render_module_header(title: str, subtitle: str, accent: str = "#0099FF", lead: str = "") -> None:
-    lead_html = ""
+    """Başlık kartı — alt yazı HTML değil; etiket sızıntısı olmasın."""
+    st.markdown(
+        f'<div class="glass-card module-header" style="border-left:6px solid {accent};margin-bottom:4px;">'
+        f'<h2 class="module-header-title">{title}</h2>'
+        f"</div>",
+        unsafe_allow_html=True,
+    )
     if lead:
-        lead_html = (
-            f'<p style="color:#E2E8F0;font-size:0.95rem;line-height:1.55;'
-            f'margin:10px 0 8px 0;overflow-wrap:anywhere;">{lead}</p>'
-        )
-    html = f"""
-        <div class="glass-card" style="border-left: 6px solid {accent}; margin-bottom: 8px;">
-            <h2 style="margin: 0; color: #FFF; font-size: 1.45rem; overflow-wrap: anywhere;">{title}</h2>
-            {lead_html}
-            <p style="color: #C8D1DC; font-size: 0.92rem; margin-top: 6px; margin-bottom: 0; overflow-wrap: anywhere;">{subtitle}</p>
-        </div>
-        """
-    if hasattr(st, "html"):
-        st.html(html)
-    else:
-        st.markdown(html, unsafe_allow_html=True)
+        st.markdown(lead)
+    if subtitle:
+        st.caption(subtitle)
 
 
 def render_source_button(url: str, label: str | None = None) -> None:
