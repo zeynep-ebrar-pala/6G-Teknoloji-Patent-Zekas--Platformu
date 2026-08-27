@@ -69,8 +69,13 @@ def _blob(paper: Dict[str, Any]) -> str:
     return f"{paper.get('title') or ''} {paper.get('abstract') or ''} {paper.get('journal') or ''}"
 
 
+def _has_topic_token(text: str, topic: str) -> bool:
+    pats = TOPIC_PATTERNS.get(topic) or []
+    return any(p.search(text) for p in pats)
+
+
 def paper_on_topic(paper: Dict[str, Any], topic: Optional[str] = None) -> bool:
-    """Başlık/özet 6G veya kilitli yedi konudan birine değmeli; biyoloji/5G-yalnız düşer."""
+    """Başlık/özet seçilen konuya değmeli. Konu seçiliyken 6G+wireless yeterli değildir."""
     if not isinstance(paper, dict):
         return False
     text = _blob(paper)
@@ -78,9 +83,10 @@ def paper_on_topic(paper: Dict[str, Any], topic: Optional[str] = None) -> bool:
         return False
     if _OFFTOPIC.search(text) and not _SIXTH.search(text):
         return False
-    tpc = (topic or paper.get("topic") or "").strip()
-    pats = TOPIC_PATTERNS.get(tpc) or _ALL_TOPIC
-    has_token = any(p.search(text) for p in pats)
+    tpc = (topic or "").strip() or None
+    if tpc:
+        return _has_topic_token(text, tpc)
+    has_token = any(p.search(text) for p in _ALL_TOPIC)
     if _SIXTH.search(text) and (has_token or _WIRELESS.search(text)):
         return True
     if has_token and _WIRELESS.search(text):

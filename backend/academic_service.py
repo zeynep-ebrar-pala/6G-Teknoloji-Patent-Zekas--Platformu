@@ -15,7 +15,7 @@ from backend.literature_client import (
     snapshot_meta,
 )
 from backend.publisher_apis import key_fingerprint
-from backend.springer_live import load_live
+from backend.springer_live import list_cited_papers, load_live
 from data.academic import ACADEMIC_SOURCES, academic_data_source
 
 
@@ -42,11 +42,11 @@ class AcademicService:
 
     @staticmethod
     def get_bundle(region: str = "both", topic: Optional[str] = None) -> Dict[str, Any]:
-        return literature_bundle(region, _norm_topic(topic), key_fingerprint(), "sp7", _live_fp())
+        return literature_bundle(region, _norm_topic(topic), key_fingerprint(), "sp8", _live_fp())
 
     @staticmethod
     def get_summary(topic: Optional[str] = None) -> Dict[str, Any]:
-        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint(), "sp7", _live_fp())
+        bundle = literature_bundle("both", _norm_topic(topic), key_fingerprint(), "sp8", _live_fp())
         meta = snapshot_meta()
         years = bundle.get("year_counts") or {}
         peak_year, peak_n = "—", None
@@ -91,10 +91,12 @@ class AcademicService:
         return pd.DataFrame({"Years": axis, name: [int(years[str(y)]) for y in axis]})
 
     @staticmethod
+    def get_cited_papers(region: str = "both", topic: Optional[str] = None) -> List[Dict[str, Any]]:
+        return list_cited_papers(region if region in ("eu", "both") else "both", _norm_topic(topic))
+
+    @staticmethod
     def get_most_cited_papers(topic: Optional[str] = None) -> List[Dict[str, Any]]:
-        return list(
-            literature_bundle("both", _norm_topic(topic), key_fingerprint(), "sp7", _live_fp()).get("cited") or []
-        )
+        return list_cited_papers("both", _norm_topic(topic))
 
     @staticmethod
     def get_trend_df(region: str = "both", topic: Optional[str] = None) -> Optional[pd.DataFrame]:

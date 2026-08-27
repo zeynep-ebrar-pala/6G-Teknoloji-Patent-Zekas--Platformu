@@ -62,15 +62,15 @@ def render_pub_topic_panel(key_suffix: str = "pub") -> Tuple[Optional[str], str]
         t("pub.region_label"),
         list(region_labels.keys()),
         horizontal=True,
-        key=f"spec_pub_region_{key_suffix}_{get_lang()}_v5",
+        key=f"spec_pub_region_{key_suffix}_{get_lang()}_v6",
     )
     region = region_labels.get(region_ui, "both")
     options = ["all"] + list(SPEC_PUB_TOPICS.keys())
     topic = st.selectbox(
         t("sources.topic_search"),
         options,
-        format_func=lambda x: t("sources.topic_all") if x == "all" else topic_label(x),
-        key=f"spec_pub_topic_{key_suffix}_{get_lang()}",
+        format_func=lambda x: t("pub.topic_all") if x == "all" else topic_label(x),
+        key=f"spec_pub_topic_{key_suffix}_{get_lang()}_v2",
     )
     picked = None if topic == "all" else topic
     return picked, region

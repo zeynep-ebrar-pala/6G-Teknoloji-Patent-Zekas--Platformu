@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from backend.config import get_springer_api_key, reload_env
+from backend.paper_geo import EU_CCS, affiliation_ccs
 from backend.years import should_refresh
 from backend.publisher_apis import _cache_put, _json, _q6g, _springer_count
 from backend.topic_filter import filter_cited
@@ -21,6 +22,7 @@ from backend.years import end_year, read_json, trend_years, write_json, year_win
 
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "springer_live.json"
 STATUS_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "springer_prefetch_status.json"
+AFF_CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "crossref_aff.json"
 
 TOPIC_ORDER = (
     "ISAC",
@@ -173,6 +175,44 @@ def _countries(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return out
 
 
+def _affiliations_of(rec: Dict[str, Any]) -> List[str]:
+    names: List[str] = []
+    raw = rec.get("affiliations") or rec.get("affiliation") or []
+    if isinstance(raw, str) and raw.strip():
+        names.append(raw.strip())
+    elif isinstance(raw, list):
+        for item in raw:
+            if isinstance(item, dict):
+                label = str(item.get("name") or item.get("value") or "").strip()
+            else:
+                label = str(item or "").strip()
+            if label:
+                names.append(label)
+    for creator in rec.get("creators") or []:
+        if not isinstance(creator, dict):
+            continue
+        aff = creator.get("affiliation") or creator.get("affiliations") or []
+        if isinstance(aff, str) and aff.strip():
+            names.append(aff.strip())
+        elif isinstance(aff, list):
+            for item in aff:
+                if isinstance(item, dict):
+                    label = str(item.get("name") or "").strip()
+                else:
+                    label = str(item or "").strip()
+                if label:
+                    names.append(label)
+    seen = set()
+    out: List[str] = []
+    for name in names:
+        key = name.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(name)
+    return out
+
+
 def _year_of(rec: Dict[str, Any]) -> Optional[int]:
     for key in ("onlineDate", "publicationDate"):
         raw = str(rec.get(key) or "")[:4]
@@ -199,19 +239,24 @@ def _records(data: Optional[Dict[str, Any]], topic: str) -> List[Dict[str, Any]]
         )
         journal = str(rec.get("publicationName") or "").strip()
         year = _year_of(rec)
+        date = str(rec.get("onlineDate") or rec.get("publicationDate") or "")[:10]
         url = f"https://doi.org/{doi}" if doi.startswith("10.") else ""
         abstract = str(rec.get("abstract") or rec.get("teaser") or "").strip()
         if len(abstract) > 1200:
             abstract = abstract[:1200]
+        affiliations = _affiliations_of(rec)
         out.append(
             {
                 "title": title,
                 "authors": authors,
                 "journal": journal,
                 "year": year,
+                "date": date,
                 "doi": doi if doi.startswith("10.") else "",
                 "citations": None,
                 "abstract": abstract,
+                "affiliations": affiliations,
+                "ccs": affiliation_ccs(affiliations),
                 "source": "Springer",
                 "source_url": url,
                 "url": url,
@@ -327,7 +372,7 @@ def _work() -> None:
                             "years": years,
                             "countries": countries or prev.get("countries") or [],
                             "institutions": inst[:10],
-                            "cited": papers[:10],
+                            "cited": papers[:50],
                             "turkey_count": turkey_n,
                             "turkey_rank": turkey_rank,
                         },
@@ -341,6 +386,13 @@ def _work() -> None:
                         work = _crossref_work(doi)
                         if isinstance(work.get("cites"), int):
                             paper["citations"] = work["cites"]
+                        aff = list(paper.get("affiliations") or [])
+                        for name in work.get("aff") or []:
+                            if name and name not in aff:
+                                aff.append(name)
+                        if aff:
+                            paper["affiliations"] = aff
+                            paper["ccs"] = affiliation_ccs(aff)
                         time.sleep(0.05)
                 papers.sort(key=lambda p: (-int(p.get("citations") or 0), str(p.get("title") or "")))
                 inst: List[Dict[str, Any]] = []
@@ -352,7 +404,7 @@ def _work() -> None:
                         "years": years,
                         "countries": countries,
                         "institutions": inst[:10],
-                        "cited": papers[:10],
+                        "cited": papers[:50],
                         "turkey_count": turkey_n,
                         "turkey_rank": turkey_rank,
                     },
@@ -489,3 +541,145 @@ def springer_overlay(topic: Optional[str] = None) -> Optional[Dict[str, Any]]:
         "cited": cited_all[:10],
         "turkey": {},
     }
+
+
+def _paper_affiliations(paper: Dict[str, Any]) -> List[str]:
+    stored = paper.get("affiliations") if isinstance(paper.get("affiliations"), list) else []
+    names = [str(x).strip() for x in stored if str(x).strip()]
+    if names:
+        return names
+    doi = str(paper.get("doi") or "").strip()
+    if not doi:
+        return []
+    blob = _read(AFF_CACHE_PATH)
+    hit = blob.get(doi)
+    if isinstance(hit, list):
+        return [str(x).strip() for x in hit if str(x).strip()]
+    aff = [str(x).strip() for x in (_crossref_work(doi).get("aff") or []) if str(x).strip()]
+    blob[doi] = aff
+    if aff:
+        _write(AFF_CACHE_PATH, blob)
+    return aff
+
+
+def _europe_cited_for_topic(topic: str, *, max_cc: int = 5) -> List[Dict[str, Any]]:
+    """Springer metin «ülke adı»: bağlılık alanı bu planda yok, ülke uydurulmaz."""
+    from backend.topic_filter import filter_cited
+
+    row = live_topic_row(topic)
+    cached = row.get("europe_cited")
+    if isinstance(cached, list) and cached:
+        return [dict(p) for p in cached if isinstance(p, dict)]
+    if not get_springer_api_key():
+        return []
+    from backend.paper_geo import EU_AFFIL, EU_CCS
+
+    eu_rows = [
+        c
+        for c in (row.get("countries") or [])
+        if isinstance(c, dict) and str(c.get("cc") or "") in EU_CCS
+    ]
+    if not eu_rows:
+        eu_rows = [{"cc": cc} for cc in ("GB", "DE", "IT", "FR", "ES")]
+    pool: List[Dict[str, Any]] = []
+    seen = set()
+    for item in eu_rows[:max_cc]:
+        cc = str(item.get("cc") or "")
+        name_en = EU_AFFIL.get(cc) or ""
+        if not name_en:
+            continue
+        data = _meta(_query(topic, extra=name_en), page=12, start=1, facet=False)
+        for paper in _records(data, topic):
+            doi = str(paper.get("doi") or "").strip().lower()
+            key = doi or str(paper.get("title") or "").casefold()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            paper["ccs"] = [cc]
+            paper["affiliations"] = [name_en]
+            pool.append(paper)
+        time.sleep(0.05)
+    papers = filter_cited(pool, topic, limit=40)
+    for paper in papers:
+        doi = str(paper.get("doi") or "")
+        if not doi:
+            continue
+        work = _crossref_work(doi)
+        if isinstance(work.get("cites"), int):
+            paper["citations"] = work["cites"]
+        time.sleep(0.03)
+    papers.sort(
+        key=lambda p: (
+            -int(p.get("citations") or 0),
+            -int(p.get("year") or 0),
+            str(p.get("title") or ""),
+        )
+    )
+    out = papers[:30]
+    if out:
+        _save_topic(topic, {"europe_cited": out})
+    return [dict(p) for p in out]
+
+
+def list_cited_papers(
+    region: str = "both",
+    topic: Optional[str] = None,
+    *,
+    limit: int = 30,
+) -> List[Dict[str, Any]]:
+    """Dünya: yıl yeniden→eski. Avrupa: atıf yüksek→düşük ve yalnız Avrupa bağlılığı."""
+    from backend.topic_filter import paper_on_topic
+
+    blob = load_live()
+    topics = blob.get("topics") if isinstance(blob.get("topics"), dict) else {}
+    tpc = (topic or "").strip() or None
+    names = [tpc] if tpc and tpc in TOPIC_ORDER else list(TOPIC_ORDER)
+    pool: List[Dict[str, Any]] = []
+    seen = set()
+    for name in names:
+        row = topics.get(name) if isinstance(topics.get(name), dict) else {}
+        for paper in row.get("cited") or []:
+            if not isinstance(paper, dict):
+                continue
+            item = dict(paper)
+            item["topic"] = item.get("topic") or name
+            if not paper_on_topic(item, tpc):
+                continue
+            doi = str(item.get("doi") or "").strip().lower()
+            key = doi or str(item.get("title") or "").casefold()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            pool.append(item)
+    if region == "eu":
+        kept: List[Dict[str, Any]] = []
+        seen_eu = set()
+        for name in names:
+            for paper in _europe_cited_for_topic(name, max_cc=5 if tpc else 2):
+                if not paper_on_topic(paper, tpc or name):
+                    continue
+                doi = str(paper.get("doi") or "").strip().lower()
+                key = doi or str(paper.get("title") or "").casefold()
+                if not key or key in seen_eu:
+                    continue
+                seen_eu.add(key)
+                kept.append(paper)
+        kept.sort(
+            key=lambda p: (
+                -int(p.get("citations") or 0),
+                -int(p.get("year") or 0),
+                str(p.get("title") or ""),
+            )
+        )
+        return kept[:limit]
+    pool.sort(
+        key=lambda p: (
+            int(p.get("year") or 0),
+            str(p.get("date") or ""),
+            int(p.get("citations") or 0),
+            str(p.get("title") or ""),
+        ),
+        reverse=True,
+    )
+    return pool[:limit]
+

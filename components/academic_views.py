@@ -363,9 +363,9 @@ def render_academic_publication_module():
 
     elif section == "cited":
         st.caption(t("pub.cited_caption") if region == "both" else t("pub.cited_caption_region"))
-        papers = bundle.get("cited") or AcademicService.get_most_cited_papers(topic)
+        papers = AcademicService.get_cited_papers(region, topic)
         if not papers:
-            show_empty(t("pub.empty_cited"))
+            show_empty(t("pub.empty_cited_region") if region == "eu" else t("pub.empty_cited"))
         else:
             for paper in papers:
                 render_paper_card(_with_source(paper))

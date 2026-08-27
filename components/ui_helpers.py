@@ -161,6 +161,18 @@ def render_paper_card(paper: dict) -> None:
     doi = paper.get("doi", "")
     from backend.source_links import paper_record_links
 
+    places = []
+    for cc in paper.get("ccs") or []:
+        key = f"pub.cc.{cc}"
+        label = _t(key)
+        if label != key:
+            places.append(label)
+    place_html = (
+        f'<p style="color:#94A3B8;font-size:0.8rem;margin:0 0 4px 0;">{", ".join(places)}</p>'
+        if places
+        else ""
+    )
+
     st.markdown(
         f"""
         <div class="glass-card" style="margin-bottom: 8px; padding: 16px;">
@@ -171,6 +183,7 @@ def render_paper_card(paper: dict) -> None:
             <p style="color:#C8D1DC;font-size:0.88rem;margin-top:6px;margin-bottom:4px;overflow-wrap:anywhere;">
                 {_t("pub.authors")}: {paper.get('authors','')} · {paper.get('journal','')} ({paper.get('year','')})
             </p>
+            {place_html}
             <p style="color:#64748B;font-size:0.78rem;margin:0;">DOI: {doi}</p>
         </div>
         """,

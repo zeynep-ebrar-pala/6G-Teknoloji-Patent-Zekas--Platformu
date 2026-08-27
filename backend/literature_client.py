@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 import streamlit as st
 
+from backend.paper_geo import EU_AFFIL, EU_CCS
 from backend.publisher_apis import (
     fetch_native_counts,
     fetch_springer_topic_totals,
@@ -38,42 +39,7 @@ PUBLISHER_PREFIXES: Dict[str, str] = {
     "elsevier": "10.1016",
 }
 
-EU_AFFIL: Dict[str, str] = {
-    "DE": "Germany",
-    "FR": "France",
-    "IT": "Italy",
-    "ES": "Spain",
-    "GB": "United Kingdom",
-    "FI": "Finland",
-    "SE": "Sweden",
-    "NL": "Netherlands",
-    "BE": "Belgium",
-    "AT": "Austria",
-    "CH": "Switzerland",
-    "NO": "Norway",
-    "DK": "Denmark",
-    "PL": "Poland",
-    "PT": "Portugal",
-    "GR": "Greece",
-    "IE": "Ireland",
-    "CZ": "Czech Republic",
-    "HU": "Hungary",
-    "RO": "Romania",
-    "BG": "Bulgaria",
-    "HR": "Croatia",
-    "SK": "Slovakia",
-    "SI": "Slovenia",
-    "LT": "Lithuania",
-    "LV": "Latvia",
-    "EE": "Estonia",
-    "LU": "Luxembourg",
-    "MT": "Malta",
-    "CY": "Cyprus",
-    "IS": "Iceland",
-}
-
 TREND_EU = ("DE", "FR", "IT", "ES", "GB", "FI", "GR", "CZ")
-EU_CCS = frozenset(EU_AFFIL.keys())
 TR_INST_HINTS = (
     "turkey",
     "türkiye",
@@ -222,7 +188,7 @@ def literature_bundle(
     region: str = "both",
     topic: Optional[str] = None,
     _keys: str = "",
-    _v: str = "sp7",
+    _v: str = "sp8",
     _live: str = "",
 ) -> Dict[str, Any]:
     """Yedi 6G konusu. Grafikler Springer Meta; konular toplanmaz."""
@@ -375,7 +341,7 @@ def country_year_df(region: str = "both", topic: Optional[str] = None) -> Option
         region,
         topic,
         key_fingerprint(),
-        "sp7",
+        "sp8",
         str(load_live().get("fetched_at") or ""),
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}
