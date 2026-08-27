@@ -173,22 +173,42 @@ def _ints(vals) -> List[int]:
 
 
 def _count_axis(title: str, values: Optional[List[int]] = None) -> dict:
-    """Sayım ekseni: 0.5 tik yok; küçük kümede 1’er adım."""
+    """Sayım ekseni: 0 solda, tamsayı tik; 0.5 ve iç içe 1’er adım yok."""
     vals = _ints(values or [])
     vmax = max(vals) if vals else 0
-    axis = dict(
+    if vmax <= 10:
+        xmax, dtick = 10, 5
+    elif vmax <= 20:
+        xmax, dtick = 20, 5
+    elif vmax <= 50:
+        xmax, dtick = 50, 10
+    elif vmax <= 100:
+        xmax, dtick = 100, 20
+    else:
+        pad = vmax + max(1, vmax // 10)
+        exp = 10 ** max(0, len(str(pad)) - 2)
+        xmax, dtick = pad, 10 * exp
+        for k in (1, 2, 5, 10):
+            step = k * exp
+            if pad / step <= 5:
+                dtick = step
+                xmax = ((pad + dtick - 1) // dtick) * dtick
+                break
+    return dict(
         title=title,
         gridcolor="rgba(200, 209, 220, 0.1)",
         rangemode="tozero",
         tickformat="d",
         separatethousands=False,
         hoverformat="d",
+        tickangle=0,
+        tickmode="linear",
+        tick0=0,
+        dtick=dtick,
+        range=[0, xmax],
+        autorange=False,
+        automargin=True,
     )
-    if vmax <= 30:
-        axis["dtick"] = 1
-        axis["tick0"] = 0
-        axis["range"] = [0, max(vmax, 1) + max(1, (vmax + 4) // 5)]
-    return axis
 
 
 def _count_bar(
@@ -1153,7 +1173,7 @@ def render_country_rank_chart(
             l=min(340, max(90, int(max((len(n) for n in labels), default=8) * 7))),
             r=110,
             t=50,
-            b=40,
+            b=56,
         ),
     )
     fig.layout.update(layout)

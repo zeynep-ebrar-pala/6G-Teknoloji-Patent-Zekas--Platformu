@@ -37,7 +37,11 @@ def _with_source(paper: dict) -> dict:
 
 
 def _country_label(row: dict) -> str:
-    cc = str(row.get("cc") or "")
+    cc = str(row.get("cc") or "").strip()
+    if not cc:
+        from backend.springer_live import COUNTRY_CC
+
+        cc = COUNTRY_CC.get(str(row.get("name") or "").strip().upper()) or ""
     if cc:
         return _cc_name(cc)
     return str(row.get("name") or "")
@@ -130,8 +134,9 @@ def _render_breakdown(topic: str | None, bundle: dict, region: str = "both") -> 
 
     if topic:
         raw = bundle.get("countries") or []
+        st.markdown(f"#### {topic_label(topic)}")
         st.caption(cap_one)
-        if _draw_cc(raw, f"{title_one} — {topic_label(topic)}"):
+        if _draw_cc(raw, f"{title_one} — {topic}"):
             return
         show_empty(empty)
         return
@@ -147,7 +152,7 @@ def _render_breakdown(topic: str | None, bundle: dict, region: str = "both") -> 
             continue
         drawn = True
         st.markdown(f"#### {topic_label(name)}")
-        show_plotly(render_country_rank_chart(rows, f"{title_one} — {topic_label(name)}"))
+        show_plotly(render_country_rank_chart(rows, f"{title_one} — {name}"))
     if drawn:
         return
     pooled = bundle.get("countries") or []
