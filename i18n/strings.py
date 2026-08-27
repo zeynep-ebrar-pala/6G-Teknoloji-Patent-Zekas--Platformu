@@ -192,42 +192,31 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
         },
         "patent": {
             "title": "Patent Zekası",
-            "subtitle": "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel — yedi 6G konusu (ISAC, RIS, Cell-Free, THz, AI-RAN, NTN, Ambient IoT). Kaynak: {source}",
-            "filter": "Firma (Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel):",
+            "subtitle": "Dokuz firma · yedi 6G konusu · kaynak: {source}",
+            "filter": "Firma:",
             "all": "Tümü",
-            "what_title": "Bu sayfa ne işe yarar?",
-            "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Patent Zekası</strong> rakip portföyü <strong>6G Technology Explorer</strong> yedilisinden çeker:
-<strong>ISAC</strong> (Integrated Sensing and Communication — bütünleşik sezim ve haberleşme),
-<strong>RIS</strong> (Reconfigurable Intelligent Surfaces — yeniden yapılandırılabilir akıllı yüzeyler),
-<strong>Cell-Free Massive MIMO</strong> (hücresiz çok-antennli erişim),
-<strong>THz</strong> (terahertz haberleşme),
-<strong>AI-Native RAN</strong> (yapay zekâ yerlisi radyo erişim ağı),
-<strong>NTN</strong> (Non-Terrestrial Networks — yer-dışı ağlar),
-<strong>Ambient IoT</strong> (ortam enerjili nesnelerin interneti).
+            "what_title": "Bu sayfa ne gösterir?",
+            "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.55;margin:8px 0 0 0;">
+Dokuz firmanın (Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel)
+yedi 6G konusundaki patent başvurularını listeler:
+ISAC, RIS, hücresiz MIMO, THz, AI-RAN, NTN, Ambient IoT.
 </p>
-<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Dokuz applicant: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT (National Institute of Information and Communications Technology — Japonya ulusal BİT enstitüsü), Intel.
-Firma çubuğu bu yedi konunun Lens <code>total</code> değeridir — ham «6G» kelimesi değildir (telefon/6G gürültüsü karışmaz).
-Diğer grafikler çekilen kayıttır (başlık + yayın no + yıl). İki katman toplanmaz. Yüzde yok.
-</p>
-<p style="color:#94A3B8;font-size:0.84rem;margin:10px 0 0 0;">
-Bir kayıt sayfaya ancak yedi sorgudan birine düşünce girer; etiket o sorgunun konusudur. <strong>Unclassified yoktur</strong> — eşleşmeyen satır düşer, uydurulmaz.
-<strong>Applicant</strong> kimin başvurduğunu söyler; sahada ürün değildir. Tek patent = pazar liderliği değildir. Yıl = yayın yılıdır.
+<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
+Firma çubukları Lens.org toplamıdır; ham «6G» araması değildir.
+Kartlar çekilen kayıtlardır. Başvuru sahibi pazar liderliği anlamına gelmez.
+Eşleşmeyen kayıt eklenmez; yıl, yayın yılıdır.
 </p>""",
-            "access_title": "Veri nereden geliyor?",
-            "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
-Bu sayfa yalnızca <strong>Lens.org</strong> patent API’sini kullanır (<code>POST /patent/search</code>).
-Siteye giriş yetmez; profildeki Access Token gerekir (<code>LENS_TOKEN</code> veya bu sayfadaki kutu).
-Toplam: JSON <code>total</code>. Kartlar ve diğer grafikler <code>data</code> satırıdır.
-HTML kazınmaz. Yanıt yoksa hücre —.
+            "access_title": "Veri kaynağı",
+            "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
+Kaynak yalnızca <strong>Lens.org</strong> patent API’sidir.
+Site girişi yetmez; Access Token gerekir (<code>LENS_TOKEN</code> veya aşağıdaki kutu).
+Yanıt yoksa hücre boş kalır; sayı üretilmez.
 </p>""",
-            "expert_title": "Çekilen kayıt ve sınır",
-            "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
+            "expert_title": "Sorgulama sınırı",
+            "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
 Firma çubuğu: yedi konu DSL’inin OR’u × <code>applicant.name</code> (Lens <code>total</code>).
-Çekilen satır: konu başı en fazla 100, dokuz firma OR süzülür. Aynı yayın no iki konuya düşerse listedeki ilk konu kalır (ISAC → … → Ambient IoT).
-Radar / yoğunluk / ağaç ekseni kayıt sayısıdır (yüzde değil). Başlık yeniden yazılmaz.
-429 olursa <code>x-rate-limit-retry-after-seconds</code> kadar beklenir.
+Çekilen satır: konu başı en fazla 100. Aynı yayın iki konuya düşerse listedeki ilk konu kalır.
+Radar / yoğunluk / ağaç ekseni kayıt sayısıdır. 429’da yeniden deneme süresi beklenir.
 </p>""",
             "key_gp": "Lens.org ↗",
             "key_lens": "Lens.org — API ve Data (token) ↗",
@@ -235,30 +224,30 @@ Radar / yoğunluk / ağaç ekseni kayıt sayısıdır (yüzde değil). Başlık 
             "key_wipo": "Lens.org ↗",
             "key_uspto": "Lens.org ↗",
             "token_label": "Lens Access Token",
-            "token_missing": "api.lens.org/patent/search tarayıcıda açılmaz; 401 (Missing Authorization) normaldir. Token, giriş yaptığınız Lens hesabında API ve Data → plan onayı → Create Token ile üretilir. Buraya veya .env LENS_TOKEN= satırına yapıştırın. Token sohbete yazılmasın.",
-            "token_help": "Staj için Trial / Academic planını seçin. Onay mailinden sonra Access Token oluşur. HTML kazınmaz; uygulamayı yenileyin.",
-            "api_error": "Lens API yanıt vermedi ({detail}). Sayı uydurulmaz.",
+            "token_missing": "Lens Access Token gerekli. Hesabınızda API ve Data → Create Token ile oluşturun; buraya veya .env dosyasına (LENS_TOKEN=) yapıştırın. Token’ı sohbete yazmayın.",
+            "token_help": "Trial veya Academic planı yeterlidir. Token kaydedildikten sonra sayıyı yenileyin.",
+            "api_error": "Lens API yanıt vermedi ({detail}). Sayı üretilmez.",
             "live_gp_heading": "### Lens.org — hak sahibi (örnek küme değil)",
             "live_gp_spin": "Lens.org tam sayılar arka planda soruluyor (ilk sefer birkaç dakika; sonra önbellek)",
             "bg_wait": "Önbellekteki sayılar gösterilir; Lens arka planda yenileniyor ({done}/{total}). Menü kilitlenmez.",
-            "bg_partial": "Gelen tam sayılar çizilir. Henüz gelmeyen hücre boş kalır; sayı uydurulmaz.",
+            "bg_partial": "Gelen tam sayılar çizilir. Henüz gelmeyen hücre boş kalır; sayı üretilmez.",
             "bg_refresh": "Sayıları şimdi yenile",
             "heavy_toggle": "Kelime bulutu, yoğunluk haritası ve TF-IDF (yavaş)",
             "cards_more": "İlk {n} kart gösterildi; {rest} kayıt çizilmedi (menü kilitlenmesin).",
             "live_gp_caption": "Aynı konu sorgusu + applicant.name. Yanıt yoksa —. Bu sayılar kilitli örnek çubuklarla toplanmaz.",
             "live_gp_metric": "Lens.org (hak sahibi)",
-            "live_gp_empty": "Lens bu sorgu için toplam vermedi; sayı uydurulmaz.",
+            "live_gp_empty": "Lens bu sorgu için toplam vermedi; sayı üretilmez.",
             "live_col_firm": "Firma",
             "live_col_n": "API toplam",
             "live_col_sample": "Örnek küme",
-            "empty_company": "«{company}» için Lens.org kayıt döndürmedi. Sayı uydurulmaz.",
-            "empty_topic": "Bu konuda Lens kayıt yok. Sayı uydurulmaz. Ofis düğmeleri aynı sorguyu sitede açar.",
+            "empty_company": "«{company}» için Lens.org kayıt döndürmedi. Sayı üretilmez.",
+            "empty_topic": "Bu konuda Lens kayıt yok. Sayı üretilmez.",
             "metric_total": "Çekilen kayıt",
             "metric_pulled": "Çekilen kayıt",
-            "pulled_caption": "Kartlar ve kelime bulutu çekilen satırdır. Firma / yıl / konu / radar / ağaç / yoğunluk çubukları Lens total (tam sayı); 100 tavanı yok. İki katman toplanmaz.",
-            "metric_leader": "En Fazla Kayıt (Applicant)",
+            "pulled_caption": "Kartlar çekilen satırdır. Firma / yıl / konu çubukları Lens toplamıdır; iki katman birleştirilmez.",
+            "metric_leader": "En fazla kayıt (başvuru sahibi)",
             "metric_leader_delta": "{n} patent",
-            "metric_domain": "Öne Çıkan Teknoloji Alanı",
+            "metric_domain": "Öne çıkan teknoloji alanı",
             "metric_domain_delta": "{n} kayıt",
             "metric_source": "Kaynak",
             "open_gp": "Lens.org patent aramasını aç ↗",
@@ -271,11 +260,11 @@ Radar / yoğunluk / ağaç ekseni kayıt sayısıdır (yüzde değil). Başlık 
             "year_caption": "Lens year_published tam sayısı, firma × yıl. Yuvarlama yok. {end} eksik yıldır.",
             "empty_trend": "Trend grafiği için yeterli patent verisi yok.",
             "companies_heading": "### En çok çalışan firmalar",
-            "companies_caption": "Lens.org total: yedi 6G konusu (OR) + applicant. Ham «6G» değil. 0 = bu sorguda kayıt yok; çubuk durur, sayı uydurulmaz.",
+            "companies_caption": "Lens.org total: yedi 6G konusu (OR) + applicant. Ham «6G» değil. 0 = bu sorguda kayıt yok.",
             "topic_mix_heading": "### Patent konusu dağılımı",
-            "topic_mix_caption": "Lens total: yedi konu × dokuz applicant (OR). 100 tavanı / yuvarlama yok. Unclassified yok.",
+            "topic_mix_caption": "Lens total: yedi konu × dokuz applicant (OR). Yuvarlama yok.",
             "radar_heading": "### Radar grafiği",
-            "radar_caption": "Firma × konu Lens total. Eksen yüzde değil; 100 tavanı yok.",
+            "radar_caption": "Firma × konu Lens total. Eksen yüzde değil.",
             "empty_counts": "Firma sayımı için veri yok.",
             "empty_domain": "Domain dağılımı hesaplanamadı.",
             "empty_kw": "Anahtar kelime analizi için veri yok.",
@@ -1270,42 +1259,30 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
         },
         "patent": {
             "title": "Patent Intelligence",
-            "subtitle": "Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel — seven 6G topics (ISAC, RIS, Cell-Free, THz, AI-RAN, NTN, Ambient IoT). Source: {source}",
-            "filter": "Company (Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel):",
+            "subtitle": "Nine firms · seven 6G topics · source: {source}",
+            "filter": "Company:",
             "all": "All",
-            "what_title": "What this page is for",
-            "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>Patent Intelligence</strong> pulls rival filings from the <strong>6G Technology Explorer</strong> seven:
-<strong>ISAC</strong> (Integrated Sensing and Communication),
-<strong>RIS</strong> (Reconfigurable Intelligent Surfaces),
-<strong>Cell-Free Massive MIMO</strong>,
-<strong>THz</strong> (terahertz communication),
-<strong>AI-Native RAN</strong> (radio access network),
-<strong>NTN</strong> (Non-Terrestrial Networks),
-<strong>Ambient IoT</strong>.
+            "what_title": "What this page shows",
+            "what_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.55;margin:8px 0 0 0;">
+Patent filings by nine firms (Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT, Intel)
+across seven 6G topics: ISAC, RIS, cell-free MIMO, THz, AI-RAN, NTN, Ambient IoT.
 </p>
-<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-Nine applicants: Nokia, Ericsson, Huawei, Samsung, Qualcomm, ZTE, NEC, NICT (National Institute of Information and Communications Technology, Japan), Intel.
-Firm bars are Lens <code>total</code> for these seven topics — not a raw «6G» keyword (handset noise is excluded).
-The other charts are pulled rows (title + publication number + year). The two layers are not summed. No percents.
-</p>
-<p style="color:#94A3B8;font-size:0.84rem;margin:10px 0 0 0;">
-A record appears only if it matched one of the seven queries; the label is that query’s topic. <strong>There is no Unclassified</strong> — unmatched rows are dropped, not invented.
-The <strong>applicant</strong> is who filed, not a fielded product. One patent is not market leadership. Year is publication year.
+<p style="color:#CBD5E1;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
+Firm bars are Lens.org totals, not a raw “6G” keyword search.
+Cards are pulled records. An applicant is not market leadership.
+Unmatched rows are omitted; year is the publication year.
 </p>""",
-            "access_title": "Where the data comes from",
-            "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:8px 0 0 0;">
-This page uses the <strong>Lens.org</strong> patent API only (<code>POST /patent/search</code>).
-A website login is not enough; you need an Access Token from your profile (<code>LENS_TOKEN</code> or the box on this page).
-Totals: JSON <code>total</code>. Cards and the other charts are <code>data</code> rows.
-HTML is not scraped. No answer → —.
+            "access_title": "Data source",
+            "access_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
+Source is the <strong>Lens.org</strong> patent API only.
+A website login is not enough; an Access Token is required (<code>LENS_TOKEN</code> or the box below).
+If there is no response, the cell stays empty; counts are not invented.
 </p>""",
-            "expert_title": "Pulled rows and limit",
-            "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.65;margin:8px 0 0 0;">
-Firm bars: OR of the seven topic DSLs × <code>applicant.name</code> (Lens <code>total</code>).
-Pulled rows: up to 100 per topic, nine-firm OR. If a publication hits two topics, the first in list order is kept (ISAC → … → Ambient IoT).
-Radar / density / tree axes are record counts, not percents. Titles are not rewritten.
-On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
+            "expert_title": "Query limits",
+            "expert_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.55;margin:8px 0 0 0;">
+Firm bars: OR of seven topic DSLs × <code>applicant.name</code> (Lens <code>total</code>).
+Pulled rows: up to 100 per topic. If a publication hits two topics, the first in list order is kept.
+Radar / density / tree axes are record counts. On 429 the client waits to retry.
 </p>""",
             "key_gp": "Lens.org ↗",
             "key_lens": "Lens.org — API & Data (token) ↗",
@@ -1313,8 +1290,8 @@ On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
             "key_wipo": "Lens.org ↗",
             "key_uspto": "Lens.org ↗",
             "token_label": "Lens Access Token",
-            "token_missing": "Do not open api.lens.org/patent/search in a browser; 401 (Missing Authorization) is expected. The token is created in your Lens account: API & Data → plan approval → Create Token. Paste it here or as LENS_TOKEN= in .env. Do not paste the token in chat.",
-            "token_help": "For the internship pick Trial / Academic. After the approval email, create an Access Token. HTML is not scraped; reload the app.",
+            "token_missing": "A Lens Access Token is required. Create one under API & Data → Create Token; paste it here or as LENS_TOKEN= in .env. Do not paste the token in chat.",
+            "token_help": "Trial or Academic is enough. Reload after saving the token.",
             "api_error": "Lens API did not respond ({detail}). Counts are not invented.",
             "live_gp_heading": "### Lens.org — applicant (not the sample)",
             "live_gp_spin": "Asking Lens.org for integer totals in the background (first load can be long; then cached)",
@@ -1333,7 +1310,7 @@ On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
             "empty_topic": "Lens returned no rows for this topic. Counts are not invented. Office buttons open the same query on the site.",
             "metric_total": "Pulled records",
             "metric_pulled": "Pulled records",
-            "pulled_caption": "Cards and the word cloud are pulled rows. Firm / year / topic / radar / tree / density bars are Lens totals (integers, no 100 cap). The two layers are not summed.",
+            "pulled_caption": "Cards are pulled rows. Firm / year / topic bars are Lens totals; layers are not merged.",
             "metric_leader": "Most records (applicant)",
             "metric_leader_delta": "{n} patents",
             "metric_domain": "Leading technology domain",
@@ -1349,11 +1326,11 @@ On 429 the client waits <code>x-rate-limit-retry-after-seconds</code>.
             "year_caption": "Lens year_published totals, firm × year. No rounding. {end} is an incomplete year.",
             "empty_trend": "Not enough patent data for a trend chart.",
             "companies_heading": "### Firms with the most filings",
-            "companies_caption": "Lens.org total: seven 6G topics (OR) + applicant. Not raw «6G». 0 = none for this query; the bar stays, the count is not invented.",
+            "companies_caption": "Lens.org total: seven 6G topics (OR) + applicant. Not raw «6G». 0 = none for this query.",
             "topic_mix_heading": "### Patent topic mix",
-            "topic_mix_caption": "Lens total: seven topics × nine applicants (OR). No 100 cap and no rounding. No Unclassified.",
+            "topic_mix_caption": "Lens total: seven topics × nine applicants (OR). No rounding.",
             "radar_heading": "### Radar chart",
-            "radar_caption": "Firm × topic Lens totals. The axis is not a percent; there is no 100 cap.",
+            "radar_caption": "Firm × topic Lens totals. Axes are counts, not percents.",
             "empty_counts": "No data for a company count.",
             "empty_domain": "Domain mix could not be computed.",
             "empty_kw": "No data for keyword analysis.",
