@@ -213,7 +213,7 @@ def _mno_ops_line(ops: list) -> str:
 
 
 def _render_eu_mno_panel(topic: str | None) -> None:
-    """Avrupa yüzü: ülke başına kilitli 3 MNO (Türkiye dahil) + TT sırası."""
+    """Avrupa yüzü: ülke başına kilitli 3 MNO (Türkiye dahil)."""
     from backend.config import get_springer_api_key
     from backend.live_refresh import render_watch
     from backend.mno_pub_live import chart_rows, ensure_prefetch, prefetch_status, tt_europe_place
@@ -230,24 +230,6 @@ def _render_eu_mno_panel(topic: str | None) -> None:
     render_watch("mno", "mno_live")
     rows = chart_rows(topic)
     place = tt_europe_place(topic)
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.metric(t("pub.metric_eu_tt"), _fmt(place.get("tt_n")))
-    with c2:
-        rank = place.get("rank")
-        field = place.get("field_n")
-        if isinstance(rank, int) and isinstance(field, int) and field > 0:
-            st.metric(t("pub.metric_eu_tt_rank"), t("pub.metric_eu_tt_rank_n", rank=rank, field=field))
-        else:
-            st.metric(t("pub.metric_eu_tt_rank"), "—")
-    with c3:
-        top = rows[0] if rows else None
-        if top:
-            country = top.get("name_tr") if get_lang() == "tr" else top.get("name_en")
-            label = f"{top.get('firm') or '—'} ({country})"
-        else:
-            label = "—"
-        st.metric(t("pub.metric_eu_mno_top"), label)
     if not rows:
         if not prefetch_status().get("running"):
             show_empty(t("pub.mno_empty"))
