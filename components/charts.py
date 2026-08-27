@@ -331,23 +331,25 @@ def _evidence_one_spider(
     fill: str,
     text_color: str,
 ) -> go.Figure:
-    """Tek halka: r = tablo sütunu ile doğrusal oran (peak=100); etiket = ham total."""
+    """Tek halka: r = tablo sütunu ile doğrusal oran (peak=100); etiket = yüzde."""
     if not rows:
         return go.Figure()
 
     categories = [str(row.get("domain") or "") for row in rows]
     r_vals: List[float] = []
     raw_labels: List[str] = []
+    pct_labels: List[str] = []
     for row in rows:
-        rv = row.get(r_key)
-        r_vals.append(float(rv) if isinstance(rv, (int, float)) else 0.0)
+        rv = float(row.get(r_key)) if isinstance(row.get(r_key), (int, float)) else 0.0
+        r_vals.append(rv)
         n = row.get(raw_key)
         raw_labels.append(f"{int(n):,}" if isinstance(n, int) else "—")
+        pct_labels.append(f"{rv:.0f}%" if rv > 0 else "")
 
     cat_c = categories + [categories[0]]
     r_c = r_vals + [r_vals[0]]
     raw_c = raw_labels + [raw_labels[0]]
-    text_c = raw_labels + [""]
+    text_c = pct_labels + [""]
 
     fig = go.Figure()
     fig.add_trace(go.Scatterpolar(
@@ -358,7 +360,7 @@ def _evidence_one_spider(
         name=series_name,
         fillcolor=fill,
         line=dict(color=line, width=4),
-        marker=dict(size=10, color=marker),
+        marker=dict(size=12, color=marker),
         text=text_c,
         textposition="top center",
         textfont=dict(color=text_color, size=11),
