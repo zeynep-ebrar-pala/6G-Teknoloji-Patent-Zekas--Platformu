@@ -97,25 +97,23 @@ render_trl_explainer()
 
 if beginner:
     _radar_caption = (
-        "Each spider matches one table column. Radial axis and labels are % of that column’s max "
-        "(100% = table max); raw integers appear only in the table and hover. "
-        "Cyan = Lens patents, green = Springer publications. "
+        "Each spider matches one table column. Rings and vertex labels are absolute Lens/Springer "
+        "totals — the same numbers as the table. Cyan = Lens patents, green = Springer publications. "
         "This is activity intensity, not TRL — readiness levels stay on the cards."
         if get_lang() == "en"
-        else "Her örümcek bir tablo sütununa aittir. Radyal eksen ve etiketler o sütunun max’ına göre %’dir "
-        "(100% = tablodaki en yüksek değer); ham sayılar yalnızca tabloda ve hover’da. "
-        "Camgöbeği = Lens patent, yeşil = Springer yayın. "
+        else "Her örümcek bir tablo sütununa aittir. Halkalar ve köşe etiketleri mutlak Lens/Springer "
+        "toplamlarıdır — tablodaki sayılarla aynıdır. Camgöbeği = Lens patent, yeşil = Springer yayın. "
         "Bu grafik etkinlik yoğunluğudur, TRL değildir — hazırlık seviyeleri kartlardaki sayılardır."
     )
 else:
     _radar_caption = (
         "Two spiders: Lens patent topic totals and Springer Meta topic totals. "
-        "Radial axis and labels are % of that column’s max (100% = table max); "
-        "raw integers only in the table and hover. Corpus intensity ≠ NASA/EU TRL (card pills)."
+        "Radial axis = absolute totals matching the table (not percent). "
+        "Corpus intensity ≠ NASA/EU TRL (card pills)."
         if get_lang() == "en"
         else "İki örümcek: Lens patent konu total’leri ve Springer Meta konu total’leri. "
-        "Radyal eksen ve etiketler o sütunun max’ına göre %’dir (100% = tablo max); "
-        "ham sayılar yalnızca tabloda ve hover’da. Külliyat yoğunluğu ≠ NASA/AB TRL (kartlardaki haplar)."
+        "Radyal eksen = tablodaki mutlak toplamlar (yüzde değil). "
+        "Külliyat yoğunluğu ≠ NASA/AB TRL (kartlardaki haplar)."
     )
 st.markdown(
     f'<div class="home-radar-note">{_radar_caption}</div>',

@@ -322,7 +322,6 @@ def _evidence_one_spider(
     rows: List[Dict[str, Any]],
     *,
     raw_key: str,
-    r_key: str,
     title: str,
     series_name: str,
     hover: str,
@@ -331,25 +330,30 @@ def _evidence_one_spider(
     fill: str,
     text_color: str,
 ) -> go.Figure:
-    """Tek halka: r = tablo sütunu ile doğrusal oran (peak=100); etiket = yüzde."""
+    """Tek halka: r = ham kayıt sayısı (patent/pub); halka tick’leri peak’e göre."""
     if not rows:
         return go.Figure()
 
     categories = [str(row.get("domain") or "") for row in rows]
-    r_vals: List[float] = []
+    r_vals: List[int] = []
     raw_labels: List[str] = []
-    pct_labels: List[str] = []
     for row in rows:
-        rv = float(row.get(r_key)) if isinstance(row.get(r_key), (int, float)) else 0.0
-        r_vals.append(rv)
         n = row.get(raw_key)
-        raw_labels.append(f"{int(n):,}" if isinstance(n, int) else "—")
-        pct_labels.append(f"{rv:.0f}%" if rv > 0 else "")
+        if isinstance(n, int):
+            r_vals.append(n)
+            raw_labels.append(f"{n:,}")
+        else:
+            r_vals.append(0)
+            raw_labels.append("—")
+
+    peak = max(r_vals) if r_vals else 0
+    peak = max(peak, 1)
+    tickvals = sorted({0, peak // 4, peak // 2, (3 * peak) // 4, peak})
 
     cat_c = categories + [categories[0]]
     r_c = r_vals + [r_vals[0]]
     raw_c = raw_labels + [raw_labels[0]]
-    text_c = pct_labels + [""]
+    text_c = raw_labels + [""]
 
     fig = go.Figure()
     fig.add_trace(go.Scatterpolar(
@@ -373,9 +377,8 @@ def _evidence_one_spider(
         polar=dict(
             radialaxis=dict(
                 visible=True,
-                range=[0, 100],
-                tickvals=[0, 25, 50, 75, 100],
-                ticksuffix="%",
+                range=[0, peak],
+                tickvals=tickvals,
                 gridcolor="rgba(200, 209, 220, 0.15)",
                 linecolor="rgba(200, 209, 220, 0.2)",
                 tickfont=dict(color="#94A3B8", size=11),
@@ -399,7 +402,6 @@ def render_evidence_radar_chart(rows: List[Dict[str, Any]]) -> go.Figure:
     return _evidence_one_spider(
         rows,
         raw_key="patent",
-        r_key="r_patent",
         title=t("charts.evidence_title_patent"),
         series_name=t("charts.evidence_patent"),
         hover=t("charts.evidence_hover_patent"),
@@ -411,11 +413,10 @@ def render_evidence_radar_chart(rows: List[Dict[str, Any]]) -> go.Figure:
 
 
 def render_evidence_radar_pair(rows: List[Dict[str, Any]]) -> tuple:
-    """İki örümcek: patent ve yayın ayrı; her biri kendi tablo sütununa doğrusal orantılı."""
+    """İki örümcek: patent ve yayın ayrı; her biri ham kayıt sayısı ekseninde."""
     pat = _evidence_one_spider(
         rows,
         raw_key="patent",
-        r_key="r_patent",
         title=t("charts.evidence_title_patent"),
         series_name=t("charts.evidence_patent"),
         hover=t("charts.evidence_hover_patent"),
@@ -427,7 +428,6 @@ def render_evidence_radar_pair(rows: List[Dict[str, Any]]) -> tuple:
     pub = _evidence_one_spider(
         rows,
         raw_key="pub",
-        r_key="r_pub",
         title=t("charts.evidence_title_pub"),
         series_name=t("charts.evidence_pub"),
         hover=t("charts.evidence_hover_pub"),
