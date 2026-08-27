@@ -113,9 +113,7 @@ def _render_breakdown(topic: str | None, bundle: dict, region: str = "both") -> 
     from components.ui_helpers import show_empty, show_plotly
 
     cap_one = t("pub.cc_caption")
-    if region == "tr":
-        cap_one = t("pub.cc_caption_tr")
-    elif region == "eu":
+    if region == "eu":
         cap_one = t("pub.cc_caption_eu")
     cap_all = t("pub.cc_caption_all")
     title_one = t("pub.chart_cc")
@@ -123,20 +121,20 @@ def _render_breakdown(topic: str | None, bundle: dict, region: str = "both") -> 
     turkey_map = bundle.get("turkey_by_topic") or {}
     st.markdown(f"### {title_one}")
 
-    def _draw_cc(raw: list, chart_title: str | None = None, turkey: dict | None = None) -> bool:
+    def _draw_cc(raw: list, chart_title: str | None = None, turkey: dict | None = None, topic_key: str | None = None) -> bool:
         info = turkey if turkey is not None else (bundle.get("turkey") or {})
         rows = _country_list_items(raw, info, region=region)
         if not rows:
             return False
         title = chart_title or title_one
-        show_plotly(render_country_rank_chart(rows, title))
+        show_plotly(render_country_rank_chart(rows, title, topic=topic_key))
         return True
 
     if topic:
         raw = bundle.get("countries") or []
         st.markdown(f"#### {topic_label(topic)}")
         st.caption(cap_one)
-        if _draw_cc(raw, f"{title_one} — {topic}"):
+        if _draw_cc(raw, f"{title_one} — {topic}", topic_key=topic):
             return
         show_empty(empty)
         return
@@ -152,7 +150,7 @@ def _render_breakdown(topic: str | None, bundle: dict, region: str = "both") -> 
             continue
         drawn = True
         st.markdown(f"#### {topic_label(name)}")
-        show_plotly(render_country_rank_chart(rows, f"{title_one} — {name}"))
+        show_plotly(render_country_rank_chart(rows, f"{title_one} — {name}", topic=name))
     if drawn:
         return
     pooled = bundle.get("countries") or []
@@ -291,20 +289,6 @@ def render_academic_publication_module():
         t("pub.subtitle", source=AcademicService.get_data_source()),
         accent="#00C2FF",
     )
-    st.markdown(
-        f"""<div class="glass-card">
-<div class="teach-label">{t("pub.what_title")}</div>
-{t("pub.what_body")}
-</div>""",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        f"""<div class="glass-card">
-<div class="teach-label">{t("pub.access_title")}</div>
-{t("pub.access_body")}
-</div>""",
-        unsafe_allow_html=True,
-    )
     if current_view_mode() == "expert":
         st.markdown(
             f"""<div class="glass-card">
@@ -317,14 +301,14 @@ def render_academic_publication_module():
     ensure_prefetch()
     render_watch("springer", "pub")
     topic, region = render_pub_topic_panel("pub")
+    if region == "tr":
+        region = "both"
     _labels = [t(f"pub.section.{k}") for k in PUB_SECTION_KEYS]
     _map = dict(zip(_labels, PUB_SECTION_KEYS))
     section = _map.get(
         select_section(t("pub.view"), _labels, key=f"academic_section_story_{get_lang()}_v4"),
         PUB_SECTION_KEYS[0],
     )
-    if region == "tr":
-        _render_region_operators(region)
 
     bundle = AcademicService.get_bundle(region, topic)
     fetched = str(bundle.get("fetched_at") or "")

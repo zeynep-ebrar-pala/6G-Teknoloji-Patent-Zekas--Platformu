@@ -56,14 +56,13 @@ def render_pub_topic_panel(key_suffix: str = "pub") -> Tuple[Optional[str], str]
 
     region_labels = {
         t("pub.region.both"): "both",
-        t("pub.region.tr"): "tr",
         t("pub.region.eu"): "eu",
     }
     region_ui = st.radio(
         t("pub.region_label"),
         list(region_labels.keys()),
         horizontal=True,
-        key=f"spec_pub_region_{key_suffix}_{get_lang()}_v3",
+        key=f"spec_pub_region_{key_suffix}_{get_lang()}_v5",
     )
     region = region_labels.get(region_ui, "both")
     options = ["all"] + list(SPEC_PUB_TOPICS.keys())

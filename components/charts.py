@@ -172,42 +172,58 @@ def _ints(vals) -> List[int]:
     return out
 
 
-def _count_axis(title: str, values: Optional[List[int]] = None) -> dict:
-    """Sayım ekseni: 0 solda, tamsayı tik; 0.5 ve iç içe 1’er adım yok."""
+def _count_ticks(vmax: int, *, three: bool = False) -> tuple[int, list[int]]:
+    """Seyrek tamsayı tik. three=True → tam üç sayı (0, orta, xmax)."""
+    hi = max(int(vmax or 0), 0)
+    max_steps = 2 if three else 3
+    want = 3 if three else 4
+    if hi <= 10:
+        return 10, [0, 5, 10]
+    steps = (1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 300, 400, 500, 1000, 2000, 5000, 10000)
+    picks: list[tuple[int, list[int]]] = []
+    for step in steps:
+        n = (hi + step - 1) // step
+        if n < 1 or n > max_steps:
+            continue
+        xmax = n * step
+        ticks = list(range(0, xmax + 1, step))
+        if 2 <= len(ticks) <= max_steps + 1:
+            picks.append((xmax, ticks))
+    if picks:
+        return min(
+            picks,
+            key=lambda p: (0 if len(p[1]) == want else 1, p[0] - hi, -len(p[1])),
+        )
+    step = 10 ** max(1, len(str(hi)) - 1)
+    xmax = ((hi + step - 1) // step) * step
+    if three:
+        mid = xmax // 2
+        return xmax, [0, mid, xmax]
+    return xmax, [0, xmax]
+
+
+def _count_axis(title: str, values: Optional[List[int]] = None, *, three: bool = False) -> dict:
+    """Sayım ekseni: 0 solda, ayrı tamsayı tik; yapışık 0100200 yok."""
     vals = _ints(values or [])
     vmax = max(vals) if vals else 0
-    if vmax <= 10:
-        xmax, dtick = 10, 5
-    elif vmax <= 20:
-        xmax, dtick = 20, 5
-    elif vmax <= 50:
-        xmax, dtick = 50, 10
-    elif vmax <= 100:
-        xmax, dtick = 100, 20
-    else:
-        pad = vmax + max(1, vmax // 10)
-        exp = 10 ** max(0, len(str(pad)) - 2)
-        xmax, dtick = pad, 10 * exp
-        for k in (1, 2, 5, 10):
-            step = k * exp
-            if pad / step <= 5:
-                dtick = step
-                xmax = ((pad + dtick - 1) // dtick) * dtick
-                break
+    xmax, ticks = _count_ticks(vmax, three=three)
     return dict(
-        title=title,
+        title=dict(text=title, standoff=12),
         gridcolor="rgba(200, 209, 220, 0.1)",
         rangemode="tozero",
-        tickformat="d",
         separatethousands=False,
         hoverformat="d",
         tickangle=0,
-        tickmode="linear",
-        tick0=0,
-        dtick=dtick,
+        tickmode="array",
+        tickvals=ticks,
+        ticktext=[str(n) for n in ticks],
+        tickfont=dict(size=12),
+        ticks="outside",
+        ticklen=4,
         range=[0, xmax],
         autorange=False,
         automargin=True,
+        fixedrange=False,
     )
 
 
@@ -1108,6 +1124,7 @@ def render_country_rank_chart(
     items: List[Dict[str, Any]],
     title: str,
     name_key: str = "name",
+    topic: str | None = None,
 ) -> go.Figure:
     """İlk 10 çubuk aynı kayıt sayısına göre; varsa … ve Türkiye, kendi facet kaydıyla. None 0 yazılmaz."""
     unit = t("charts.paper_count")
@@ -1145,6 +1162,7 @@ def render_country_rank_chart(
             colors.append(QUALITATIVE_COLORS[fallback_i % len(QUALITATIVE_COLORS)])
             fallback_i += 1
         hovers.append(hover_n)
+    sparse = topic in ("RIS", "THz", "Ambient IoT")
     fig = go.Figure(
         go.Bar(
             x=xs,
@@ -1160,7 +1178,7 @@ def render_country_rank_chart(
     layout = _layout()
     layout.update(
         title=dict(text=f"<b>{title}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
-        xaxis=_count_axis(t("charts.paper_count"), counted),
+        xaxis=_count_axis(t("charts.paper_count"), counted, three=sparse),
         yaxis=dict(
             autorange="reversed",
             categoryorder="array",
@@ -1173,7 +1191,7 @@ def render_country_rank_chart(
             l=min(340, max(90, int(max((len(n) for n in labels), default=8) * 7))),
             r=110,
             t=50,
-            b=56,
+            b=72,
         ),
     )
     fig.layout.update(layout)
