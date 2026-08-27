@@ -45,18 +45,24 @@ def _pub_n(domain: str) -> Optional[int]:
 
 
 def _norm(values: List[Optional[int]]) -> List[Optional[float]]:
+    """Log10 göreli yoğunluk: 100 * log10(1+n) / log10(1+peak) — küçük konular da görünür."""
+    from math import log10
+
     nums = [v for v in values if isinstance(v, int) and v >= 0]
     if not nums:
         return [None for _ in values]
     peak = max(nums)
     if peak <= 0:
         return [0.0 if isinstance(v, int) else None for v in values]
+    denom = log10(1 + peak)
+    if denom <= 0:
+        return [0.0 if isinstance(v, int) else None for v in values]
     out: List[Optional[float]] = []
     for v in values:
         if not isinstance(v, int):
             out.append(None)
         else:
-            out.append(round(100.0 * v / peak, 1))
+            out.append(round(100.0 * log10(1 + v) / denom, 1))
     return out
 
 
@@ -64,7 +70,7 @@ def _norm(values: List[Optional[int]]) -> List[Optional[float]]:
 def topic_evidence_rows(_fp: str = "") -> List[Dict[str, Any]]:
     """
     Yedi 6G konusu: Lens total + Springer Meta total.
-    r_patent / r_pub: seri içi göreli yoğunluk (max=100); hover ham sayı.
+    r_patent / r_pub: seri içi log10 göreli yoğunluk (peak=100); hover ham sayı.
     """
     from backend.patent_apis import key_fingerprint as patent_fp
     from backend.publisher_apis import key_fingerprint as pub_fp

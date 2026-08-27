@@ -49,43 +49,67 @@ for idx, (tech_id, tech) in enumerate(TECHNOLOGIES.items()):
         )
 
 st.markdown(t("home.radar_heading"))
-col_radar, col_info = st.columns([1.2, 1])
-with col_radar:
-    try:
-        from components.charts import render_evidence_radar_chart
 
-        rows = topic_evidence_rows(evidence_fingerprint())
-        if rows and any(
-            isinstance(r.get("patent"), int) or isinstance(r.get("pub"), int) for r in rows
-        ):
-            show_plotly(render_evidence_radar_chart(rows))
-        else:
-            st.caption(t("home.radar_empty"))
-    except Exception:
+rows = []
+try:
+    from components.charts import render_evidence_radar_chart
+
+    rows = topic_evidence_rows(evidence_fingerprint())
+    if rows and any(
+        isinstance(r.get("patent"), int) or isinstance(r.get("pub"), int) for r in rows
+    ):
+        show_plotly(render_evidence_radar_chart(rows))
+    else:
         st.caption(t("home.radar_empty"))
-with col_info:
-    render_trl_explainer()
+except Exception as exc:
+    st.error(f"{t('home.radar_empty')} ({type(exc).__name__}: {exc})")
+
+# Ham toplamlar — Plotly başarısız olsa bile görünür
+_th_topic = t("home.radar_table_topic")
+_th_pat = t("home.radar_table_patent")
+_th_pub = t("home.radar_table_pub")
+_cells = []
+for r in rows or []:
+    domain = str(r.get("domain") or "—")
+    pat = f"{int(r['patent']):,}" if isinstance(r.get("patent"), int) else "—"
+    pub = f"{int(r['pub']):,}" if isinstance(r.get("pub"), int) else "—"
+    _cells.append(f"<tr><td>{domain}</td><td style='text-align:right'>{pat}</td><td style='text-align:right'>{pub}</td></tr>")
+if _cells:
+    st.markdown(
+        f"""<div class="home-radar-table-wrap" style="margin:0.6rem 0 1rem;overflow-x:auto">
+<table class="home-radar-table" style="width:100%;max-width:640px;border-collapse:collapse;font-size:0.85rem;color:#C8D1DC">
+<thead><tr>
+<th style="text-align:left;padding:4px 8px;border-bottom:1px solid rgba(200,209,220,0.25)">{_th_topic}</th>
+<th style="text-align:right;padding:4px 8px;border-bottom:1px solid rgba(200,209,220,0.25)">{_th_pat}</th>
+<th style="text-align:right;padding:4px 8px;border-bottom:1px solid rgba(200,209,220,0.25)">{_th_pub}</th>
+</tr></thead>
+<tbody>{''.join(_cells)}</tbody>
+</table></div>""",
+        unsafe_allow_html=True,
+    )
+
+render_trl_explainer()
 
 if beginner:
     _radar_caption = (
         "Each axis is one of the seven 6G topics. The cyan ring is Lens.org patent totals; "
-        "the green ring is Springer Nature publication totals. Values are relative within each ring "
-        "(100 = the strongest topic in that source). Hover shows the raw count. This is activity "
+        "the green ring is Springer Nature publication totals. Values use log10 relative intensity "
+        "within each ring (100 = the strongest topic). Hover shows the raw count. This is activity "
         "intensity, not TRL — readiness levels stay on the cards."
         if get_lang() == "en"
         else "Her eksen yedi 6G konusundan biridir. Camgöbeği halka Lens.org patent toplamı, "
-        "yeşil halka Springer Nature yayın toplamıdır. Sayılar her halka içinde görelidir "
-        "(100 = o kaynaktaki en yüksek konu). Üzerine gelince ham toplam görünür. Bu grafik "
+        "yeşil halka Springer Nature yayın toplamıdır. Sayılar her halka içinde log10 göreli "
+        "yoğunluktur (100 = o kaynaktaki en yüksek konu). Üzerine gelince ham toplam görünür. Bu grafik "
         "etkinlik yoğunluğudur, TRL değildir — hazırlık seviyeleri kartlardaki sayılardır."
     )
 else:
     _radar_caption = (
         "Dual spider: Lens patent/search topic totals vs Springer Meta API topic totals. "
-        "Each series is max-normalized to 100 for a shared radial axis; hover keeps absolute totals. "
+        "Each series is log10-normalized to 100 for a shared radial axis; hover keeps absolute totals. "
         "Corpus intensity ≠ NASA/EU TRL (card pills)."
         if get_lang() == "en"
         else "Çift halka: Lens patent/search konu total’leri × Springer Meta API konu total’leri. "
-        "Her seri kendi maksimumuna göre 100’e ölçeklenir (ortak radyal eksen); hover ham total’i korur. "
+        "Her seri log10 ile kendi maksimumuna göre 100’e ölçeklenir (ortak radyal eksen); hover ham total’i korur. "
         "Külliyat yoğunluğu ≠ NASA/AB TRL (kartlardaki haplar)."
     )
 st.markdown(

@@ -319,7 +319,7 @@ def render_trl_radar_chart(technologies_data: Dict[str, Any]) -> go.Figure:
 
 
 def render_evidence_radar_chart(rows: List[Dict[str, Any]]) -> go.Figure:
-    """Çift halka: Lens patent + Springer yayın (seri içi max=100); hover ham total."""
+    """Çift halka: Lens patent + Springer yayın (log10 göreli, peak=100); hover ham total."""
     if not rows:
         return go.Figure()
 
@@ -337,6 +337,9 @@ def render_evidence_radar_chart(rows: List[Dict[str, Any]]) -> go.Figure:
             out.append(f"{int(v):,}" if isinstance(v, int) else "—")
         return out
 
+    def _label(vals: List[float]) -> List[str]:
+        return [f"{v:.0f}" if v > 0 else "" for v in vals]
+
     categories = [str(row.get("domain") or "") for row in rows]
     r_pat = _r("r_patent")
     r_pub = _r("r_pub")
@@ -348,16 +351,22 @@ def render_evidence_radar_chart(rows: List[Dict[str, Any]]) -> go.Figure:
     pub_c = r_pub + [r_pub[0]]
     raw_pat_c = raw_pat + [raw_pat[0]]
     raw_pub_c = raw_pub + [raw_pub[0]]
+    pat_text = _label(r_pat) + [""]
+    pub_text = _label(r_pub) + [""]
 
     fig = go.Figure()
     fig.add_trace(go.Scatterpolar(
         r=pat_c,
         theta=cat_c,
         fill="toself",
+        mode="lines+markers+text",
         name=t("charts.evidence_patent"),
-        fillcolor="rgba(0, 153, 255, 0.22)",
-        line=dict(color="#00E5FF", width=3),
-        marker=dict(size=7, color="#0099FF"),
+        fillcolor="rgba(0, 153, 255, 0.35)",
+        line=dict(color="#00E5FF", width=4),
+        marker=dict(size=10, color="#0099FF"),
+        text=pat_text,
+        textposition="top center",
+        textfont=dict(color="#7DD3FC", size=11),
         customdata=raw_pat_c,
         hovertemplate=t("charts.evidence_hover_patent"),
     ))
@@ -365,10 +374,14 @@ def render_evidence_radar_chart(rows: List[Dict[str, Any]]) -> go.Figure:
         r=pub_c,
         theta=cat_c,
         fill="toself",
+        mode="lines+markers+text",
         name=t("charts.evidence_pub"),
-        fillcolor="rgba(34, 197, 94, 0.18)",
-        line=dict(color="#22C55E", width=3),
-        marker=dict(size=7, color="#22C55E"),
+        fillcolor="rgba(34, 197, 94, 0.35)",
+        line=dict(color="#22C55E", width=4),
+        marker=dict(size=10, color="#22C55E"),
+        text=pub_text,
+        textposition="bottom center",
+        textfont=dict(color="#86EFAC", size=11),
         customdata=raw_pub_c,
         hovertemplate=t("charts.evidence_hover_pub"),
     ))
@@ -409,7 +422,7 @@ def render_evidence_radar_chart(rows: List[Dict[str, Any]]) -> go.Figure:
             borderwidth=1,
             font=dict(color="#C8D1DC", size=12),
         ),
-        height=480,
+        height=520,
         margin=dict(l=40, r=40, t=50, b=90),
     )
     return fig
