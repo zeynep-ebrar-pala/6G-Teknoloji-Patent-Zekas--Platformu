@@ -62,7 +62,7 @@ def render_pub_topic_panel(key_suffix: str = "pub") -> Tuple[Optional[str], str]
         t("pub.region_label"),
         list(region_labels.keys()),
         horizontal=True,
-        key=f"spec_pub_region_{key_suffix}_{get_lang()}_v6",
+        key=f"spec_pub_region_{key_suffix}_{get_lang()}_v7",
     )
     region = region_labels.get(region_ui, "both")
     options = ["all"] + list(SPEC_PUB_TOPICS.keys())

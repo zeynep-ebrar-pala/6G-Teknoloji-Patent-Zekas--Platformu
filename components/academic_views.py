@@ -316,34 +316,43 @@ def render_academic_publication_module():
     if fetched:
         st.caption(t("app.live_cached", ts=fetched))
 
-    def _trend_fig():
+    def _trend_fig(title: str):
         df = AcademicService.get_trend_df(region, topic)
         if df is None or df.empty:
             return None
-        return render_academic_trends_chart(df, t("pub.chart_one_title"))
+        return render_academic_trends_chart(df, title)
 
     if section == "year":
-        st.caption(t("pub.chart_one_body"))
-        years = bundle.get("year_counts") or {}
-        years = {str(y): int(years.get(str(y), 0) or 0) for y in trend_years()}
-        fig = _trend_fig()
+        eu = region == "eu"
+        st.caption(t("pub.chart_one_body_eu") if eu else t("pub.chart_one_body"))
+        line_title = t("pub.chart_one_title_eu") if eu else t("pub.chart_one_title")
+        eu_from_years = False
+        if eu:
+            from backend.springer_live import europe_year_charts
+
+            with st.spinner(t("pub.eu_year_wait")):
+                series, eu_totals = europe_year_charts(topic)
+            eu_from_years = bool(eu_totals)
+            fig = _trend_fig(line_title) if eu_from_years else None
+        else:
+            series = bundle.get("year_series") or {}
+            years = bundle.get("year_counts") or {}
+            years = {str(y): int(years.get(str(y), 0) or 0) for y in trend_years()}
+            fig = _trend_fig(line_title)
+            if fig is None and any(int(v or 0) for v in years.values()):
+                fig = render_academic_database_chart(years, line_title, t("pub.chart_year_x"))
         if fig is not None:
             show_plotly(fig)
-        elif any(years.values()):
-            show_plotly(render_academic_database_chart(years, t("pub.chart_one_title"), t("pub.chart_year_x")))
         else:
-            show_empty(t("pub.empty_year_region") if region != "both" else t("pub.empty_year"))
+            show_empty(t("pub.empty_year_region") if eu else t("pub.empty_year"))
 
-        st.caption(t("pub.chart_two_body"))
-        if current_view_mode() == "expert":
-            st.caption(t("pub.chart_two_body_expert"))
-        series = bundle.get("year_series") or {}
         topic_rows = []
         for name in TOPIC_ORDER:
-            years = series.get(name) or {}
-            n = sum(int(years.get(str(y), 0) or 0) for y in trend_years())
+            ymap = series.get(name) or {}
+            n = sum(int(ymap.get(str(y), 0) or 0) for y in trend_years())
             if n > 0:
                 topic_rows.append({"name": topic_label(name), "count": n})
+        eu_facet_bars = False
         if not topic_rows:
             topics = bundle.get("topics") or {}
             topic_rows = [
@@ -351,12 +360,26 @@ def render_academic_publication_module():
                 for k, v in topics.items()
                 if k in TOPIC_ORDER and isinstance(v, int)
             ]
-        if topic_rows:
-            show_plotly(render_academic_bar_chart(topic_rows, t("pub.chart_two_title")))
+            eu_facet_bars = bool(eu and topic_rows)
+        if eu:
+            st.caption(t("pub.chart_two_body_eu_facet") if eu_facet_bars else t("pub.chart_two_body_eu"))
+            if current_view_mode() == "expert":
+                st.caption(
+                    t("pub.chart_two_body_expert_eu_facet")
+                    if eu_facet_bars
+                    else t("pub.chart_two_body_expert_eu")
+                )
         else:
-            show_empty(t("pub.empty_year_region") if region != "both" else t("pub.empty_year"))
+            st.caption(t("pub.chart_two_body"))
+            if current_view_mode() == "expert":
+                st.caption(t("pub.chart_two_body_expert"))
+        bar_title = t("pub.chart_two_title_eu") if eu else t("pub.chart_two_title")
+        if topic_rows:
+            show_plotly(render_academic_bar_chart(topic_rows, bar_title))
+        else:
+            show_empty(t("pub.empty_year_region") if eu else t("pub.empty_year"))
 
-        if region == "eu":
+        if eu:
             _render_eu_mno_panel(topic)
 
     elif section == "country":

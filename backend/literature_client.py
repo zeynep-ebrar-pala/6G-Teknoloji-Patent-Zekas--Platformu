@@ -155,6 +155,24 @@ def _apply_region(payload: Dict[str, Any], region: str) -> Dict[str, Any]:
         eu_n = sum(int(r["count"]) for r in payload["countries"] if isinstance(r.get("count"), int))
         payload["total"] = eu_n if payload["countries"] else None
         payload["turkey"] = {}
+        payload["year_counts"] = {}
+        payload["year_series"] = {}
+        by = payload.get("countries_by_topic") or {}
+        topic = payload.get("topic")
+        if topic:
+            n = sum(
+                int(r["count"])
+                for r in (by.get(topic) or [])
+                if isinstance(r.get("count"), int)
+            )
+            payload["topics"] = {topic: n} if n else {}
+        else:
+            eu_topics: Dict[str, int] = {}
+            for name, rows in by.items():
+                n = sum(int(r["count"]) for r in rows if isinstance(r.get("count"), int))
+                if n:
+                    eu_topics[name] = n
+            payload["topics"] = eu_topics
     return payload
 
 
@@ -188,7 +206,7 @@ def literature_bundle(
     region: str = "both",
     topic: Optional[str] = None,
     _keys: str = "",
-    _v: str = "sp8",
+    _v: str = "sp9",
     _live: str = "",
 ) -> Dict[str, Any]:
     """Yedi 6G konusu. Grafikler Springer Meta; konular toplanmaz."""
@@ -337,11 +355,15 @@ def literature_bundle(
 
 
 def country_year_df(region: str = "both", topic: Optional[str] = None) -> Optional[pd.DataFrame]:
+    if region == "eu":
+        from backend.springer_live import europe_trend_df
+
+        return europe_trend_df(topic)
     bundle = literature_bundle(
         region,
         topic,
         key_fingerprint(),
-        "sp8",
+        "sp9",
         str(load_live().get("fetched_at") or ""),
     )
     series: Dict[str, Dict[str, int]] = bundle.get("year_series") or {}

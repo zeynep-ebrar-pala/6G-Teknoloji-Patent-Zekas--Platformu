@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from backend.config import get_springer_api_key, reload_env
-from backend.paper_geo import EU_CCS, affiliation_ccs
+from backend.paper_geo import EU_AFFIL, EU_CCS, affiliation_ccs
 from backend.years import should_refresh
 from backend.publisher_apis import _cache_put, _json, _q6g, _springer_count
 from backend.topic_filter import filter_cited
@@ -619,6 +619,83 @@ def _europe_cited_for_topic(topic: str, *, max_cc: int = 5) -> List[Dict[str, An
     if out:
         _save_topic(topic, {"europe_cited": out})
     return [dict(p) for p in out]
+
+
+_eu_year_cooldown_until = 0.0
+
+
+def _europe_or_clause(topic: str, *, max_cc: int = 8) -> str:
+    """Facet’teki Avrupa ülkelerinin İngilizce adı; tek OR, 4 ayrı istek değil."""
+    row = live_topic_row(topic)
+    eu_rows = [
+        c
+        for c in (row.get("countries") or [])
+        if isinstance(c, dict) and str(c.get("cc") or "") in EU_CCS
+    ]
+    ccs = [str(c.get("cc") or "") for c in eu_rows[:max_cc]]
+    if not ccs:
+        ccs = ["GB", "DE", "IT", "FR", "ES", "NL", "SE", "FI"]
+    parts: List[str] = []
+    for cc in ccs:
+        name_en = EU_AFFIL.get(cc) or ""
+        if not name_en:
+            continue
+        parts.append(f'"{name_en}"' if " " in name_en else name_en)
+    return "(" + " OR ".join(parts) + ")" if parts else "Germany"
+
+
+def _europe_year_map(topic: str, *, max_cc: int = 8) -> Dict[str, int]:
+    """Avrupa: tek sorguda ülke adı OR + year facet. Dünya serisi kullanılmaz."""
+    global _eu_year_cooldown_until
+    empty = {str(y): 0 for y in trend_years()}
+    row = live_topic_row(topic)
+    cached = row.get("europe_years")
+    if isinstance(cached, dict) and any(int(cached.get(str(y), 0) or 0) for y in trend_years()):
+        return {str(y): int(cached.get(str(y), 0) or 0) for y in trend_years()}
+    if not get_springer_api_key():
+        return empty
+    if time.time() < _eu_year_cooldown_until:
+        return empty
+    extra = _europe_or_clause(topic, max_cc=max_cc)
+    data = _meta(_query(topic, extra=extra), page=1, start=1, facet=True)
+    if not data:
+        _eu_year_cooldown_until = time.time() + 90.0
+        return empty
+    years = _year_map(_facets(data).get("year") or [])
+    if any(years.values()):
+        _save_topic(topic, {"europe_years": years})
+    return years
+
+
+def europe_year_charts(topic: Optional[str] = None) -> tuple[Dict[str, Dict[str, int]], Dict[str, int]]:
+    tpc = (topic or "").strip() or None
+    names = [tpc] if tpc and tpc in TOPIC_ORDER else list(TOPIC_ORDER)
+    series: Dict[str, Dict[str, int]] = {}
+    totals: Dict[str, int] = {}
+    for name in names:
+        years = _europe_year_map(name)
+        series[name] = years
+        n = sum(int(years.get(str(y), 0) or 0) for y in trend_years())
+        if n:
+            totals[name] = n
+    return series, totals
+
+
+def europe_trend_df(topic: Optional[str] = None):
+    import pandas as pd
+
+    series, _ = europe_year_charts(topic)
+    axis = list(trend_years())
+    keep = [name for name in TOPIC_ORDER if name in series]
+    if topic:
+        keep = [topic] if topic in series else []
+    if not keep or not any(sum((series.get(n) or {}).values()) for n in keep):
+        return None
+    data: Dict[str, List[int]] = {"Years": axis}
+    for name in keep:
+        years = series.get(name) or {}
+        data[name] = [int(years.get(str(y), 0) or 0) for y in axis]
+    return pd.DataFrame(data)
 
 
 def list_cited_papers(
