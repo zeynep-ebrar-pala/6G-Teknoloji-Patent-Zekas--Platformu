@@ -3,6 +3,7 @@
 import streamlit as st
 
 from backend.data_service import DataService
+from backend.evidence_radar import evidence_fingerprint, topic_evidence_rows
 from components.content_views import is_beginner, render_trl_explainer
 from components.ui_helpers import current_view_mode, show_plotly
 from data.home_cards import home_card
@@ -51,27 +52,41 @@ st.markdown(t("home.radar_heading"))
 col_radar, col_info = st.columns([1.2, 1])
 with col_radar:
     try:
-        from components.charts import render_trl_radar_chart
+        from components.charts import render_evidence_radar_chart
 
-        show_plotly(render_trl_radar_chart(TECHNOLOGIES))
+        rows = topic_evidence_rows(evidence_fingerprint())
+        if rows and any(
+            isinstance(r.get("patent"), int) or isinstance(r.get("pub"), int) for r in rows
+        ):
+            show_plotly(render_evidence_radar_chart(rows))
+        else:
+            st.caption(t("home.radar_empty"))
     except Exception:
-        pass
+        st.caption(t("home.radar_empty"))
 with col_info:
     render_trl_explainer()
 
 if beginner:
     _radar_caption = (
-        "Each slice is a readiness level from 1 to 9: how close the technology is to operational use. "
-        "A higher number means closer to the field. None of these seven is in commercial network use yet."
+        "Each axis is one of the seven 6G topics. The cyan ring is Lens.org patent totals; "
+        "the green ring is Springer Nature publication totals. Values are relative within each ring "
+        "(100 = the strongest topic in that source). Hover shows the raw count. This is activity "
+        "intensity, not TRL — readiness levels stay on the cards."
         if get_lang() == "en"
-        else "Her dilim 1–9 arası bir hazırlık seviyesidir: teknolojinin sahada kullanıma ne kadar yakın "
-        "olduğunu gösterir. Sayı yükseldikçe sahaya yaklaşır. Bu yedi teknoloji henüz ticari şebekede değildir."
+        else "Her eksen yedi 6G konusundan biridir. Camgöbeği halka Lens.org patent toplamı, "
+        "yeşil halka Springer Nature yayın toplamıdır. Sayılar her halka içinde görelidir "
+        "(100 = o kaynaktaki en yüksek konu). Üzerine gelince ham toplam görünür. Bu grafik "
+        "etkinlik yoğunluğudur, TRL değildir — hazırlık seviyeleri kartlardaki sayılardır."
     )
 else:
     _radar_caption = (
-        "Slices use the NASA/EU TRL 1–9 scale; each integer is mapped from a 3GPP technical report or a public trial class."
+        "Dual spider: Lens patent/search topic totals vs Springer Meta API topic totals. "
+        "Each series is max-normalized to 100 for a shared radial axis; hover keeps absolute totals. "
+        "Corpus intensity ≠ NASA/EU TRL (card pills)."
         if get_lang() == "en"
-        else "Dilimler NASA/AB TRL 1–9 ölçeğidir; her tam sayı, 3GPP teknik raporu veya kamuya açık deneme sınıfına göre eşlenir."
+        else "Çift halka: Lens patent/search konu total’leri × Springer Meta API konu total’leri. "
+        "Her seri kendi maksimumuna göre 100’e ölçeklenir (ortak radyal eksen); hover ham total’i korur. "
+        "Külliyat yoğunluğu ≠ NASA/AB TRL (kartlardaki haplar)."
     )
 st.markdown(
     f'<div class="home-radar-note">{_radar_caption}</div>',
