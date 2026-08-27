@@ -289,7 +289,7 @@ def render_patent_intelligence_module():
     from backend.patent_prefetch import ensure_prefetch
 
     if get_lens_token():
-        ensure_prefetch(topic, tuple(spec), force=True)
+        ensure_prefetch(topic, tuple(spec), force=False)
     render_watch("lens", "patent")
     payload = _chart_payload()
     complete = bool(payload["snap"].get("complete"))

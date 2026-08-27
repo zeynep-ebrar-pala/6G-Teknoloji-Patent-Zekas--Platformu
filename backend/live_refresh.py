@@ -15,11 +15,11 @@ _SESSION_FLAG = "_live_sources_kicked"
 
 
 def kickoff_on_visit() -> None:
-    """Her tarayıcı oturumunda bir kez: önbelleği göster, kaynakları arka planda yenile."""
+    """Önbelleği göster. Tam tarama yok: yalnız eksik veya yıl penceresi büyümüşse arka plan."""
     if st.session_state.get(_SESSION_FLAG):
         return
     st.session_state[_SESSION_FLAG] = True
-    _start(force=True)
+    _start(force=False)
 
 
 def _start(*, force: bool) -> None:
@@ -77,12 +77,6 @@ def _watch_fragment(source: str, wait_key: str) -> None:
         shown = min(int(now_done), int(now_total))
         st.info(t(f"{wait_key}.bg_wait", done=format_int(shown), total=format_int(now_total)))
         st.progress(shown / max(int(now_total), 1))
-        if source == "mno":
-            seen = st.session_state.get("_mno_done_seen")
-            if seen != shown:
-                st.session_state["_mno_done_seen"] = shown
-                if shown > 0:
-                    st.rerun()
         return
     if st.session_state.pop(flag, False):
         st.rerun()

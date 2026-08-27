@@ -226,9 +226,10 @@ def _render_eu_mno_panel(topic: str | None) -> None:
     if not get_springer_api_key():
         show_empty(t("pub.mno_need_key"))
         return
-    ensure_prefetch(topic)
-    render_watch("mno", "mno_live")
     rows = chart_rows(topic)
+    ensure_prefetch(topic)
+    if not rows:
+        render_watch("mno", "mno_live")
     place = tt_europe_place(topic)
     if not rows:
         if not prefetch_status().get("running"):

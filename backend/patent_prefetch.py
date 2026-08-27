@@ -260,8 +260,11 @@ def snapshot(topic: Optional[str], companies: Tuple[str, ...]) -> Dict[str, Any]
     pending = sum(1 for q in queries if _n(q) is None)
     rows = load_vendor_rows(topic)
     complete = pending == 0 and bool(rows)
+    job = str(st.get("job") or _job_key(topic, companies))
+    alive = _threads.get(job)
+    running = alive is not None and alive.is_alive()
     return {
-        "running": bool(st.get("running")),
+        "running": running,
         "done": int(st.get("done") or 0),
         "total": int(st.get("total") or max(len(queries), 1)),
         "error": str(st.get("error") or ""),

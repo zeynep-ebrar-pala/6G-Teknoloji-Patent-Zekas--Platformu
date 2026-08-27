@@ -453,8 +453,9 @@ def ensure_prefetch(*, force: bool = False) -> None:
 
 def prefetch_status() -> Dict[str, Any]:
     st = _read(STATUS_PATH)
+    alive = _thread is not None and _thread.is_alive()
     return {
-        "running": bool(st.get("running")),
+        "running": alive,
         "done": int(st.get("done") or 0),
         "total": int(st.get("total") or 0),
         "error": str(st.get("error") or ""),

@@ -85,8 +85,11 @@ def _status_set(**fields: Any) -> None:
 
 def prefetch_status() -> Dict[str, Any]:
     st = read_json(STATUS_PATH)
+    key = str(st.get("topic") or "all")
+    alive = _threads.get(key)
+    running = alive is not None and alive.is_alive()
     return {
-        "running": bool(st.get("running")),
+        "running": running,
         "done": int(st.get("done") or 0),
         "total": int(st.get("total") or 0),
         "error": str(st.get("error") or ""),
@@ -99,16 +102,31 @@ def _work(topic: Optional[str]) -> None:
     with _work_lock:
         reload_env()
         jobs = _jobs(topic)
-        total = max(len(jobs), 1)
+        pending = [job for job in jobs if not isinstance(peek_springer_count(job["query"], None), int)]
+        stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+        if not pending:
+            _status_set(
+                running=False,
+                done=len(jobs),
+                total=max(len(jobs), 1),
+                error="",
+                topic=_topic_key(topic),
+                fetched_at=stamp,
+                year_end=end_year(),
+            )
+            blob = read_json(CACHE_PATH)
+            blob[_topic_key(topic)] = {"fetched_at": stamp, "year_end": end_year()}
+            write_json(CACHE_PATH, blob)
+            return
+        total = len(pending)
         done = 0
         _status_set(running=True, done=0, total=total, error="", topic=_topic_key(topic))
         try:
-            for job in jobs:
-                _springer_count(job["query"], None, force=True)
+            for job in pending:
+                _springer_count(job["query"], None, force=False)
                 done += 1
                 _status_set(running=True, done=done, total=total)
                 time.sleep(0.12)
-            stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
             _status_set(
                 running=False,
                 done=total,
@@ -125,7 +143,7 @@ def _work(topic: Optional[str]) -> None:
                 error=str(exc)[:240],
                 done=done,
                 total=total,
-                fetched_at=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+                fetched_at=stamp,
             )
 
 
@@ -155,6 +173,7 @@ def ensure_prefetch(topic: Optional[str] = None, *, force: bool = False) -> None
             year_end=stored_end,
             force=force,
             running=False,
+            max_stale_s=7 * 24 * 3600,
         ):
             return
         _status_set(running=True, done=0, total=max(len(jobs), 1), error="", topic=key)

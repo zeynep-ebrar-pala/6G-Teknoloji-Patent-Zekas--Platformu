@@ -411,7 +411,7 @@ Bu sayfa <strong>Springer Nature Meta API</strong> kullanır. Bireysel e-posta y
             },
             "mno_caption": "Bu bölgedeki mobil şebeke işletmecileri (MNO — Mobile Network Operator). Yayın sayısı uydurulmaz; isimler ülke listesindendir.",
             "mno_heading": "Avrupa MNO yayın liderleri",
-            "mno_body": "Sorun: her ülkede hangi işletmecinin 6G literatüründe daha görünür olduğu tek bakışta yok. Çözüm: ülke başına kilitli üç **MNO (Mobile Network Operator — mobil şebeke işletmecisi)** — Türkiye’de Turkcell, Vodafone Türkiye, Türk Telekom — Springer Nature Meta metin aramasında sayılır; çubuk o üçün en yükseğidir (bağlılık facet’i değil). **Türk Telekom** sırası, kaç ülke liderinin TT’den çok kaydı olduğuna göre okunur.",
+            "mno_body": "Her ülkede Wikipedia’daki üç **MNO (Mobile Network Operator — mobil şebeke işletmecisi)** Springer Nature Meta metin aramasında 6G ile sayılır. Çubuk o üçün en yüksek kaydıdır. Türkiye’de üçlü: Turkcell, Vodafone Türkiye, Türk Telekom.",
             "mno_body_expert": "Sorgu biçimi: 6G + konu + tırnaklı firma adı + ülke İngilizce adı, Springer onlinedatefrom/to ile. Bu affiliation (bağlılık) facet değildir; Orange + France gibi metin eşleşmesi gürültü üretebilir. Sayı yoksa çubuk yok (0 uydurulmaz). Türkiye kilitli üçlüdedir. TT sırası = 1 + (lead_n > tt_n olan ülke lideri sayısı); TT zaten ülke lideriyse ayrı satır eklenmez.",
             "mno_need_key": "Bu grafik Springer Nature Meta API anahtarı ister. Anahtar yoksa çubuk çizilmez; sayı uydurulmaz.",
             "mno_empty": "Henüz ölçülen ülke lideri yok. Arka plan doldurunca çubuklar gelir; sayı uydurulmaz.",
@@ -562,13 +562,17 @@ bazı kaydı DE/MY/CZ şirketine yanlış düşürebilir; ülke çubuğu o hatay
             "metric_papers": "TT bağlılıklı makale (DOI)",
             "metric_touch": "Avrupa dokunuşu",
             "metric_named": "Adı geçen TTI ülkesi",
-            "role_title": "Pazardaki yer: satıcı değil, operatör",
+            "role_title": "Türk Telekom satıcı değil, işletmecidir",
             "role_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-Türk Telekom <strong>Türkiye’de entegre operatördür</strong> (sabit, mobil, genişbant).
-Avrupa 6G <em>ekipman</em> pazarında Nokia / Ericsson sınıfı RAN satıcısı değildir.
-<strong>Türk Telekom International (TTI):</strong> %100 iştirak; CEE–Türkiye–Kafkasya–Ortadoğu toptan veri/ses.
-Harita yalnızca adı kaynakta geçen ülkeleri boyar. Boyanmayan Avrupa ülkesi «yok» iddiası değil:
-bu platformda o ülke adı kilitlenmedi.
+Türk Telekom <strong>Türkiye’de entegre operatördür</strong>: sabit hat, mobil ve genişbantı birlikte işletir.
+Avrupa 6G <em>ekipman</em> pazarında Nokia veya Ericsson gibi
+<strong>RAN (Radio Access Network — telsiz erişim ağı)</strong> satıcısı değildir.
+</p>
+<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:10px 0 0 0;">
+<strong>TTI (Türk Telekom International):</strong> yüzde yüz iştirak.
+Orta ve Doğu Avrupa, Türkiye, Kafkasya ve Ortadoğu’da toptan veri ve ses taşır.
+Harita, kaynak metinde adı geçen ülkeleri boyar. Boyanmayan ülke «orada iş yok» demek değildir:
+o ülke bu listedeki kaynaklarda geçmez.
 </p>""",
             "map_heading": "### Avrupa haritası (kaynakta adı geçen ülkeler)",
             "map_caption": "Boyanan ülke TTI (Türk Telekom International) About’taki ilk giren toptan pazar, operatör merkezi, 6G Ar-Ge (Araştırma ve Geliştirme) ortağı, ETSI (European Telecommunications Standards Institute — Avrupa Telekomünikasyon Standartları Enstitüsü) merkezi veya MoU (Memorandum of Understanding — mutabakat zaptı) imza yeridir. KKTC ISO üç harfli kodu olmadığı için boyanmaz; KAP kararındaki konum işaretlenir. Abone veya pazar payı değildir.",
@@ -649,14 +653,17 @@ Rakip operatör (Turkcell, Vodafone Türkiye) bu platformda yayın API’si olma
 Bu abone/gelir payı değildir. Patent tabloları Patent Zekası sayfasındadır.
 </p>
 </div>""",
-            "what_title_pub": "Yayın bağlılığı ülke sırasını nasıl kurar?",
+            "what_title_pub": "Ülke sırası makale adresinden çıkar",
             "what_body_pub": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>DOI / bağlılık</strong> kurum kimliği veya bağlılık dizesiyle 6G konu yayınlarını sayar.
-Türk Telekom satırı TR dışı ülkede TR kurum ID’si ile şişirilmez; o ülkede DOI-kilitli bağlılık yoksa sayı 0’dır.
+Bir makalenin ülkesi, yazarın yazdığı <strong>kurum adresidir</strong> (bağlılık).
+Kayıt <strong>DOI (Digital Object Identifier — dijital nesne tanımlayıcı)</strong> ile bu platformda tutulur; sayı uydurulmaz.
+Türk Telekom satırı, Ankara veya İstanbul adresini Almanya ya da Fransa’ya taşımaz.
+O ülkede Türk Telekom adresli makale yoksa sayı 0’dır.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-1./2./3. Wikipedia Avrupa MNO listesindeki üç işletmecinin kendi iç sıralamasıdır; abone payı değildir.
-Patent ofisleri bu sayfada yoktur — Patent Zekası’ndadır.
+1., 2. ve 3. sıra: Wikipedia Avrupa <strong>MNO (Mobile Network Operator — mobil şebeke işletmecisi)</strong>
+listesindeki o ülkenin üç işletmecisinin kendi içindeki sırasıdır. Abone veya gelir payı değildir.
+Patent tabloları bu sayfada yoktur; Patent Zekası’ndadır.
 </p>""",
             "overview_heading": "### Avrupa geneli — 3 operatör + Türk Telekom",
             "overview_heading_pat": "### Avrupa geneli — patent (kilitli örnek küme)",
@@ -1463,7 +1470,7 @@ This page uses the <strong>Springer Nature Meta API</strong>. A personal email i
             },
             "mno_caption": "Mobile network operators (MNO) in this region. Paper counts are not invented; names come from the country list.",
             "mno_heading": "European MNO publication leaders",
-            "mno_body": "Problem: you cannot see, in one view, which operator is more visible in the 6G literature in each country. Method: the locked three **MNOs (mobile network operators)** per country — in Türkiye: Turkcell, Vodafone Türkiye, Türk Telekom — are counted in a Springer Nature Meta text search (not an affiliation facet); the bar is the highest of those three. **Türk Telekom** rank is how many country-leaders have more records than TT.",
+            "mno_body": "In each country the three **MNOs (mobile network operators)** from Wikipedia are counted in a Springer Nature Meta 6G text search. The bar is the highest of those three. In Türkiye the three are Turkcell, Vodafone Türkiye and Türk Telekom.",
             "mno_body_expert": "Query shape: 6G + topic + quoted firm name + English country name, with Springer onlinedatefrom/to. This is not an affiliation facet; Orange + France style text matches can be noisy. No count → no bar (zeros are not invented). Türkiye is in the locked-trio roster. TT rank = 1 + (country-leaders with lead_n > tt_n); if TT is already that country’s leader, no extra row is added.",
             "mno_need_key": "This chart needs a Springer Nature Meta API key. No key → no bars; counts are not invented.",
             "mno_empty": "No measured country-leader yet. Bars appear when the background fill finishes; counts are not invented.",
@@ -1614,13 +1621,17 @@ can mis-map a record to a DE/MY/CZ company; the country bar on the global tab is
             "metric_papers": "TT-affiliated papers (DOI)",
             "metric_touch": "European touchpoints",
             "metric_named": "Named TTI countries",
-            "role_title": "Market place: operator, not equipment vendor",
+            "role_title": "Türk Telekom is an operator, not an equipment vendor",
             "role_body": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-Türk Telekom is an <strong>integrated operator in Türkiye</strong> (fixed, mobile, broadband).
-It is not a Nokia/Ericsson-class RAN vendor in the European 6G <em>equipment</em> market.
-<strong>Türk Telekom International (TTI)</strong> is a 100% subsidiary for wholesale data/voice across
-CEE–Türkiye–Caucasus–Middle East. The map paints only countries named in a locked source.
-An unpainted European country is not a claim of absence — its name was not locked here.
+Türk Telekom is an <strong>integrated operator in Türkiye</strong>: it runs fixed, mobile and broadband together.
+It is not a Nokia- or Ericsson-class
+<strong>RAN (Radio Access Network)</strong> vendor in the European 6G <em>equipment</em> market.
+</p>
+<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:10px 0 0 0;">
+<strong>TTI (Türk Telekom International)</strong> is a 100% subsidiary.
+It carries wholesale data and voice across Central and Eastern Europe, Türkiye, the Caucasus and the Middle East.
+The map paints countries named in the source text. An unpainted country is not a claim of “no activity there”:
+that name does not appear in this list’s sources.
 </p>""",
             "map_heading": "### Europe map (places named in a source)",
             "map_caption": "Painted countries are TTI (Türk Telekom International) About first-mover wholesale markets, operator HQ, a 6G R&amp;D (research and development) partner, the ETSI (European Telecommunications Standards Institute) seat, or an MoU (memorandum of understanding) venue. Northern Cyprus has no ISO-3166-1 code, so it is marked from the KAP decision rather than painted. Not subscriber or revenue share.",
@@ -1701,14 +1712,16 @@ Rival operators (Turkcell, Vodafone Türkiye) are not counted here — there is 
 This is not subscriber/revenue share. Patent tables sit on Patent Intelligence.
 </p>
 </div>""",
-            "what_title_pub": "How affiliation builds the country ranking",
+            "what_title_pub": "Country rank comes from the paper’s address",
             "what_body_pub": """<p style="color:#E2E8F0;font-size:0.92rem;line-height:1.65;margin:8px 0 0 0;">
-<strong>DOI / affiliation</strong> counts 6G-topic papers by institution ID or affiliation string.
-The Türk Telekom row is not inflated on a non-TR country with the TR institution ID; if that country has no DOI-locked affiliation, the count is 0.
+A paper’s country is the author’s <strong>institution address</strong> (affiliation).
+The record is held here by <strong>DOI (Digital Object Identifier)</strong>; counts are not invented.
+The Türk Telekom row does not move an Ankara or Istanbul address onto Germany or France.
+If that country has no Türk Telekom-addressed paper, the count is 0.
 </p>
 <p style="color:#CBD5E1;font-size:0.88rem;line-height:1.6;margin:10px 0 0 0;">
-1st/2nd/3rd rank the three MNOs from the Wikipedia European list, not subscriber share.
-Patent-office tables are not on this page — they sit on Patent Intelligence.
+1st, 2nd and 3rd rank the three <strong>MNOs (mobile network operators)</strong> on that country’s Wikipedia Europe list — not subscriber or revenue share.
+Patent-office tables are not on this page; they sit on Patent Intelligence.
 </p>""",
             "overview_heading": "### Europe-wide — 3 operators + Türk Telekom",
             "overview_heading_pat": "### Europe-wide — patents (locked sample)",
