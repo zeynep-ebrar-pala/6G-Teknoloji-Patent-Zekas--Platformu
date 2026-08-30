@@ -170,11 +170,24 @@ else:
     from backend.springer_live import ensure_prefetch as ensure_springer
     from components.charts import (
         render_academic_trends_chart,
+        render_technology_performance_charts,
         render_technology_record_counts_chart,
     )
 
     _section_label("tech.perf_heading")
     _teach_note(t("tech.perf_caption"))
+    perf_figs, perf_note = render_technology_performance_charts(tech["id"])
+    if perf_figs:
+        if perf_note:
+            _teach_note(perf_note)
+        for fig in perf_figs:
+            show_plotly(fig)
+    else:
+        show_empty(t("tech.empty_perf"))
+
+    st.divider()
+    _section_label("tech.records_heading")
+    _teach_note(t("tech.records_caption"))
     domain = PatentService.domain_for_tech(tech["id"])
     pub_topic = TECH_ID_TO_DOMAIN.get(tech["id"])
 
