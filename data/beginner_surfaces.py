@@ -1,6 +1,6 @@
 """
-Temel mod — kullanım senaryoları, artı/eksi, araştırma ve TT örnekleri.
-global_research ve tt_scenarios: {title, body} ile başlık + açıklama.
+Temel mod — kullanım senaryoları, artı/eksi, araştırma ve coğrafi örnekler.
+global_research ve tt_scenarios: {title, body} — başlık sorunu, gövde açıklaması.
 """
 
 BEGINNER_SURFACES = {
@@ -65,58 +65,58 @@ BEGINNER_SURFACES = {
         ],
         "global_research": [
             {
-                "title": "Uluslararası standart çalışması (3GPP Release-19)",
+                "title": "Standart kuruluşu: iletişim ve algılama birlikte tanımlanıyor",
                 "body": (
-                    "Dünyadaki operatörler ve üreticiler aynı dili konuşsun diye "
-                    "entegre algılama standart gündemine girdi. Bu bir satış vaadi değil; "
-                    "yol haritasının resmi adımıdır."
+                    "3GPP Release-19 kapsamında dünya operatörleri ve üreticileri, "
+                    "aynı antenle hem konuşma hem çevre algılamasının kurallarını yazmaya başladı. "
+                    "Bu, yakında satışa çıkacak ürün demek değildir; ortak dil oluşturma adımıdır."
                 ),
             },
             {
-                "title": "Avrupa Hexa-X-II 6G programı",
+                "title": "Avrupa 6G programı: mimaride birlikte düşünülüyor",
                 "body": (
-                    "Avrupa'nın büyük 6G araştırma programı bu konuyu mimari raporlarında "
-                    "ele alıyor. Laboratuvar ve simülasyon ağırlıklıdır."
+                    "Hexa-X-II gibi Avrupa programları, iletişim ve algılamayı aynı mimaride "
+                    "nasıl konumlandıracağımızı raporluyor. Ağırlık laboratuvar ve simülasyondadır."
                 ),
             },
             {
-                "title": "IEEE entegre algılama girişimi",
+                "title": "Akademi–endüstri ortak çalışma grupları",
                 "body": (
-                    "Akademi ve endüstri bu alanda ortak çalışma grupları kurdu. "
-                    "Amaç: iletişim ve algılamayı aynı radyo zincirinde birleştirmek."
+                    "IEEE ve benzeri girişimler, iletişim ve algılamayı tek radyo zincirinde "
+                    "birleştirmenin yollarını tartışıyor. Sahada her kulede radar yoktur."
                 ),
             },
             {
-                "title": "Üretici laboratuvar denemeleri",
+                "title": "Üretici laboratuvar gösterimleri",
                 "body": (
-                    "Büyük üreticiler test ortamlarında yüksek hız ve algılama birlikte "
-                    "gösterilmeye çalışılıyor. 'Her kule radar' ticari ürün değildir; "
-                    "laboratuvar iddiaları saha garantisi taşımaz."
+                    "Büyük üreticiler test ortamında yüksek hız ve algılamayı birlikte "
+                    "göstermeye çalışıyor. Laboratuvar iddiası, şebeke garantisi değildir."
                 ),
             },
         ],
         "tt_scenarios": [
             {
-                "title": "Boğaz ve Marmara'da sis altında deniz trafiği",
+                "title": "Sis yüzünden gemiler görünmüyor",
                 "body": (
-                    "Sis altında kamera işe yaramaz. Sahil baz istasyonları aynı sinyalle "
-                    "gemilerin uzaklığını ve hızını okuyabilir. Senaryo araştırma aşamasındadır; "
-                    "saha garantisi değildir."
+                    "Boğaz ve Marmara'da sis kamerayı işe yaramaz hale getirir. "
+                    "Sahildeki baz istasyonu, gönderdiği radyo sinyalinin geri dönüşünden "
+                    "geminin uzakta ve hızlı olduğunu anlayabilir. Bu fikir araştırılıyor; "
+                    "şebekede ürün olarak yoktur."
                 ),
             },
             {
-                "title": "İstanbul ve Ankara'da dron koridoru güvenliği",
+                "title": "Şehirde dronları kim güvenli izleyecek?",
                 "body": (
-                    "Şehir içi teslimat dronları ve izinsiz dronlar için ayrı radar ağı "
-                    "kurmak zordur. Mevcut kule geometrisi bu koridorlarda adaydır."
+                    "Teslimat dronları ve izinsiz uçuşlar için ayrı radar ağı kurmak pahalıdır. "
+                    "Mevcut kule hattı, bu koridorlarda ek bir görev üstlenebilir mi diye "
+                    "literatürde tartışılıyor."
                 ),
             },
             {
-                "title": "Afet sonrası enkaz altında hareket arama",
+                "title": "Enkaz altında insan var mı?",
                 "body": (
-                    "Deprem sonrası enkaz altında hareket aramak için kamera her yere giremez. "
-                    "Radyo yankısı duvar arkası hareketi gösterebilir; gizlilik ve doğruluk "
-                    "tartışmaları devam eder."
+                    "Deprem sonrası kamera her enkaza giremez. Radyo yankısı hareket ipucu "
+                    "verebilir; ancak gizlilik, hata payı ve yasal sınırlar henüz net değildir."
                 ),
             },
         ],
@@ -181,54 +181,56 @@ BEGINNER_SURFACES = {
         ],
         "global_research": [
             {
-                "title": "ETSI RIS endüstri grubu",
+                "title": "Standart kuruluşu: akıllı yüzeylerin tanımı yazılıyor",
                 "body": (
-                    "Avrupa telekom standardı kuruluşu akıllı yüzeyler için ortak tanım "
-                    "ve test yöntemleri geliştiriyor. Ürün değil, standart çalışmasıdır."
+                    "ETSI gibi kuruluşlar, cepheye asılan yansıtıcı panellerin nasıl test "
+                    "edileceğini ve şebekeye nasıl bağlanacağını standartlaştırıyor. "
+                    "Henüz her binada satılan ürün değildir."
                 ),
             },
             {
-                "title": "IEEE akıllı yüzey çalışma grubu",
+                "title": "Akademi: yansıtıcı yüzeylerin fiziği",
                 "body": (
-                    "Akademi ve endüstri yansıtıcı yüzeylerin şebekeye nasıl bağlanacağını "
-                    "tartışıyor. Sahada her binada panel yoktur."
+                    "IEEE ve üniversite grupları, sinyali telefona çeviren ince panellerin "
+                    "sınırlarını ve kayıplarını inceliyor."
                 ),
             },
             {
-                "title": "Operatör saha denemeleri",
+                "title": "Operatörler: cephe ve tünelde prototip deniyor",
                 "body": (
-                    "Bazı operatörler cephe ve iç mekânda prototip paneller deniyor. "
-                    "Tak-çalıştır ticari ürün henüz yaygın değildir."
+                    "Bazı operatörler plaza, tünel ve cephede panel prototipi kuruyor. "
+                    "Ticari 'tak-çalıştır' ürün yaygın değildir."
                 ),
             },
             {
-                "title": "RISE-6G Avrupa projesi",
+                "title": "Avrupa RISE-6G projesi",
                 "body": (
-                    "Akıllı yüzeyleri 6G mimarisine bağlama araştırması. "
+                    "Akıllı yüzeyleri 6G mimarisine nasıl bağlayacağımızı araştırıyor. "
                     "Laboratuvar ve pilot saha ağırlıklıdır."
                 ),
             },
         ],
         "tt_scenarios": [
             {
-                "title": "Tarihi Yarımada dar sokak kapsaması",
+                "title": "Dar sokakta telefon çekmiyor",
                 "body": (
-                    "Yeni kule dikmek tarihi dokuya zarar verebilir. Cepheye ince panel "
-                    "sinyali telefona yansıtır; prototip aşamasındadır."
+                    "Tarihi Yarımada gibi yerlerde yeni kule dikmek zor veya istenmez. "
+                    "Cepheye asılan ince panel, baz istasyonunun sinyalini telefona "
+                    "yansıtmaya adaydır; prototip aşamasındadır."
                 ),
             },
             {
-                "title": "Avrasya Tüneli ve Marmaray",
+                "title": "Tünelde bağlantı kopuyor",
                 "body": (
-                    "Tünel kıvrımlarında sinyal zayıflar. Duvara monte paneller yönlendirme "
-                    "yapabilir; saha denemesi adayıdır."
+                    "Avrasya Tüneli ve Marmaray'da kıvrımlar sinyali zayıflatır. "
+                    "Duvara monte panel sinyali yönlendirebilir; saha denemesi adayıdır."
                 ),
             },
             {
-                "title": "Plaza ve veri merkezi cam cepheleri",
+                "title": "Plaza ve cam cephede içeride zayıf sinyal",
                 "body": (
-                    "Yüksek frekansta cam ve iç mekân sorunları yaşanır. Şeffaf veya ince "
-                    "kaplama iç kapsamayı iyileştirmeye adaydır."
+                    "Yüksek frekansta cam ve kalın duvar iç mekânda sinyali keser. "
+                    "Şeffaf veya ince yüzey kaplaması iç kapsamayı iyileştirmeye adaydır."
                 ),
             },
         ],
@@ -286,54 +288,55 @@ BEGINNER_SURFACES = {
         ],
         "global_research": [
             {
-                "title": "Linköping Üniversitesi çalışmaları",
+                "title": "Akademi: hücre sınırı sorununu matematikle modelliyor",
                 "body": (
-                    "Hücresiz MIMO kavramının önde gelen akademik kaynağı. "
-                    "Simülasyon ve laboratuvar ağırlıklıdır."
+                    "Linköping gibi merkezler, dağıtık antenlerin aynı anda hizmet "
+                    "vermesini simülasyon ve laboratuvarda inceliyor."
                 ),
             },
             {
-                "title": "IEEE özel yayın konuları",
+                "title": "IEEE: dağıtık anten literatürü büyüyor",
                 "body": (
-                    "Dağıtık anten ve ortak ön kodlama literatürü hızla büyüyor. "
-                    "Saha ölçümü sınırlıdır."
+                    "Yoğun ortamlarda tek kuleye yığılan yükü paylaştırma fikri "
+                    "makale ve özel dergi konularında tartışılıyor."
                 ),
             },
             {
-                "title": "3GPP dağıtık MIMO çalışma grupları",
+                "title": "Standart kuruluşu: dağıtık MIMO gündemde",
                 "body": (
-                    "Standart kuruluşu dağıtık anten mimarisini gelecek sürümlerde "
-                    "tartışıyor. Ticari ürün değildir."
+                    "3GPP gelecek sürümlerde dağıtık anten mimarisini inceliyor. "
+                    "Ticari şebeke ürünü henüz değildir."
                 ),
             },
             {
-                "title": "Ericsson ve Nokia laboratuvar gösterimleri",
+                "title": "Üreticiler: stadyum benzeri demolar",
                 "body": (
-                    "Üreticiler stadyum benzeri senaryolarda demo yapıyor. "
-                    "Kent geneli dağıtım aşamasında değildir."
+                    "Ericsson ve Nokia gibi firmalar yoğun mekân senaryolarında "
+                    "laboratuvar gösterimi yapıyor; kent geneli dağıtım yoktur."
                 ),
             },
         ],
         "tt_scenarios": [
             {
-                "title": "RAMS Park yoğun tribün",
+                "title": "Stadyumda herkes aynı anda bağlanıyor",
                 "body": (
-                    "On binlerce kişi aynı anda bağlandığında tek kule yetmeyebilir. "
-                    "Dağıtık antenler yoğunluğu paylaştırmaya adaydır; fiber maliyeti vardır."
+                    "On binlerce kişi tek kuleye yük bindirir; tribünün bir yanı hızlı, "
+                    "diğer yanı yavaş kalabilir. Tavan ve tribüne dağıtık antenler "
+                    "yükü paylaştırmaya adaydır; fiber maliyeti vardır."
                 ),
             },
             {
-                "title": "İstanbul Havalimanı geniş terminal",
+                "title": "Havalimanında yürürken bağlantı kopuyor",
                 "body": (
-                    "Yolcular hareket ederken bağlantı kopması yaşanabilir. "
-                    "Tavan ve kolonlara dağıtık anten senaryosu tartışılıyor."
+                    "Geniş terminalde geçişlerde sinyal düşebilir. Birçok küçük anten "
+                    "birlikte hizmet vererek kopmayı azaltmaya adaydır."
                 ),
             },
             {
-                "title": "Akıllı depo ve üretim hatları",
+                "title": "Depoda robot hücre kenarında zayıflıyor",
                 "body": (
-                    "Otonom araçlar ve robotlar hücre kenarında zayıflayabilir. "
-                    "Dağıtık anten bu ortamlarda adaydır."
+                    "Otonom araçlar ve robotlar depo köşelerinde sinyal kaybedebilir. "
+                    "Dağıtık anten bu tür iç mekânlarda tartışılıyor."
                 ),
             },
         ],
@@ -391,54 +394,54 @@ BEGINNER_SURFACES = {
         ],
         "global_research": [
             {
-                "title": "IEEE terahertz standartlaşma grubu",
+                "title": "Standart kuruluşu: kısa mesafe ultra geniş bant",
                 "body": (
-                    "Kısa mesafe ultra geniş bant için frekans ve protokol "
-                    "tartışmaları yapılıyor."
+                    "IEEE 802.15.3d gibi gruplar, çok yüksek frekansta kısa mesafe "
+                    "bağlantının kurallarını yazıyor. Cep telefonu varsayılan bantı değildir."
                 ),
             },
             {
-                "title": "ITU-R spektrum tahsis çalışmaları",
+                "title": "ITU: frekans tahsisi için veri toplanıyor",
                 "body": (
-                    "Uluslararası frekans tahsisi için bilimsel veri toplanıyor. "
-                    "Abone telefonunda varsayılan bant değildir."
+                    "Uluslararası kuruluşlar, terahertz diliminin hangi koşullarda "
+                    "kullanılabileceğine dair bilimsel rapor üretiyor."
                 ),
             },
             {
-                "title": "DARPA ve Max Planck programları",
+                "title": "Kamu araştırma programları",
                 "body": (
-                    "Terahertz donanım ve kanal ölçümü araştırması. "
-                    "Laboratuvar ağırlıklıdır."
+                    "DARPA ve Max Planck gibi merkezler donanım ve kanal ölçümü yapıyor. "
+                    "Ağırlık laboratuvar ortamındadır."
                 ),
             },
             {
-                "title": "Samsung Sub-THz saha denemeleri",
+                "title": "Üretici Sub-THz demoları",
                 "body": (
-                    "Üreticiler 140 GHz civarında demo yapıyor. "
-                    "Açık şehir makrosu için tasarlanmadı."
+                    "Samsung gibi firmalar 140 GHz civarında kısa mesafe demo yapıyor. "
+                    "Açık şehirde cep hızı senaryosu değildir."
                 ),
             },
         ],
         "tt_scenarios": [
             {
-                "title": "Veri merkezlerinde raf arası bağlantı",
+                "title": "Veri merkezinde kablo karmaşası",
                 "body": (
-                    "Binlerce fiber kablo yerine kısa mesafe kablosuz link düşünülüyor. "
-                    "Laboratuvar ve pilot aşamasındadır."
+                    "Sunucu rafları arasında binlerce fiber kablo yönetimi zordur. "
+                    "Kısa mesafe kablosuz link bu ortamda düşünülüyor; menzil çok kısadır."
                 ),
             },
             {
-                "title": "Zor coğrafyada kule köprüsü",
+                "title": "Dağlık alanda kuleler arası fiber zor",
                 "body": (
-                    "Dağlık alanda fiber çekmek zor olduğunda kuleler arası kablosuz "
-                    "köprü adayıdır. Menzil kısadır."
+                    "Fiber çekmek maliyetli veya imkânsız coğrafyada kuleler arası "
+                    "kısa kablosuz köprü adayıdır. Sokak boyunca cep hızı vaadi değildir."
                 ),
             },
             {
-                "title": "Teknoloji merkezi sunum denemeleri",
+                "title": "Canlı sunum ve demo salonu",
                 "body": (
-                    "Yüksek çözünürlüklü canlı sunum ve holografik demo hedeflenir. "
-                    "Günlük cep hızı senaryosu değildir."
+                    "Teknoloji merkezlerinde yüksek çözünürlüklü canlı yayın denemeleri "
+                    "yapılabilir. Günlük abone deneyimi hedefi değildir."
                 ),
             },
         ],
@@ -496,54 +499,55 @@ BEGINNER_SURFACES = {
         ],
         "global_research": [
             {
-                "title": "AI-RAN Alliance",
+                "title": "AI-RAN Alliance: ortak tanım aranıyor",
                 "body": (
-                    "Üreticiler ve operatörler yapay zekâ destekli radyo ağını "
-                    "ortak tanımlamaya çalışıyor. Deneme aşamasındadır."
+                    "Üreticiler ve operatörler, yapay zekâ destekli radyo ağının "
+                    "sınırlarını birlikte yazmaya çalışıyor. Deneme aşamasındadır."
                 ),
             },
             {
-                "title": "O-RAN yapay zekâ çalışma grupları",
+                "title": "O-RAN: akıllı uygulama katmanı",
                 "body": (
-                    "Açık radyo arayüzü üzerinde akıllı uygulamaların nasıl çalışacağı "
-                    "yazılıyor. O-RAN yapay zekâ değildir; üzerinde uygulama çalışır."
+                    "Açık radyo arayüzü üzerinde politika üreten uygulamaların "
+                    "nasıl çalışacağı tanımlanıyor. O-RAN kendisi yapay zekâ değildir."
                 ),
             },
             {
-                "title": "3GPP Release-18 yapay zekâ çalışması",
+                "title": "3GPP: radyo arayüzünde makine öğrenmesi",
                 "body": (
-                    "Standart kuruluşu radyo arayüzünde makine öğrenmesini inceliyor. "
-                    "Tam nöral hava arayüzü laboratuvar ucudur."
+                    "Standart kuruluşu, öğrenen modellerin radyo katmanında nereye "
+                    "oturabileceğini inceliyor. Tam otomatik şebeke henüz değildir."
                 ),
             },
             {
-                "title": "NVIDIA derin öğrenme RAN testleri",
+                "title": "GPU tabanlı test ortamları",
                 "body": (
-                    "GPU tabanlı test ortamlarında politika denemeleri yapılıyor. "
-                    "Net enerji kazancı her saha için ölçülmelidir."
+                    "NVIDIA gibi firmalar laboratuvarda politika denemeleri yapıyor. "
+                    "Net enerji kazancı her ortamda ölçülmelidir."
                 ),
             },
         ],
         "tt_scenarios": [
             {
-                "title": "Yeşil şebeke — gece enerji tasarrufu",
+                "title": "Gece boş kuleler elektrik yiyor",
                 "body": (
-                    "Gece trafiği düşerken boş kuleler uyutulabilir. "
-                    "Tasarruf hedefidir; saha faturası burada ölçülmedi."
+                    "Trafiğin az olduğu saatlerde gereksiz radyo birimleri çalışmaya "
+                    "devam eder. Yapay zekâ hangi parçayı uyutacağını seçebilir; "
+                    "tasarruf hedefidir, burada fatura ölçülmedi."
                 ),
             },
             {
-                "title": "Maç günü dinamik kapasite",
+                "title": "Maç günü stadyum çevresi çöküyor",
                 "body": (
-                    "Stadyum çevresinde trafik patlar; kaynak otomatik kaydırılabilir. "
-                    "İnsan denetimi ve geri alma yolu kalır."
+                    "Ani trafik patlamasında sabit kural yetmeyebilir. Kaynak otomatik "
+                    "kaydırılabilir; insan denetimi ve geri alma yolu kalır."
                 ),
             },
             {
-                "title": "Kestirimci arıza önleme",
+                "title": "Kule arızası geç fark ediliyor",
                 "body": (
-                    "Donanım arızası önceden görülüp yedek sisteme geçiş planlanabilir. "
-                    "Yanlış alarm riski vardır."
+                    "Donanım bozulması önceden görülüp yedek plan yapılabilir. "
+                    "Yanlış alarm ve kara kutu model riski vardır."
                 ),
             },
         ],
@@ -601,54 +605,53 @@ BEGINNER_SURFACES = {
         ],
         "global_research": [
             {
-                "title": "3GPP Release-17/18/19 NTN geliştirmeleri",
+                "title": "Standart kuruluşu: telefon uydu hücresini görsün",
                 "body": (
-                    "Standart telefonun uydu hücresini görmesi için kurallar yazılıyor. "
-                    "Her eski telefon otomatik uyumlu değildir."
+                    "3GPP Release-17 ve sonrası, standart telefonun uydu hücresine "
+                    "bağlanma kurallarını yazıyor. Her eski telefon uyumlu değildir."
                 ),
             },
             {
-                "title": "Starlink Direct to Cell",
+                "title": "Starlink Direct to Cell denemeleri",
                 "body": (
-                    "Alçak yörünge uydu ile doğrudan cep telefonu denemeleri kamuya açık "
-                    "yapılıyor. Türkiye sahası ölçümü bu platformda yok."
+                    "Alçak yörünge uydu ile doğrudan cep telefonu bağlantısı kamuya açık "
+                    "test ediliyor. Karasal kule hızı ve gecikmesiyle aynı değildir."
                 ),
             },
             {
                 "title": "AST SpaceMobile saha testleri",
                 "body": (
-                    "Uydu üzerinden doğrudan telefon bağlantısı test ediliyor. "
-                    "Kapasite ve gecikme karasal kuleyle aynı değildir."
+                    "Uydu üzerinden telefon bağlantısı deneniyor. Kapasite sınırlıdır; "
+                    "şehir içi yoğunluk senaryosu değildir."
                 ),
             },
             {
-                "title": "ESA 6G uzay bileşeni",
+                "title": "Avrupa uzay ajansı 6G bileşeni",
                 "body": (
-                    "Avrupa uzay ajansı 6G ile uydu entegrasyonunu araştırıyor. "
-                    "Afet ve kırsal senaryolar öne çıkar."
+                    "ESA, 6G ile uydu entegrasyonunu afet ve kırsal bağlamda araştırıyor."
                 ),
             },
         ],
         "tt_scenarios": [
             {
-                "title": "Afet dayanıklı acil iletişim",
+                "title": "Depremde kuleler devre dışı kalıyor",
                 "body": (
-                    "Depremde kule ve fiber zarar görebilir. Uydu acil SMS ve ses için "
-                    "yedek yol olabilir; gecikme karasalden uzundur."
+                    "Afet sonrası karasal şebeke zarar görebilir. Uydu üzerinden acil "
+                    "SMS veya ses yedek yol olabilir; gecikme şehir kulesinden uzundur."
                 ),
             },
             {
-                "title": "Balıkçı ve gemi filoları",
+                "title": "Açık denizde telefon çekmiyor",
                 "body": (
-                    "Açık denizde karasal kapsama yoktur. Aynı SIM ile uydu üzerinden "
-                    "iletişim hedeflenir; hız sınırlı olabilir."
+                    "Balıkçı ve gemi filoları karasal kapsama dışına çıkar. Aynı SIM ile "
+                    "uydu bağlantısı hedeflenir; hız sınırlı olabilir."
                 ),
             },
             {
-                "title": "Dağlık kırsal kapsama",
+                "title": "Mezrada kule dikmek imkânsız veya pahalı",
                 "body": (
-                    "Kule dikmek zor veya pahalı mezralarda uydu hücresi boşluğu "
-                    "kapatmaya adaydır. '%100 sıfır boşluk' pazarlamadır."
+                    "Dağlık kırsalda her köye fiber ve kule ekonomik değildir. Uydu "
+                    "boşluğu kapatmaya adaydır; '%100 kapsama' pazarlamadır."
                 ),
             },
         ],
@@ -706,54 +709,54 @@ BEGINNER_SURFACES = {
         ],
         "global_research": [
             {
-                "title": "3GPP Release-19 Ambient IoT çalışması",
+                "title": "Standart kuruluşu: pilsiz etiket kuralları",
                 "body": (
-                    "Pilsiz etiketlerin hücresel ağda nasıl okunacağı standart "
-                    "gündemine girdi. Ticari raf ürünü değildir."
+                    "3GPP Release-19, pilsiz etiketlerin hücresel ağda nasıl okunacağını "
+                    "standart gündemine aldı. Ticari raf ürünü değildir."
                 ),
             },
             {
-                "title": "IEEE geri saçılım yayınları",
+                "title": "Akademi: geri saçılım ve enerji toplama",
                 "body": (
-                    "Akademi enerji toplama ve geri saçılım iletişimini inceliyor. "
-                    "Menzil ve güvenilirlik sınırlıdır."
+                    "IEEE ve üniversiteler, ortam radyosundan çalışan etiketlerin "
+                    "fizik sınırlarını inceliyor. Menzil kısadır."
                 ),
             },
             {
-                "title": "Avrupa sıfır güç IoT konsorsiyumu",
+                "title": "Avrupa sıfır güç IoT programları",
                 "body": (
-                    "Trilyon nesne hedefi araştırma ufkudur; lojistik ölçeğinde "
-                    "pil değiştirmek ekonomik değildir."
+                    "Trilyon nesne hedefi araştırma ufkudur; pratik sorun binlerce "
+                    "nesnede pil değiştirmenin maliyetidir."
                 ),
             },
             {
-                "title": "Wiliot ve Qualcomm pilsiz etiket demoları",
+                "title": "Ticari pilsiz etiket pilotları",
                 "body": (
-                    "Ticari pilot etiketler depo ve mağazada deneniyor. "
-                    "Hücresel çoklu okuyucu senaryosu ayrı çalışma konusudur."
+                    "Wiliot ve Qualcomm gibi firmalar depo ve mağazada pilot deniyor. "
+                    "Hücresel çoklu okuyucu senaryosu ayrı konudur."
                 ),
             },
         ],
         "tt_scenarios": [
             {
-                "title": "Depo ve lojistik merkezi palet takibi",
+                "title": "Binlerce paletin pilini kim değiştirecek?",
                 "body": (
-                    "Binlerce paletin pilini değiştirmek mümkün değildir. "
-                    "Pilsiz etiket 'nerede, kaç derece' sorularını yanıtlamaya adaydır."
+                    "Lojistik merkezlerinde her palete pil takmak ekonomik değildir. "
+                    "Ortam radyosundan çalışan etiket 'nerede, kaç derece' bildirmeye adaydır."
                 ),
             },
             {
-                "title": "Akıllı tarım ve sera izleme",
+                "title": "Serada kablo ve pil lojistiği zor",
                 "body": (
-                    "Sera ve tarlada nem ve sıcaklık pilsiz sensörle izlenebilir. "
-                    "Kapsama alanı sınırlıdır."
+                    "Toprağa gömülü nem sensörü pilsiz çalışabilir; ortamda yeterli "
+                    "radyo yoksa etiket susar. Kapsama alanı sınırlıdır."
                 ),
             },
             {
-                "title": "Soğuk zincir ve ilaç lojistiği",
+                "title": "Soğuk zincirde sıcaklık kaçtı mı?",
                 "body": (
-                    "Sıcaklık ihlali anında alarm üretilebilir. "
-                    "Telefon veya kamera yerine geçmez; etiket sınırlı veri taşır."
+                    "İlaç ve gıda taşımada sıcaklık ihlali pahalıdır. Pilsiz etiket "
+                    "alarm üretebilir; video veya telefon yerine geçmez."
                 ),
             },
         ],
