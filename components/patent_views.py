@@ -7,7 +7,7 @@ from typing import Any, Dict, List
 
 import streamlit as st
 
-from backend.patent_service import PatentService
+from backend.patent_service import PatentService, sort_patent_rows
 from i18n.core import format_int, get_lang, t
 from components.charts import (
     render_company_counts_chart,
@@ -74,11 +74,13 @@ def _chart_payload() -> Dict[str, Any]:
             df_trends = df_trends.iloc[0:0]
         if not df_tree.empty:
             df_tree = df_tree[df_tree["company"] == company_arg]
-        patents = [p for p in (snap.get("rows") or []) if p.get("assignee") == company_arg]
+        patents = sort_patent_rows(
+            [p for p in (snap.get("rows") or []) if p.get("assignee") == company_arg]
+        )
     else:
         firm_counts = firm_all
         firm_names = list(spec)
-        patents = list(snap.get("rows") or [])
+        patents = sort_patent_rows(list(snap.get("rows") or []))
     return {
         "snap": snap,
         "topic": topic,

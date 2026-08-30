@@ -59,6 +59,20 @@ _COMPANY_PATTERNS: Tuple[Tuple[str, str], ...] = (
 )
 
 
+def sort_patent_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Yıla göre yeniden eskiye; aynı yılda yayın numarası."""
+    def _year(p: Dict[str, Any]) -> int:
+        try:
+            return int(p.get("year") or 0)
+        except (TypeError, ValueError):
+            return 0
+
+    return sorted(
+        rows,
+        key=lambda p: (-_year(p), str(p.get("publication_number") or p.get("id") or "")),
+    )
+
+
 def _company_match(assignee: str) -> Optional[str]:
     """Intel ≠ intelligent. NICT tam ad veya kısaltma."""
     text = (assignee or "").lower()
@@ -349,10 +363,7 @@ class PatentService:
 
     @staticmethod
     def get_top_patents(company: Optional[str] = None, domain: Optional[str] = None) -> List[Dict[str, Any]]:
-        return sorted(
-            _scoped(company, domain),
-            key=lambda p: (-int(p["year"]), str(p.get("publication_number") or p.get("id") or "")),
-        )
+        return sort_patent_rows(_scoped(company, domain))
 
     @staticmethod
     def get_network_edges(company: Optional[str] = None, domain: Optional[str] = None) -> List[tuple]:

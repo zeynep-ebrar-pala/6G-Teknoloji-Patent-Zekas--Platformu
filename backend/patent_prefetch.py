@@ -115,6 +115,9 @@ def _work(topic: Optional[str], companies: Tuple[str, ...]) -> None:
                         continue
                     seen.add(pub)
                     rows_out.append(rec)
+            from backend.patent_service import sort_patent_rows
+
+            rows_out = sort_patent_rows(rows_out)
             blob = _read_json(_ROWS)
             key = _job_key(topic, tuple(SPEC_COMPANIES))
             if rows_out:
@@ -217,11 +220,13 @@ def ensure_topic_year_prefetch(topic: str, *, force: bool = False) -> None:
 
 
 def load_vendor_rows(topic: Optional[str]) -> List[Dict[str, Any]]:
+    from backend.patent_service import sort_patent_rows
+
     blob = _read_json(_ROWS)
     key = _job_key(topic, tuple(SPEC_COMPANIES))
     rows = blob.get(key)
     if isinstance(rows, list):
-        return [r for r in rows if isinstance(r, dict)]
+        return sort_patent_rows([r for r in rows if isinstance(r, dict)])
     return []
 
 
