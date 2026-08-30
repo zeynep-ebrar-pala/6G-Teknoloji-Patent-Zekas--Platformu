@@ -55,24 +55,33 @@ def _is_expert_view() -> bool:
         return False
 
 
+def _reload_module_dict(module_name: str, attr: str, cache: dict) -> dict:
+    """Dosya değişince Temel metinler kilitlenmesin."""
+    from importlib import import_module, reload
+    from pathlib import Path
+
+    mod = import_module(module_name)
+    path = Path(mod.__file__)
+    mtime = path.stat().st_mtime_ns
+    key = f"{module_name}:{attr}"
+    if cache.get("_mtime", {}).get(key) != mtime or key not in cache.get("_data", {}):
+        mod = reload(mod)
+        cache.setdefault("_data", {})[key] = getattr(mod, attr)
+        cache.setdefault("_mtime", {})[key] = mtime
+    return cache["_data"][key]
+
+
+_COPY_CACHE: dict = {"_data": {}, "_mtime": {}}
+
+
 def _beginner_copy() -> dict:
     if _lang() == "en":
-        from data.beginner_copy_en import BEGINNER_COPY
-
-        return BEGINNER_COPY
-    from data.beginner_copy import BEGINNER_COPY
-
-    return BEGINNER_COPY
+        return _reload_module_dict("data.beginner_copy_en", "BEGINNER_COPY", _COPY_CACHE)
+    return _reload_module_dict("data.beginner_copy", "BEGINNER_COPY", _COPY_CACHE)
 
 
-def _expert_depth() -> dict:
-    if _lang() == "en":
-        from data.expert_depth_en import EXPERT_DEPTH
-
-        return EXPERT_DEPTH
-    from data.expert_depth import EXPERT_DEPTH
-
-    return EXPERT_DEPTH
+def _beginner_surfaces() -> dict:
+    return _reload_module_dict("data.beginner_surfaces", "BEGINNER_SURFACES", _COPY_CACHE)
 
 
 BEGINNER_SURFACE_KEYS = (
@@ -86,10 +95,14 @@ BEGINNER_SURFACE_KEYS = (
 )
 
 
-def _beginner_surfaces() -> dict:
-    from data.beginner_surfaces import BEGINNER_SURFACES
+def _expert_depth() -> dict:
+    if _lang() == "en":
+        from data.expert_depth_en import EXPERT_DEPTH
 
-    return BEGINNER_SURFACES
+        return EXPERT_DEPTH
+    from data.expert_depth import EXPERT_DEPTH
+
+    return EXPERT_DEPTH
 
 
 def _with_layers(tech: dict | None) -> dict | None:
@@ -113,7 +126,7 @@ def _with_layers(tech: dict | None) -> dict | None:
         out["beginner_principle"] = extra["principle_html"]
     if extra.get("arch_html"):
         out["beginner_arch"] = extra["arch_html"]
-    if not _is_expert_view() and _lang() == "tr":
+    if not _is_expert_view():
         surfaces = _beginner_surfaces().get(tech.get("id"), {})
         for key in BEGINNER_SURFACE_KEYS:
             if surfaces.get(key) is not None:

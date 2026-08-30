@@ -9,7 +9,7 @@ from components.ui_helpers import current_view_mode, show_plotly
 from data.home_cards import home_card
 from i18n.core import get_lang, t
 
-TECHNOLOGIES = DataService.get_all_technologies()
+_all_technologies = DataService.get_all_technologies()
 beginner = is_beginner(current_view_mode())
 
 st.markdown(
@@ -26,7 +26,7 @@ st.markdown(
 )
 
 cols = st.columns(3, gap="large")
-for idx, (tech_id, tech) in enumerate(TECHNOLOGIES.items()):
+for idx, (tech_id, tech) in enumerate(_all_technologies.items()):
     col = cols[idx % 3]
     with col:
         card = home_card(tech_id, beginner=beginner)

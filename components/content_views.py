@@ -311,6 +311,8 @@ def render_adv_dis(tech: dict, *, beginner: bool) -> None:
 
 
 def render_global_tt_trl(tech: dict, *, beginner: bool, trl_class: str) -> None:
+    from components.surface_render import render_surface_block, render_surface_item
+
     c_g, c_tt_box, c_t_level = st.columns([1, 1, 0.9])
     global_why = tech.get("global_why") or []
     tt_why = tech.get("tt_why") or []
@@ -322,15 +324,17 @@ def render_global_tt_trl(tech: dict, *, beginner: bool, trl_class: str) -> None:
         for i, gr in enumerate(tech.get("global_research") or []):
             why = global_why[i] if (not beginner and i < len(global_why)) else ""
             why_html = (
-                f"<div style='color:#94A3B8;font-size:0.82rem;margin-top:4px;line-height:1.45;'>{escape(why)}</div>"
+                f"<div style='color:#94A3B8;font-size:0.82rem;margin-top:4px;line-height:1.45;'>"
+                f"{escape(why)}</div>"
                 if why
                 else ""
             )
-            items.append(
-                f"<li style='margin-bottom:10px;line-height:1.5;'>"
-                f"<span style='color:#00C2FF;'>🔹</span> <strong style='color:#FFFFFF;'>{escape(str(gr))}</strong>"
-                f"{why_html}</li>"
-            )
+            item_html = render_surface_item(gr)
+            if not item_html:
+                continue
+            if why_html:
+                item_html = item_html.replace("</li>", f"{why_html}</li>")
+            items.append(item_html)
         st.markdown(
             f"""<div class="glass-card"><ul style="list-style:none;padding-left:0;margin:0;color:#E2E8F0;font-size:0.9rem;">
 {''.join(items)}</ul></div>""",
@@ -343,14 +347,17 @@ def render_global_tt_trl(tech: dict, *, beginner: bool, trl_class: str) -> None:
         for i, tt_sc in enumerate(tech.get("tt_scenarios") or []):
             why = tt_why[i] if (not beginner and i < len(tt_why)) else ""
             why_html = (
-                f"<span style='display:block;color:#94A3B8;font-size:0.82rem;margin-top:4px;'>{escape(why)}</span>"
+                f"<span style='display:block;color:#94A3B8;font-size:0.82rem;margin-top:4px;'>"
+                f"{escape(why)}</span>"
                 if why
                 else ""
             )
-            chunks.append(
-                f"<p style='margin-bottom:12px;line-height:1.5;font-size:0.9rem;color:#E2E8F0;'>"
-                f"{escape(str(tt_sc))}{why_html}</p>"
-            )
+            block = render_surface_block(tt_sc)
+            if not block:
+                continue
+            if why_html:
+                block = block.replace("</p>", f"{why_html}</p>")
+            chunks.append(block)
         st.markdown(
             f"""<div class="glass-card" style="border-left:4px solid #FFB020;">{''.join(chunks)}</div>""",
             unsafe_allow_html=True,
