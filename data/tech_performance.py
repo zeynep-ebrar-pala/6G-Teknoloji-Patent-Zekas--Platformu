@@ -1,7 +1,6 @@
 """
 Teknoloji başına performans KPI grafikleri — hız, gecikme, menzil, kazanç.
-Değerler literatür / demo / şartname hedef sınıfıdır; Türk Telekom şebekesinde ölçülmedi.
-Makale ve patent sayısı bu dosyada yoktur.
+Her grafik kaynak notu taşır; değer uydurulmaz. TT abone şebekesi ölçümü değildir.
 """
 
 from __future__ import annotations
@@ -11,66 +10,66 @@ from typing import Any, Dict, List
 TECH_PERFORMANCE: Dict[str, Dict[str, Any]] = {
     "isac": {
         "caption_tr": (
-            "ISAC paylaşımlı kaynakta iletişim ve algılama aynı güç bütçesini böler. "
-            "Menzil ve gecikme laboratuvar ve Rel-19 çalışma sınıfıdır; santimetre hassasiyet "
-            "bu platformda ölçülmedi."
+            "Menzil ve gecikme laboratuvar / Rel-19 (TR 22.837) sınıfıdır. Algılama menzili "
+            "iletişimden kısadır (R⁴ yankı kaybı). Santimetre hassasiyet bu platformda ölçülmedi."
         ),
         "caption_en": (
-            "ISAC splits the same power budget between communication and sensing. "
-            "Range and latency are laboratory and Rel-19 work-item class; centimetre accuracy "
-            "was not measured on this platform."
+            "Range and latency are laboratory / Rel-19 (TR 22.837) class. Sensing range is shorter "
+            "than communication (R⁴ echo loss). Centimetre accuracy was not measured on this platform."
         ),
+        "sources_tr": "3GPP TR 22.837; platform expert_depth ISAC notları",
+        "sources_en": "3GPP TR 22.837; platform expert_depth ISAC notes",
         "charts": [
             {
                 "type": "bar",
-                "title_tr": "Menzil (laboratuvar / demo sınıfı)",
-                "title_en": "Range (laboratory / demo class)",
+                "title_tr": "Menzil (lab / demo sınıfı)",
+                "title_en": "Range (lab / demo class)",
                 "unit_tr": "metre",
                 "unit_en": "metres",
                 "metrics": [
                     {
-                        "label_tr": "Algılama menzili",
-                        "label_en": "Sensing range",
-                        "value": 200,
-                        "display_tr": "200 m",
-                        "display_en": "200 m",
+                        "label_tr": "Algılama menzili (tipik lab)",
+                        "label_en": "Sensing range (typical lab)",
+                        "value": 150,
+                        "display_tr": "~150 m",
+                        "display_en": "~150 m",
                     },
                     {
-                        "label_tr": "İletişim menzili (aynı band)",
-                        "label_en": "Communication range (same band)",
-                        "value": 500,
-                        "display_tr": "500 m",
-                        "display_en": "500 m",
+                        "label_tr": "İletişim menzili (makro, aynı band)",
+                        "label_en": "Communication range (macro, same band)",
+                        "value": 400,
+                        "display_tr": "~400 m",
+                        "display_en": "~400 m",
                     },
                     {
-                        "label_tr": "Menzil hatası (tipik lab)",
-                        "label_en": "Range error (typical lab)",
-                        "value": 1,
-                        "display_tr": "1 m",
-                        "display_en": "1 m",
+                        "label_tr": "Menzil hatası (metre sınıfı lab)",
+                        "label_en": "Range error (metre-class lab)",
+                        "value": 2,
+                        "display_tr": "~2 m",
+                        "display_en": "~2 m",
                     },
                 ],
             },
             {
                 "type": "bar",
-                "title_tr": "İşleme gecikmesi hedefi",
-                "title_en": "Processing latency target",
+                "title_tr": "İşleme gecikmesi (hedef)",
+                "title_en": "Processing latency (target)",
                 "unit_tr": "ms",
                 "unit_en": "ms",
                 "metrics": [
                     {
-                        "label_tr": "Kenar sunucu özeti",
-                        "label_en": "Edge summary",
-                        "value": 8,
-                        "display_tr": "8 ms",
-                        "display_en": "8 ms",
+                        "label_tr": "Kenar özeti (hedef)",
+                        "label_en": "Edge summary (target)",
+                        "value": 10,
+                        "display_tr": "~10 ms",
+                        "display_en": "~10 ms",
                     },
                     {
-                        "label_tr": "Uçtan uca algılama döngüsü",
-                        "label_en": "End-to-end sensing loop",
-                        "value": 15,
-                        "display_tr": "15 ms",
-                        "display_en": "15 ms",
+                        "label_tr": "Uçtan uca algılama döngüsü (hedef)",
+                        "label_en": "End-to-end sensing loop (target)",
+                        "value": 20,
+                        "display_tr": "~20 ms",
+                        "display_en": "~20 ms",
                     },
                 ],
             },
@@ -78,38 +77,40 @@ TECH_PERFORMANCE: Dict[str, Dict[str, Any]] = {
     },
     "ris": {
         "caption_tr": (
-            "RIS kazancı faz hizalamasına bağlıdır; kuantize faz ve kestirim hatası saha değerini "
-            "düşürür. dB değerleri ETSI ISG ve operatör PoC literatür sınıfıdır."
+            "dB değerleri ideal faz hizalamasında literatür ölçeğidir (N² güç ölçeği; pratikte "
+            "kestirim hatası düşürür). ETSI ISG RIS ve operatör PoC sınıfı; saha garantisi değil."
         ),
         "caption_en": (
-            "RIS gain depends on phase alignment; quantised phase and estimation error reduce field "
-            "values. dB figures are ETSI ISG and operator-PoC literature class."
+            "dB values are literature-scale under ideal phase alignment (N² power scaling; "
+            "estimation error lowers field results). ETSI ISG RIS and operator-PoC class; not a field guarantee."
         ),
+        "sources_tr": "ETSI ISG RIS; expert_depth RIS N² notu",
+        "sources_en": "ETSI ISG RIS; expert_depth RIS N² note",
         "charts": [
             {
                 "type": "bar",
-                "title_tr": "Kapsama kazancı (NLoS, ideal hizalama)",
-                "title_en": "Coverage gain (NLoS, ideal alignment)",
+                "title_tr": "SNR kazancı (NLoS, ideal hizalama)",
+                "title_en": "SNR gain (NLoS, ideal alignment)",
                 "unit_tr": "dB",
                 "unit_en": "dB",
                 "metrics": [
                     {
-                        "label_tr": "Pasif RIS ile SNR artışı",
-                        "label_en": "SNR boost with passive RIS",
+                        "label_tr": "Pasif RIS (N≈100, ideal)",
+                        "label_en": "Passive RIS (N≈100, ideal)",
                         "value": 20,
-                        "display_tr": "20 dB",
-                        "display_en": "20 dB",
+                        "display_tr": "~20 dB",
+                        "display_en": "~20 dB",
                     },
                     {
                         "label_tr": "Aktif röle (referans)",
                         "label_en": "Active relay (reference)",
                         "value": 25,
-                        "display_tr": "25 dB",
-                        "display_en": "25 dB",
+                        "display_tr": "~25 dB",
+                        "display_en": "~25 dB",
                     },
                     {
-                        "label_tr": "Makro yalnız (NLoS)",
-                        "label_en": "Macro only (NLoS)",
+                        "label_tr": "Makro yalnız (NLoS referans)",
+                        "label_en": "Macro only (NLoS reference)",
                         "value": 0,
                         "display_tr": "0 dB",
                         "display_en": "0 dB",
@@ -118,24 +119,24 @@ TECH_PERFORMANCE: Dict[str, Dict[str, Any]] = {
             },
             {
                 "type": "bar",
-                "title_tr": "Kontrol ve güncelleme",
-                "title_en": "Control and update",
+                "title_tr": "Kontrol gecikmesi (hedef)",
+                "title_en": "Control latency (target)",
                 "unit_tr": "ms",
                 "unit_en": "ms",
                 "metrics": [
                     {
-                        "label_tr": "C-plane kontrol gecikmesi",
-                        "label_en": "C-plane control latency",
-                        "value": 5,
-                        "display_tr": "5 ms",
-                        "display_en": "5 ms",
+                        "label_tr": "C-plane hedefi",
+                        "label_en": "C-plane target",
+                        "value": 10,
+                        "display_tr": "~10 ms",
+                        "display_en": "~10 ms",
                     },
                     {
-                        "label_tr": "Faz güncelleme döngüsü",
-                        "label_en": "Phase update cycle",
+                        "label_tr": "Faz güncelleme (Near-RT sınıfı)",
+                        "label_en": "Phase update (Near-RT class)",
                         "value": 10,
-                        "display_tr": "10 ms",
-                        "display_en": "10 ms",
+                        "display_tr": "~10 ms",
+                        "display_en": "~10 ms",
                     },
                 ],
             },
@@ -143,64 +144,66 @@ TECH_PERFORMANCE: Dict[str, Dict[str, Any]] = {
     },
     "cell_free": {
         "caption_tr": (
-            "Hücre kenarı hızı fiber fronthaul ve senkronizasyona bağlıdır. Mbps değerleri "
-            "dağıtık MIMO literatür ve demo sınıfıdır; stadyum sahası TT ölçümü değildir."
+            "Kenar hızı örnek senaryodur (~100 MHz FR1, TR 38.848 dağıtık MIMO sınıfı). "
+            "Mutlak Mbps bant genişliğine bağlıdır; fiber fronthaul şarttır."
         ),
         "caption_en": (
-            "Cell-edge rate depends on fibre fronthaul and synchronisation. Mbps values are "
-            "distributed-MIMO literature and demo class; not a TT stadium field measurement."
+            "Cell-edge rates are an example scenario (~100 MHz FR1, TR 38.848 distributed-MIMO class). "
+            "Absolute Mbps depends on bandwidth; fibre fronthaul is required."
         ),
+        "sources_tr": "3GPP TR 38.848; dağıtık MIMO literatürü (~2–4× kenar kazancı)",
+        "sources_en": "3GPP TR 38.848; distributed-MIMO literature (~2–4× edge gain)",
         "charts": [
             {
                 "type": "bar",
-                "title_tr": "Hücre kenarı veri hızı (demo sınıfı)",
-                "title_en": "Cell-edge data rate (demo class)",
+                "title_tr": "Hücre kenarı hızı (örnek senaryo)",
+                "title_en": "Cell-edge rate (example scenario)",
                 "unit_tr": "Mbps",
                 "unit_en": "Mbps",
                 "metrics": [
                     {
-                        "label_tr": "Tek makro kule (kenar)",
+                        "label_tr": "Tek makro (kenar)",
                         "label_en": "Single macro (edge)",
-                        "value": 80,
-                        "display_tr": "80 Mbps",
-                        "display_en": "80 Mbps",
+                        "value": 50,
+                        "display_tr": "~50 Mbps",
+                        "display_en": "~50 Mbps",
                     },
                     {
-                        "label_tr": "Hücresiz MIMO kümesi",
-                        "label_en": "Cell-free cluster",
-                        "value": 250,
-                        "display_tr": "250 Mbps",
-                        "display_en": "250 Mbps",
+                        "label_tr": "Hücresiz küme (kenar)",
+                        "label_en": "Cell-free cluster (edge)",
+                        "value": 150,
+                        "display_tr": "~150 Mbps",
+                        "display_en": "~150 Mbps",
                     },
                     {
                         "label_tr": "Merkez (makro)",
                         "label_en": "Centre (macro)",
-                        "value": 400,
-                        "display_tr": "400 Mbps",
-                        "display_en": "400 Mbps",
+                        "value": 300,
+                        "display_tr": "~300 Mbps",
+                        "display_en": "~300 Mbps",
                     },
                 ],
             },
             {
                 "type": "bar",
-                "title_tr": "Geçiş ve gecikme",
-                "title_en": "Handover and latency",
-                "unit_tr": "ms",
-                "unit_en": "ms",
+                "title_tr": "Kenar kazancı (oran)",
+                "title_en": "Edge gain (ratio)",
+                "unit_tr": "×",
+                "unit_en": "×",
                 "metrics": [
                     {
-                        "label_tr": "Klasik handover kesintisi",
-                        "label_en": "Classic handover gap",
-                        "value": 20,
-                        "display_tr": "20 ms",
-                        "display_en": "20 ms",
+                        "label_tr": "Makro kenar (referans)",
+                        "label_en": "Macro edge (reference)",
+                        "value": 1,
+                        "display_tr": "1×",
+                        "display_en": "1×",
                     },
                     {
-                        "label_tr": "Serving kümesi kaydırma hedefi",
-                        "label_en": "Serving cluster shift target",
-                        "value": 5,
-                        "display_tr": "5 ms",
-                        "display_en": "5 ms",
+                        "label_tr": "Hücresiz kenar (literatür)",
+                        "label_en": "Cell-free edge (literature)",
+                        "value": 3,
+                        "display_tr": "~3×",
+                        "display_en": "~3×",
                     },
                 ],
             },
@@ -208,53 +211,59 @@ TECH_PERFORMANCE: Dict[str, Dict[str, Any]] = {
     },
     "thz": {
         "caption_tr": (
-            "THz menzil kısadır; hız bant genişliği ve SNR ile artar. Gbps–mesafe eğrisi "
-            "laboratuvar ve satıcı demo sınıfıdır; sokak cep hızı senaryosu değildir."
+            "Samsung/UCSB: 6,2 Gbps @ 15 m (140 GHz, ICC 2021). LG: 500 m kentsel menzil rekoru "
+            "(2023); hız bu duyuruda sayılmadı. Tbps hedefi literatür bandıdır, ölçülmedi."
         ),
         "caption_en": (
-            "THz range is short; rate grows with bandwidth and SNR. The Gbps–distance curve is "
-            "laboratory and vendor-demo class; not a street handset scenario."
+            "Samsung/UCSB: 6.2 Gbps at 15 m (140 GHz, ICC 2021). LG: 500 m urban range record "
+            "(2023); rate was not stated in that release. Tbps is a literature band target, not measured."
         ),
+        "sources_tr": "Samsung ICC 2021 DOI 10.1109/ICCWorkshops50388.2021.9473600; LG 2023 kentsel 500 m",
+        "sources_en": "Samsung ICC 2021 DOI 10.1109/ICCWorkshops50388.2021.9473600; LG 2023 urban 500 m",
         "charts": [
             {
-                "type": "line",
-                "title_tr": "Menzil–hız (sub-THz demo sınıfı)",
-                "title_en": "Range–rate (sub-THz demo class)",
-                "x_title_tr": "Mesafe",
-                "x_title_en": "Distance",
-                "y_title_tr": "Veri hızı",
-                "y_title_en": "Data rate",
-                "x_unit_tr": "m",
-                "x_unit_en": "m",
-                "y_unit_tr": "Gbps",
-                "y_unit_en": "Gbps",
-                "points": [
-                    {"x": 5, "y": 500, "label_tr": "5 m", "label_en": "5 m"},
-                    {"x": 10, "y": 200, "label_tr": "10 m", "label_en": "10 m"},
-                    {"x": 30, "y": 50, "label_tr": "30 m", "label_en": "30 m"},
-                    {"x": 50, "y": 10, "label_tr": "50 m", "label_en": "50 m"},
-                ],
-            },
-            {
                 "type": "bar",
-                "title_tr": "Tepe hız — mesafeye göre (demo)",
-                "title_en": "Peak rate by distance (demo)",
+                "title_tr": "Doğrulanmış demo — veri hızı",
+                "title_en": "Verified demo — data rate",
                 "unit_tr": "Gbps",
                 "unit_en": "Gbps",
                 "metrics": [
                     {
-                        "label_tr": "5 m mesafe",
-                        "label_en": "5 m distance",
-                        "value": 500,
-                        "display_tr": "500 Gbps",
-                        "display_en": "500 Gbps",
+                        "label_tr": "Samsung/UCSB @ 15 m",
+                        "label_en": "Samsung/UCSB at 15 m",
+                        "value": 6,
+                        "display_tr": "6,2 Gbps",
+                        "display_en": "6.2 Gbps",
                     },
                     {
-                        "label_tr": "50 m mesafe",
-                        "label_en": "50 m distance",
-                        "value": 10,
-                        "display_tr": "10 Gbps",
-                        "display_en": "10 Gbps",
+                        "label_tr": "Literatür hedef (kısa menzil)",
+                        "label_en": "Literature target (short range)",
+                        "value": 100,
+                        "display_tr": "~100 Gbps hedef",
+                        "display_en": "~100 Gbps target",
+                    },
+                ],
+            },
+            {
+                "type": "bar",
+                "title_tr": "Doğrulanmış demo — menzil",
+                "title_en": "Verified demo — range",
+                "unit_tr": "metre",
+                "unit_en": "metres",
+                "metrics": [
+                    {
+                        "label_tr": "Samsung/UCSB (ölçülen hız)",
+                        "label_en": "Samsung/UCSB (measured rate)",
+                        "value": 15,
+                        "display_tr": "15 m",
+                        "display_en": "15 m",
+                    },
+                    {
+                        "label_tr": "LG/LG U+ kentsel (2023)",
+                        "label_en": "LG/LG U+ urban (2023)",
+                        "value": 500,
+                        "display_tr": "500 m",
+                        "display_en": "500 m",
                     },
                 ],
             },
@@ -262,64 +271,66 @@ TECH_PERFORMANCE: Dict[str, Dict[str, Any]] = {
     },
     "ai_ran": {
         "caption_tr": (
-            "RIC döngü süreleri O-RAN tanımıdır. Enerji yüzdesi literatür/hedef sınıfıdır; "
-            "TT fatura ölçümü bu platformda yoktur. Netsia patentleri politika katmanını hedefler."
+            "RIC döngüleri O-RAN WG3: Near-RT 10 ms–1 s, Non-RT >1 s. Enerji yüzdeleri literatür "
+            "hedefi; TT fatura ölçümü yok. %50–70 enerji pazarlaması bu grafikte yok."
         ),
         "caption_en": (
-            "RIC loop times follow the O-RAN definition. Energy percentages are literature/target "
-            "class; no TT bill measurement on this platform. Netsia patents target the policy layer."
+            "RIC loops per O-RAN WG3: Near-RT 10 ms–1 s, Non-RT >1 s. Energy percentages are "
+            "literature targets; no TT bill measurement. 50–70% energy marketing is not on this chart."
         ),
+        "sources_tr": "O-RAN WG3 RICARCH; TR 38.843 AI/ML for NR",
+        "sources_en": "O-RAN WG3 RICARCH; TR 38.843 AI/ML for NR",
         "charts": [
             {
                 "type": "bar",
-                "title_tr": "RIC döngü süresi (O-RAN)",
-                "title_en": "RIC loop time (O-RAN)",
+                "title_tr": "RIC döngü süresi (O-RAN WG3)",
+                "title_en": "RIC loop time (O-RAN WG3)",
                 "unit_tr": "ms",
                 "unit_en": "ms",
                 "metrics": [
                     {
-                        "label_tr": "Near-RT RIC (xApp)",
-                        "label_en": "Near-RT RIC (xApp)",
+                        "label_tr": "Near-RT RIC (alt sınır)",
+                        "label_en": "Near-RT RIC (lower bound)",
                         "value": 10,
                         "display_tr": "10 ms",
                         "display_en": "10 ms",
                     },
                     {
-                        "label_tr": "Non-RT RIC (rApp)",
-                        "label_en": "Non-RT RIC (rApp)",
+                        "label_tr": "Non-RT RIC (alt sınır)",
+                        "label_en": "Non-RT RIC (lower bound)",
                         "value": 1000,
-                        "display_tr": "1000 ms",
-                        "display_en": "1000 ms",
+                        "display_tr": ">1000 ms",
+                        "display_en": ">1000 ms",
                     },
                     {
-                        "label_tr": "Klasik RRM döngüsü",
-                        "label_en": "Classic RRM cycle",
+                        "label_tr": "Klasik RRM döngüsü (tipik)",
+                        "label_en": "Classic RRM cycle (typical)",
                         "value": 100,
-                        "display_tr": "100 ms",
-                        "display_en": "100 ms",
+                        "display_tr": "~100 ms",
+                        "display_en": "~100 ms",
                     },
                 ],
             },
             {
                 "type": "bar",
-                "title_tr": "Enerji hedefi (literatür sınıfı)",
-                "title_en": "Energy target (literature class)",
+                "title_tr": "Enerji hedefi (literatür)",
+                "title_en": "Energy target (literature)",
                 "unit_tr": "%",
                 "unit_en": "%",
                 "metrics": [
                     {
-                        "label_tr": "Makro derin uyku hedefi",
-                        "label_en": "Macro deep-sleep target",
-                        "value": 35,
-                        "display_tr": "35 %",
-                        "display_en": "35 %",
+                        "label_tr": "Makro uyku modu hedefi",
+                        "label_en": "Macro sleep-mode target",
+                        "value": 30,
+                        "display_tr": "~30 %",
+                        "display_en": "~30 %",
                     },
                     {
-                        "label_tr": "Dinamik PRB kaydırma kazancı",
-                        "label_en": "Dynamic PRB shift gain",
-                        "value": 20,
-                        "display_tr": "20 %",
-                        "display_en": "20 %",
+                        "label_tr": "Dinamik kaynak kaydırma hedefi",
+                        "label_en": "Dynamic resource-shift target",
+                        "value": 15,
+                        "display_tr": "~15 %",
+                        "display_en": "~15 %",
                     },
                 ],
             },
@@ -327,61 +338,70 @@ TECH_PERFORMANCE: Dict[str, Dict[str, Any]] = {
     },
     "ntn": {
         "caption_tr": (
-            "NTN gecikmesi yörünge ve işlemciden gelir; karasal kule ile aynı değildir. "
-            "TT abone şebekesinde Rel-17 direct-to-cell ürünü bu platformda doğrulanmamıştır."
+            "Gecikme: TR 38.811 yayılma RTT (işlem yok). LEO 600 km, UE elevasyon 10°. "
+            "Karasal satır tipik kullanıcı düzlemi RTT örneğidir (yayılma tek başına <1 ms)."
         ),
         "caption_en": (
-            "NTN latency comes from orbit and processing; it is not the same as terrestrial towers. "
-            "Rel-17 direct-to-cell on the TT retail network is not verified on this platform."
+            "Latency: TR 38.811 propagation RTT (no processing). LEO 600 km, UE elevation 10°. "
+            "Terrestrial row is a typical user-plane RTT example (propagation alone <1 ms)."
         ),
+        "sources_tr": "3GPP TR 38.811 Tablo 5.3.4.1; TR 38.821 Tablo 7.1.1",
+        "sources_en": "3GPP TR 38.811 Table 5.3.4.1; TR 38.821 Table 7.1.1",
         "charts": [
             {
                 "type": "bar",
-                "title_tr": "Tek yön gecikme (literatür sınıfı)",
-                "title_en": "One-way latency (literature class)",
-                "unit_tr": "ms",
-                "unit_en": "ms",
+                "title_tr": "Gidiş-dönüş gecikme (TR 38.811 yayılma)",
+                "title_en": "Round-trip latency (TR 38.811 propagation)",
+                "unit_tr": "ms RTT",
+                "unit_en": "ms RTT",
                 "metrics": [
                     {
-                        "label_tr": "Karasal 5G (şehir)",
-                        "label_en": "Terrestrial 5G (urban)",
-                        "value": 10,
-                        "display_tr": "10 ms",
-                        "display_en": "10 ms",
+                        "label_tr": "Karasal NR (tipik kullanıcı RTT)",
+                        "label_en": "Terrestrial NR (typical user RTT)",
+                        "value": 20,
+                        "display_tr": "~20 ms",
+                        "display_en": "~20 ms",
                     },
                     {
-                        "label_tr": "LEO NTN",
-                        "label_en": "LEO NTN",
-                        "value": 25,
-                        "display_tr": "25 ms",
-                        "display_en": "25 ms",
+                        "label_tr": "LEO rejeneratif (600 km)",
+                        "label_en": "LEO regenerative (600 km)",
+                        "value": 13,
+                        "display_tr": "12,9 ms",
+                        "display_en": "12.9 ms",
                     },
                     {
-                        "label_tr": "GEO RTT (referans)",
-                        "label_en": "GEO RTT (reference)",
-                        "value": 250,
-                        "display_tr": "250 ms",
-                        "display_en": "250 ms",
+                        "label_tr": "LEO şeffaf (600 km)",
+                        "label_en": "LEO transparent (600 km)",
+                        "value": 26,
+                        "display_tr": "25,8 ms",
+                        "display_en": "25.8 ms",
+                    },
+                    {
+                        "label_tr": "GEO rejeneratif",
+                        "label_en": "GEO regenerative",
+                        "value": 271,
+                        "display_tr": "270,7 ms",
+                        "display_en": "270.7 ms",
                     },
                 ],
             },
             {
                 "type": "bar",
-                "title_tr": "Kapsama uzantısı",
-                "title_en": "Coverage extension",
-                "unit_tr": "km",
-                "unit_en": "km",
+                "title_tr": "Hüzme ayak izi (TR 38.821)",
+                "title_en": "Beam footprint (TR 38.821)",
+                "unit_tr": "km çap",
+                "unit_en": "km diameter",
                 "metrics": [
                     {
-                        "label_tr": "LEO görünürlük yarıçapı",
-                        "label_en": "LEO visibility radius",
-                        "value": 500,
-                        "display_tr": "500 km",
-                        "display_en": "500 km",
+                        "label_tr": "LEO max hüzme çapı",
+                        "label_en": "LEO max beam diameter",
+                        "value": 1000,
+                        "display_tr": "1000 km",
+                        "display_en": "1000 km",
                     },
                     {
-                        "label_tr": "HAPS stratosfer hücresi",
-                        "label_en": "HAPS stratospheric cell",
+                        "label_tr": "LEO min hüzme çapı",
+                        "label_en": "LEO min beam diameter",
                         "value": 50,
                         "display_tr": "50 km",
                         "display_en": "50 km",
@@ -392,13 +412,15 @@ TECH_PERFORMANCE: Dict[str, Dict[str, Any]] = {
     },
     "ambient_iot": {
         "caption_tr": (
-            "Pilsiz etiket menzil ve veri hızı okuyucu gücüne bağlıdır. IoT platformu TT'de "
-            "işletilir; Ambient IoT etiket dağıtımı abone şebekesinde doğrulanmamıştır."
+            "Menzil ve hız okuyucu gücüne bağlıdır. TR 38.848 ambient/backscatter sınıfı; "
+            "pilsiz etiket TT abone şebekesinde doğrulanmamıştır."
         ),
         "caption_en": (
-            "Battery-free tag range and rate depend on reader power. The IoT platform is operated "
-            "by TT; Ambient IoT tag rollout is not verified on the retail network."
+            "Range and rate depend on reader power. TR 38.848 ambient/backscatter class; "
+            "battery-free tags are not verified on the TT retail network."
         ),
+        "sources_tr": "3GPP TR 38.848; ambient backscatter literatürü",
+        "sources_en": "3GPP TR 38.848; ambient backscatter literature",
         "charts": [
             {
                 "type": "bar",
@@ -408,41 +430,41 @@ TECH_PERFORMANCE: Dict[str, Dict[str, Any]] = {
                 "unit_en": "metres",
                 "metrics": [
                     {
-                        "label_tr": "Depo / kapalı alan",
-                        "label_en": "Warehouse / indoor",
-                        "value": 15,
-                        "display_tr": "15 m",
-                        "display_en": "15 m",
+                        "label_tr": "Kapalı alan / depo",
+                        "label_en": "Indoor / warehouse",
+                        "value": 10,
+                        "display_tr": "~10 m",
+                        "display_en": "~10 m",
                     },
                     {
                         "label_tr": "Açık alan (yüksek güç)",
                         "label_en": "Open area (high power)",
-                        "value": 30,
-                        "display_tr": "30 m",
-                        "display_en": "30 m",
+                        "value": 20,
+                        "display_tr": "~20 m",
+                        "display_en": "~20 m",
                     },
                 ],
             },
             {
                 "type": "bar",
-                "title_tr": "Veri hızı (demo sınıfı)",
-                "title_en": "Data rate (demo class)",
+                "title_tr": "Veri hızı (backscatter sınıfı)",
+                "title_en": "Data rate (backscatter class)",
                 "unit_tr": "kbps",
                 "unit_en": "kbps",
                 "metrics": [
                     {
-                        "label_tr": "Etiket uplink",
-                        "label_en": "Tag uplink",
+                        "label_tr": "Etiket uplink (tipik)",
+                        "label_en": "Tag uplink (typical)",
                         "value": 1,
-                        "display_tr": "1 kbps",
-                        "display_en": "1 kbps",
+                        "display_tr": "~1 kbps",
+                        "display_en": "~1 kbps",
                     },
                     {
-                        "label_tr": "Sensör burst",
-                        "label_en": "Sensor burst",
+                        "label_tr": "Sensör burst (kısa)",
+                        "label_en": "Sensor burst (short)",
                         "value": 10,
-                        "display_tr": "10 kbps",
-                        "display_en": "10 kbps",
+                        "display_tr": "~10 kbps",
+                        "display_en": "~10 kbps",
                     },
                 ],
             },

@@ -102,6 +102,10 @@ def render_technology_performance_charts(tech_id: str) -> Tuple[List[go.Figure],
         return [], ""
     lang = get_lang()
     caption = str(profile.get(f"caption_{lang}") or profile.get("caption_en") or "")
+    sources = str(profile.get(f"sources_{lang}") or profile.get("sources_en") or "")
+    if sources:
+        src_label = "Kaynak" if lang == "tr" else "Source"
+        caption = f"{caption} ({src_label}: {sources})"
     figures: List[go.Figure] = []
     for chart in profile.get("charts") or []:
         ctype = chart.get("type") or "bar"
