@@ -119,7 +119,7 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
             "why_needed": "Neden gerekli?",
             "what": "Ne işe yarar?",
             "tt_impact": "Türk Telekom ve TRL",
-            "heading": "Temel katman — problem, ihtiyaç, yöntem. Denklem ve 3GPP uzman katmanındadır.",
+            "heading": "6G'yi ilk kez okuyorsanız buradan başlayın: önce sorun, sonra çözüm, en sonda gerçek hayat örneği. Denklemler ve 3GPP ayrıntıları Uzman katmanındadır.",
             "heading_compact": "Tanım katmanı (özet)",
             "heading_expert": "Uzman katman — aynı sıra; denklem, varsayım, 3GPP ve alternatif. Cümleler Temel ile aynı değildir.",
             "rail_beginner": "1 Problem · 2 İhtiyaç · 3 Yöntem · 4 Mekanizma · 5 Sınır · 6 Uygulama",

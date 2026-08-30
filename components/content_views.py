@@ -122,13 +122,18 @@ def render_foundation_layer(tech: dict, *, compact: bool = False) -> None:
     analogy = fnd.get("analogy")
     tech_map = fnd.get("analogy_technical_map")
     if analogy:
+        tech_block = ""
+        if not beginner and tech_map:
+            tech_block = (
+                f"<div class='teach-label'>{escape(t('teach.analogy_map'))}</div>"
+                f"<p class='teach-muted'>{escape(str(tech_map))}</p>"
+            )
         _emit_stack(
             depth_cls,
             "<div class='glass-card teach-card'>"
             f"<div class='teach-label'>06  ·  {escape(t('teach.analogy'))}</div>"
             f"<p class='teach-body'>{escape(str(analogy))}</p>"
-            f"<div class='teach-label'>{escape(t('teach.analogy_map'))}</div>"
-            f"<p class='teach-muted'>{escape(str(tech_map or ''))}</p></div>",
+            f"{tech_block}</div>",
         )
     _emit_stack(
         depth_cls,
