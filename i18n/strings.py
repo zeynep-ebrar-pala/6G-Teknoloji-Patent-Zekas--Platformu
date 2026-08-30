@@ -118,7 +118,7 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
             "problem": "Hangi problem?",
             "why_needed": "Neden gerekli?",
             "what": "Ne işe yarar?",
-            "tt_impact": "Türkiye bağlamı ve hazırlık seviyesi",
+            "tt_impact": "Türk Telekom'ta kayıtlı çalışmalar",
             "heading": "6G'yi ilk kez okuyorsanız buradan başlayın: önce sorun, sonra çözüm, en sonda gerçek hayat örneği. Denklemler ve 3GPP ayrıntıları Uzman katmanındadır.",
             "heading_compact": "Tanım katmanı (özet)",
             "heading_expert": "Uzman katman — aynı sıra; denklem, varsayım, 3GPP ve alternatif. Cümleler Temel ile aynı değildir.",
@@ -154,8 +154,8 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
             "disadvantages": "### Dezavantajlar — hangi problem doğurur?",
             "global": "### Dünyada neden konuşuluyor?",
             "global_caption": "Her satır: Kim çalışıyor ve bu konuyu neden gündemde tutuyor?",
-            "tt_scenarios": "### Bu coğrafyada hangi sorunlara dokunabilir?",
-            "tt_caption": "Resmi operatör ürün planı değildir. Türkiye coğrafyasında bu teknolojinin hangi günlük soruna yanıt verebileceğini gösteren örneklerdir.",
+            "tt_scenarios": "### Türk Telekom ne yaptı?",
+            "tt_caption": "Bu platformda doğrulanmış duyuru, deneme, patent veya yayın kaydı. Abone şebekesinde ürün vaadi değildir; kayıt yoksa açıkça yazılır.",
             "trl_assess": "### TRL değerlendirmesi",
             "diagram_terms": "Diyagram terimleri",
         },
@@ -170,7 +170,7 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
                 "architecture": "3. Sistem mimarisi",
                 "use_cases": "4. Kullanım alanları",
                 "adv_dis": "5. Avantajlar ve dezavantajlar",
-                "global_tt": "6. Dünyadaki çalışmalar ve Türkiye örnekleri",
+                "global_tt": "6. Dünyadaki çalışmalar ve Türk Telekom kayıtları",
                 "performance": "7. Performans grafikleri ve referans makaleler",
             },
             "def_heading": "### Teknoloji tanımı — problem, yöntem, sınır",
@@ -956,7 +956,7 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "modules": "#### Modüller",
             "mod_left": """
 - **Ana Sayfa** — 7 teknolojinin TRL radar haritası; Dual-Depth (Temel/Uzman) giriş metnini değiştirir
-- **6G Teknoloji Rehberi** — tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT senaryoları, TRL
+- **6G Teknoloji Rehberi** — tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT kayıtları, TRL
 - **Patent Zekası** — Nokia–Intel (9 firma); yedi 6G konusu; Lens.org; grafik: firma, yıl, konu, radar, bulut, ağaç, yoğunluk, harita
 - **Akademik Yayın Analizi** — Springer Nature Meta API; yıl / ülke / atıf
             """,
@@ -1154,7 +1154,7 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
 </p>
 </div>""",
             "cards_heading": "Seven Building Blocks",
-            "cards_caption": "Each card states the field problem first, then the method. For the step-by-step walkthrough, equations, and the Türk Telekom scenario, open 6G Technology Explorer in the sidebar.",
+            "cards_caption": "Each card states the field problem first, then the method. For the step-by-step walkthrough, equations, and documented Türk Telekom work, open 6G Technology Explorer in the sidebar.",
             "card_cta": "Step-by-step walkthrough: 6G Technology Explorer → select this card",
             "cards_heading_expert": "Seven Building Blocks",
             "cards_caption_expert": "Each card states the problem plus the technical counterpart. For Shannon/CRB, 3GPP and the validity window, open 6G Technology Explorer.",
@@ -1189,7 +1189,7 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
             "problem": "Which problem?",
             "why_needed": "Why is it needed?",
             "what": "What does it do?",
-            "tt_impact": "Türk Telekom and TRL",
+            "tt_impact": "Documented Türk Telekom work",
             "heading": "Foundation layer — problem, need, method. Equations and 3GPP sit in the expert layer.",
             "heading_compact": "Definition layer (summary)",
             "heading_expert": "Expert layer — same sequence; equations, assumptions, 3GPP and alternatives. Sentences are not copies of Foundation.",
@@ -1225,8 +1225,8 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
             "disadvantages": "### Disadvantages — which problems it creates",
             "global": "### Work worldwide",
             "global_caption": "This is not a name-drop list: each row says why the topic is on the standards or research agenda.",
-            "tt_scenarios": "### Türk Telekom scenarios",
-            "tt_caption": "Problem → why this technology → expected outcome. Not a field measurement.",
+            "tt_scenarios": "### What Türk Telekom has done",
+            "tt_caption": "Verified announcement, trial, patent, or publication on this platform. Not a retail-network product claim; gaps are stated explicitly.",
             "trl_assess": "### TRL assessment",
             "diagram_terms": "Diagram terms",
         },
@@ -1241,7 +1241,7 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
                 "architecture": "3. System architecture",
                 "use_cases": "4. Use cases",
                 "adv_dis": "5. Advantages and disadvantages",
-                "global_tt": "6. Global work and TT scenarios",
+                "global_tt": "6. Global work and documented Türk Telekom activity",
                 "performance": "7. Performance charts and reference papers",
             },
             "def_heading": "### Technology definition — problem, method, limit",
@@ -2026,7 +2026,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "modules": "#### Modules",
             "mod_left": """
 - **Home** — TRL radar for the seven technologies; dual-depth (foundation/expert) switches the intro
-- **6G Technology Explorer** — definition, operating principle, block diagram, architecture, use cases, advantages/disadvantages, global work, TT scenarios, TRL
+- **6G Technology Explorer** — definition, operating principle, block diagram, architecture, use cases, advantages/disadvantages, global work, documented TT activity, TRL
 - **Patent Intelligence** — Nokia–Intel (9 firms); seven 6G topics; Lens.org; charts: firms, year, topic, radar, cloud, tree, density, map
 - **Academic Publication Analysis** — Springer Nature Meta API; year / country / cited
             """,
@@ -2043,7 +2043,7 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "talk_body": """
 1. Purpose and scope (1 min)
 2. Home TRL radar (2 min)
-3. One technology (e.g. RIS) — principle + diagram + TT scenario (3 min)
+3. One technology (e.g. RIS) — principle + diagram + what TT has done (3 min)
 4. Patent Intelligence — company filter, year chart, TT Europe footprint (3 min)
 5. Academic Publication Analysis — Springer Nature Meta API + TT-affiliated DOI (3 min)
 6. AI Assistant — “What is RIS?” and “NTN vs ISAC” (2 min)

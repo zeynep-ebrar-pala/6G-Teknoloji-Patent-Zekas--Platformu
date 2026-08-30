@@ -72,8 +72,10 @@ BEGINNER_COPY = {
             "low-altitude drone testbeds. Not a commercial ‘every site is a radar’ product."
         ),
         "tt_impact": (
-            "Fog-bound strait traffic, urban drone corridor, motion under debris: existing site "
-            "geometry is the candidate. TRL 4 — laboratory; not in every subscriber neighbourhood."
+            "With InterDigital, Türk Telekom announced an Ankara test-centre trial on preliminary "
+            "6G ISAC architecture using ETSI ISAC ISG baseline concepts, showing collaborative "
+            "cellular and Wi-Fi sensing (2026). ISAC is not verified as a retail-network product "
+            "on this platform; TRL 4."
         ),
         "principle_html": (
             "<p><strong>1. Radiate:</strong> the <strong>gNB</strong> (next-generation Node B) "
@@ -158,8 +160,9 @@ BEGINNER_COPY = {
             "Not plug-and-play commodity on every building."
         ),
         "tt_impact": (
-            "Peninsula, tunnel, plaza glass: coverage without a new tower. TRL 5 — prototype in a "
-            "relevant environment; not a default part of the subscriber network."
+            "No verified RIS field pilot or retail-network installation for Türk Telekom on this "
+            "platform. The group tracks 6G architecture via the Ericsson R&D MoU and EUREKA "
+            "DRIVING-6G (Türkiye lead); TRL 5."
         ),
         "principle_html": (
             "<p><strong>1. Surface:</strong> a thin reflector on the façade. This is not a base station.</p>"
@@ -234,7 +237,9 @@ BEGINNER_COPY = {
             "demonstrations. A stadium PoC candidate; not a city-wide product."
         ),
         "tt_impact": (
-            "Airport, stadium, warehouse: the edge complaint. TRL 4. Dense venues first — fibre is expensive."
+            "No verified cell-free MIMO field pilot for Türk Telekom on this platform. TT R&D "
+            "publications track 6G network slicing and distributed architecture; TRL 4 — fibre cost "
+            "is an operational constraint."
         ),
         "principle_html": (
             "<p><strong>1. Distribute:</strong> APs are placed densely; the design does not rest on one macro.</p>"
@@ -307,8 +312,9 @@ BEGINNER_COPY = {
             "sub-THz demonstrations. Not the default band in a subscriber handset."
         ),
         "tt_impact": (
-            "Not handset speed in the near term; racks and tower hops where fibre cannot be pulled. "
-            "TRL 3. Placement: the laboratory."
+            "No verified THz field installation or retail-network measurement for Türk Telekom on "
+            "this platform. Ankara and Istanbul data centres are operated; inter-rack THz mesh "
+            "was not measured here. TRL 3."
         ),
         "principle_html": (
             "<p><strong>1. Band:</strong> spectrum between mmWave and infrared opens; B grows.</p>"
@@ -384,7 +390,9 @@ BEGINNER_COPY = {
             "A fully neural air interface is laboratory."
         ),
         "tt_impact": (
-            "Post-match resource shift, night sleep, a fault precursor. TRL 5. Human supervision stays."
+            "Netsia (group R&D affiliate) received US patents on programmable RAN, slicing, and "
+            "RIC slice assurance; TT R&D published AI-for-6G papers. Net Insight Open RAN sync and "
+            "Ericsson 6G standards MoU were signed. TRL 5 — human supervision remains."
         ),
         "principle_html": (
             "<p><strong>1. Measure:</strong> load, channel, energy, drops.</p>"
@@ -457,7 +465,9 @@ BEGINNER_COPY = {
             "A disaster backup path is operator strategy, not a field guarantee."
         ),
         "tt_impact": (
-            "Disaster path, fleet, rural. TRL 6 — the most mature of the seven. A complement."
+            "TTI (Türk Telekom International) operates wholesale PoPs in 19 countries; rural "
+            "coverage in Türkiye is terrestrial. Rel-17 direct-to-cell NTN is not verified on "
+            "the retail network on this platform. TRL 6 — industry trials exist."
         ),
         "principle_html": (
             "<p><strong>1. Priority:</strong> the city stays on towers. Empty geography uses <strong>LEO</strong> / <strong>HAPS</strong>.</p>"
@@ -526,7 +536,9 @@ BEGINNER_COPY = {
             "Inflow to a TT IoT platform is a scenario; it is not on every shelf."
         ),
         "tt_impact": (
-            "Warehouse pallet, greenhouse, meter. TRL 4. It does not replace your phone."
+            "The Türk Telekom IoT platform operationally collects sensor and device data. Battery-free "
+            "6G Ambient IoT tag rollout is not verified on the retail network on this platform. "
+            "TRL 4 — it does not replace your phone."
         ),
         "principle_html": (
             "<p><strong>1. Harvest:</strong> a rectenna converts an RF scrap to DC.</p>"

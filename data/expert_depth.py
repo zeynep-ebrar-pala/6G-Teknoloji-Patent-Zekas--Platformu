@@ -153,9 +153,9 @@ EXPERT_DEPTH: dict[str, dict] = {
             "Satıcı test yatakları gösterimdir; 100 Gbps + 1 cm birlikte bu platformda doğrulanmış metrik değildir.",
         ],
         "tt_why": [
-            "Boğaz: kıyı gNB geometrisi su yolunu keser; sis kamerayı körler, RF yankısı adaydır.",
-            "Dron koridoru: alçak irtifa, karasal kule zaten yukarı bakar; ayrı UTM radarı pahalıdır.",
-            "Enkaz: optik yok, duvar arkası RF literatürü var; arama-kurtarma ürün onayı ayrı iştir.",
+            "Ankara test merkezi: InterDigital ile ETSI ISAC ISG tabanlı ön 6G ISAC denemesi duyuruldu (2026).",
+            "Abone şebekesi: ISAC ticari ürün olarak bu platformda doğrulanmamıştır.",
+            "Standart: Ericsson 6G mutabakatı kapsamında entegre algılama mimarisi izlenir.",
         ],
     },
     "ris": {
@@ -279,9 +279,9 @@ EXPERT_DEPTH: dict[str, dict] = {
             "RISE-6G: AB araştırma çerçevesi, standart değil.",
         ],
         "tt_why": [
-            "Tarihi yarımada: yeni kule silüeti kısıtlı; cephe paneli arkeolojik ve imar olarak daha savunulabilir.",
-            "Tünel: kıvrım N-LoS; pasif panel bakım ve güç açısından aktiften sade olabilir.",
-            "Plaza camı: şeffaf RIS araştırması var; '10 Gbps+ her vagonda' bu platformda ölçülmedi.",
+            "Saha pilot: bu platformda doğrulanmış RIS kurulumu kaydı yoktur.",
+            "Ar-Ge: Ericsson MoU ve DRIVING-6G kapsamında 6G mimarisi takip edilir.",
+            "Patent: Netsia kümesi AI-RAN/dilimleme ağırlıklı; RIS dosyası listelenmemiştir.",
         ],
     },
     "cell_free": {
@@ -374,9 +374,9 @@ EXPERT_DEPTH: dict[str, dict] = {
             "Ericsson/Nokia gösterimleri laboratuvar; stadyum ürün SKU'su değildir.",
         ],
         "tt_why": [
-            "Stadyum: aynı anda yüksek yük + adalet; klasik makro tribün kenarını aç bırakır.",
-            "İGA: yürüyüş handover kopması; serving kümesi kaydırması aday mekanizmadır.",
-            "Sanayi: AGV hücre sınırında durmasın diye kısa hop + ortak taşıma.",
+            "Saha pilot: hücresiz MIMO kurulum kaydı bu platformda yoktur.",
+            "Yayın: Ar-Ge bağlılıklı 6G dilimleme ve ML yayınları izlenir.",
+            "Proje: DRIVING-6G ve Ericsson mutabakatı — dağıtık RAN literatür takibi.",
         ],
     },
     "thz": {
@@ -497,9 +497,9 @@ EXPERT_DEPTH: dict[str, dict] = {
             "Satıcı 140 GHz gösterimi Sub-THz'dir; 10 THz ürün değildir.",
         ],
         "tt_why": [
-            "Veri merkezi: d küçük, fiber yorgunluğu; yine de hizalama ve ısı var.",
-            "Kule köprüsü: kazı yok; yağmur yedek hop ister.",
-            "Holografik stüdyo: kontrollü iç mekân, abone sokağı değil.",
+            "Saha: THz kurulum ölçümü bu platformda yoktur; TRL 3.",
+            "Altyapı: Ankara/İstanbul veri merkezleri işletilir; THz mesh ölçülmemiştir.",
+            "Literatür: Ericsson MoU ve DRIVING-6G — yüksek frekans izleme.",
         ],
     },
     "ai_ran": {
@@ -619,9 +619,9 @@ EXPERT_DEPTH: dict[str, dict] = {
             "NVIDIA Aerial vb. SDK'dır; standart değildir.",
         ],
         "tt_why": [
-            "Gece makro uyku: ölçüm varsa watt-saat; yoksa senaryo motoru kuralıdır.",
-            "Maç günü: yük s, eylem komşu hücreden PRB; keşif kapalı tutulur.",
-            "Kestirimci bakım: yanlış pozitif saha ekibini yakmamalı.",
+            "Netsia: RANxChange, dilimleme ve slice assurance patentleri (2023–2025).",
+            "Yayın: TT Ar-Ge AI/6G ve ağ dilimleme makaleleri (kilitli DOI kümesi).",
+            "Ortaklık: Net Insight Open RAN sync (2025); Ericsson 6G MoU (2026).",
         ],
     },
     "ntn": {
@@ -738,9 +738,9 @@ EXPERT_DEPTH: dict[str, dict] = {
             "ESA 6G uzay bileşeni: Avrupa sistem çalışması.",
         ],
         "tt_why": [
-            "Afet: karasal gNB ölür, kimlik aynı kalır — operatör stratejisi, saha garantisi değil.",
-            "Filo: açık deniz FSPL + Direct-to-cell cihaz sınıfı.",
-            "Dağ: site yok; kapasite değil, bağlantı.",
+            "TTI: 19 ülkede toptan PoP (About); karasal toptan, NTN ürünü değil.",
+            "Kırsal: karasal şebeke ve fiber; Rel-17 NTN abone ürünü doğrulanmamış.",
+            "Standart: Ericsson MoU kapsamında uydu entegrasyonu literatür izi.",
         ],
     },
     "ambient_iot": {
@@ -860,9 +860,9 @@ EXPERT_DEPTH: dict[str, dict] = {
             "Wiliot vb. ticari etiket: 3GPP ile özdeş ürün olmayabilir.",
         ],
         "tt_why": [
-            "Depo: okuyucu gNB veya gate; 10 yıl bakım vaadi hedef, saha değil.",
-            "Sera: nem seyrek; toprak Friis'i tasarım kısıtı.",
-            "Sayaç: RF'si olan şaft/bina; metal dolap öldürür.",
+            "IoT platformu operasyonel; Ambient IoT etiket dağıtımı doğrulanmamış.",
+            "Literatür: düşük güç IoT ve 6G yayın/patent takibi.",
+            "Patent: Netsia kümesi AI-RAN ağırlıklı; Ambient IoT dosyası yok.",
         ],
     },
 }

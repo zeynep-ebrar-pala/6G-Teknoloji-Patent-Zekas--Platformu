@@ -1,5 +1,5 @@
 """
-Temel mod — kullanım senaryoları, artı/eksi, araştırma ve coğrafi örnekler.
+Temel mod — kullanım senaryoları, artı/eksi, araştırma ve Türk Telekom kayıtları.
 global_research ve tt_scenarios: {title, body} — başlık sorunu, gövde açıklaması.
 """
 
@@ -96,27 +96,28 @@ BEGINNER_SURFACES = {
         ],
         "tt_scenarios": [
             {
-                "title": "Sis yüzünden gemiler görünmüyor",
+                "title": "Ankara test merkezinde ISAC denemesi",
                 "body": (
-                    "Boğaz ve Marmara'da sis kamerayı işe yaramaz hale getirir. "
-                    "Sahildeki baz istasyonu, gönderdiği radyo sinyalinin geri dönüşünden "
-                    "geminin uzakta ve hızlı olduğunu anlayabilir. Bu fikir araştırılıyor; "
-                    "şebekede ürün olarak yoktur."
+                    "InterDigital ile Ankara'da, ETSI ISAC ISG taban kavramlarını kullanan "
+                    "ön 6G ISAC mimarisinde hücresel ve Wi-Fi algılamayı birlikte gösteren "
+                    "deneme duyuruldu (2026). Kaynak test merkezi çalışmasıdır; abone şebekesi "
+                    "ürünü değildir."
                 ),
             },
             {
-                "title": "Şehirde dronları kim güvenli izleyecek?",
+                "title": "Abone şebekesinde durum",
                 "body": (
-                    "Teslimat dronları ve izinsiz uçuşlar için ayrı radar ağı kurmak pahalıdır. "
-                    "Mevcut kule hattı, bu koridorlarda ek bir görev üstlenebilir mi diye "
-                    "literatürde tartışılıyor."
+                    "ISAC, bu platformda Türk Telekom abone şebekesinde ticari ürün olarak "
+                    "doğrulanmamıştır. Hazırlık seviyesi 4; laboratuvar ve test merkezi "
+                    "düzeyindedir."
                 ),
             },
             {
-                "title": "Enkaz altında insan var mı?",
+                "title": "6G standart hazırlığı",
                 "body": (
-                    "Deprem sonrası kamera her enkaza giremez. Radyo yankısı hareket ipucu "
-                    "verebilir; ancak gizlilik, hata payı ve yasal sınırlar henüz net değildir."
+                    "Ericsson ile 2026 MWC Barcelona'da 6G standart katkısı için Ar-Ge "
+                    "mutabakatı imzalandı. Entegre algılama mimarisi bu çerçevede izlenir; "
+                    "saha ürün tarihi bu kaynakta yoktur."
                 ),
             },
         ],
@@ -212,25 +213,27 @@ BEGINNER_SURFACES = {
         ],
         "tt_scenarios": [
             {
-                "title": "Dar sokakta telefon çekmiyor",
+                "title": "Doğrulanmış saha pilotu yok",
                 "body": (
-                    "Tarihi Yarımada gibi yerlerde yeni kule dikmek zor veya istenmez. "
-                    "Cepheye asılan ince panel, baz istasyonunun sinyalini telefona "
-                    "yansıtmaya adaydır; prototip aşamasındadır."
+                    "Bu platformda Türk Telekom adına kayıtlı RIS saha pilotu veya abone "
+                    "şebekesi kurulumu yoktur. Hazırlık seviyesi 5; endüstri genelinde "
+                    "prototip aşamasıdır."
                 ),
             },
             {
-                "title": "Tünelde bağlantı kopuyor",
+                "title": "6G Ar-Ge ve standart çerçevesi",
                 "body": (
-                    "Avrasya Tüneli ve Marmaray'da kıvrımlar sinyali zayıflatır. "
-                    "Duvara monte panel sinyali yönlendirebilir; saha denemesi adayıdır."
+                    "Ericsson ile 2026'da 6G Ar-Ge mutabakatı imzalandı. EUREKA DRIVING-6G "
+                    "(AI-native 6G, Türkiye yürütücülüğü) projesinde grup 6G mimarisini "
+                    "takip ediyor; RIS literatürde izlenir."
                 ),
             },
             {
-                "title": "Plaza ve cam cephede içeride zayıf sinyal",
+                "title": "Patent izi",
                 "body": (
-                    "Yüksek frekansta cam ve kalın duvar iç mekânda sinyali keser. "
-                    "Şeffaf veya ince yüzey kaplaması iç kapsamayı iyileştirmeye adaydır."
+                    "Kilitli patent kümesinde Netsia (grup Ar-Ge iştiraki) kayıtları "
+                    "programlanabilir RAN ve dilimleme ağırlıklıdır; RIS'e özel Netsia "
+                    "dosyası bu platformda listelenmemiştir."
                 ),
             },
         ],
@@ -318,25 +321,27 @@ BEGINNER_SURFACES = {
         ],
         "tt_scenarios": [
             {
-                "title": "Stadyumda herkes aynı anda bağlanıyor",
+                "title": "Doğrulanmış saha pilotu yok",
                 "body": (
-                    "On binlerce kişi tek kuleye yük bindirir; tribünün bir yanı hızlı, "
-                    "diğer yanı yavaş kalabilir. Tavan ve tribüne dağıtık antenler "
-                    "yükü paylaştırmaya adaydır; fiber maliyeti vardır."
+                    "Bu platformda Türk Telekom adına kayıtlı hücresiz MIMO saha pilotu "
+                    "yoktur. Hazırlık seviyesi 4; fiber bağlantı maliyeti operasyonel "
+                    "kısıttır."
                 ),
             },
             {
-                "title": "Havalimanında yürürken bağlantı kopuyor",
+                "title": "Ar-Ge yayın izi",
                 "body": (
-                    "Geniş terminalde geçişlerde sinyal düşebilir. Birçok küçük anten "
-                    "birlikte hizmet vererek kopmayı azaltmaya adaydır."
+                    "Türk Telekom Ar-Ge bağlılıklı yayınlarda 6G ağ dilimleme ve makine "
+                    "öğrenmesi konuları izlenir; dağıtık anten mimarisi bu literatür "
+                    "kümesinde tartışılır."
                 ),
             },
             {
-                "title": "Depoda robot hücre kenarında zayıflıyor",
+                "title": "6G proje katılımı",
                 "body": (
-                    "Otonom araçlar ve robotlar depo köşelerinde sinyal kaybedebilir. "
-                    "Dağıtık anten bu tür iç mekânlarda tartışılıyor."
+                    "EUREKA DRIVING-6G ve Ericsson 6G mutabakatı kapsamında grup dağıtık "
+                    "RAN mimarisini takip ediyor; abone şebekesinde kurulum kaydı "
+                    "bu platformda yoktur."
                 ),
             },
         ],
@@ -424,24 +429,26 @@ BEGINNER_SURFACES = {
         ],
         "tt_scenarios": [
             {
-                "title": "Veri merkezinde kablo karmaşası",
+                "title": "Doğrulanmış THz kurulumu yok",
                 "body": (
-                    "Sunucu rafları arasında binlerce fiber kablo yönetimi zordur. "
-                    "Kısa mesafe kablosuz link bu ortamda düşünülüyor; menzil çok kısadır."
+                    "Bu platformda Türk Telekom adına kayıtlı THz saha kurulumu veya abone "
+                    "şebekesi ölçümü yoktur. Hazırlık seviyesi 3; laboratuvar aşamasıdır."
                 ),
             },
             {
-                "title": "Dağlık alanda kuleler arası fiber zor",
+                "title": "Veri merkez altyapısı",
                 "body": (
-                    "Fiber çekmek maliyetli veya imkânsız coğrafyada kuleler arası "
-                    "kısa kablosuz köprü adayıdır. Sokak boyunca cep hızı vaadi değildir."
+                    "Grup Ankara ve İstanbul'da veri merkezleri işletir. Raflar arası THz "
+                    "kablosuz bağlantı bu platformda ölçülmemiştir; fiber altyapı "
+                    "mevcuttur."
                 ),
             },
             {
-                "title": "Canlı sunum ve demo salonu",
+                "title": "6G literatür takibi",
                 "body": (
-                    "Teknoloji merkezlerinde yüksek çözünürlüklü canlı yayın denemeleri "
-                    "yapılabilir. Günlük abone deneyimi hedefi değildir."
+                    "Ericsson 6G mutabakatı ve DRIVING-6G projesi kapsamında grup yüksek "
+                    "frekans bantlarını literatürde izler; ticari THz ürün duyurusu "
+                    "bu kaynakta yoktur."
                 ),
             },
         ],
@@ -529,25 +536,28 @@ BEGINNER_SURFACES = {
         ],
         "tt_scenarios": [
             {
-                "title": "Gece boş kuleler elektrik yiyor",
+                "title": "Netsia patentleri (programlanabilir RAN)",
                 "body": (
-                    "Trafiğin az olduğu saatlerde gereksiz radyo birimleri çalışmaya "
-                    "devam eder. Yapay zekâ hangi parçayı uyutacağını seçebilir; "
-                    "tasarruf hedefidir, burada fatura ölçülmedi."
+                    "Grup Ar-Ge iştiraki Netsia, RAN kapasite paylaşımı (RANxChange), "
+                    "erişim+backhaul dilimleme ve RIC altında dilim güvencesi için ABD "
+                    "patentleri aldı (2023–2025). Google Patents kayıtları bu platformda "
+                    "listelenir."
                 ),
             },
             {
-                "title": "Maç günü stadyum çevresi çöküyor",
+                "title": "Yapay zekâ destekli 6G yayınları",
                 "body": (
-                    "Ani trafik patlamasında sabit kural yetmeyebilir. Kaynak otomatik "
-                    "kaydırılabilir; insan denetimi ve geri alma yolu kalır."
+                    "Türk Telekom Ar-Ge bağlılıklı makaleler: 6G için yapay zekâ, ağ "
+                    "dilimleme, radyo planlama ve Open RAN konularında IEEE ve Springer "
+                    "yayınları (2025–2026). Bu platformda kilitli DOI kümesinde sayılır."
                 ),
             },
             {
-                "title": "Kule arızası geç fark ediliyor",
+                "title": "Open RAN ve standart ortaklıkları",
                 "body": (
-                    "Donanım bozulması önceden görülüp yedek plan yapılabilir. "
-                    "Yanlış alarm ve kara kutu model riski vardır."
+                    "Net Insight ile GNSS bağımsız senkronizasyon ve Open RAN genişletmesi "
+                    "duyuruldu (2025). Ericsson ile 2026 MWC Barcelona'da 6G standart "
+                    "mutabakatı imzalandı. Saha otonom işletim bu platformda doğrulanmadı."
                 ),
             },
         ],
@@ -634,24 +644,27 @@ BEGINNER_SURFACES = {
         ],
         "tt_scenarios": [
             {
-                "title": "Depremde kuleler devre dışı kalıyor",
+                "title": "TTI toptan ağ",
                 "body": (
-                    "Afet sonrası karasal şebeke zarar görebilir. Uydu üzerinden acil "
-                    "SMS veya ses yedek yol olabilir; gecikme şehir kulesinden uzundur."
+                    "TTI (Türk Telekom International), resmi About sayfasında 19 ülkede "
+                    "toptan PoP işlettiğini yazar. Bu, uydu NTN ürünü değil; karasal "
+                    "toptan bağlantıdır."
                 ),
             },
             {
-                "title": "Açık denizde telefon çekmiyor",
+                "title": "Kırsal kapsama (karasal)",
                 "body": (
-                    "Balıkçı ve gemi filoları karasal kapsama dışına çıkar. Aynı SIM ile "
-                    "uydu bağlantısı hedeflenir; hız sınırlı olabilir."
+                    "Türkiye'de kırsal bağlantı karasal şebeke ve fiber yatırımlarıyla "
+                    "sağlanır. Abone şebekesinde Rel-17 direct-to-cell NTN ürünü bu "
+                    "platformda doğrulanmamıştır."
                 ),
             },
             {
-                "title": "Mezrada kule dikmek imkânsız veya pahalı",
+                "title": "6G standart hazırlığı",
                 "body": (
-                    "Dağlık kırsalda her köye fiber ve kule ekonomik değildir. Uydu "
-                    "boşluğu kapatmaya adaydır; '%100 kapsama' pazarlamadır."
+                    "Ericsson 6G mutabakatı kapsamında uydu entegrasyonu literatürde "
+                    "izlenir. Endüstride kamuya açık direct-to-cell denemeleri vardır; "
+                    "Türk Telekom saha kaydı bu platformda listelenmemiştir."
                 ),
             },
         ],
@@ -739,24 +752,27 @@ BEGINNER_SURFACES = {
         ],
         "tt_scenarios": [
             {
-                "title": "Binlerce paletin pilini kim değiştirecek?",
+                "title": "IoT platformu (işletimde)",
                 "body": (
-                    "Lojistik merkezlerinde her palete pil takmak ekonomik değildir. "
-                    "Ortam radyosundan çalışan etiket 'nerede, kaç derece' bildirmeye adaydır."
+                    "Türk Telekom IoT platformu sensör ve cihaz verisini toplar ve "
+                    "yönetir; bu operasyonel altyapıdır. Pilsiz 6G Ambient IoT etiket "
+                    "dağıtımı abone şebekesinde bu platformda doğrulanmamıştır."
                 ),
             },
             {
-                "title": "Serada kablo ve pil lojistiği zor",
+                "title": "6G literatür takibi",
                 "body": (
-                    "Toprağa gömülü nem sensörü pilsiz çalışabilir; ortamda yeterli "
-                    "radyo yoksa etiket susar. Kapsama alanı sınırlıdır."
+                    "Ar-Ge ekipleri düşük güçlü IoT ve 6G konularını yayın ve patent "
+                    "verisinde izler. Ambient IoT'a özel saha pilot kaydı bu platformda "
+                    "yoktur."
                 ),
             },
             {
-                "title": "Soğuk zincirde sıcaklık kaçtı mı?",
+                "title": "Patent izi",
                 "body": (
-                    "İlaç ve gıda taşımada sıcaklık ihlali pahalıdır. Pilsiz etiket "
-                    "alarm üretebilir; video veya telefon yerine geçmez."
+                    "Kilitli Netsia patentleri AI-RAN ve dilimleme ağırlıklıdır; "
+                    "Ambient IoT'a özel grup patenti bu listede yoktur. Hazırlık "
+                    "seviyesi 4; telefonun yerini almaz."
                 ),
             },
         ],

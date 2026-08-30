@@ -97,9 +97,9 @@ TECHNOLOGIES = {
             "Nokia Bell Labs, Huawei 6G ISAC Testbed Gösterimleri (100+ Gbps + 1cm algılama)"
         ],
         "tt_scenarios": [
-            "<strong>İstanbul Boğazı & Marmara Deniz Seyir Güvenliği:</strong> Türk Telekom sahil baz istasyonları ile boğazdaki tüm deniz taşıtlarının sis altında gerçek zamanlı konum/hız takibi.",
-            "<strong>İstanbul / Ankara İHA (Dron) Koridorları:</strong> Türk Telekom 6G kuleleri ile şehir içi teslimat dronlarının uçuş güvenliği ve kaçak dron tespiti.",
-            "<strong>AFAD Entegre Deprem Enkaz Algılama:</strong> Deprem anında binaların enkaz altındaki hareketliliklerin duvar arkası RF algılama ile kameralar olmadan tespiti."
+            "<strong>Ankara test merkezi — ISAC denemesi (2026):</strong> InterDigital ile ETSI ISAC ISG taban kavramlarını kullanan ön 6G ISAC mimarisinde hücresel ve Wi-Fi algılamayı birlikte gösteren deneme duyuruldu. Test merkezi çalışmasıdır; abone şebekesi ürünü değildir.",
+            "<strong>Abone şebekesi:</strong> ISAC bu platformda Türk Telekom abone şebekesinde ticari ürün olarak doğrulanmamıştır. TRL 4 — laboratuvar ve test merkezi düzeyi.",
+            "<strong>6G standart hazırlığı:</strong> Ericsson ile 2026 MWC Barcelona'da 6G standart katkısı için Ar-Ge mutabakatı imzalandı; entegre algılama mimarisi bu çerçevede izlenir."
         ],
         "references": [
             {
@@ -206,9 +206,9 @@ TECHNOLOGIES = {
             "RISE-6G EU Project (Reconfigurable Intelligent Surfaces for 6G)"
         ],
         "tt_scenarios": [
-            "<strong>Tarihi Yarımada & Dar Sokak Kapsaması (İstanbul):</strong> Tarihi dokuya zarar vermeden, yeni kule dikmeksizin bina yüzeylerine akıllı kaplama RIS ile kesintisiz 6G.",
-            "<strong>Avrasya Tüneli & Marmaray Kesintisiz Kapsama:</strong> Tünel içi kıvrımlarda sinyal sönümlenmesini önleyen pasif RIS panelleri ile Türk Telekom abonelerine 10 Gbps+ hız.",
-            "<strong>Türk Telekom Plaza & Veri Merkezleri Cam Kaplama:</strong> Plaza binalarının dış camlarına entegre şeffaf RIS kaplaması ile iç mekan mmWave kapsama sorununu çözme."
+            "<strong>Doğrulanmış saha pilotu:</strong> Bu platformda Türk Telekom adına kayıtlı RIS saha pilotu veya abone şebekesi kurulumu yoktur. TRL 5 — endüstri prototip aşaması.",
+            "<strong>6G Ar-Ge çerçevesi:</strong> Ericsson ile 2026'da 6G Ar-Ge mutabakatı; EUREKA DRIVING-6G (AI-native 6G, Türkiye yürütücülüğü) projesinde 6G mimarisi takip edilir.",
+            "<strong>Patent izi:</strong> Kilitli Netsia patentleri programlanabilir RAN ve dilimleme ağırlıklıdır; RIS'e özel Netsia dosyası bu platformda listelenmemiştir."
         ],
         "references": [
             {
@@ -310,9 +310,9 @@ TECHNOLOGIES = {
             "Ericsson & Nokia 6G Distributed MIMO Laboratuvar Gösterimleri"
         ],
         "tt_scenarios": [
-            "<strong>Türk Telekom RAMS Park / Şükrü Saracoğlu Stadyum Çözümü:</strong> 50.000+ taraftarın aynı anda canlı yayın yaptığı durumlarda stadyum çatısına ve tribünlere dağıtılmış Cell-Free AP'ler ile sıfır hız düşüşü.",
-            "<strong>İstanbul Havalimanı İç Mekan Kapsaması:</strong> Dünyanın en büyük terminal alanlarından birinde yolcular hareket ederken hücresel geçiş kopması yaşamadan kesintisiz 6G bağlantısı.",
-            "<strong>Marmara Bölgesi Akıllı Sanayi Depoları:</strong> Otonom transpalet ve robotların hücre kenarında sinyal kaybetmeden tam senkronize çalışması."
+            "<strong>Doğrulanmış saha pilotu:</strong> Bu platformda Türk Telekom adına kayıtlı hücresiz MIMO saha pilotu yoktur. TRL 4 — fiber bağlantı maliyeti operasyonel kısıttır.",
+            "<strong>Ar-Ge yayın izi:</strong> Türk Telekom Ar-Ge bağlılıklı yayınlarda 6G ağ dilimleme ve makine öğrenmesi konuları izlenir; dağıtık anten mimarisi literatürde tartışılır.",
+            "<strong>6G proje katılımı:</strong> EUREKA DRIVING-6G ve Ericsson 6G mutabakatı kapsamında dağıtık RAN mimarisi takip edilir; abone şebekesi kurulum kaydı bu platformda yoktur."
         ],
         "references": [
             {
@@ -411,9 +411,9 @@ TECHNOLOGIES = {
             "Samsung 6G White Paper & Sub-THz (140 GHz) Field Test Demos"
         ],
         "tt_scenarios": [
-            "<strong>Türk Telekom Veri Merkezleri Raflar Arası THz Mesh:</strong> Ankara ve İstanbul veri merkezlerinde sunucu rafları arasındaki binlerce fiber kabloyu kaldırıp 1 Tbps THz kablosuz bağlantı kurma.",
-            "<strong>Türk Telekom 6G Kuleler Arası Ultra-Backhaul:</strong> Fiber çekmenin çok zor veya maliyetli olduğu dağlık/zorlu arazilerde kuleler arası Terabit kablosuz fiber köprü.",
-            "<strong>Yüksek Çözünürlüklü Holografik Sunumlar:</strong> Türk Telekom teknoloji merkezlerinde 8K canlı holografik konferans ve iletişim."
+            "<strong>Doğrulanmış THz kurulumu:</strong> Bu platformda Türk Telekom adına kayıtlı THz saha kurulumu veya abone şebekesi ölçümü yoktur. TRL 3 — laboratuvar aşaması.",
+            "<strong>Veri merkez altyapısı:</strong> Grup Ankara ve İstanbul'da veri merkezleri işletir; raflar arası THz kablosuz bağlantı bu platformda ölçülmemiştir.",
+            "<strong>6G literatür takibi:</strong> Ericsson 6G mutabakatı ve DRIVING-6G kapsamında yüksek frekans bantları literatürde izlenir; ticari THz ürün duyurusu bu kaynakta yoktur."
         ],
         "references": [
             {
@@ -513,9 +513,9 @@ TECHNOLOGIES = {
             "NVIDIA Aerial 6G SDK & Deep Learning RAN Testbeds"
         ],
         "tt_scenarios": [
-            "<strong>Türk Telekom Yeşil Şebeke (Green Network) İnisiyatifi:</strong> Gece saatlerinde trafiğin düştüğü kulelerde AI-RAN derin uyku modu ile yılda gigawatt-saat mertebesinde elektrik tasarrufu.",
-            "<strong>Süper Lig Maç Günleri Dinamik Akıllı Trafik Yönetimi:</strong> Maç saatinde stadyum çevresindeki kulelerin kaynaklarını yapay zeka ile milisaniyeler içinde taraftarlara otomatik kaydırma.",
-            "<strong>Türk Telekom Şebekesi Kestirimci Arıza Önleme:</strong> Baz istasyonundaki donanım bozulmalarını arıza yaşanmadan saatler önce tespit edip yedek sisteme geçiş."
+            "<strong>Netsia patentleri (2023–2025):</strong> Grup Ar-Ge iştiraki Netsia, RAN kapasite paylaşımı (RANxChange), erişim+backhaul dilimleme ve RIC altında dilim güvencesi için ABD patentleri aldı. Google Patents kayıtları bu platformda listelenir.",
+            "<strong>Yapay zekâ destekli 6G yayınları:</strong> Türk Telekom Ar-Ge bağlılıklı makaleler — 6G için yapay zekâ, ağ dilimleme, radyo planlama (IEEE, Springer; 2025–2026). Kilitli DOI kümesinde sayılır.",
+            "<strong>Open RAN ve standart ortaklıkları:</strong> Net Insight ile GNSS bağımsız senkronizasyon ve Open RAN genişletmesi (2025); Ericsson ile 2026 MWC Barcelona'da 6G standart mutabakatı. Saha otonom işletim bu platformda doğrulanmadı."
         ],
         "references": [
             {
@@ -610,9 +610,9 @@ TECHNOLOGIES = {
             "ESA (European Space Agency) 6G Space Component Initiative"
         ],
         "tt_scenarios": [
-            "<strong>Türk Telekom Afet Dayanıklı Acil İletişim Şebekesi:</strong> Deprem anında karasal kuleler veya fiber hatlar zarar görse dahi tüm abonelerin LEO uyduları üzerinden AFAD ve yakınlarıyla kesintisiz haberleşmesi.",
-            "<strong>Marmara ve Karadeniz Balıkçı / Gemi Filoları:</strong> Türk Telekom SIM kartlı cihazların açık denizde uydu üzerinden tam kapsamada kalması.",
-            "<strong>Doğu ve Güneydoğu Anadolu Dağlık Kırsal Kapsama:</strong> Kule dikilmesi coğrafi olarak imkansız mezra ve dağ yollarında %100 kapsama."
+            "<strong>TTI toptan ağ:</strong> TTI (Türk Telekom International) resmi About sayfasında 19 ülkede toptan PoP işlettiğini yazar. Uydu NTN ürünü değil; karasal toptan bağlantıdır.",
+            "<strong>Kırsal kapsama (karasal):</strong> Türkiye'de kırsal bağlantı karasal şebeke ve fiber yatırımlarıyla sağlanır. Abone şebekesinde Rel-17 direct-to-cell NTN ürünü bu platformda doğrulanmamıştır.",
+            "<strong>6G standart hazırlığı:</strong> Ericsson 6G mutabakatı kapsamında uydu entegrasyonu literatürde izlenir. Endüstri direct-to-cell denemeleri vardır; Türk Telekom saha kaydı bu platformda listelenmemiştir."
         ],
         "references": [
             {
@@ -715,9 +715,9 @@ TECHNOLOGIES = {
             "Wiliot & Qualcomm Battery-Free Smart Tag Demos"
         ],
         "tt_scenarios": [
-            "<strong>Türk Telekom Lojistik ve Depo Dijital Dönüşümü:</strong> Türk Telekom'un binlerce tedarikçi ürününün ve saha teçhizatının bataryasız etiketlerle 10 yıl boyunca bakım yapmaksızın takibi.",
-            "<strong>Türkiye Akıllı Tarım / Sera Entegrasyonu:</strong> Tarım arazilerine serpilen pilsiz 6G nem sensörleri ile Türk Telekom IoT platformu üzerinden sulama otomasyonu.",
-            "<strong>Akıllı Şehir Sayaç Takibi:</strong> Su, doğalgaz ve elektrik sayaçlarının bataryasız Ambient IoT etiketleriyle otomatik okunması."
+            "<strong>IoT platformu (işletimde):</strong> Türk Telekom IoT platformu sensör ve cihaz verisini toplar ve yönetir. Pilsiz 6G Ambient IoT etiket dağıtımı abone şebekesinde bu platformda doğrulanmamıştır.",
+            "<strong>6G literatür takibi:</strong> Ar-Ge ekipleri düşük güçlü IoT ve 6G konularını yayın ve patent verisinde izler. Ambient IoT'a özel saha pilot kaydı bu platformda yoktur.",
+            "<strong>Patent izi:</strong> Kilitli Netsia patentleri AI-RAN ve dilimleme ağırlıklıdır; Ambient IoT'a özel grup patenti bu listede yoktur. TRL 4 — telefonun yerini almaz."
         ],
         "references": [
             {

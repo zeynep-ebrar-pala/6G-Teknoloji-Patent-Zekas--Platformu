@@ -72,8 +72,9 @@ BEGINNER_COPY = {
             "Her kulede satılan ticari radar ürünü değildir."
         ),
         "tt_impact": (
-            "Türkiye bağlamında sisli deniz yolu, şehir içi dronlar ve afet sonrası arama "
-            "gibi sorunlarda düşünülüyor. Hazırlık seviyesi 4; laboratuvarda doğrulandı, şebekede henüz yok."
+            "InterDigital ile Ankara test merkezinde ETSI ISAC ISG taban kavramlarını kullanan "
+            "ön 6G ISAC mimarisinde hücresel ve Wi-Fi algılamayı birlikte gösteren deneme duyuruldu (2026). "
+            "Abone şebekesinde ISAC ürünü bu platformda doğrulanmamıştır; hazırlık seviyesi 4."
         ),
         "principle_html": (
             "<p><strong>1. Gönder:</strong> Baz istasyonu telefonunuza veri gönderir. "
@@ -161,8 +162,9 @@ BEGINNER_COPY = {
             "Tak-çalıştır ticari ürün her binada yoktur."
         ),
         "tt_impact": (
-            "Türkiye bağlamında dar sokak, tünel ve plaza içi zayıf sinyal sorunlarında "
-            "düşünülüyor. Hazırlık seviyesi 5; prototip aşamasında, şebekenin varsayılan parçası değil."
+            "Bu platformda Türk Telekom adına doğrulanmış RIS saha pilotu veya abone şebekesi "
+            "kurulumu kaydı yoktur. Grup, Ericsson ile 6G Ar-Ge mutabakatı ve EUREKA DRIVING-6G "
+            "projesinde 6G mimarisini takip ediyor; hazırlık seviyesi 5."
         ),
         "principle_html": (
             "<p><strong>1. Yüzey:</strong> Cepheye ince yansıtıcı asılır. Bu bir baz istasyonu değildir.</p>"
@@ -237,8 +239,9 @@ BEGINNER_COPY = {
             "Stadyum denemesi adayıdır; kent geneli dağıtım aşamasında değildir."
         ),
         "tt_impact": (
-            "Türkiye bağlamında stadyum, havalimanı ve büyük depo gibi yoğun mekânlarda "
-            "düşünülüyor. Hazırlık seviyesi 4; fiber altyapı maliyeti yüksektir."
+            "Bu platformda Türk Telekom adına doğrulanmış hücresiz MIMO saha pilotu kaydı yoktur. "
+            "Ar-Ge yayınlarında 6G ağ dilimleme ve dağıtık mimari konuları izlenir; "
+            "hazırlık seviyesi 4; fiber maliyeti operasyonel kısıttır."
         ),
         "principle_html": (
             "<p><strong>1. Dağıt:</strong> Noktalar sık yerleştirilir; tek makro kuleye bel bağlanmaz.</p>"
@@ -313,8 +316,9 @@ BEGINNER_COPY = {
             "Abone telefonunda varsayılan bant değil."
         ),
         "tt_impact": (
-            "Türkiye bağlamında veri merkezi içi bağlantı ve zor coğrafyada kule köprüsü "
-            "düşünülüyor. Hazırlık seviyesi 3; cep hızı senaryosu değil, laboratuvar aşaması."
+            "Bu platformda Türk Telekom adına doğrulanmış THz saha kurulumu veya abone şebekesi "
+            "kayıdı yoktur. Ankara ve İstanbul veri merkezleri işletilir; THz mesh bu platformda "
+            "ölçülmemiştir. Hazırlık seviyesi 3; laboratuvar aşaması."
         ),
         "principle_html": (
             "<p><strong>1. Bant:</strong> mmWave ile kızılötesi arasındaki spektrum açılır.</p>"
@@ -390,8 +394,10 @@ BEGINNER_COPY = {
             "Tam nöral hava arayüzü laboratuvar aşamasında."
         ),
         "tt_impact": (
-            "Türkiye bağlamında gece enerji tasarrufu, maç günü yoğunluk ve arıza öncesi "
-            "uyarı düşünülüyor. Hazırlık seviyesi 5; insan denetimi kalkmaz."
+            "Netsia (grup Ar-Ge iştiraki) programlanabilir RAN, dilimleme ve RIC güvencesi için "
+            "ABD patentleri aldı; Ar-Ge ekipleri yapay zekâ destekli 6G yayınları üretti. "
+            "Net Insight ile Open RAN senkronizasyonu ve Ericsson ile 6G standart mutabakatı "
+            "imzalandı. Hazırlık seviyesi 5; insan denetimi kalkmaz."
         ),
         "principle_html": (
             "<p><strong>1. Ölç:</strong> Yük, kanal, enerji, kopma.</p>"
@@ -467,8 +473,9 @@ BEGINNER_COPY = {
             "Afet yedek hattı operatör stratejisidir, saha garantisi değildir."
         ),
         "tt_impact": (
-            "Türkiye bağlamında afet yedek hattı, açık deniz filoları ve kırsal boşluklar "
-            "düşünülüyor. Hazırlık seviyesi 6; şehir kulesinin tamamlayıcısıdır."
+            "TTI (Türk Telekom International) toptan ağda 19 ülkede PoP işletir; kırsal kapsama "
+            "karasal şebeke ile sağlanır. Abone şebekesinde Rel-17 direct-to-cell NTN ürünü "
+            "bu platformda doğrulanmamıştır. Hazırlık seviyesi 6; endüstri denemeleri vardır."
         ),
         "principle_html": (
             "<p><strong>1. Öncelik:</strong> Şehir kulede kalır. Boş coğrafyada uydu / yüksek irtifa.</p>"
@@ -538,8 +545,9 @@ BEGINNER_COPY = {
             "TT IoT platformuna akış senaryodur; her rafta değildir."
         ),
         "tt_impact": (
-            "Türkiye bağlamında depo lojistiği, sera ve soğuk zincir izleme düşünülüyor. "
-            "Hazırlık seviyesi 4; telefonun yerini almaz."
+            "Türk Telekom IoT platformu operasyonel olarak cihaz ve sensör verisini toplar. "
+            "Pilsiz 6G Ambient IoT etiket dağıtımı abone şebekesinde bu platformda "
+            "doğrulanmamıştır. Hazırlık seviyesi 4; telefonun yerini almaz."
         ),
         "principle_html": (
             "<p><strong>1. Topla:</strong> Rectenna radyo kırıntısını elektriğe çevirir.</p>"
