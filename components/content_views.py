@@ -348,7 +348,8 @@ def render_global_tt_trl(tech: dict, *, beginner: bool, trl_class: str) -> None:
                 else ""
             )
             chunks.append(
-                f"<p style='margin-bottom:12px;line-height:1.5;font-size:0.9rem;color:#E2E8F0;'>{tt_sc}{why_html}</p>"
+                f"<p style='margin-bottom:12px;line-height:1.5;font-size:0.9rem;color:#E2E8F0;'>"
+                f"{escape(str(tt_sc))}{why_html}</p>"
             )
         st.markdown(
             f"""<div class="glass-card" style="border-left:4px solid #FFB020;">{''.join(chunks)}</div>""",

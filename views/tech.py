@@ -42,19 +42,19 @@ TECH_SECTION_KEYS = [
     "performance",
 ]
 
-TECHNOLOGIES = DataService.get_all_technologies()
+_all_technologies = DataService.get_all_technologies()
 selected_tech_id = st.selectbox(
     t("tech.select"),
-    options=list(TECHNOLOGIES.keys()),
+    options=list(_all_technologies.keys()),
     format_func=lambda x: t(
         "tech.select_fmt",
-        icon=TECHNOLOGIES[x]["icon"],
-        title=TECHNOLOGIES[x]["title"],
-        trl=TECHNOLOGIES[x]["trl"],
+        icon=_all_technologies[x]["icon"],
+        title=_all_technologies[x]["title"],
+        trl=_all_technologies[x]["trl"],
     ),
 )
 
-tech = DataService.get_technology_by_id(selected_tech_id)
+tech = _all_technologies[selected_tech_id]
 beginner = is_beginner(current_view_mode())
 trl_class = "trl-low" if tech["trl"] <= 4 else ("trl-mid" if tech["trl"] == 5 else "trl-high")
 depth_cls = "depth-badge-beginner" if beginner else "depth-badge-expert"

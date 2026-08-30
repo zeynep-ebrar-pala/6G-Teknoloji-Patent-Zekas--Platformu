@@ -75,6 +75,23 @@ def _expert_depth() -> dict:
     return EXPERT_DEPTH
 
 
+BEGINNER_SURFACE_KEYS = (
+    "use_cases",
+    "advantages",
+    "disadvantages",
+    "global_research",
+    "tt_scenarios",
+    "highlights",
+    "trl_desc",
+)
+
+
+def _beginner_surfaces() -> dict:
+    from data.beginner_surfaces import BEGINNER_SURFACES
+
+    return BEGINNER_SURFACES
+
+
 def _with_layers(tech: dict | None) -> dict | None:
     if not tech:
         return tech
@@ -96,6 +113,11 @@ def _with_layers(tech: dict | None) -> dict | None:
         out["beginner_principle"] = extra["principle_html"]
     if extra.get("arch_html"):
         out["beginner_arch"] = extra["arch_html"]
+    if not _is_expert_view() and _lang() == "tr":
+        surfaces = _beginner_surfaces().get(tech.get("id"), {})
+        for key in BEGINNER_SURFACE_KEYS:
+            if surfaces.get(key) is not None:
+                out[key] = surfaces[key]
     foundation_src = {k: extra.get(k) for k in FOUNDATION_KEYS if extra.get(k) is not None}
     if expert_extra:
         for k in FOUNDATION_KEYS:
