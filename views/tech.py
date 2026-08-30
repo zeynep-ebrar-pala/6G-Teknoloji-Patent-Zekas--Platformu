@@ -170,9 +170,9 @@ else:
     from backend.springer_live import ensure_prefetch as ensure_springer
     from components.charts import (
         render_academic_trends_chart,
-        render_technology_performance_charts,
         render_technology_record_counts_chart,
     )
+    from components.performance_charts import render_technology_performance_charts
 
     _section_label("tech.perf_heading")
     _teach_note(t("tech.perf_caption"))
