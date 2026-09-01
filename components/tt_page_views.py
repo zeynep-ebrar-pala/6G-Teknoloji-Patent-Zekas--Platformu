@@ -10,7 +10,7 @@ import streamlit as st
 
 from backend.data_service import DataService
 from components.tt_scenarios import render_tt_scenario_calculator
-from i18n.core import get_lang, t
+from i18n.core import get_lang, t, t_value
 
 
 def _beginner_surfaces() -> dict:
@@ -102,8 +102,8 @@ def render_roadmap_banner() -> None:
 def render_strategy_table() -> None:
     st.markdown(t("tt_page.roadmap.strategy_heading"))
     st.caption(t("tt_page.roadmap.strategy_caption"))
-    rows = t("tt_page.strategy")
-    if not isinstance(rows, list):
+    rows = t_value("tt_page.strategy")
+    if not isinstance(rows, list) or not rows:
         return
     table = []
     for row in rows:

@@ -24,6 +24,8 @@ FALLBACK_LANG = "tr"
 _MISSING: set[tuple[str, str]] = set()
 _FLAT: dict[str, dict[str, str]] | None = None
 _FLAT_MTIME: int = 0
+_UI_ROOT: dict[str, Any] | None = None
+_UI_ROOT_MTIME: int = 0
 
 
 def flatten(data: dict[str, Any], prefix: str = "") -> dict[str, str]:
@@ -96,6 +98,45 @@ def _year_fields() -> dict[str, Any]:
     except Exception:
         y = 2026
         return {"y0": 2020, "y1": y, "l0": y - 4, "l1": y, "end": y}
+
+
+def _ui_root() -> dict[str, Any]:
+    """strings.UI — liste/dict yapıları flatten edilmeden."""
+    global _UI_ROOT, _UI_ROOT_MTIME
+    import importlib
+    from pathlib import Path
+
+    import i18n.strings as strings_mod
+
+    mtime = Path(strings_mod.__file__).stat().st_mtime_ns
+    if _UI_ROOT is None or _UI_ROOT_MTIME != mtime:
+        strings_mod = importlib.reload(strings_mod)
+        _UI_ROOT = strings_mod.UI
+        _UI_ROOT_MTIME = mtime
+    return _UI_ROOT
+
+
+def t_value(key: str) -> Any:
+    """İç içe katalog değeri (liste, dict, str). Düz metin için t()."""
+    lang = get_lang()
+    parts = key.split(".")
+
+    def _walk(catalog: dict[str, Any] | None) -> Any:
+        if not catalog:
+            return None
+        node: Any = catalog
+        for part in parts:
+            if not isinstance(node, dict):
+                return None
+            node = node.get(part)
+            if node is None:
+                return None
+        return node
+
+    val = _walk(_ui_root().get(lang))
+    if val is None and lang != FALLBACK_LANG:
+        val = _walk(_ui_root().get(FALLBACK_LANG))
+    return val
 
 
 def t(key: str, **kwargs: Any) -> str:
