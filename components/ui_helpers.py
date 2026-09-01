@@ -7,6 +7,7 @@ yüklemesinde `from components.ui_helpers import ...` ImportError üretmesin.
 from __future__ import annotations
 
 import re
+from html import escape
 from typing import Optional
 
 import streamlit as st
@@ -168,27 +169,33 @@ def render_paper_card(paper: dict) -> None:
         key = f"pub.cc.{cc}"
         label = _t(key)
         if label != key:
-            places.append(label)
+            places.append(escape(label))
     place_html = (
         f'<p style="color:#94A3B8;font-size:0.8rem;margin:0 0 4px 0;">{", ".join(places)}</p>'
         if places
         else ""
     )
+    title = escape(str(paper.get("title") or ""))
+    authors = escape(str(paper.get("authors") or ""))
+    journal = escape(str(paper.get("journal") or ""))
+    year = escape(str(paper.get("year") or ""))
+    doi_esc = escape(str(doi))
+    cite_esc = escape(str(cite_label))
 
     st.markdown(
-        f"""
-        <div class="glass-card" style="margin-bottom: 8px; padding: 16px;">
-            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
-                <h4 style="color:#00E5FF;margin:0;line-height:1.4;overflow-wrap:anywhere;">{paper['title']}</h4>
-                <span class="trl-pill trl-high" style="white-space:normal;">{cite_label}</span>
-            </div>
-            <p style="color:#C8D1DC;font-size:0.88rem;margin-top:6px;margin-bottom:4px;overflow-wrap:anywhere;">
-                {_t("pub.authors")}: {paper.get('authors','')} · {paper.get('journal','')} ({paper.get('year','')})
-            </p>
-            {place_html}
-            <p style="color:#64748B;font-size:0.78rem;margin:0;">DOI: {doi}</p>
-        </div>
-        """,
+        (
+            '<div class="glass-card" style="margin-bottom: 8px; padding: 16px;">'
+            '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">'
+            f'<h4 style="color:#00E5FF;margin:0;line-height:1.4;overflow-wrap:anywhere;">{title}</h4>'
+            f'<span class="trl-pill trl-high" style="white-space:normal;">{cite_esc}</span>'
+            "</div>"
+            f'<p style="color:#C8D1DC;font-size:0.88rem;margin-top:6px;margin-bottom:4px;overflow-wrap:anywhere;">'
+            f"{_t('pub.authors')}: {authors} · {journal} ({year})"
+            "</p>"
+            f"{place_html}"
+            f'<p style="color:#64748B;font-size:0.78rem;margin:0;">DOI: {doi_esc}</p>'
+            "</div>"
+        ),
         unsafe_allow_html=True,
     )
     render_link_row(

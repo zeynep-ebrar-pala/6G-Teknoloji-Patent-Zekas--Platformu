@@ -52,6 +52,13 @@ def _papers() -> List[Dict[str, Any]]:
     return out
 
 
+@st.cache_data(ttl=86400, show_spinner=False)
+def _paper_crossref_cites(doi: str) -> Optional[int]:
+    from backend.springer_live import crossref_citation_count
+
+    return crossref_citation_count(doi)
+
+
 class TTEuropeService:
     @staticmethod
     def get_source() -> str:
@@ -74,13 +81,18 @@ class TTEuropeService:
         enriched = []
         for paper in papers:
             merged = dict(paper)
-            merged["citations"] = paper.get("citations")
-            merged["citations_live"] = False
+            cites = paper.get("citations")
+            if not isinstance(cites, int):
+                live = _paper_crossref_cites(str(paper.get("doi") or ""))
+                cites = live if isinstance(live, int) else None
+            merged["citations"] = cites
+            merged["citations_live"] = isinstance(cites, int)
             enriched.append(merged)
 
         def _paper_sort(p: Dict[str, Any]) -> tuple:
             cites = p.get("citations")
-            return (-int(p.get("year") or 0), -(cites if isinstance(cites, int) else -1))
+            cite_rank = int(cites) if isinstance(cites, int) else -1
+            return (-int(p.get("year") or 0), -cite_rank, str(p.get("doi") or ""))
 
         return sorted(enriched, key=_paper_sort)
 

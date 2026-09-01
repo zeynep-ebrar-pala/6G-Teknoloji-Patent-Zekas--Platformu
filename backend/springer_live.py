@@ -292,6 +292,15 @@ def _crossref_work(doi: str) -> Dict[str, Any]:
     return {"cites": cites, "aff": names}
 
 
+def crossref_citation_count(doi: str) -> Optional[int]:
+    """Crossref is-referenced-by-count — çekilen DOI için atıf."""
+    token = (doi or "").strip().removeprefix("https://doi.org/").removeprefix("http://doi.org/")
+    if not token:
+        return None
+    cites = _crossref_work(token).get("cites")
+    return int(cites) if isinstance(cites, int) else None
+
+
 def _save_topic(name: str, patch: Dict[str, Any]) -> None:
     blob = load_live()
     topics = blob.get("topics") if isinstance(blob.get("topics"), dict) else {}
