@@ -438,6 +438,39 @@ def _country_rank(kind: str, *, compact_patent: bool = False) -> None:
         render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
 
 
+def _patent_country_drilldown() -> None:
+    """Ülke seçimi + firma çubuk grafiği — ofis metrikleri yok."""
+    lang = get_lang()
+    st.caption(t("tt_eu.rank_caption_pat_short"))
+    countries = TTEuropeService.ranked_countries()
+    labels = [row["name_tr"] if lang == "tr" else row["name_en"] for row in countries]
+    by_label = {labels[i]: countries[i]["cc"] for i in range(len(countries))}
+    default_ix = next((i for i, row in enumerate(countries) if row["cc"] == "TR"), 0)
+    picked = st.selectbox(
+        t("tt_eu.rank_country"),
+        labels,
+        index=default_ix,
+        key=f"tt_eu_rank_cc_patent_drill_{lang}",
+    )
+    cc = by_label.get(picked) or "TR"
+    with st.spinner(t("tt_eu.rank_spin")):
+        payload = TTEuropeService.country_rank(cc, include_pubs=False)
+    if not payload.get("ok"):
+        return
+    rows = payload["rows"]
+    drawn = _positive_rows(rows, "pat_n")
+    if not drawn:
+        st.info(t("tt_eu.rank_empty_pat"))
+        render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
+        return
+    show_plotly(
+        render_tt_country_rank_chart(
+            drawn, "pat_n", t("tt_eu.rank_pat_title"), t("tt_eu.rank_pat_x")
+        )
+    )
+    render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
+
+
 def _rd_touchpoints() -> None:
     st.markdown(t("tt_eu.presence_heading"))
     st.caption(t("tt_eu.presence_caption"))
@@ -458,31 +491,37 @@ def _rd_touchpoints() -> None:
 
 
 def render_tt_europe_patent_section(domain: str | None = None) -> None:
-    with st.expander(t("tt_eu.pat_intro_title"), expanded=False):
-        st.markdown(t("tt_eu.pat_intro_body"), unsafe_allow_html=True)
-        if current_view_mode() == "expert":
-            st.markdown(t("tt_eu.expert_body"), unsafe_allow_html=True)
+    st.caption(t("tt_eu.pat_section_lead"))
 
     pats = TTEuropeService.get_patents()
     if domain:
         pats = [p for p in pats if (p.get("domain") or "") == domain]
-    if not pats:
-        show_empty(t("tt_eu.empty_topic", topic=domain or "—"))
-    else:
-        for pat in pats:
-            render_patent_card(pat)
 
-    vs = {
-        name: n
-        for name, n in TTEuropeService.vendor_sample_vs_tt(domain).items()
-        if int(n or 0) > 0
-    }
-    if vs:
-        st.markdown(t("tt_eu.vs_heading"))
-        st.caption(t("tt_eu.vs_caption"))
-        show_plotly(render_tt_vs_vendors_chart(vs))
+    tab_records, tab_charts = st.tabs([t("tt_eu.pat_tab_records"), t("tt_eu.pat_tab_charts")])
 
-    _country_rank("patent", compact_patent=True)
+    with tab_records:
+        with st.expander(t("tt_eu.pat_intro_title"), expanded=False):
+            st.markdown(t("tt_eu.pat_intro_body"), unsafe_allow_html=True)
+            if current_view_mode() == "expert":
+                st.markdown(t("tt_eu.expert_body"), unsafe_allow_html=True)
+        if not pats:
+            show_empty(t("tt_eu.empty_topic", topic=domain or "—"))
+        else:
+            for pat in pats:
+                render_patent_card(pat)
+
+    with tab_charts:
+        vs = {
+            name: n
+            for name, n in TTEuropeService.vendor_sample_vs_tt(domain).items()
+            if int(n or 0) > 0
+        }
+        if vs:
+            st.markdown(t("tt_eu.vs_heading"))
+            st.caption(t("tt_eu.vs_caption"))
+            show_plotly(render_tt_vs_vendors_chart(vs))
+        st.markdown(t("tt_eu.rank_heading_pat"))
+        _patent_country_drilldown()
 
 
 def render_tt_europe_pub_section(topic: str | None = None) -> None:

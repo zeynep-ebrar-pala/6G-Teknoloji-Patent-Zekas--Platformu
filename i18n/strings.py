@@ -336,6 +336,7 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
                 "Lens.org rakip grafikleri ve API kutusu yalnızca «Rakip patent grafikleri» bölümündedir."
             ),
             "tt_eu_domain": "6G konu filtresi (kilitli küme)",
+            "tt_eu_build": "Kod sürümü: {build}",
             "year_heading": "### Patent sayısı / yıl",
             "year_caption": "Lens year_published tam sayısı, firma × yıl. Yuvarlama yok. {end} eksik yıldır.",
             "empty_trend": "Trend grafiği için yeterli patent verisi yok.",
@@ -664,6 +665,9 @@ Harita yalnızca kaynakta adı geçen ülkeyi boyar.
 Google Patents’te kilitlenen TT-grup 6G-komşu tesciller <strong>Netsia Inc.</strong> altındadır (Argela / TT ABD Ar-Ge iştiraki).
 Sayılar kilitli örnek kümedir; Lens rakip toplamı veya küresel SEP payı değildir.
 </p>""",
+            "pat_section_lead": "Netsia Inc. kilitli kayıtlar — patent ofisi çubuğu bu sekmede yok.",
+            "pat_tab_records": "Patent kartları",
+            "pat_tab_charts": "Grafikler",
             "named_heading": "### Kaynakta adı geçen yerler — TT burada ne yapıyor?",
             "named_caption": "Her kart bir cümledir: ülke + TT’nin o yerdeki işi + kaynak. 19 veya 24 ülke adı raporda yok; eklenmez.",
             "named_col_place": "Yer",
@@ -1514,6 +1518,7 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
                 "Lens.org rival charts and the API box are only under «Rival patent charts»."
             ),
             "tt_eu_domain": "6G topic filter (locked set)",
+            "tt_eu_build": "Code build: {build}",
             "year_heading": "### Patent count / year",
             "year_caption": "Lens year_published totals, firm × year. No rounding. {end} is an incomplete year.",
             "empty_trend": "Not enough patent data for a trend chart.",
@@ -1842,6 +1847,9 @@ The map paints only countries named in a source.
 Locked TT-group 6G-adjacent grants on Google Patents sit under <strong>Netsia Inc.</strong> (Argela / TT US R&D affiliate).
 Counts are from a locked sample — not Lens rival totals or global SEP share.
 </p>""",
+            "pat_section_lead": "Locked Netsia Inc. records — no patent-office bar chart on this tab.",
+            "pat_tab_records": "Patent cards",
+            "pat_tab_charts": "Charts",
             "named_heading": "### Places named in a source — what TT does there",
             "named_caption": "Each card is a sentence: place + TT’s activity there + source. The 19 or 24 country names are not in the report; they are not added.",
             "named_col_place": "Place",

@@ -1160,47 +1160,6 @@ def render_tt_vs_leader_chart(
     return fig
 
 
-def render_tt_office_chart(counts: Dict[str, int]) -> go.Figure:
-    """TT-grup doğrulanmış patentlerin ofisi — kod değil açık ad."""
-    label = {
-        "EP": t("charts.office_epo"),
-        "US": t("charts.office_uspto"),
-        "TR": t("charts.office_turkpatent"),
-    }
-    order = ["EP", "US", "TR"]
-    keys = [k for k in order if int(counts.get(k) or 0) > 0]
-    keys += [k for k in counts if k not in order and int(counts.get(k) or 0) > 0]
-    names = [label.get(k, k) for k in keys]
-    vals = [int(counts[k]) for k in keys]
-    fig = go.Figure(
-        go.Bar(
-            x=names,
-            y=vals,
-            text=[str(v) for v in vals],
-            textposition="outside",
-            cliponaxis=False,
-            marker=dict(color="#E20074"),
-            hovertemplate=t("charts.hover_v", unit=t("charts.patent_count")),
-        )
-    )
-    layout = _layout()
-    layout.update(
-        title=dict(text=f"<b>{t('charts.tt_office')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
-        xaxis=dict(
-            title=t("charts.tt_office_x"),
-            gridcolor="rgba(200, 209, 220, 0.1)",
-            tickangle=-18,
-            automargin=True,
-        ),
-        yaxis=_count_axis(t("charts.patent_count"), vals),
-        height=380,
-        bargap=0.35,
-        margin=dict(l=40, r=20, t=50, b=110),
-    )
-    fig.layout.update(layout)
-    return fig
-
-
 def render_tt_europe_presence_chart(items: List[Dict[str, Any]], name_key: str = "name") -> go.Figure:
     """Avrupa dokunuşu sayısı (işbirliği/standart/proje) — patent sayısı değildir."""
     names = [i[name_key] for i in items]

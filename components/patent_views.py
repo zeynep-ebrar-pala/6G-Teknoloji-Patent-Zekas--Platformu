@@ -34,7 +34,7 @@ from components.ui_helpers import (
 from components.topic_panels import render_patent_topic_panel
 from components.tt_europe_views import render_tt_europe_patent_section
 
-PATENT_SECTION_KEYS = ["charts", "tt_eu"]
+PATENT_SECTION_KEYS = ["tt_eu", "charts"]
 
 
 def _tt_patent_domain_filter() -> str | None:
@@ -261,12 +261,15 @@ def render_patent_intelligence_module():
     _labels = [t(f"patent.section.{k}") for k in PATENT_SECTION_KEYS]
     _map = dict(zip(_labels, PATENT_SECTION_KEYS))
     section = _map.get(
-        select_section(t("patent.view"), _labels, key=f"patent_section_story_{get_lang()}"),
+        select_section(t("patent.view"), _labels, key=f"patent_section_v4_{get_lang()}"),
         PATENT_SECTION_KEYS[0],
     )
 
     if section == "tt_eu":
+        from data.app_build import APP_BUILD
+
         st.caption(t("patent.tt_eu_subtitle"))
+        st.caption(t("patent.tt_eu_build", build=APP_BUILD))
         domain = _tt_patent_domain_filter()
         render_tt_europe_patent_section(domain=domain)
         return
