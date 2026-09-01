@@ -97,6 +97,18 @@ def get_gemini_api_key() -> Optional[str]:
     return _secret("GEMINI_API_KEY")
 
 
+def get_gemini_chat_models() -> tuple[str, ...]:
+    """Gemini chat model sırası. GEMINI_CHAT_MODEL tek model zorlar."""
+    override = (_secret("GEMINI_CHAT_MODEL") or os.getenv("GEMINI_CHAT_MODEL") or "").strip()
+    if override:
+        return (override,)
+    return (
+        "gemini-3.1-pro-preview",
+        "gemini-3-flash-preview",
+        "gemini-flash-latest",
+    )
+
+
 def get_default_ai_provider() -> Provider:
     raw = (os.getenv("DEFAULT_AI_PROVIDER") or "groq").strip().lower()
     return "gemini" if raw == "gemini" else "groq"

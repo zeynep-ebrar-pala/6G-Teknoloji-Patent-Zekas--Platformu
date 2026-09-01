@@ -39,7 +39,19 @@ def _validate_gemini(api_key: str) -> Tuple[bool, str]:
     try:
         from google import genai
 
+        from backend.config import get_gemini_chat_models
+
         client = genai.Client(api_key=api_key)
+        probe = "ping"
+        for model in get_gemini_chat_models():
+            try:
+                response = client.models.generate_content(model=model, contents=probe)
+                if getattr(response, "text", None):
+                    return True, t("auth.gemini_ok")
+            except Exception as exc:
+                if "404" in str(exc) or "not found" in str(exc).lower():
+                    continue
+                raise
         list(client.models.list())
         return True, t("auth.gemini_ok")
     except ImportError:

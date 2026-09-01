@@ -542,8 +542,17 @@ GEMINI_CHAT_MODELS = (
     "gemini-3.1-pro-preview",
     "gemini-3-flash-preview",
     "gemini-flash-latest",
-    "gemini-2.5-flash",
 )
+
+
+def _model_unavailable(exc: Exception) -> bool:
+    text = str(exc).lower()
+    return (
+        "404" in text
+        or "not_found" in text
+        or "not found" in text
+        or "no longer available" in text
+    )
 
 
 def _history_messages(history: Optional[Sequence[Dict[str, Any]]]) -> List[Dict[str, str]]:
@@ -622,7 +631,9 @@ def _answer_with_gemini(
         f"{prior}\n\n{t('ai.user_wrap', question=question)}"
     )
     last_exc: Exception | None = None
-    for model in GEMINI_CHAT_MODELS:
+    from backend.config import get_gemini_chat_models
+
+    for model in get_gemini_chat_models():
         try:
             response = client.models.generate_content(model=model, contents=prompt)
             text = getattr(response, "text", None) or ""
@@ -630,6 +641,8 @@ def _answer_with_gemini(
                 return str(text)
         except Exception as exc:
             last_exc = exc
+            if _model_unavailable(exc):
+                continue
     if last_exc:
         raise last_exc
     return ""
