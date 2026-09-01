@@ -132,20 +132,18 @@ def render_tt_roadmap_section() -> None:
 def render_tt_done_section() -> None:
     """Yapıldı — doğrulanmış patent, yayın, duyuru ve Avrupa izi."""
     from backend.tt_europe_service import TTEuropeService
-    from components.charts import render_tt_office_chart, render_tt_vs_vendors_chart
+    from components.charts import render_tt_vs_vendors_chart
     from components.tt_europe_views import (
         _collab_block,
         _country_rank,
         _europe_position_banner,
         _geo_presence,
-        _metrics,
         _rd_touchpoints,
         render_patent_card,
         render_paper_card,
         show_empty,
         show_plotly,
     )
-    from i18n.core import format_int
 
     render_done_banner()
     render_tt_tech_summary()
@@ -156,16 +154,6 @@ def render_tt_done_section() -> None:
     st.markdown(t("tt_page.done.records_heading"))
     st.caption(t("tt_page.done.records_caption"))
 
-    _metrics("patent")
-    offices = TTEuropeService.office_counts(None)
-    positive_offices = {k: n for k, n in offices.items() if int(n or 0) > 0}
-    st.markdown(t("tt_eu.office_heading"))
-    st.caption(t("tt_eu.office_caption"))
-    if positive_offices:
-        st.info(t("tt_eu.office_lock_all", us=format_int(offices.get("US") or 0)))
-        show_plotly(render_tt_office_chart(positive_offices))
-    else:
-        show_empty(t("tt_eu.empty_topic", topic="—"))
     st.markdown(t("tt_eu.pat_list_heading"))
     st.caption(t("tt_eu.pat_list_caption"))
     pats = TTEuropeService.get_patents()
