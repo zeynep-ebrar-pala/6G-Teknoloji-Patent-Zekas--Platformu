@@ -208,13 +208,14 @@ def _geo_presence() -> None:
         render_source_button(ir["tti_url"], t("tt_eu.open_tti"))
 
 
-def _collab_block(*, draw_chart: bool = True) -> None:
+def _collab_block(*, draw_chart: bool = True, include_touchpoints: bool = True) -> None:
     """İşbirliği / standart / basın — tescil değildir."""
     st.markdown(t("tt_eu.role_heading"))
     st.caption(t("tt_eu.role_caption"))
     if draw_chart:
         show_plotly(render_tt_role_kind_chart(TTEuropeService.role_kind_counts()))
-    _rd_touchpoints()
+    if include_touchpoints:
+        _rd_touchpoints()
 
 
 def _fmt_firm(item: dict | None) -> str:
@@ -491,3 +492,64 @@ def render_tt_europe_pub_section(topic: str | None = None) -> None:
     _europe_position_banner("pub")
     _country_rank("pub")
     _collab_block(draw_chart=False)
+
+
+def render_tt_done_section() -> None:
+    """Yapıldı — doğrulanmış patent, yayın, duyuru ve Avrupa izi."""
+    from components.tt_page_views import render_done_banner, render_tt_tech_summary
+
+    render_done_banner()
+    render_tt_tech_summary()
+
+    st.markdown(t("tt_page.done.field_heading"))
+    _rd_touchpoints()
+
+    st.markdown(t("tt_page.done.records_heading"))
+    st.caption(t("tt_page.done.records_caption"))
+
+    _metrics("patent")
+    offices = TTEuropeService.office_counts(None)
+    positive_offices = {k: n for k, n in offices.items() if int(n or 0) > 0}
+    st.markdown(t("tt_eu.office_heading"))
+    st.caption(t("tt_eu.office_caption"))
+    if positive_offices:
+        st.info(t("tt_eu.office_lock_all", us=format_int(offices.get("US") or 0)))
+        show_plotly(render_tt_office_chart(positive_offices))
+    else:
+        show_empty(t("tt_eu.empty_topic", topic="—"))
+    st.markdown(t("tt_eu.pat_list_heading"))
+    st.caption(t("tt_eu.pat_list_caption"))
+    pats = TTEuropeService.get_patents()
+    if not pats:
+        show_empty(t("tt_eu.empty_topic", topic="—"))
+    else:
+        for pat in pats:
+            render_patent_card(pat)
+
+    st.markdown(t("tt_eu.papers_heading"))
+    st.caption(t("tt_eu.papers_caption"))
+    papers = TTEuropeService.get_papers()
+    if not papers:
+        show_empty(t("pub.empty_topic", topic="—"))
+    else:
+        for paper in papers:
+            render_paper_card(paper)
+            note = paper.get("note") or ""
+            if note:
+                st.caption(note)
+
+    _europe_position_banner("patent")
+    vs = {
+        name: n
+        for name, n in TTEuropeService.vendor_sample_vs_tt(None).items()
+        if int(n or 0) > 0
+    }
+    if vs:
+        st.markdown(t("tt_eu.vs_heading"))
+        st.caption(t("tt_eu.vs_caption"))
+        show_plotly(render_tt_vs_vendors_chart(vs))
+
+    _country_rank("patent")
+    _geo_presence()
+    _collab_block(include_touchpoints=False)
+    _country_rank("pub")

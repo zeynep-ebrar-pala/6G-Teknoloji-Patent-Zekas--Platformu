@@ -31,9 +31,84 @@ UI = {
         "tt_page": {
             "view": "Türk Telekom görünümü",
             "section": {
-                "footprint": "Avrupa’daki yeri",
-                "scenario": "Saha senaryosu",
+                "done": "Yapıldı — doğrulanmış kayıtlar",
+                "roadmap": "Yapılacak — hedef ve senaryo",
             },
+            "done": {
+                "banner_title": "Doğrulanmış kayıtlar",
+                "banner_body": (
+                    "Bu sekmede yalnızca bu platformda kaynakla bağlanan işler listelenir: "
+                    "resmi duyuru, patent ofisi kaydı, kilitli DOI yayını, TTI toptan pazarı veya "
+                    "standart / MoU katılımı. Abone şebekesinde ticari 6G ürünü vaadi değildir."
+                ),
+                "badges": "Kaynak türü:",
+                "badge_announce": "Duyuru",
+                "badge_patent": "Patent",
+                "badge_pub": "Yayın",
+                "badge_standard": "Standart",
+                "badge_tti": "TTI",
+                "tech_heading": "### Teknolüye göre — ne yapıldı?",
+                "tech_caption": (
+                    "Her satır Modül 1 ile aynı kaynaktan gelir. Kayıt yoksa açıkça yazılır. "
+                    "Detay için 6G Teknolojileri sayfasındaki «Türk Telekom ne yaptı?» bölümüne gidin."
+                ),
+                "open_tech": "6G Teknolojileri sayfasını aç",
+                "field_heading": "### Saha, laboratuvar ve resmi duyurular",
+                "records_heading": "### Patent, yayın ve Avrupa izi",
+                "records_caption": (
+                    "Patent ve yayın sayıları kilitli örnek kümedir; pazar payı veya küresel liderlik değildir. "
+                    "Harita TTI About ve resmi duyurularda adı geçen ülkeleri boyar."
+                ),
+            },
+            "roadmap": {
+                "banner_title": "Hedef ve senaryo",
+                "banner_body": (
+                    "Burada strateji yönü ve kural tabanlı senaryo eşleştirmesi vardır. "
+                    "Gbps, ms ve yüzde skorları saha ölçümü değil; literatür hedefi veya model çıktısıdır."
+                ),
+                "strategy_heading": "### Strateji hedefleri",
+                "strategy_caption": (
+                    "Nitel hedefler; her satırda bağlı teknoloji, bugünkü TRL ve kaynak türü. "
+                    "Tarih ve performans sayısı uydurulmaz."
+                ),
+                "strategy_col_goal": "Hedef",
+                "strategy_col_tech": "Bağlı teknoloji",
+                "strategy_col_trl": "TRL bugün",
+                "strategy_col_source": "Kaynak türü",
+                "scenario_sub": "Senaryo çalıştırıcı",
+            },
+            "strategy": [
+                {
+                    "goal": "3GPP Rel-19/20 6G standart katkısı ve ISAC / AI-RAN mimari izleme",
+                    "tech": "ISAC, AI-RAN",
+                    "trl": "4–5",
+                    "source": "Standart / MoU",
+                },
+                {
+                    "goal": "Yeşil şebeke — enerji verimliliği ve dinamik kaynak yönetimi",
+                    "tech": "AI-RAN, hücresiz MIMO",
+                    "trl": "4–5",
+                    "source": "Strateji hedefi",
+                },
+                {
+                    "goal": "Afet ve acil iletişim yedekliliği (karasal kule çöküşü senaryosu)",
+                    "tech": "NTN, ISAC",
+                    "trl": "4–6",
+                    "source": "Strateji hedefi",
+                },
+                {
+                    "goal": "Avrupa toptan görünürlük ve standart organlarında TT temsili",
+                    "tech": "TTI, ETSI katılımı",
+                    "trl": "—",
+                    "source": "Duyuru / TTI",
+                },
+                {
+                    "goal": "6G-bitişik patent ve yayın izinin genişletilmesi",
+                    "tech": "Tüm yedi teknoloji",
+                    "trl": "Mevcut TRL",
+                    "source": "Patent / yayın",
+                },
+            ],
         },
         "settings": {"language": "Dil", "language_help": "Arayüz ve yeni AI yanıtları seçilen dile geçer."},
         "depth": {
@@ -789,8 +864,18 @@ Patentler Patent Zekası'ndadır.
             "method_crossref_title": "Crossref query.title=6G, dergi, {y0}–{y1}",
         },
         "scenario": {
-            "title": "Türk Telekom 6G Saha Dağıtım ve Senaryo Çözümleyici",
-            "lead": "Türkiye coğrafyası, Türk Telekom altyapısı ve stratejik Ar-Ge hedeflerine göre 6G teknoloji eşleştirme motoru.",
+            "title": "Senaryo çalıştırıcı — kural tabanlı eşleştirme",
+            "lead": (
+                "Türkiye coğrafyası ve Ar-Ge önceliklerine göre teknoloji seti önerir. "
+                "Çıktı simülasyon ve literatür hedefidir; saha dağıtım planı veya resmi TT taahhüdü değildir."
+            ),
+            "assumptions_title": "Varsayımlar ve sınırlar",
+            "sim_badge": "Simülasyon çıktısı — saha ölçümü değil",
+            "year_label": "Literatür / senaryo zaman çizelgesi",
+            "verified_bridge_heading": "### Bu senaryoda doğrulanmış TT kaydı",
+            "verified_bridge_none": "Bu teknoloji için bu platformda doğrulanmış TT kaydı listelenmemiştir.",
+            "verified_bridge_open": "Modül 1 — {title}",
+            "open_tech_explorer": "6G Teknolojileri sayfasını aç",
             "kpi_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:0;">
 <strong>KPI (Key Performance Indicator — anahtar performans göstergesi):</strong>
 hız, gecikme, enerji gibi izleme sayılarıdır. Buradaki değerler saha ping’i değil;
@@ -811,16 +896,19 @@ ve gerçek fiber topolojisi modele girmez. Sayıyı «ölçülmüş 6G performan
             "priority_help": "Bu dağıtımda hedeflenen birincil performans veya iş hedefi",
             "metrics_exp": "Detaylı performans ve metrik özeti",
             "capex_caption": "CAPEX (sermaye gideri) ölçeği — ihale fiyatı değil: **{value}**",
-            "kpi_note": "KPI değerleri kural tabanlı senaryo motoru çıktısıdır; saha ölçümü değildir.",
-            "result_heading": "### Önerilen Türk Telekom mimarisi ve KPI analizi",
+            "kpi_note": "Aşağıdaki sayılar kural tabanlı senaryo motoru çıktısıdır; saha ölçümü değildir.",
+            "result_heading": "### Senaryo eşleştirmesi (simülasyon)",
+            "solution_label": "Senaryo mimarisi (hedef senaryo):",
+            "priority_label": "Öncelik etkisi (hedef):",
+            "feasibility_note": "Model içi uyumluluk skoru; gerçek saha skoru değildir.",
             "techs": "**Önerilen 6G teknolojileri:** {techs}",
             "solution": "**Saha çözüm mimarisi:**",
             "priority_impact": "**Stratejik hedef etkisi:**",
             "density_profile": "**Yoğunluk profili:** {value}",
-            "metric_speed": "Hız kapasitesi",
-            "metric_latency": "Gecikme (latency)",
-            "metric_energy": "Enerji skoru",
-            "feasibility": "**Uygulanabilirlik ve saha uyumluluk skoru:** `{score}`",
+            "metric_speed": "Simülasyon — hız kapasitesi",
+            "metric_latency": "Simülasyon — gecikme",
+            "metric_energy": "Simülasyon — enerji skoru",
+            "feasibility": "**Senaryo uyumluluk skoru (model içi):** `{score}`",
             "region_bosphorus": "İstanbul Boğazı ve Marmara deniz sahili (ISAC + THz)",
             "region_stadium": "RAMS Park / stadyum ve yoğun etkinlik alanları (hücresiz MIMO)",
             "region_industry": "Marmara sanayi bölgesi / otonom fabrikalar (Ambient IoT + AI-RAN)",
@@ -1107,9 +1195,84 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
         "tt_page": {
             "view": "Türk Telekom view",
             "section": {
-                "footprint": "Place in Europe",
-                "scenario": "Field scenario",
+                "done": "Done — verified records",
+                "roadmap": "Planned — goals and scenarios",
             },
+            "done": {
+                "banner_title": "Verified records",
+                "banner_body": (
+                    "This tab lists only work tied to a source on this platform: official announcements, "
+                    "patent-office records, locked DOI papers, TTI wholesale markets, or standards / MoU participation. "
+                    "It is not a retail-network 6G product claim."
+                ),
+                "badges": "Source type:",
+                "badge_announce": "Announcement",
+                "badge_patent": "Patent",
+                "badge_pub": "Publication",
+                "badge_standard": "Standards",
+                "badge_tti": "TTI",
+                "tech_heading": "### By technology — what was done",
+                "tech_caption": (
+                    "Each row comes from the same source as Module 1. Gaps are stated explicitly. "
+                    "For detail, open «What Türk Telekom has done» on the 6G Technologies page."
+                ),
+                "open_tech": "Open 6G Technologies",
+                "field_heading": "### Field, laboratory, and official announcements",
+                "records_heading": "### Patents, publications, and European footprint",
+                "records_caption": (
+                    "Patent and publication counts are from a locked sample set — not market share or global leadership. "
+                    "The map paints countries named in TTI About and official announcements."
+                ),
+            },
+            "roadmap": {
+                "banner_title": "Goals and scenarios",
+                "banner_body": (
+                    "Strategic direction and rule-based scenario matching live here. "
+                    "Gbps, ms, and percentage scores are not field measurements — they are literature targets or model output."
+                ),
+                "strategy_heading": "### Strategic goals",
+                "strategy_caption": (
+                    "Qualitative goals with linked technology, today’s TRL, and source type. "
+                    "Dates and performance numbers are not invented."
+                ),
+                "strategy_col_goal": "Goal",
+                "strategy_col_tech": "Linked technology",
+                "strategy_col_trl": "TRL today",
+                "strategy_col_source": "Source type",
+                "scenario_sub": "Scenario engine",
+            },
+            "strategy": [
+                {
+                    "goal": "3GPP Rel-19/20 6G standards contribution and ISAC / AI-RAN architecture tracking",
+                    "tech": "ISAC, AI-RAN",
+                    "trl": "4–5",
+                    "source": "Standards / MoU",
+                },
+                {
+                    "goal": "Green network — energy efficiency and dynamic resource management",
+                    "tech": "AI-RAN, cell-free MIMO",
+                    "trl": "4–5",
+                    "source": "Strategic goal",
+                },
+                {
+                    "goal": "Disaster and emergency communications backup (terrestrial site failure scenario)",
+                    "tech": "NTN, ISAC",
+                    "trl": "4–6",
+                    "source": "Strategic goal",
+                },
+                {
+                    "goal": "European wholesale visibility and TT representation in standards bodies",
+                    "tech": "TTI, ETSI participation",
+                    "trl": "—",
+                    "source": "Announcement / TTI",
+                },
+                {
+                    "goal": "Expand the 6G-adjacent patent and publication footprint",
+                    "tech": "All seven technologies",
+                    "trl": "Current TRL",
+                    "source": "Patent / publication",
+                },
+            ],
         },
         "settings": {"language": "Language", "language_help": "The interface and new AI answers switch to the selected language."},
         "depth": {
@@ -1865,8 +2028,18 @@ Patents sit on Patent Intelligence.
             "method_crossref_title": "Crossref query.title=6G, journal, {y0}–{y1}",
         },
         "scenario": {
-            "title": "Türk Telekom 6G field-deployment scenario engine",
-            "lead": "A 6G technology-matching engine driven by Turkish geography, Türk Telekom infrastructure, and strategic R&D priorities.",
+            "title": "Scenario engine — rule-based matching",
+            "lead": (
+                "Matches technology sets to Turkish geography and R&D priorities. "
+                "Output is simulation and literature class — not a field deployment plan or official TT commitment."
+            ),
+            "assumptions_title": "Assumptions and limits",
+            "sim_badge": "Simulation output — not a field measurement",
+            "year_label": "Literature / scenario timeline",
+            "verified_bridge_heading": "### Verified TT records for this scenario",
+            "verified_bridge_none": "No verified TT record for this technology is listed on this platform.",
+            "verified_bridge_open": "Module 1 — {title}",
+            "open_tech_explorer": "Open 6G Technologies",
             "kpi_body": """<p style="color:#E2E8F0;font-size:0.88rem;line-height:1.6;margin:0;">
 A <strong>KPI (key performance indicator)</strong> is a tracking number such as rate, latency, or energy.
 Values here are not a field ping; they are the output of a rule-based scenario engine.
@@ -1886,16 +2059,19 @@ and the real fibre topology are not in the model. Do not read the numbers as mea
             "priority_help": "The primary performance or business goal for this deployment",
             "metrics_exp": "Detailed performance and metric summary",
             "capex_caption": "CAPEX (capital expenditure) scale — not a tender price: **{value}**",
-            "kpi_note": "KPI values are the rule-based scenario engine’s output; they are not field measurements.",
-            "result_heading": "### Recommended Türk Telekom architecture and KPI analysis",
+            "kpi_note": "The numbers below are rule-based scenario engine output; they are not field measurements.",
+            "result_heading": "### Scenario match (simulation)",
+            "solution_label": "Scenario architecture (target scenario):",
+            "priority_label": "Priority impact (target):",
+            "feasibility_note": "In-model compatibility score; not a real field score.",
             "techs": "**Recommended 6G technologies:** {techs}",
             "solution": "**Field solution architecture:**",
             "priority_impact": "**Strategic-objective impact:**",
             "density_profile": "**Density profile:** {value}",
-            "metric_speed": "Peak rate capacity",
-            "metric_latency": "Latency",
-            "metric_energy": "Energy score",
-            "feasibility": "**Feasibility and field-fit score:** `{score}`",
+            "metric_speed": "Simulation — peak rate",
+            "metric_latency": "Simulation — latency",
+            "metric_energy": "Simulation — energy score",
+            "feasibility": "**Scenario compatibility score (in-model):** `{score}`",
             "region_bosphorus": "Istanbul Bosphorus and Marmara shoreline (ISAC + THz)",
             "region_stadium": "RAMS Park / stadium and dense event venues (cell-free MIMO)",
             "region_industry": "Marmara industrial zone / autonomous factories (Ambient IoT + AI-RAN)",
