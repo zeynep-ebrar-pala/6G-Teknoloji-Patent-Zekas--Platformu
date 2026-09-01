@@ -136,7 +136,6 @@ def render_tt_done_section() -> None:
     from components.tt_europe_views import (
         _collab_block,
         _country_rank,
-        _europe_position_banner,
         _geo_presence,
         _rd_touchpoints,
         render_patent_card,
@@ -175,7 +174,6 @@ def render_tt_done_section() -> None:
             if note:
                 st.caption(note)
 
-    _europe_position_banner("patent")
     vs = {
         name: n
         for name, n in TTEuropeService.vendor_sample_vs_tt(None).items()
