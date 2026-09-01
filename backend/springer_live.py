@@ -23,6 +23,7 @@ from backend.years import end_year, read_json, trend_years, write_json, year_win
 CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "springer_live.json"
 STATUS_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "springer_prefetch_status.json"
 AFF_CACHE_PATH = Path(__file__).resolve().parents[1] / "data" / "cache" / "crossref_aff.json"
+CITED_POOL_VERSION = 2
 
 TOPIC_ORDER = (
     "ISAC",
@@ -301,6 +302,82 @@ def crossref_citation_count(doi: str) -> Optional[int]:
     return int(cites) if isinstance(cites, int) else None
 
 
+def _dedupe_papers(papers: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    seen: set[str] = set()
+    out: List[Dict[str, Any]] = []
+    for paper in papers:
+        if not isinstance(paper, dict):
+            continue
+        doi = str(paper.get("doi") or "").strip().lower()
+        key = doi or str(paper.get("title") or "").casefold()
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        out.append(paper)
+    return out
+
+
+def _fetch_cited_pool(query: str, topic: str) -> List[Dict[str, Any]]:
+    """Geniş örneklem: güncel + 2023'e kadar ek sayfalar; atıf sıralaması için."""
+    papers: List[Dict[str, Any]] = []
+    for start in (1, 51, 101, 151, 201):
+        data = _meta(query, page=50, start=start, facet=False)
+        if not data:
+            break
+        batch = _records(data, topic)
+        if not batch:
+            break
+        papers.extend(batch)
+    y0, _y1 = year_window()
+    mature_q = f"{_q6g(topic)} onlinedatefrom:{y0}-01-01 onlinedateto:2023-12-31"
+    for start in (1, 51, 101):
+        data = _meta(mature_q, page=50, start=start, facet=False)
+        if not data:
+            break
+        batch = _records(data, topic)
+        if not batch:
+            break
+        papers.extend(batch)
+    return _dedupe_papers(papers)
+
+
+def _enrich_citations(papers: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    out: List[Dict[str, Any]] = []
+    for paper in papers:
+        p = dict(paper)
+        doi = str(p.get("doi") or "").strip()
+        if doi and not isinstance(p.get("citations"), int):
+            work = _crossref_work(doi)
+            if isinstance(work.get("cites"), int):
+                p["citations"] = work["cites"]
+            time.sleep(0.05)
+        out.append(p)
+    return out
+
+
+def _rank_cited_papers(pool: List[Dict[str, Any]], limit: int) -> List[Dict[str, Any]]:
+    """Atıf > 0 önce; sıra: atıf yüksek→düşük, aynı atıfta yıl yeniden→eski."""
+    enriched = []
+    for paper in pool:
+        p = dict(paper)
+        if not isinstance(p.get("citations"), int):
+            live = crossref_citation_count(str(p.get("doi") or ""))
+            if isinstance(live, int):
+                p["citations"] = live
+        enriched.append(p)
+    with_cites = [p for p in enriched if int(p.get("citations") or 0) > 0]
+    without = [p for p in enriched if int(p.get("citations") or 0) <= 0]
+    cite_key = lambda p: (
+        -int(p.get("citations") or 0),
+        -int(p.get("year") or 0),
+        str(p.get("date") or ""),
+        str(p.get("title") or ""),
+    )
+    with_cites.sort(key=cite_key)
+    without.sort(key=lambda p: (-int(p.get("year") or 0), str(p.get("title") or "")))
+    return (with_cites + without)[:limit]
+
+
 def _save_topic(name: str, patch: Dict[str, Any]) -> None:
     blob = load_live()
     topics = blob.get("topics") if isinstance(blob.get("topics"), dict) else {}
@@ -366,8 +443,9 @@ def _work() -> None:
                 )
                 done += 1
                 _status(running=True, done=done, total=total_jobs)
-                rec_data = _meta(q, page=50, start=1, facet=False)
-                papers = filter_cited(_records(rec_data, name), name, limit=50) if rec_data else []
+                raw_papers = _fetch_cited_pool(q, name)
+                enriched = _enrich_citations(raw_papers)
+                papers = filter_cited(enriched, name, limit=50)
                 done += 1
                 _status(running=True, done=done, total=total_jobs)
                 if not papers:
@@ -381,7 +459,7 @@ def _work() -> None:
                             "years": years,
                             "countries": countries or prev.get("countries") or [],
                             "institutions": inst[:10],
-                            "cited": papers[:50],
+                            "cited": _rank_cited_papers(papers, 50),
                             "turkey_count": turkey_n,
                             "turkey_rank": turkey_rank,
                         },
@@ -389,21 +467,6 @@ def _work() -> None:
                     done += 1
                     _status(running=True, done=done, total=total_jobs)
                     continue
-                for paper in papers:
-                    doi = str(paper.get("doi") or "")
-                    if doi:
-                        work = _crossref_work(doi)
-                        if isinstance(work.get("cites"), int):
-                            paper["citations"] = work["cites"]
-                        aff = list(paper.get("affiliations") or [])
-                        for name in work.get("aff") or []:
-                            if name and name not in aff:
-                                aff.append(name)
-                        if aff:
-                            paper["affiliations"] = aff
-                            paper["ccs"] = affiliation_ccs(aff)
-                        time.sleep(0.05)
-                papers.sort(key=lambda p: (-int(p.get("citations") or 0), str(p.get("title") or "")))
                 inst: List[Dict[str, Any]] = []
                 _save_topic(
                     name,
@@ -420,6 +483,9 @@ def _work() -> None:
                 )
                 done += 1
                 _status(running=True, done=done, total=total_jobs)
+            blob = load_live()
+            blob["cited_pool_version"] = CITED_POOL_VERSION
+            _write(CACHE_PATH, blob)
             _status(running=False, done=total_jobs, total=total_jobs, error="")
         except Exception as exc:
             _status(running=False, done=done, total=total_jobs, error=str(exc)[:240])
@@ -454,7 +520,11 @@ def ensure_prefetch(*, force: bool = False) -> None:
             force=force,
             running=False,
         ):
-            return
+            if int(live.get("cited_pool_version") or 0) >= CITED_POOL_VERSION:
+                return
+            force = True
+        if int(live.get("cited_pool_version") or 0) < CITED_POOL_VERSION:
+            force = True
         _status(running=True, done=0, total=len(TOPIC_ORDER) * 3, error="")
         _thread = threading.Thread(target=_work, daemon=True, name="springer-live")
         _thread.start()
@@ -609,23 +679,9 @@ def _europe_cited_for_topic(topic: str, *, max_cc: int = 5) -> List[Dict[str, An
             paper["affiliations"] = [name_en]
             pool.append(paper)
         time.sleep(0.05)
-    papers = filter_cited(pool, topic, limit=40)
-    for paper in papers:
-        doi = str(paper.get("doi") or "")
-        if not doi:
-            continue
-        work = _crossref_work(doi)
-        if isinstance(work.get("cites"), int):
-            paper["citations"] = work["cites"]
-        time.sleep(0.03)
-    papers.sort(
-        key=lambda p: (
-            -int(p.get("citations") or 0),
-            -int(p.get("year") or 0),
-            str(p.get("title") or ""),
-        )
-    )
-    out = papers[:30]
+    enriched = _enrich_citations(pool)
+    papers = filter_cited(enriched, topic, limit=40)
+    out = _rank_cited_papers(papers, 30)
     if out:
         _save_topic(topic, {"europe_cited": out})
     return [dict(p) for p in out]
@@ -758,15 +814,6 @@ def list_cited_papers(
                 str(p.get("title") or ""),
             )
         )
-        return kept[:limit]
-    pool.sort(
-        key=lambda p: (
-            int(p.get("year") or 0),
-            str(p.get("date") or ""),
-            int(p.get("citations") or 0),
-            str(p.get("title") or ""),
-        ),
-        reverse=True,
-    )
-    return pool[:limit]
+        return _rank_cited_papers(kept, limit)
+    return _rank_cited_papers(pool, limit)
 

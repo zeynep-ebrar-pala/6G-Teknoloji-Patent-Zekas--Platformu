@@ -389,6 +389,8 @@ def render_academic_publication_module():
         if not papers:
             show_empty(t("pub.empty_cited_region") if region == "eu" else t("pub.empty_cited"))
         else:
+            if all(int(p.get("citations") or 0) == 0 for p in papers[:8]):
+                st.caption(t("pub.cited_zero_hint"))
             for paper in papers:
                 render_paper_card(_with_source(paper))
 
