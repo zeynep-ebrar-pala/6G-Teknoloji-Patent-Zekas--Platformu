@@ -539,20 +539,17 @@ GROQ_CHAT_MODELS = (
     "openai/gpt-oss-20b",
 )
 GEMINI_CHAT_MODELS = (
-    "gemini-3.1-pro-preview",
+    "gemini-2.5-flash",
     "gemini-3-flash-preview",
     "gemini-flash-latest",
+    "gemini-3.1-pro-preview",
 )
 
 
-def _model_unavailable(exc: Exception) -> bool:
-    text = str(exc).lower()
-    return (
-        "404" in text
-        or "not_found" in text
-        or "not found" in text
-        or "no longer available" in text
-    )
+def _gemini_retryable(exc: Exception) -> bool:
+    from backend.gemini_util import gemini_retryable_error
+
+    return gemini_retryable_error(exc)
 
 
 def _history_messages(history: Optional[Sequence[Dict[str, Any]]]) -> List[Dict[str, str]]:
@@ -641,7 +638,7 @@ def _answer_with_gemini(
                 return str(text)
         except Exception as exc:
             last_exc = exc
-            if _model_unavailable(exc):
+            if _gemini_retryable(exc):
                 continue
     if last_exc:
         raise last_exc
@@ -701,7 +698,12 @@ class AIAssistantService:
                         "sources": sources,
                     }
             except Exception as exc:
-                note = t("ai.llm_fail", exc=str(exc)[:180])
+                from backend.gemini_util import gemini_error_summary, gemini_quota_error
+
+                if gemini_quota_error(exc):
+                    note = t("ai.llm_quota")
+                else:
+                    note = t("ai.llm_fail", exc=gemini_error_summary(exc))
                 return {"response": f"{local}\n\n{note}", "type": "fallback", "sources": sources}
 
         return {"response": local, "type": "fallback", "sources": sources}

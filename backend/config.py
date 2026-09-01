@@ -97,16 +97,21 @@ def get_gemini_api_key() -> Optional[str]:
     return _secret("GEMINI_API_KEY")
 
 
-def get_gemini_chat_models() -> tuple[str, ...]:
-    """Gemini chat model sırası. GEMINI_CHAT_MODEL tek model zorlar."""
-    override = (_secret("GEMINI_CHAT_MODEL") or os.getenv("GEMINI_CHAT_MODEL") or "").strip()
-    if override:
-        return (override,)
+def get_gemini_auth_probe_models() -> tuple[str, ...]:
+    """Ücretsiz katman — giriş doğrulaması ve öncelikli yanıt."""
     return (
-        "gemini-3.1-pro-preview",
+        "gemini-2.5-flash",
         "gemini-3-flash-preview",
         "gemini-flash-latest",
     )
+
+
+def get_gemini_chat_models() -> tuple[str, ...]:
+    """Gemini chat model sırası. Flash önce; Pro ücretli planda."""
+    override = (_secret("GEMINI_CHAT_MODEL") or os.getenv("GEMINI_CHAT_MODEL") or "").strip()
+    if override:
+        return (override,)
+    return get_gemini_auth_probe_models() + ("gemini-3.1-pro-preview",)
 
 
 def get_default_ai_provider() -> Provider:

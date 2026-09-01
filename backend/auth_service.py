@@ -39,25 +39,32 @@ def _validate_gemini(api_key: str) -> Tuple[bool, str]:
     try:
         from google import genai
 
-        from backend.config import get_gemini_chat_models
+        from backend.config import get_gemini_auth_probe_models
+        from backend.gemini_util import gemini_quota_error, gemini_retryable_error
 
         client = genai.Client(api_key=api_key)
-        probe = "ping"
-        for model in get_gemini_chat_models():
+        list(client.models.list())
+
+        quota_hit = False
+        for model in get_gemini_auth_probe_models():
             try:
-                response = client.models.generate_content(model=model, contents=probe)
+                response = client.models.generate_content(model=model, contents="ok")
                 if getattr(response, "text", None):
                     return True, t("auth.gemini_ok")
             except Exception as exc:
-                if "404" in str(exc) or "not found" in str(exc).lower():
+                if gemini_retryable_error(exc):
+                    if gemini_quota_error(exc):
+                        quota_hit = True
                     continue
-                raise
-        list(client.models.list())
+                return False, t("auth.gemini_bad", exc=str(exc)[:120])
+
+        if quota_hit:
+            return True, t("auth.gemini_ok_quota")
         return True, t("auth.gemini_ok")
     except ImportError:
         return False, t("auth.gemini_missing")
     except Exception as exc:
-        return False, t("auth.gemini_bad", exc=exc)
+        return False, t("auth.gemini_bad", exc=str(exc)[:120])
 
 
 def resolve_stored_key(provider: Provider) -> Optional[str]:
