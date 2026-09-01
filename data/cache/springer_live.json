@@ -1,8 +1,8 @@
 {
   "topics": {
     "ISAC": {
-      "total": 731,
-      "query": "6G ISAC onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "total": 742,
+      "query": "\"6G\" ISAC onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
       "years": {
         "2020": 7,
         "2021": 5,
@@ -10,18 +10,18 @@
         "2023": 43,
         "2024": 79,
         "2025": 186,
-        "2026": 387
+        "2026": 398
       },
       "countries": [
         {
           "cc": "CN",
           "name": "China",
-          "count": 330
+          "count": 334
         },
         {
           "cc": "IN",
           "name": "India",
-          "count": 122
+          "count": 123
         },
         {
           "cc": "MY",
@@ -36,7 +36,7 @@
         {
           "cc": "GB",
           "name": "United Kingdom",
-          "count": 60
+          "count": 61
         },
         {
           "cc": "US",
@@ -46,7 +46,7 @@
         {
           "cc": "DE",
           "name": "Germany",
-          "count": 32
+          "count": 33
         },
         {
           "cc": "SA",
@@ -59,19 +59,19 @@
           "count": 31
         },
         {
+          "cc": "TR",
+          "name": "Turkey",
+          "count": 30
+        },
+        {
           "cc": "AE",
           "name": "United Arab Emirates",
           "count": 29
         },
         {
-          "cc": "TR",
-          "name": "Turkey",
-          "count": 29
-        },
-        {
           "cc": "IT",
           "name": "Italy",
-          "count": 23
+          "count": 24
         },
         {
           "cc": "FR",
@@ -104,23 +104,23 @@
           "count": 17
         },
         {
+          "cc": "PK",
+          "name": "Pakistan",
+          "count": 16
+        },
+        {
           "cc": "EG",
           "name": "Egypt",
           "count": 15
         },
         {
-          "cc": "PK",
-          "name": "Pakistan",
-          "count": 15
-        },
-        {
-          "cc": "IQ",
-          "name": "Iraq",
-          "count": 11
+          "cc": "",
+          "name": "Tunisia",
+          "count": 12
         }
       ],
-      "turkey_count": 29,
-      "turkey_rank": 11,
+      "turkey_count": 30,
+      "turkey_rank": 10,
       "institutions": [],
       "cited": [
         {
@@ -246,8 +246,8 @@
       ]
     },
     "RIS": {
-      "total": 1790,
-      "query": "6G RIS onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "total": 1815,
+      "query": "\"6G\" RIS onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
       "years": {
         "2020": 17,
         "2021": 46,
@@ -255,28 +255,28 @@
         "2023": 159,
         "2024": 291,
         "2025": 491,
-        "2026": 697
+        "2026": 721
       },
       "countries": [
         {
           "cc": "CN",
           "name": "China",
-          "count": 594
+          "count": 602
         },
         {
           "cc": "IN",
           "name": "India",
-          "count": 415
+          "count": 420
         },
         {
           "cc": "SA",
           "name": "Saudi Arabia",
-          "count": 132
+          "count": 134
         },
         {
           "cc": "MY",
           "name": "Malaysia",
-          "count": 127
+          "count": 128
         },
         {
           "cc": "US",
@@ -284,19 +284,19 @@
           "count": 116
         },
         {
-          "cc": "JO",
-          "name": "Jordan",
-          "count": 107
-        },
-        {
           "cc": "GB",
           "name": "United Kingdom",
-          "count": 106
+          "count": 108
         },
         {
-          "cc": "",
+          "cc": "JO",
+          "name": "Jordan",
+          "count": 108
+        },
+        {
+          "cc": "VN",
           "name": "Vietnam",
-          "count": 82
+          "count": 83
         },
         {
           "cc": "KR",
@@ -306,12 +306,12 @@
         {
           "cc": "CA",
           "name": "Canada",
-          "count": 58
+          "count": 59
         },
         {
           "cc": "PK",
           "name": "Pakistan",
-          "count": 57
+          "count": 58
         },
         {
           "cc": "EG",
@@ -321,7 +321,7 @@
         {
           "cc": "DE",
           "name": "Germany",
-          "count": 51
+          "count": 52
         },
         {
           "cc": "AE",
@@ -341,7 +341,12 @@
         {
           "cc": "",
           "name": "Iran",
-          "count": 43
+          "count": 44
+        },
+        {
+          "cc": "TR",
+          "name": "Turkey",
+          "count": 37
         },
         {
           "cc": "GR",
@@ -349,18 +354,13 @@
           "count": 36
         },
         {
-          "cc": "TR",
-          "name": "Turkey",
-          "count": 36
-        },
-        {
-          "cc": "AU",
-          "name": "Australia",
-          "count": 27
+          "cc": "IQ",
+          "name": "Iraq",
+          "count": 28
         }
       ],
-      "turkey_count": 99,
-      "turkey_rank": 19,
+      "turkey_count": 100,
+      "turkey_rank": 18,
       "institutions": [],
       "cited": [
         {
@@ -483,11 +483,253 @@
           "url": "https://doi.org/10.1007/s11235-026-01506-z",
           "topic": "RIS"
         }
+      ],
+      "europe_cited": [
+        {
+          "title": "A review of IRS-assisted communication for medical robotics: enabling intelligent wireless control in 6G healthcare systems",
+          "authors": "Zhang, Siwen, Saleem, Asad, Zhou, Liang, Meiling, Sun, Komolafe, Temitope E., Xu, Yan",
+          "journal": "Applied Intelligence",
+          "year": 2026,
+          "date": "2026-07-08",
+          "doi": "10.1007/s10489-026-07353-4",
+          "citations": 0,
+          "abstract": "Advances in wireless communication are reshaping medical robotics by enabling more responsive and connected healthcare systems. This review article examines how millimeter-wave (mmWave) communication, intelligent reflecting surface (IRS), and massive multiple-input multiple-output (MIMO) can support the closed-loop, latency-sensitive, and reliability-critical requirements of medical robotic systems. Rather than treating these technologies as separate wireless trends, the paper analyzes their complementary roles in robotic sensing, control feedback, mobility support, and resilient connectivity across applications such as telesurgery, patient monitoring, rehabilitation, and smart hospital robotics. Particular emphasis is placed on sixth-generation (6G) capabilities, AI-driven wireless adaptation, and communication-robotics co-design under constraints including blockage, interference, device miniaturization, power limits, and cybersecurity. Key implementation barriers, open challenges, and future research directions are also summarized.",
+          "affiliations": [
+            "Italy"
+          ],
+          "ccs": [
+            "IT"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s10489-026-07353-4",
+          "url": "https://doi.org/10.1007/s10489-026-07353-4",
+          "topic": "RIS"
+        },
+        {
+          "title": "Active RISs: Modeling and Optimization",
+          "authors": "Tasci, Recep Akif, Gavriilidis, Panagiotis, Basar, Ertugrul, Alexandropoulos, George C.",
+          "journal": "Reconfigurable Intelligent Surfaces for Wireless Communications",
+          "year": 2026,
+          "date": "2026-06-01",
+          "doi": "10.1007/978-981-95-1814-2_9",
+          "citations": 0,
+          "abstract": "Reconfigurable Intelligent Surfaces (RIS)-empowered communication has emerged as a transformative technology for next generation wireless networks, enabling the programmable shaping of the propagation environment. However, conventional passive RISs are fundamentally limited by the double path loss effect, which severely attenuates the reflected signals. To overcome this, active RIS architectures, capable of amplifying impinging signals, have been proposed. This chapter investigates the modeling, performance analysis, and optimization of active RISs, focusing on two hardware designs: a dual-RIS structure with a single Power Amplifier (PA), and a reflection amplification structure at the unit cell level using tunnel diodes. For the single PA-based design, a comprehensive mathematical model is developed, and closed-form expressions for the received signal-to-noise ratio, bit error probability, and Energy Efficiency (EE) are derived. An optimization framework for configuring the phase shifts and amplifier gain is proposed to maximize system capacity under power constraints. Moreover, a reflection amplification model based on tunnel diodes is introduced, where each unit cell is modeled ",
+          "affiliations": [
+            "Greece"
+          ],
+          "ccs": [
+            "GR"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-95-1814-2_9",
+          "url": "https://doi.org/10.1007/978-981-95-1814-2_9",
+          "topic": "RIS"
+        },
+        {
+          "title": "Beamforming for Reconfigurable Intelligence Surface Assisted Collaborative System of Communication and Sensing",
+          "authors": "Luo, Tianfang, Li, Zihan, Liu, Chao, Xiao, Pei, Wang, Tong, Ouyang, Min",
+          "journal": "Computer Supported Cooperative Work and Social Computing",
+          "year": 2026,
+          "date": "2026-07-02",
+          "doi": "10.1007/978-981-92-0288-1_13",
+          "citations": 0,
+          "abstract": "The collaboration between communication and sensing has emerged as an important technology for sixth-generation (6G) wireless communication networks. In this paper, we investigate the beamforming for the collaborative system of communication and sensing via the collaboration between reconfigurable intelligent surfaces (RIS) and multiple-input single-output (MISO) base stations (BS) in multi-user MISO systems. In order to promote the sum communication rate for all users while ensuring the radar sensing performance, we formulate a non-convex optimization problem to maximize the sum rate for all users under the constraints of the radar signal-to-noise ratio (SNR). To address the non-convex optimization, we propose a hybrid approach combining fractional programming and the alternating direction method of multipliers (ADMM) to optimize acceptance filter coefficients, the beamforming and the RIS reflection coefficients matrix. The simulation results indicate that the proposed scheme is able to enhance the communication capability while ensuring the radar performance. Furthermore, compared to the scheme without RIS collaboration, our scheme achieves more accurate alignment with target dir",
+          "affiliations": [
+            "United Kingdom"
+          ],
+          "ccs": [
+            "GB"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-0288-1_13",
+          "url": "https://doi.org/10.1007/978-981-92-0288-1_13",
+          "topic": "RIS"
+        },
+        {
+          "title": "Deep Reinforcement Learning Based Cooperative Transmission Optimization for IRS-Assisted Multi-UAV Covert Communication",
+          "authors": "Liu, Zixuan, Su, Wenting, Zhang, Bo, Ma, Ming",
+          "journal": "Advanced Intelligent Computing Technology and Applications",
+          "year": 2026,
+          "date": "2026-07-21",
+          "doi": "10.1007/978-981-92-3450-9_5",
+          "citations": 0,
+          "abstract": "With the development of 6G networks, drones have been widely used in the field of wireless communication due to their high mobility and flexible deployment. However, wireless channels are vulnerable to eavesdropping attacks. Covert communication can improve security by concealing communication activities.This paper studies a drone covert communication system based on an infrared reflector (IRS), where the IRS enhances wireless propagation, while jamming the drone reduces the detection capability of eavesdroppers. To improve system performance, a hybrid DRL-AO optimization scheme is developed to jointly design the UAV flight trajectory, IRS reflection coefficients, and transmission power allocation. Numerical results verify that the proposed approach achieves achieves higher covert transmission rates and a lower detection probability than traditional benchmark methods.",
+          "affiliations": [
+            "Germany"
+          ],
+          "ccs": [
+            "DE"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-3450-9_5",
+          "url": "https://doi.org/10.1007/978-981-92-3450-9_5",
+          "topic": "RIS"
+        },
+        {
+          "title": "Interference-aware complex phasor message passing network for joint beamforming optimization in multi-user IRS-assisted 6G systems",
+          "authors": "Mustafa, Mustafa Ihsan, Ucan, Osman Nuri",
+          "journal": "Discover Computing",
+          "year": 2026,
+          "date": "2026-08-04",
+          "doi": "10.1007/s10791-026-10407-3",
+          "citations": 0,
+          "abstract": "This paper proposes an Interference-Aware Complex Phasor Message Passing Network (CPMPN) for joint beamforming optimization in multi-user IRS-assisted systems. The proposed framework introduces a complex-valued graph representation that preserves the amplitude and phase characteristics of wireless channels and employs an interference-aware message passing mechanism to capture constructive and destructive signal interactions. A feasibility-preserving phase output layer guarantees unit-modulus IRS reflection coefficients, while a joint prediction head simultaneously generates IRS phase shifts and base station beamforming vectors. The proposed method is evaluated using the DeepMIMO O1 ray-tracing dataset under realistic millimeter-wave propagation conditions. Experimental results show that CPMPN achieves an achievable sum rate of 25.3 bps/Hz at 20 dB SNR, outperforming Alternating Optimization (23.4 bps/Hz), Real-Valued GNN (21.9 bps/Hz), Random IRS Phase (14.8 bps/Hz), and No-IRS transmission (13.6 bps/Hz). Moreover, the proposed framework approaches the semidefinite relaxation (SDR) upper bound of 27.1 bps/Hz with an optimality gap of only 3.3%, while maintaining substantially lower",
+          "affiliations": [
+            "Greece"
+          ],
+          "ccs": [
+            "GR"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s10791-026-10407-3",
+          "url": "https://doi.org/10.1007/s10791-026-10407-3",
+          "topic": "RIS"
+        },
+        {
+          "title": "LLM-enhanced-EA-driven automated optimization framework for joint indoor deployment of multiple BSs and RISs",
+          "authors": "Liao, Sichong, Hou, Jinbo, Zhao, Yi, Liu, Ziming, Hu, Haonan, Li, Zeyang, Wang, Kezhi, Zhang, Jie",
+          "journal": "Science China Information Sciences",
+          "year": 2026,
+          "date": "2026-08-19",
+          "doi": "10.1007/s11432-025-5063-7",
+          "citations": 0,
+          "abstract": "The joint deployment of base stations (BSs) and reconfigurable intelligent surfaces (RISs) is considered a promising but underexplored solution to simultaneously improve indoor coverage performance and reduce network costs. Classical evolutionary algorithms (EAs) can solve this bi-objective non-convex mixed integer programming problem. However, EAs often suffer from efficiency issues due to convergence on local optima, and require redesigning the mechanism to concentrate on the fruitful areas of the search space, especially when the space is large. In this work, we use the large language model (LLM)-enhanced non-dominated sorting genetic algorithm II (NSGA-II) to directly solve the bi-objective optimization problem, assisted by an LLM to enhance its concentrated exploration capability by extending the exploration in language space. To minimize manual engineering, we designed an automated LLM-based module that generates tailored optimization prompts from templates, user descriptions, and reference materials. Simulations show that LLM-NSGA-II, guided by these automated prompts, matches the performance of manual engineering. When applied to joint BS and RIS deployment, LEAO achieves a",
+          "affiliations": [
+            "United Kingdom"
+          ],
+          "ccs": [
+            "GB"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11432-025-5063-7",
+          "url": "https://doi.org/10.1007/s11432-025-5063-7",
+          "topic": "RIS"
+        },
+        {
+          "title": "Physical Layer Security of NOMA Networks with Energy Harvesting and Intelligent Reflective Surfaces",
+          "authors": "Do-Dac, Thiem",
+          "journal": "Advances and Trends in Artificial Intelligence. Theory and Applications",
+          "year": 2026,
+          "date": "2026-07-19",
+          "doi": "10.1007/978-981-92-2888-1_49",
+          "citations": 0,
+          "abstract": "This paper analyzes the physical layer security of Non-Orthogonal Multiple Access (NOMA) networks with Full Duplex Energy Harvesting (FD EH) and Intelligent Reflective Surfaces (IRS) with the aim of enhancing spectrum efficiency and reliability. The paper evaluates the security of NOMA networks with EH and IRS (NwEaS) and provides a formula for calculating the system throughput. The results illustrate that the system throughput is significantly influenced by the power transmission of the source, energy harvesting coefficient, and quantity of reflective elements on the security performance of NwEaS. Additionally, selecting appropriate values for NOMA power split factor and IRS split factor can achieve optimal security performance.",
+          "affiliations": [
+            "Germany"
+          ],
+          "ccs": [
+            "DE"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-92-2888-1_49",
+          "url": "https://doi.org/10.1007/978-981-92-2888-1_49",
+          "topic": "RIS"
+        },
+        {
+          "title": "RIS assisted energy aware multi agent adaptive SAC for UAV aided IoT network path planning and obstacle avoidance",
+          "authors": "Mowla, Md. Najmul, Asadi, Davood, Rabie, Khaled M., Shongwe, Thokozani",
+          "journal": "Scientific Reports",
+          "year": 2026,
+          "date": "2026-07-13",
+          "doi": "10.1038/s41598-026-60464-3",
+          "citations": 0,
+          "abstract": "Unmanned aerial vehicles (UAVs) are emerging as critical enablers of next generation Internet of Things (IoT) infrastructures, supporting real-time data collection, wireless relaying, and agile operations in dynamic environments. However, achieving safe and energy efficient multi UAV navigation under sixth generation (6G) communication constraints remains a significant challenge due to dynamic obstacles, limited on board energy, and the high cost of centralized coordination. This study introduces a multi agent soft actor-critic (MASAC) framework for UAV path planning and energy aware coordination in a fixed RIS assisted IoT grid. MASAC integrates entropy regularized actor-critic learning with reconfigurable intelligent surface (RIS) aware reward shaping to support energy aware navigation, RIS assisted recharging, and connectivity guided trajectory optimization. A lightweight convolutional policy network is used to encode spatial information from the grid environment, including obstacle locations, dynamic obstacle states, exploration memory, and UAV position, enabling efficient policy learning under constrained navigation settings. Extensive simulations in RIS assisted, 6G enabled I",
+          "affiliations": [
+            "United Kingdom"
+          ],
+          "ccs": [
+            "GB"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1038/s41598-026-60464-3",
+          "url": "https://doi.org/10.1038/s41598-026-60464-3",
+          "topic": "RIS"
+        },
+        {
+          "title": "Receiving RISs: Enabling Channel Estimation and Autonomous Configuration",
+          "authors": "Alexandropoulos, George C., Katsanos, Konstantinos D., Vlachos, Evangelos",
+          "journal": "Reconfigurable Intelligent Surfaces for Wireless Communications",
+          "year": 2026,
+          "date": "2026-06-01",
+          "doi": "10.1007/978-981-95-1814-2_12",
+          "citations": 0,
+          "abstract": "This chapter focuses on a hardware architecture for semi-passive Reconfigurable Intelligent Surfaces (RISs) and investigates its consideration for boosting the performance of Multiple-Input Multiple-Output (MIMO) communication systems. The architecture incorporates a single or multiple radio-frequency chains to receive pilot signals via tunable absorption phase profiles realized by the metasurface front end, as well as a controller encompassing a baseband processing unit to carry out channel estimation, and consequently, the optimization of the RIS reflection coefficients. A novel channel estimation protocol, according to which the RIS receives non-orthogonal training pilot sequences from two multi-antenna terminals via tunable absorption phase profiles, and then, estimates the respective channels via its signal processing unit, is presented. The channel estimates are particularly used by the RIS controller to design the capacity-achieving reflection phase configuration of the metasurface front end. The proposed channel estimation algorithm, which is based on the Alternating Direction Method of Multipliers (ADMM), profits from the RIS random spatial absorption sampling to capture t",
+          "affiliations": [
+            "Greece"
+          ],
+          "ccs": [
+            "GR"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-95-1814-2_12",
+          "url": "https://doi.org/10.1007/978-981-95-1814-2_12",
+          "topic": "RIS"
+        },
+        {
+          "title": "Six-Ray Street Canyon Propagation Model, Including Intelligent Reflective Surfaces for Wireless Microcell Applications at X-band",
+          "authors": "Poormohammad, Sarah, Farzaneh, Forouhar",
+          "journal": "Wireless Personal Communications",
+          "year": 2026,
+          "date": "2026-04-22",
+          "doi": "10.1007/s11277-026-11947-z",
+          "citations": 0,
+          "abstract": "A six-ray street canyon propagation model is proposed for microcell applications in presence of intelligent reflective surfaces (IRSs) in the X-band. The paper addresses a relevant and emerging area in 6G wireless communications involving IRS-assisted direction-finding in urban microcell environments. Two intelligent reflective surfaces are considered on both sides of the street walls. The use of a six-ray propagation model introduces a novel perspective by accounting for both environmental reflections and IRS-enhanced paths. The expected RMSE values (Root-Mean Square Errors) of direction-finding are evaluated in this case, with and without direct path blocking. The computation results are compared to those obtained by a recent reference for verification. The simulations are repeated for far-field cases. The presence of the IRSs can decrease the direction-finding resolution at far field but it can improve the signal coverage in general and in case of the blocking of the direct path the direction-finding resolution is improved as well. The direction-finding results are compared to CRLB (Cramer-Rao Lower Bound) for further verification. Bistatic radar cross-section (RCS) modelling fo",
+          "affiliations": [
+            "Greece"
+          ],
+          "ccs": [
+            "GR"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/s11277-026-11947-z",
+          "url": "https://doi.org/10.1007/s11277-026-11947-z",
+          "topic": "RIS"
+        },
+        {
+          "title": "The Road Towards RIS Standardization",
+          "authors": "Liu, Ruiqi, Shojaeifard, Arman, Wu, Qingqing, Liu, Yuanwei, Di Renzo, Marco, Alexandropoulos, George C.",
+          "journal": "Reconfigurable Intelligent Surfaces for Wireless Communications",
+          "year": 2026,
+          "date": "2026-06-01",
+          "doi": "10.1007/978-981-95-1814-2_24",
+          "citations": 0,
+          "abstract": "As a vital component of smart and sustainable radio environment, reconfigurable intelligent surface (RIS) plays a critical role in future wireless communications systems. The abilities of RIS to alter wireless propagation conditions with lower cost of deployment and lower energy consumption make it a strong candidate technology for the next generation networks. Given these merits studied by the academia, the industrial community has taken steps to standardize RIS in order to harmonize it with the current system design. The ETSI ISG RIS is one of the earliest standardization group to study RIS and their activities are provided in details. Particularly, a variety of use cases and deployment scenarios are identified, modelling of RIS-assisted communication channels is studied, and reference archetectures and future standardization impact are also analyzed. The future of RIS standardization lies in the industrial consensus to mature this technology further and address its engineering challenges.",
+          "affiliations": [
+            "Greece"
+          ],
+          "ccs": [
+            "GR"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-981-95-1814-2_24",
+          "url": "https://doi.org/10.1007/978-981-95-1814-2_24",
+          "topic": "RIS"
+        },
+        {
+          "title": "UAV-Assisted Reconfigurable Intelligent Surface Channel State Information Prediction in Beyond 5G Communication Systems: A Machine Learning Perspective",
+          "authors": "Djakwah, Peter, Ahado, William Mawuli, Annor, Andrew Essah Owiredu, Amadu, Aminatu, Achiaa, Akua, Mensah, Clerance Abraham, Agyemang, Justice Owusu, Gadze, James Dzisi",
+          "journal": "Pan-African Artificial Intelligence and Smart Systems",
+          "year": 2026,
+          "date": "2026-08-12",
+          "doi": "10.1007/978-3-032-33957-7_26",
+          "citations": 0,
+          "abstract": "This research presents a novel deep learning framework for channel state information (CSI) prediction in UAV-assisted Reconfigurable Intelligent Surface (RIS) enabled Beyond 5G (B5G) communication systems. The proposed approach leverages a hybrid 3D Convolutional Neural Network (3D-CNN) and Long Short-Term Memory (LSTM) architecture to capture both spatial and temporal dependencies inherent in dynamic wireless environments. Simulated in MATLAB, the model utilizes Rician fading channels, user and UAV mobility patterns, and real-time environmental parameters to generate CSI datasets. This dataset is fed into the 3D-CNN + LSTM model to predict CSI. The results demonstrate rapid convergence, low RMSE (0.12–0.18), and high prediction accuracy (up to 88%). The predicted sum-rate closely aligns with ground truth across varying SNR levels, validating the model’s capacity to preserve spectral efficiency under dynamic conditions. Future work will look into optimizing the performance of the model and benchmarking it against other CSI prediction methods .",
+          "affiliations": [
+            "Germany"
+          ],
+          "ccs": [
+            "DE"
+          ],
+          "source": "Springer",
+          "source_url": "https://doi.org/10.1007/978-3-032-33957-7_26",
+          "url": "https://doi.org/10.1007/978-3-032-33957-7_26",
+          "topic": "RIS"
+        }
       ]
     },
     "Cell-Free": {
-      "total": 575,
-      "query": "6G cell-free massive MIMO onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "total": 586,
+      "query": "\"6G\" cell-free massive MIMO onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
       "years": {
         "2020": 3,
         "2021": 20,
@@ -495,23 +737,23 @@
         "2023": 82,
         "2024": 97,
         "2025": 159,
-        "2026": 173
+        "2026": 183
       },
       "countries": [
         {
           "cc": "CN",
           "name": "China",
-          "count": 181
+          "count": 185
         },
         {
           "cc": "IN",
           "name": "India",
-          "count": 157
+          "count": 160
         },
         {
           "cc": "GB",
           "name": "United Kingdom",
-          "count": 45
+          "count": 46
         },
         {
           "cc": "SA",
@@ -524,24 +766,24 @@
           "count": 34
         },
         {
+          "cc": "DE",
+          "name": "Germany",
+          "count": 27
+        },
+        {
           "cc": "IT",
           "name": "Italy",
           "count": 27
         },
         {
-          "cc": "DE",
-          "name": "Germany",
-          "count": 26
-        },
-        {
           "cc": "PK",
           "name": "Pakistan",
-          "count": 22
+          "count": 23
         },
         {
-          "cc": "",
+          "cc": "VN",
           "name": "Vietnam",
-          "count": 20
+          "count": 21
         },
         {
           "cc": "CA",
@@ -584,23 +826,23 @@
           "count": 14
         },
         {
-          "cc": "",
+          "cc": "BE",
           "name": "Belgium",
+          "count": 13
+        },
+        {
+          "cc": "TR",
+          "name": "Turkey",
           "count": 13
         },
         {
           "cc": "AE",
           "name": "United Arab Emirates",
           "count": 12
-        },
-        {
-          "cc": "TR",
-          "name": "Turkey",
-          "count": 12
         }
       ],
-      "turkey_count": 26,
-      "turkey_rank": 20,
+      "turkey_count": 27,
+      "turkey_rank": 19,
       "institutions": [],
       "cited": [
         {
@@ -726,8 +968,8 @@
       ]
     },
     "THz": {
-      "total": 2583,
-      "query": "6G THz onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "total": 2604,
+      "query": "\"6G\" THz onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
       "years": {
         "2020": 46,
         "2021": 135,
@@ -735,18 +977,18 @@
         "2023": 323,
         "2024": 473,
         "2025": 663,
-        "2026": 704
+        "2026": 724
       },
       "countries": [
         {
           "cc": "IN",
           "name": "India",
-          "count": 775
+          "count": 781
         },
         {
           "cc": "CN",
           "name": "China",
-          "count": 654
+          "count": 659
         },
         {
           "cc": "US",
@@ -756,17 +998,17 @@
         {
           "cc": "SA",
           "name": "Saudi Arabia",
-          "count": 170
+          "count": 172
         },
         {
           "cc": "GB",
           "name": "United Kingdom",
-          "count": 131
+          "count": 133
         },
         {
           "cc": "DE",
           "name": "Germany",
-          "count": 126
+          "count": 128
         },
         {
           "cc": "CA",
@@ -781,7 +1023,7 @@
         {
           "cc": "EG",
           "name": "Egypt",
-          "count": 84
+          "count": 85
         },
         {
           "cc": "JP",
@@ -791,12 +1033,12 @@
         {
           "cc": "MY",
           "name": "Malaysia",
-          "count": 72
+          "count": 75
         },
         {
           "cc": "TR",
           "name": "Turkey",
-          "count": 72
+          "count": 73
         },
         {
           "cc": "",
@@ -806,12 +1048,17 @@
         {
           "cc": "KR",
           "name": "South Korea",
-          "count": 66
+          "count": 67
         },
         {
           "cc": "FR",
           "name": "France",
           "count": 64
+        },
+        {
+          "cc": "",
+          "name": "Bangladesh",
+          "count": 53
         },
         {
           "cc": "ES",
@@ -824,14 +1071,9 @@
           "count": 51
         },
         {
-          "cc": "",
-          "name": "Bangladesh",
-          "count": 50
-        },
-        {
           "cc": "PK",
           "name": "Pakistan",
-          "count": 45
+          "count": 47
         },
         {
           "cc": "FI",
@@ -839,7 +1081,7 @@
           "count": 43
         }
       ],
-      "turkey_count": 135,
+      "turkey_count": 137,
       "turkey_rank": 12,
       "institutions": [],
       "cited": [
@@ -966,8 +1208,8 @@
       ]
     },
     "AI-RAN": {
-      "total": 38,
-      "query": "6G AI-RAN onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "total": 39,
+      "query": "\"6G\" AI-RAN onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
       "years": {
         "2020": 1,
         "2021": 1,
@@ -975,7 +1217,7 @@
         "2023": 1,
         "2024": 3,
         "2025": 10,
-        "2026": 22
+        "2026": 23
       },
       "countries": [
         {
@@ -999,23 +1241,23 @@
           "count": 5
         },
         {
+          "cc": "TR",
+          "name": "Turkey",
+          "count": 5
+        },
+        {
           "cc": "US",
           "name": "United States",
           "count": 5
         },
         {
-          "cc": "",
+          "cc": "BE",
           "name": "Belgium",
           "count": 4
         },
         {
           "cc": "IT",
           "name": "Italy",
-          "count": 4
-        },
-        {
-          "cc": "TR",
-          "name": "Turkey",
           "count": 4
         },
         {
@@ -1054,6 +1296,11 @@
           "count": 2
         },
         {
+          "cc": "PK",
+          "name": "Pakistan",
+          "count": 2
+        },
+        {
           "cc": "",
           "name": "Algeria",
           "count": 1
@@ -1077,15 +1324,10 @@
           "cc": "",
           "name": "Hungary",
           "count": 1
-        },
-        {
-          "cc": "",
-          "name": "Iran",
-          "count": 1
         }
       ],
-      "turkey_count": 4,
-      "turkey_rank": 8,
+      "turkey_count": 5,
+      "turkey_rank": 5,
       "institutions": [],
       "cited": [
         {
@@ -1211,8 +1453,8 @@
       ]
     },
     "NTN": {
-      "total": 336,
-      "query": "6G NTN onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "total": 339,
+      "query": "\"6G\" NTN onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
       "years": {
         "2020": 3,
         "2021": 8,
@@ -1220,7 +1462,7 @@
         "2023": 31,
         "2024": 31,
         "2025": 97,
-        "2026": 150
+        "2026": 153
       },
       "countries": [
         {
@@ -1251,7 +1493,7 @@
         {
           "cc": "SA",
           "name": "Saudi Arabia",
-          "count": 20
+          "count": 21
         },
         {
           "cc": "FI",
@@ -1269,6 +1511,11 @@
           "count": 18
         },
         {
+          "cc": "PK",
+          "name": "Pakistan",
+          "count": 15
+        },
+        {
           "cc": "FR",
           "name": "France",
           "count": 14
@@ -1276,11 +1523,6 @@
         {
           "cc": "DE",
           "name": "Germany",
-          "count": 12
-        },
-        {
-          "cc": "PK",
-          "name": "Pakistan",
           "count": 12
         },
         {
@@ -1304,12 +1546,12 @@
           "count": 9
         },
         {
-          "cc": "",
+          "cc": "LU",
           "name": "Luxembourg",
           "count": 8
         },
         {
-          "cc": "",
+          "cc": "PL",
           "name": "Poland",
           "count": 7
         },
@@ -1324,7 +1566,7 @@
           "count": 6
         }
       ],
-      "turkey_count": 22,
+      "turkey_count": 23,
       "turkey_rank": 16,
       "institutions": [],
       "cited": [
@@ -1451,8 +1693,8 @@
       ]
     },
     "Ambient IoT": {
-      "total": 1711,
-      "query": "6G ambient IoT onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
+      "total": 1729,
+      "query": "\"6G\" ambient IoT onlinedatefrom:2020-01-01 onlinedateto:2026-12-31",
       "years": {
         "2020": 16,
         "2021": 75,
@@ -1460,28 +1702,28 @@
         "2023": 222,
         "2024": 295,
         "2025": 478,
-        "2026": 481
+        "2026": 497
       },
       "countries": [
         {
           "cc": "IN",
           "name": "India",
-          "count": 637
+          "count": 644
         },
         {
           "cc": "CN",
           "name": "China",
-          "count": 362
+          "count": 364
         },
         {
           "cc": "SA",
           "name": "Saudi Arabia",
-          "count": 152
+          "count": 153
         },
         {
           "cc": "US",
           "name": "United States",
-          "count": 121
+          "count": 122
         },
         {
           "cc": "GB",
@@ -1501,22 +1743,22 @@
         {
           "cc": "CA",
           "name": "Canada",
-          "count": 58
+          "count": 59
         },
         {
           "cc": "KR",
           "name": "South Korea",
-          "count": 54
+          "count": 56
         },
         {
           "cc": "MY",
           "name": "Malaysia",
-          "count": 54
+          "count": 55
         },
         {
           "cc": "DE",
           "name": "Germany",
-          "count": 51
+          "count": 52
         },
         {
           "cc": "TR",
@@ -1524,14 +1766,14 @@
           "count": 47
         },
         {
-          "cc": "ES",
-          "name": "Spain",
+          "cc": "AE",
+          "name": "United Arab Emirates",
           "count": 45
         },
         {
-          "cc": "AE",
-          "name": "United Arab Emirates",
-          "count": 44
+          "cc": "ES",
+          "name": "Spain",
+          "count": 45
         },
         {
           "cc": "EG",
@@ -1539,13 +1781,13 @@
           "count": 43
         },
         {
-          "cc": "FR",
-          "name": "France",
-          "count": 42
-        },
-        {
           "cc": "IQ",
           "name": "Iraq",
+          "count": 43
+        },
+        {
+          "cc": "FR",
+          "name": "France",
           "count": 42
         },
         {
@@ -1559,7 +1801,7 @@
           "count": 37
         },
         {
-          "cc": "",
+          "cc": "VN",
           "name": "Vietnam",
           "count": 37
         }
@@ -1692,5 +1934,6 @@
     }
   },
   "source": "Springer Nature Meta API",
-  "fetched_at": "2026-08-21 10:28 UTC"
+  "fetched_at": "2026-09-01 06:17 UTC",
+  "year_end": 2026
 }

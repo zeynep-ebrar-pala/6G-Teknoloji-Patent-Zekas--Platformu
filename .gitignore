@@ -10,6 +10,7 @@ __pycache__/
 env/
 venv/
 ENV/
+.streamlit/secrets.toml
 
 # Prefetch lock/status only — live overlay JSON is committed so Cloud matches local charts
 data/cache/springer_prefetch_status.json
