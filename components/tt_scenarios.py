@@ -5,6 +5,7 @@ Renders interactive Turkish telecom deployment scenario UI using Backend Scenari
 
 import streamlit as st
 
+from backend.data_service import DataService
 from backend.scenario_engine import DENSITY_KEYS, PRIORITY_KEYS, REGION_KEYS, ScenarioEngine
 from i18n.core import format_decimal, format_int, get_lang, t
 
