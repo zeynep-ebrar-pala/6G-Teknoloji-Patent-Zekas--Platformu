@@ -539,10 +539,10 @@ GROQ_CHAT_MODELS = (
     "openai/gpt-oss-20b",
 )
 GEMINI_CHAT_MODELS = (
-    "gemini-2.5-flash",
-    "gemini-2.0-flash",
+    "gemini-3.1-pro-preview",
+    "gemini-3-flash-preview",
     "gemini-flash-latest",
-    "gemini-2.5-pro",
+    "gemini-2.5-flash",
 )
 
 
