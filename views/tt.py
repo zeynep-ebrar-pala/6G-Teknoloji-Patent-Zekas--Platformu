@@ -1,5 +1,4 @@
-from components.tt_europe_views import render_tt_done_section
-from components.tt_page_views import render_tt_roadmap_section
+from components.tt_page_views import render_tt_done_section, render_tt_roadmap_section
 from components.ui_helpers import select_section
 from i18n.core import get_lang, t
 
