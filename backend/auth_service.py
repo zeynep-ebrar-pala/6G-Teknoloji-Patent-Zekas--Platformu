@@ -10,7 +10,6 @@ Provider = Literal["groq", "gemini"]
 
 
 def validate_api_key(provider: Provider, api_key: str) -> Tuple[bool, str]:
-    """Validate provider API key with a minimal live request."""
     key = (api_key or "").strip()
     if not key:
         return False, t("auth.empty")
@@ -32,23 +31,24 @@ def _validate_groq(api_key: str) -> Tuple[bool, str]:
     except ImportError:
         return False, t("auth.groq_missing")
     except Exception as exc:
-        return False, t("auth.groq_bad", exc=exc)
+        return False, t("auth.groq_bad", exc=str(exc)[:80])
 
 
 def _validate_gemini(api_key: str) -> Tuple[bool, str]:
-    from backend.gemini_util import gemini_list_models, safe_error_text
+    from backend.gemini_util import GeminiAuthError, GeminiQuotaError, gemini_list_models
+
+    if not api_key.startswith("AIza") or len(api_key) < 30:
+        return False, t("auth.gemini_invalid")
 
     try:
-        data = gemini_list_models(api_key)
-        if data.get("error"):
-            return False, t("auth.gemini_bad", exc=safe_error_text(Exception(str(data["error"]))))
+        gemini_list_models(api_key)
         return True, t("auth.gemini_ok")
-    except Exception as exc:
-        from backend.gemini_util import gemini_quota_error, gemini_retryable_error
-
-        if gemini_retryable_error(exc) or gemini_quota_error(exc):
-            return True, t("auth.gemini_ok_quota")
-        return False, t("auth.gemini_bad", exc=safe_error_text(exc))
+    except GeminiQuotaError:
+        return True, t("auth.gemini_ok_quota")
+    except GeminiAuthError:
+        return False, t("auth.gemini_invalid")
+    except Exception:
+        return True, t("auth.gemini_ok_quota")
 
 
 def resolve_stored_key(provider: Provider) -> Optional[str]:

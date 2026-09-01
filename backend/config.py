@@ -107,11 +107,11 @@ def get_gemini_auth_probe_models() -> tuple[str, ...]:
 
 
 def get_gemini_chat_models() -> tuple[str, ...]:
-    """Gemini chat model sırası. Flash önce; Pro ücretli planda."""
+    """Yalnızca Flash — Pro ücretsiz planda kota 0."""
     override = (_secret("GEMINI_CHAT_MODEL") or os.getenv("GEMINI_CHAT_MODEL") or "").strip()
-    if override:
+    if override and "3.1-pro" not in override:
         return (override,)
-    return get_gemini_auth_probe_models() + ("gemini-3.1-pro-preview",)
+    return get_gemini_auth_probe_models()
 
 
 def get_default_ai_provider() -> Provider:

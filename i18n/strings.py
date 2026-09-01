@@ -1001,11 +1001,13 @@ ve gerçek fiber topolojisi modele girmez. Sayıyı «ölçülmüş 6G performan
             "groq_bad": "Groq anahtarı geçersiz: {exc}",
             "gemini_ok": "Gemini API anahtarı doğrulandı.",
             "gemini_ok_quota": (
-                "Gemini anahtarı geçerli. Ücretsiz kota dolu veya Pro model bu planda yok; "
-                "yanıtlar Flash model veya yerel özet ile üretilir."
+                "Gemini anahtarı geçerli. Ücretsiz kota dolu; yanıtlar Flash veya yerel özet ile üretilir."
+            ),
+            "gemini_invalid": (
+                "Gemini anahtarı tanınmadı. Google AI Studio'dan yeni anahtar oluşturun."
             ),
             "gemini_missing": "Gemini kütüphanesi yüklü değil. pip install google-genai",
-            "gemini_bad": "Gemini anahtarı reddedildi: {exc}",
+            "gemini_bad": "Gemini bağlantı hatası.",
         },
         "ai": {
             "title": "AI Asistan",
@@ -1030,8 +1032,11 @@ ve gerçek fiber topolojisi modele girmez. Sayıyı «ölçülmüş 6G performan
             "tfidf_note": "*Yanıt platform kayıtlarından seçilmiştir; sayı uydurulmaz.*",
             "llm_fail": "*Dil modeli yanıt veremedi: {exc}*",
             "llm_quota": (
-                "*Gemini ücretsiz kota doldu veya seçilen model bu planda yok. "
-                "Yukarıda yerel özet gösterildi; Groq anahtarı veya ücretli plan alternatif olabilir.*"
+                "*Gemini ücretsiz kota doldu. Yukarıda yerel özet gösterildi; "
+                "Groq anahtarı ekleyebilir veya Google AI Studio planını yükseltebilirsiniz.*"
+            ),
+            "llm_groq_fallback": (
+                "*Gemini kotası doldu; yanıt Groq ile üretildi.*"
             ),
             "glossary_title": "Teknik sözlük (ilk kullanım açılımı)",
             "cite_n": "{n} atıf",
@@ -2190,11 +2195,13 @@ and the real fibre topology are not in the model. Do not read the numbers as mea
             "groq_bad": "Groq key is invalid: {exc}",
             "gemini_ok": "Gemini API key validated.",
             "gemini_ok_quota": (
-                "Gemini key is valid. Free-tier quota is exhausted or Pro is not on your plan; "
-                "answers use Flash models or the local summary."
+                "Gemini key is valid. Free-tier quota is full; answers use Flash or the local summary."
+            ),
+            "gemini_invalid": (
+                "Gemini key was not recognized. Create a new key in Google AI Studio."
             ),
             "gemini_missing": "The Gemini library is not installed. pip install google-genai",
-            "gemini_bad": "Gemini key was rejected: {exc}",
+            "gemini_bad": "Gemini connection error.",
         },
         "ai": {
             "title": "AI Assistant",
@@ -2219,8 +2226,11 @@ and the real fibre topology are not in the model. Do not read the numbers as mea
             "tfidf_note": "*This answer is from platform records selected with TF-IDF; numbers are not invented.*",
             "llm_fail": "*The LLM did not return an answer: {exc}*",
             "llm_quota": (
-                "*Gemini free-tier quota is exhausted or the model is not on your plan. "
-                "Local summary is shown above; a Groq key or paid plan are alternatives.*"
+                "*Gemini free-tier quota is full. Local summary is shown above; "
+                "add a Groq key or upgrade your Google AI Studio plan.*"
+            ),
+            "llm_groq_fallback": (
+                "*Gemini quota was exhausted; this answer was generated with Groq.*"
             ),
             "glossary_title": "Technical glossary (first-use expansions)",
             "cite_n": "{n} citations",

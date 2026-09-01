@@ -538,12 +538,6 @@ GROQ_CHAT_MODELS = (
     "qwen/qwen3.6-27b",
     "openai/gpt-oss-20b",
 )
-GEMINI_CHAT_MODELS = (
-    "gemini-2.5-flash",
-    "gemini-3-flash-preview",
-    "gemini-flash-latest",
-    "gemini-3.1-pro-preview",
-)
 
 
 def _gemini_retryable(exc: Exception) -> bool:
@@ -672,8 +666,20 @@ class AIAssistantService:
             try:
                 context, ctx_sources = _format_context(question, mode, budget=_CTX_BUDGET)
                 sources = _uniq(list(ctx_sources) + list(sources))
+                groq_fallback = False
                 if provider == "gemini":
-                    text = _answer_with_gemini(question, key, context, history)
+                    from backend.auth_service import resolve_stored_key
+                    from backend.gemini_util import GeminiQuotaError
+
+                    try:
+                        text = _answer_with_gemini(question, key, context, history)
+                    except GeminiQuotaError:
+                        groq_key = (resolve_stored_key("groq") or "").strip()
+                        if groq_key:
+                            text = _answer_with_groq(question, groq_key, context, history)
+                            groq_fallback = True
+                        else:
+                            raise
                 else:
                     try:
                         text = _answer_with_groq(question, key, context, history)
@@ -687,10 +693,16 @@ class AIAssistantService:
                         else:
                             raise
                 if len(text.strip()) >= 280:
-                    return {"response": text.strip(), "type": "llm", "sources": sources}
+                    resp = text.strip()
+                    if groq_fallback:
+                        resp += "\n\n" + t("ai.llm_groq_fallback")
+                    return {"response": resp, "type": "llm", "sources": sources}
                 if text.strip():
+                    tail = local
+                    if groq_fallback:
+                        tail = t("ai.llm_groq_fallback") + "\n\n" + local
                     return {
-                        "response": text.strip() + "\n\n" + local,
+                        "response": text.strip() + "\n\n" + tail,
                         "type": "llm",
                         "sources": sources,
                     }
