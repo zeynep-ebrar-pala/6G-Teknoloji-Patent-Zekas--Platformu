@@ -26,8 +26,9 @@ _TECH_HINTS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("thz", ("THZ", "TERAHERTZ")),
 )
 
-_CTX_BUDGET = 5200
-_CTX_BUDGET_RETRY = 3200
+_CTX_BUDGET = 7500
+_CTX_BUDGET_RETRY = 4500
+_LLM_MIN_CHARS = 120
 
 
 def _is_beginner(view_mode: str) -> bool:
@@ -354,7 +355,7 @@ def _corpus() -> List[Dict[str, str]]:
     return chunks
 
 
-def _retrieve(question: str, k: int = 8, view_mode: str = "") -> List[Dict[str, str]]:
+def _retrieve(question: str, k: int = 10, view_mode: str = "") -> List[Dict[str, str]]:
     chunks = _corpus()
     if not chunks:
         return []
@@ -470,7 +471,7 @@ def _build_answer_body(question: str, view_mode: str = "", *, compact: bool = Fa
         return "\n\n".join(blocks), _uniq(sources)
 
     chunks = _retrieve(question, view_mode=view_mode)
-    for ch in chunks[:4]:
+    for ch in chunks[:6]:
         cid = str(ch.get("id", ""))
         if cid.startswith("tech:"):
             parts = cid.split(":")
@@ -504,20 +505,19 @@ def _uniq(items: Sequence[str]) -> List[str]:
 
 def _format_context(question: str, view_mode: str = "", budget: int = _CTX_BUDGET) -> tuple[str, List[str]]:
     depth = t("ai.depth_beginner") if _is_beginner(view_mode) else t("ai.depth_expert")
-    body, sources = _build_answer_body(question, view_mode, compact=True)
+    body, sources = _build_answer_body(question, view_mode, compact=False)
     header = "\n".join(
         [
             t("ai.ctx_header"),
             t("ai.pedagogy"),
-            t("ai.style_tr"),
+            t("ai.answer_blueprint"),
             depth,
             t("ai.ctx_rule"),
-            t("ai.complete_rule"),
             "",
         ]
     )
     if len(header) + len(body) > budget:
-        body = body[: max(800, budget - len(header) - 40)]
+        body = body[: max(1200, budget - len(header) - 40)]
     return header + body, sources
 
 
@@ -526,6 +526,7 @@ def _system_preamble() -> str:
         [
             t("ai.system"),
             t("ai.style_tr"),
+            t("ai.answer_blueprint"),
             t("ai.complete_rule"),
         ]
     )
@@ -592,8 +593,8 @@ def _answer_with_groq(
             response = client.chat.completions.create(
                 model=model,
                 messages=messages,
-                temperature=0.2,
-                max_tokens=2048,
+                temperature=0.35,
+                max_tokens=3072,
             )
             text = _message_text(response)
             if text.strip():
@@ -692,7 +693,7 @@ class AIAssistantService:
                             text = _answer_with_groq(question, key, context, None)
                         else:
                             raise
-                if len(text.strip()) >= 280:
+                if len(text.strip()) >= _LLM_MIN_CHARS:
                     resp = text.strip()
                     if groq_fallback:
                         resp += "\n\n" + t("ai.llm_groq_fallback")

@@ -118,7 +118,13 @@ def gemini_generate(api_key: str, model: str, prompt: str, *, timeout: float = 1
         f"{urllib.parse.urlencode({'key': api_key})}"
     )
     payload = json.dumps(
-        {"contents": [{"parts": [{"text": prompt}]}]},
+        {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "temperature": 0.35,
+                "maxOutputTokens": 3072,
+            },
+        },
         ensure_ascii=False,
     ).encode("utf-8")
     req = urllib.request.Request(
