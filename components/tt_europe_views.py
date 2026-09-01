@@ -10,7 +10,6 @@ from backend.tt_europe_service import TTEuropeService
 from components.charts import (
     render_tt_country_rank_chart,
     render_tt_europe_choropleth,
-    render_tt_office_chart,
     render_tt_role_kind_chart,
     render_tt_vs_leader_chart,
     render_tt_vs_vendors_chart,
@@ -450,19 +449,6 @@ def _rd_touchpoints() -> None:
 
 def render_tt_europe_patent_section(domain: str | None = None) -> None:
     _explainer("patent")
-    _metrics("patent", domain)
-    offices = TTEuropeService.office_counts(domain)
-    positive_offices = {k: n for k, n in offices.items() if int(n or 0) > 0}
-    st.markdown(t("tt_eu.office_heading"))
-    st.caption(t("tt_eu.office_caption"))
-    if positive_offices:
-        if domain:
-            st.info(t("tt_eu.office_lock_one", topic=domain, us=format_int(offices.get("US") or 0)))
-        else:
-            st.info(t("tt_eu.office_lock_all", us=format_int(offices.get("US") or 0)))
-        show_plotly(render_tt_office_chart(positive_offices))
-    else:
-        show_empty(t("tt_eu.empty_topic", topic=domain or "—"))
     st.markdown(t("tt_eu.pat_list_heading"))
     st.caption(t("tt_eu.pat_list_caption"))
     pats = TTEuropeService.get_patents()
@@ -473,7 +459,6 @@ def render_tt_europe_patent_section(domain: str | None = None) -> None:
     else:
         for pat in pats:
             render_patent_card(pat)
-    _europe_position_banner("patent", domain)
     vs = {
         name: n
         for name, n in TTEuropeService.vendor_sample_vs_tt(domain).items()
@@ -484,8 +469,6 @@ def render_tt_europe_patent_section(domain: str | None = None) -> None:
         st.caption(t("tt_eu.vs_caption"))
         show_plotly(render_tt_vs_vendors_chart(vs))
     _country_rank("patent")
-    _geo_presence()
-    _collab_block()
 
 
 def render_tt_europe_pub_section(topic: str | None = None) -> None:
