@@ -36,35 +36,19 @@ def _validate_groq(api_key: str) -> Tuple[bool, str]:
 
 
 def _validate_gemini(api_key: str) -> Tuple[bool, str]:
-    try:
-        from google import genai
+    from backend.gemini_util import gemini_list_models, safe_error_text
 
-        from backend.config import get_gemini_auth_probe_models
+    try:
+        data = gemini_list_models(api_key)
+        if data.get("error"):
+            return False, t("auth.gemini_bad", exc=safe_error_text(Exception(str(data["error"]))))
+        return True, t("auth.gemini_ok")
+    except Exception as exc:
         from backend.gemini_util import gemini_quota_error, gemini_retryable_error
 
-        client = genai.Client(api_key=api_key)
-        list(client.models.list())
-
-        quota_hit = False
-        for model in get_gemini_auth_probe_models():
-            try:
-                response = client.models.generate_content(model=model, contents="ok")
-                if getattr(response, "text", None):
-                    return True, t("auth.gemini_ok")
-            except Exception as exc:
-                if gemini_retryable_error(exc):
-                    if gemini_quota_error(exc):
-                        quota_hit = True
-                    continue
-                return False, t("auth.gemini_bad", exc=str(exc)[:120])
-
-        if quota_hit:
+        if gemini_retryable_error(exc) or gemini_quota_error(exc):
             return True, t("auth.gemini_ok_quota")
-        return True, t("auth.gemini_ok")
-    except ImportError:
-        return False, t("auth.gemini_missing")
-    except Exception as exc:
-        return False, t("auth.gemini_bad", exc=str(exc)[:120])
+        return False, t("auth.gemini_bad", exc=safe_error_text(exc))
 
 
 def resolve_stored_key(provider: Provider) -> Optional[str]:

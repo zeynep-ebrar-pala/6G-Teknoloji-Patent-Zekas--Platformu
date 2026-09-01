@@ -10,6 +10,15 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().parent / ".env", override=True)
 
+import sys
+
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 import streamlit as st
 
 st.set_page_config(

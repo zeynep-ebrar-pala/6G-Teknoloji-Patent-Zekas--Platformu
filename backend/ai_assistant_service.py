@@ -619,23 +619,20 @@ def _answer_with_gemini(
     context: str,
     history: Optional[Sequence[Dict[str, Any]]] = None,
 ) -> str:
-    from google import genai
+    from backend.config import get_gemini_chat_models
+    from backend.gemini_util import gemini_generate
 
-    client = genai.Client(api_key=api_key)
     prior = "\n".join(f"{m['role']}: {m['content']}" for m in _history_messages(history))
     prompt = (
         f"{_system_preamble()}\n\n{context}\n\n"
         f"{prior}\n\n{t('ai.user_wrap', question=question)}"
     )
     last_exc: Exception | None = None
-    from backend.config import get_gemini_chat_models
-
     for model in get_gemini_chat_models():
         try:
-            response = client.models.generate_content(model=model, contents=prompt)
-            text = getattr(response, "text", None) or ""
-            if str(text).strip():
-                return str(text)
+            text = gemini_generate(api_key, model, prompt)
+            if text.strip():
+                return text
         except Exception as exc:
             last_exc = exc
             if _gemini_retryable(exc):
