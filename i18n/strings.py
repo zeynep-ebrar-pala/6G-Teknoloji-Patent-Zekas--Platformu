@@ -331,6 +331,11 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
                 "charts": "Rakip patent grafikleri",
                 "tt_eu": "Türk Telekom patent izi",
             },
+            "tt_eu_subtitle": (
+                "Netsia Inc. (Türk Telekom grubu) için kilitlenmiş Google Patents kayıtları. "
+                "Lens.org rakip grafikleri ve API kutusu yalnızca «Rakip patent grafikleri» bölümündedir."
+            ),
+            "tt_eu_domain": "6G konu filtresi (kilitli küme)",
             "year_heading": "### Patent sayısı / yıl",
             "year_caption": "Lens year_published tam sayısı, firma × yıl. Yuvarlama yok. {end} eksik yıldır.",
             "empty_trend": "Trend grafiği için yeterli patent verisi yok.",
@@ -654,6 +659,11 @@ Harita yalnızca kaynakta adı geçen ülkeyi boyar.
             "empty_topic": "Kilitli Netsia kümesinde «{topic}» tescili yok. Boş ofis çubuğu çizilmez; konu taramasındaki ofis düğmeleri aynı sorguyu dış sitede açar.",
             "pat_list_heading": "### Netsia Inc. (Türk Telekom grubu) — Google Patents",
             "pat_list_caption": "Hak sahibi (assignee): Netsia Inc. Kartlar yıla göre yeniden eskiye (2025 → 2023). Rakip (Nokia–ZTE) kümesine karıştırılmaz.",
+            "pat_intro_title": "Bu bölüm ne ölçer?",
+            "pat_intro_body": """<p style="color:#CBD5E1;font-size:0.9rem;line-height:1.6;margin:0;">
+Google Patents’te kilitlenen TT-grup 6G-komşu tesciller <strong>Netsia Inc.</strong> altındadır (Argela / TT ABD Ar-Ge iştiraki).
+Sayılar kilitli örnek kümedir; Lens rakip toplamı veya küresel SEP payı değildir.
+</p>""",
             "named_heading": "### Kaynakta adı geçen yerler — TT burada ne yapıyor?",
             "named_caption": "Her kart bir cümledir: ülke + TT’nin o yerdeki işi + kaynak. 19 veya 24 ülke adı raporda yok; eklenmez.",
             "named_col_place": "Yer",
@@ -764,6 +774,7 @@ Patentler Patent Zekası'ndadır.
             "rank_heading_pub": "### Ülke detayı — yayın (3 MNO + Türk Telekom)",
             "rank_caption": "Üç operatör Wikipedia Avrupa MNO listesindeki bu ülke satırından kilitlendi; abone/gelir «en yüksek 3» bu platformda ölçülmedi. Yayın = 6G konu + kurum ID (yoksa bağlılık dizesi). Patent = Google Patents (Netsia yalnız TR). 0 kayıt sıra almaz (—). Küresel SEP veya pazar payı değildir.",
             "rank_caption_pat": "Bu ülkede Wikipedia’daki 3 MNO + TT. Patent = Google Patents (Netsia yalnız TR). Kaydı 0 olan firma çizilmez; sıra uydurulmaz. Kartlarda Google Patents açılır.",
+            "rank_caption_pat_short": "Seçilen ülkede Wikipedia MNO listesindeki firmalar + TT. Yalnızca kayıtlı firmalar çizilir.",
             "rank_caption_pub": "Üç operatör Wikipedia Avrupa MNO listesinden kilitlendi. Yayın = 6G konu + kurum ID. 0 kayıt sıra almaz (—). Patent ofis sütunu bu sayfada yok.",
             "rank_country": "Avrupa ülkesi",
             "rank_spin": "Ülke sıralaması yükleniyor",
@@ -1498,6 +1509,11 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
                 "charts": "Rival patent charts",
                 "tt_eu": "Türk Telekom patent footprint",
             },
+            "tt_eu_subtitle": (
+                "Locked Google Patents records for Netsia Inc. (Türk Telekom group). "
+                "Lens.org rival charts and the API box are only under «Rival patent charts»."
+            ),
+            "tt_eu_domain": "6G topic filter (locked set)",
             "year_heading": "### Patent count / year",
             "year_caption": "Lens year_published totals, firm × year. No rounding. {end} is an incomplete year.",
             "empty_trend": "Not enough patent data for a trend chart.",
@@ -1821,6 +1837,11 @@ The map paints only countries named in a source.
             "empty_topic": "The locked Netsia set has no “{topic}” grant. Empty office bars are not drawn. The office buttons in Topic search open the same query on the external site.",
             "pat_list_heading": "### Netsia Inc. (Türk Telekom group) — Google Patents",
             "pat_list_caption": "Assignee: Netsia Inc. Cards are newest to oldest (2025 → 2023). These cards are not mixed into the Nokia–ZTE vendor set.",
+            "pat_intro_title": "What this section measures",
+            "pat_intro_body": """<p style="color:#CBD5E1;font-size:0.9rem;line-height:1.6;margin:0;">
+Locked TT-group 6G-adjacent grants on Google Patents sit under <strong>Netsia Inc.</strong> (Argela / TT US R&D affiliate).
+Counts are from a locked sample — not Lens rival totals or global SEP share.
+</p>""",
             "named_heading": "### Places named in a source — what TT does there",
             "named_caption": "Each card is a sentence: place + TT’s activity there + source. The 19 or 24 country names are not in the report; they are not added.",
             "named_col_place": "Place",
@@ -1931,6 +1952,7 @@ Patents sit on Patent Intelligence.
             "rank_heading_pub": "### Country detail — publications (3 MNOs + Türk Telekom)",
             "rank_caption": "The three operators are locked from that country’s row in the Wikipedia European MNO list; subscriber/revenue “top 3” was not measured here. Publication counts are a 6G topic search. Patent counts are Google Patents (Netsia on TR only). A zero count is unranked (—); zeros are not labelled “2nd”. Not global SEP or market share.",
             "rank_caption_pat": "The three Wikipedia MNOs + TT in this country. Patents = Google Patents (Netsia on TR only). Firms with 0 records are not drawn; rank is not invented. Cards open Google Patents.",
+            "rank_caption_pat_short": "Wikipedia MNO list firms + TT in the selected country. Only firms with records are plotted.",
             "rank_caption_pub": "The three operators are locked from the Wikipedia European MNO list. Publications are a 6G topic search. A zero count is unranked (—). Patent-office columns are not on this page.",
             "rank_country": "European country",
             "rank_spin": "Loading the country ranking",

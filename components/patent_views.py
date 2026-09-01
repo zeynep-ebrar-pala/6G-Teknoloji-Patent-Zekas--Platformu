@@ -37,6 +37,28 @@ from components.tt_europe_views import render_tt_europe_patent_section
 PATENT_SECTION_KEYS = ["charts", "tt_eu"]
 
 
+def _tt_patent_domain_filter() -> str | None:
+    """Kilitli Netsia kümesinde konu filtresi — Lens API kutusu yok."""
+    from backend.tt_europe_service import TTEuropeService
+    from i18n.core import topic_label
+
+    domains = sorted(
+        {
+            str(p.get("domain") or "").strip()
+            for p in TTEuropeService.get_patents()
+            if str(p.get("domain") or "").strip()
+        }
+    )
+    options = ["all"] + domains
+    picked = st.selectbox(
+        t("patent.tt_eu_domain"),
+        options,
+        format_func=lambda x: t("sources.topic_all") if x == "all" else topic_label(x),
+        key=f"pat_tt_domain_{get_lang()}",
+    )
+    return None if picked == "all" else picked
+
+
 def _lens_token_box() -> None:
     from backend.config import get_lens_token
 
@@ -236,6 +258,19 @@ def render_patent_intelligence_module():
         t("patent.subtitle", source=PatentService.get_data_source()),
     )
 
+    _labels = [t(f"patent.section.{k}") for k in PATENT_SECTION_KEYS]
+    _map = dict(zip(_labels, PATENT_SECTION_KEYS))
+    section = _map.get(
+        select_section(t("patent.view"), _labels, key=f"patent_section_story_{get_lang()}"),
+        PATENT_SECTION_KEYS[0],
+    )
+
+    if section == "tt_eu":
+        st.caption(t("patent.tt_eu_subtitle"))
+        domain = _tt_patent_domain_filter()
+        render_tt_europe_patent_section(domain=domain)
+        return
+
     st.markdown(f"**{t('patent.what_title')}**")
     st.markdown(t("patent.what_body"))
     st.markdown(f"**{t('patent.access_title')}**")
@@ -248,17 +283,6 @@ def render_patent_intelligence_module():
     _lens_token_box()
     render_spec_patent_sources()
     topic = render_patent_topic_panel("patent")
-
-    _labels = [t(f"patent.section.{k}") for k in PATENT_SECTION_KEYS]
-    _map = dict(zip(_labels, PATENT_SECTION_KEYS))
-    section = _map.get(
-        select_section(t("patent.view"), _labels, key=f"patent_section_story_{get_lang()}"),
-        PATENT_SECTION_KEYS[0],
-    )
-
-    if section == "tt_eu":
-        render_tt_europe_patent_section(domain=topic)
-        return
 
     spec = PatentService.get_spec_companies()
     filter_options = ["all"] + spec

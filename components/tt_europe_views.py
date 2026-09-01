@@ -238,7 +238,7 @@ def _fmt_pat_hits(items: list | None) -> str:
     return " · ".join(f"{it['name']} ({it['n']})" for it in hits)
 
 
-def _country_rank(kind: str) -> None:
+def _country_rank(kind: str, *, compact_patent: bool = False) -> None:
     from backend.mno_pub_live import ensure_prefetch as ensure_mno_pub
 
     if kind != "patent":
@@ -246,13 +246,13 @@ def _country_rank(kind: str) -> None:
     lang = get_lang()
     name_key = "name_tr" if lang == "tr" else "name_en"
     is_pat = kind == "patent"
-    st.markdown(t("tt_eu.overview_heading_pat" if is_pat else "tt_eu.overview_heading_pub"))
-    st.caption(t("tt_eu.overview_caption_pat" if is_pat else "tt_eu.overview_caption_pub"))
-    spin = t("tt_eu.overview_spin_pat" if is_pat else "tt_eu.overview_spin")
-    with st.spinner(spin):
-        overview = TTEuropeService.europe_overview(include_pubs=not is_pat)
-    if overview:
-        if is_pat:
+    if is_pat and not compact_patent:
+        st.markdown(t("tt_eu.overview_heading_pat"))
+        st.caption(t("tt_eu.overview_caption_pat"))
+        spin = t("tt_eu.overview_spin_pat")
+        with st.spinner(spin):
+            overview = TTEuropeService.europe_overview(include_pubs=False)
+        if overview:
             pat_rows = [
                 row
                 for row in overview
@@ -286,14 +286,20 @@ def _country_rank(kind: str) -> None:
                         {
                             t("tt_eu.named_col_place"): row[name_key],
                             t("tt_eu.overview_hits_pat"): _fmt_pat_hits(row.get("pat_top3")),
-                        t("tt_eu.overview_tt_pat"): format_int(row["tt_pat_n"]),
-                    }
-                )
+                            t("tt_eu.overview_tt_pat"): format_int(row["tt_pat_n"]),
+                        }
+                    )
                 if table:
                     show_dataframe(table)
             else:
                 show_empty(t("tt_eu.overview_empty_pat"))
-        else:
+    elif not is_pat:
+        st.markdown(t("tt_eu.overview_heading_pub"))
+        st.caption(t("tt_eu.overview_caption_pub"))
+        spin = t("tt_eu.overview_spin")
+        with st.spinner(spin):
+            overview = TTEuropeService.europe_overview(include_pubs=True)
+        if overview:
             tt_only = [r for r in overview if int(r.get("tt_pub_n") or 0) > 0]
             if not tt_only:
                 show_empty(t("tt_eu.overview_empty_pub"))
@@ -321,7 +327,10 @@ def _country_rank(kind: str) -> None:
             )
 
     st.markdown(t("tt_eu.rank_heading_pat" if is_pat else "tt_eu.rank_heading_pub"))
-    st.caption(t("tt_eu.rank_caption_pat" if is_pat else "tt_eu.rank_caption_pub"))
+    if is_pat and compact_patent:
+        st.caption(t("tt_eu.rank_caption_pat_short"))
+    else:
+        st.caption(t("tt_eu.rank_caption_pat" if is_pat else "tt_eu.rank_caption_pub"))
     countries = TTEuropeService.ranked_countries()
     labels = [row["name_tr"] if lang == "tr" else row["name_en"] for row in countries]
     by_label = {labels[i]: countries[i]["cc"] for i in range(len(countries))}
@@ -346,38 +355,39 @@ def _country_rank(kind: str) -> None:
             st.info(t("tt_eu.rank_empty_pat"))
             render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
             return
-        st.markdown(
-            t(
-                "tt_eu.rank_tt_pat",
-                pat_n=format_int(pat_n),
-            )
-        )
         show_plotly(
             render_tt_country_rank_chart(
                 drawn, "pat_n", t("tt_eu.rank_pat_title"), t("tt_eu.rank_pat_x")
             )
         )
-        from backend.source_links import assignee_patent_links
-
-        table = []
-        for row in sorted(drawn, key=lambda r: (-int(r.get("pat_n") or 0), r["name"])):
-            pat_links = {item["id"]: item["url"] for item in assignee_patent_links(row["name"])}
-            table.append(
-                {
-                    t("tt_eu.rank_col_firm"): row["name"],
-                    t("tt_eu.rank_col_pat"): format_int(row["pat_n"]),
-                    t("sources.open_google_patents").replace(" ↗", ""): pat_links.get("google_patents")
-                    or row.get("patents_url")
-                    or "",
-                }
+        if not compact_patent:
+            st.markdown(
+                t(
+                    "tt_eu.rank_tt_pat",
+                    pat_n=format_int(pat_n),
+                )
             )
-        gp_col = t("sources.open_google_patents").replace(" ↗", "")
-        show_dataframe(
-            table,
-            column_config={
-                gp_col: st.column_config.LinkColumn(gp_col, display_text="Google"),
-            },
-        )
+            from backend.source_links import assignee_patent_links
+
+            table = []
+            for row in sorted(drawn, key=lambda r: (-int(r.get("pat_n") or 0), r["name"])):
+                pat_links = {item["id"]: item["url"] for item in assignee_patent_links(row["name"])}
+                table.append(
+                    {
+                        t("tt_eu.rank_col_firm"): row["name"],
+                        t("tt_eu.rank_col_pat"): format_int(row["pat_n"]),
+                        t("sources.open_google_patents").replace(" ↗", ""): pat_links.get("google_patents")
+                        or row.get("patents_url")
+                        or "",
+                    }
+                )
+            gp_col = t("sources.open_google_patents").replace(" ↗", "")
+            show_dataframe(
+                table,
+                column_config={
+                    gp_col: st.column_config.LinkColumn(gp_col, display_text="Google"),
+                },
+            )
         render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
         return
 
@@ -448,9 +458,11 @@ def _rd_touchpoints() -> None:
 
 
 def render_tt_europe_patent_section(domain: str | None = None) -> None:
-    _explainer("patent")
-    st.markdown(t("tt_eu.pat_list_heading"))
-    st.caption(t("tt_eu.pat_list_caption"))
+    with st.expander(t("tt_eu.pat_intro_title"), expanded=False):
+        st.markdown(t("tt_eu.pat_intro_body"), unsafe_allow_html=True)
+        if current_view_mode() == "expert":
+            st.markdown(t("tt_eu.expert_body"), unsafe_allow_html=True)
+
     pats = TTEuropeService.get_patents()
     if domain:
         pats = [p for p in pats if (p.get("domain") or "") == domain]
@@ -459,6 +471,7 @@ def render_tt_europe_patent_section(domain: str | None = None) -> None:
     else:
         for pat in pats:
             render_patent_card(pat)
+
     vs = {
         name: n
         for name, n in TTEuropeService.vendor_sample_vs_tt(domain).items()
@@ -468,7 +481,8 @@ def render_tt_europe_patent_section(domain: str | None = None) -> None:
         st.markdown(t("tt_eu.vs_heading"))
         st.caption(t("tt_eu.vs_caption"))
         show_plotly(render_tt_vs_vendors_chart(vs))
-    _country_rank("patent")
+
+    _country_rank("patent", compact_patent=True)
 
 
 def render_tt_europe_pub_section(topic: str | None = None) -> None:
