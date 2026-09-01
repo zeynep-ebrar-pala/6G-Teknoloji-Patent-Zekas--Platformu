@@ -45,6 +45,11 @@ def show_plotly(fig):
     return _uh.show_plotly(fig)
 
 
+def show_dataframe(table: list[dict], *, column_config: dict | None = None) -> None:
+    """Tüm sütunları sola hizalı TextColumn — NumberColumn sağa kaymasın."""
+    return _uh.show_dataframe(table, column_config=column_config)
+
+
 def _positive_rows(rows: list, key: str) -> list:
     return [r for r in rows if int(r.get(key) or 0) > 0]
 
@@ -278,11 +283,11 @@ def _country_rank(kind: str) -> None:
                         {
                             t("tt_eu.named_col_place"): row[name_key],
                             t("tt_eu.overview_hits_pat"): _fmt_pat_hits(row.get("pat_top3")),
-                            t("tt_eu.overview_tt_pat"): row["tt_pat_n"],
-                        }
-                    )
+                        t("tt_eu.overview_tt_pat"): format_int(row["tt_pat_n"]),
+                    }
+                )
                 if table:
-                    st.dataframe(table, hide_index=True, width="stretch")
+                    show_dataframe(table)
             else:
                 show_empty(t("tt_eu.overview_empty_pat"))
         else:
@@ -300,15 +305,13 @@ def _country_rank(kind: str) -> None:
                         t("tt_eu.overview_pub_1"): _fmt_firm(top[0] if len(top) > 0 else None),
                         t("tt_eu.overview_pub_2"): _fmt_firm(top[1] if len(top) > 1 else None),
                         t("tt_eu.overview_pub_3"): _fmt_firm(top[2] if len(top) > 2 else None),
-                        t("tt_eu.overview_tt_pub"): row["tt_pub_n"],
+                        t("tt_eu.overview_tt_pub"): format_int(row["tt_pub_n"]),
                         t("ui.source").replace(" ↗", ""): row.get("pub_search_url") or "",
                     }
                 )
             src_col = t("ui.source").replace(" ↗", "")
-            st.dataframe(
+            show_dataframe(
                 table,
-                hide_index=True,
-                width="stretch",
                 column_config={
                     src_col: st.column_config.LinkColumn(src_col, display_text="IEEE"),
                 },
@@ -359,17 +362,15 @@ def _country_rank(kind: str) -> None:
             table.append(
                 {
                     t("tt_eu.rank_col_firm"): row["name"],
-                    t("tt_eu.rank_col_pat"): row["pat_n"],
+                    t("tt_eu.rank_col_pat"): format_int(row["pat_n"]),
                     t("sources.open_google_patents").replace(" ↗", ""): pat_links.get("google_patents")
                     or row.get("patents_url")
                     or "",
                 }
             )
         gp_col = t("sources.open_google_patents").replace(" ↗", "")
-        st.dataframe(
+        show_dataframe(
             table,
-            hide_index=True,
-            width="stretch",
             column_config={
                 gp_col: st.column_config.LinkColumn(gp_col, display_text="Google"),
             },
@@ -395,14 +396,12 @@ def _country_rank(kind: str) -> None:
         table.append(
             {
                 t("tt_eu.rank_col_firm"): row["name"],
-                t("tt_eu.rank_col_pub"): row["pub_n"],
+                t("tt_eu.rank_col_pub"): format_int(row["pub_n"]),
                 src_col: row.get("pub_search_url") or payload.get("pub_search_url") or "",
             }
         )
-    st.dataframe(
+    show_dataframe(
         table,
-        hide_index=True,
-        width="stretch",
         column_config={
             src_col: st.column_config.LinkColumn(src_col, display_text="IEEE"),
         },

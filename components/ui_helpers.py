@@ -105,7 +105,7 @@ def render_source_totals(kind: str, topic: Optional[str], key_suffix: str) -> No
             }
         )
     config[open_col] = st.column_config.LinkColumn(open_col, display_text=_t("sources.total_open_text"))
-    st.dataframe(table, hide_index=True, width="stretch", column_config=config, key=f"tot_{kind}_{key_suffix}")
+    show_dataframe(table, column_config=config, key=f"tot_{kind}_{key_suffix}")
 
 
 def render_spec_patent_sources() -> None:
@@ -254,3 +254,21 @@ def select_section(label: str, options: list[str], key: str) -> str:
 
 def show_plotly(fig) -> None:
     st.plotly_chart(fig, width="stretch")
+
+
+def show_dataframe(
+    table: list[dict],
+    *,
+    column_config: dict | None = None,
+    key: str | None = None,
+) -> None:
+    """st.dataframe — NumberColumn sağa kaydırır; varsayılan sola hizalı TextColumn."""
+    config = dict(column_config or {})
+    if table:
+        for col in table[0].keys():
+            if col not in config:
+                config[col] = st.column_config.TextColumn(col)
+    kwargs: dict = {"hide_index": True, "width": "stretch", "column_config": config}
+    if key:
+        kwargs["key"] = key
+    st.dataframe(table, **kwargs)

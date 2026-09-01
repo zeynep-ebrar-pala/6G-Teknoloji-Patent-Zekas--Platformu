@@ -255,10 +255,10 @@ def _render_eu_mno_panel(topic: str | None) -> None:
         )
     st.caption(t("pub.mno_table_caption"))
     three = t("pub.mno_col_three")
-    st.dataframe(
+    from components.ui_helpers import show_dataframe
+
+    show_dataframe(
         table,
-        hide_index=True,
-        width="stretch",
         column_config={three: st.column_config.TextColumn(three, width="large")},
     )
 
