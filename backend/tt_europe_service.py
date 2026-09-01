@@ -52,6 +52,24 @@ def _papers() -> List[Dict[str, Any]]:
     return out
 
 
+def _mno_springer_pub_n(op: Dict[str, Any], country: Dict[str, Any]) -> tuple[int, bool]:
+    """Springer Meta metin «6G {firma} {ülke}» — bağlılık facet değil."""
+    from backend.config import get_springer_api_key
+    from backend.mno_pub_live import _query, peek_op_count
+    from backend.publisher_apis import _springer_count
+
+    place = "Turkey" if str(country.get("cc") or "") == "TR" else str(country.get("name_en") or "")
+    search = str(op.get("search") or op.get("name") or "").strip()
+    if not search or not place:
+        return 0, False
+    n = peek_op_count(None, search, place)
+    if n is None and get_springer_api_key():
+        n = _springer_count(_query(None, search, place), None, force=False)
+    if isinstance(n, int):
+        return int(n), True
+    return 0, False
+
+
 @st.cache_data(ttl=86400, show_spinner=False)
 def _paper_crossref_cites(doi: str) -> Optional[int]:
     from backend.springer_live import crossref_citation_count
@@ -113,21 +131,28 @@ class TTEuropeService:
         tt_group = _patents()
         ranked: List[Dict[str, Any]] = []
         pub_any = False
+        pub_resolved_any = False
         for op in ops:
             patterns = tuple(op["patterns"])
             pub_n = 0
             pub_resolved = False
             pub_hits: List[str] = []
-            if include_pubs and op.get("is_tt"):
-                pub_n = sum(
-                    1
-                    for p in _papers()
-                    if (p.get("affiliation_country") or "").upper() == country["cc"]
-                )
-                pub_resolved = True
+            if include_pubs:
+                if op.get("is_tt"):
+                    pub_n = sum(
+                        1
+                        for p in _papers()
+                        if (p.get("affiliation_country") or "").upper() == country["cc"]
+                    )
+                    if pub_n > 0:
+                        pub_resolved = True
+                        pub_hits = ["DOI-locked TT affiliation (this country)"]
+                if not pub_resolved:
+                    pub_n, pub_resolved = _mno_springer_pub_n(op, country)
+                    if pub_n > 0:
+                        pub_hits = ["Springer Nature Meta text search"]
                 pub_any = pub_any or pub_n > 0
-                if pub_n:
-                    pub_hits = ["DOI-locked TT affiliation (this country)"]
+                pub_resolved_any = pub_resolved_any or pub_resolved
             pat_n = 0
             pat_ids: List[str] = []
             if op.get("is_tt"):
@@ -186,7 +211,7 @@ class TTEuropeService:
             "name_en": country["name_en"],
             "mno_source": EU_MNO_LIST_URL,
             "pub_search_url": springer_text_search_url(f"6G {country['name_en']}"),
-            "pub_ok": pub_any,
+            "pub_ok": pub_resolved_any if include_pubs else False,
             "rows": ranked,
             "tt_pub_rank": None if not tt_row else tt_row["pub_rank"],
             "tt_pat_rank": None if not tt_row else tt_row["pat_rank"],

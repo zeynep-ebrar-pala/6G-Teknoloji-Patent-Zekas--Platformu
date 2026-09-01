@@ -240,6 +240,10 @@ def _fmt_pat_hits(items: list | None) -> str:
 
 
 def _country_rank(kind: str) -> None:
+    from backend.mno_pub_live import ensure_prefetch as ensure_mno_pub
+
+    if kind != "patent":
+        ensure_mno_pub(None)
     lang = get_lang()
     name_key = "name_tr" if lang == "tr" else "name_en"
     is_pat = kind == "patent"
@@ -378,25 +382,37 @@ def _country_rank(kind: str) -> None:
         render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
         return
 
-    pub_drawn = _positive_rows(rows, "pub_n") if payload.get("pub_ok") else []
+    pub_drawn = _positive_rows(rows, "pub_n")
     st.markdown(
         t(
             "tt_eu.rank_tt_pub",
             pub_n=format_int(tt_row.get("pub_n") or 0),
         )
     )
-    if not pub_drawn:
-        st.info(t("tt_eu.rank_oa_fail"))
+    if not payload.get("pub_ok"):
+        st.info(t("tt_eu.rank_pub_pending"))
+        from backend.mno_pub_live import ensure_prefetch
+
+        ensure_prefetch(None)
         render_source_button(payload.get("pub_search_url") or "", t("tt_eu.rank_open_oa"))
         render_source_button(payload["mno_source"], t("tt_eu.rank_open_wiki"))
         return
+    if pub_drawn:
+        show_plotly(
+            render_tt_country_rank_chart(
+                rows, "pub_n", t("tt_eu.rank_pub_title"), t("tt_eu.rank_pub_x")
+            )
+        )
+    else:
+        st.info(t("tt_eu.rank_empty_pub"))
     src_col = t("ui.source").replace(" ↗", "")
     table = []
-    for row in sorted(pub_drawn, key=lambda r: (-int(r.get("pub_n") or 0), r["name"])):
+    for row in sorted(rows, key=lambda r: (-int(r.get("pub_n") or 0), r["name"])):
+        pub_cell = format_int(row["pub_n"]) if row.get("pub_resolved") else "—"
         table.append(
             {
                 t("tt_eu.rank_col_firm"): row["name"],
-                t("tt_eu.rank_col_pub"): format_int(row["pub_n"]),
+                t("tt_eu.rank_col_pub"): pub_cell,
                 src_col: row.get("pub_search_url") or payload.get("pub_search_url") or "",
             }
         )
