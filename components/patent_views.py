@@ -6,7 +6,8 @@ Grafikler Lens.org toplamı / çekilen kayıttır. Kilitli örnek yok.
 import streamlit as st
 
 from backend.patent_service import PatentService, sort_patent_rows
-from i18n.core import format_int, get_lang, t
+from data.app_build import APP_BUILD
+from i18n.core import format_int, t
 from components.charts import (
     render_company_counts_chart,
     render_company_patent_domain_chart,
@@ -25,36 +26,10 @@ from components.ui_helpers import (
     render_patent_card,
     render_source_button,
     render_spec_patent_sources,
-    select_section,
     show_empty,
     show_plotly,
 )
 from components.topic_panels import render_patent_topic_panel
-from components.tt_europe_views import render_tt_europe_patent_section
-
-PATENT_SECTION_KEYS = ["charts", "tt_eu"]
-
-
-def _tt_patent_domain_filter() -> str | None:
-    """Kilitli Netsia kümesinde konu filtresi — Lens API kutusu yok."""
-    from backend.tt_europe_service import TTEuropeService
-    from i18n.core import topic_label
-
-    domains = sorted(
-        {
-            str(p.get("domain") or "").strip()
-            for p in TTEuropeService.get_patents()
-            if str(p.get("domain") or "").strip()
-        }
-    )
-    options = ["all"] + domains
-    picked = st.selectbox(
-        t("patent.tt_eu_domain"),
-        options,
-        format_func=lambda x: t("sources.topic_all") if x == "all" else topic_label(x),
-        key=f"pat_tt_domain_{get_lang()}",
-    )
-    return None if picked == "all" else picked
 
 
 def _lens_token_box() -> None:
@@ -76,22 +51,7 @@ def render_patent_intelligence_module():
         t("patent.title"),
         t("patent.subtitle", source=PatentService.get_data_source()),
     )
-
-    _labels = [t(f"patent.section.{k}") for k in PATENT_SECTION_KEYS]
-    _map = dict(zip(_labels, PATENT_SECTION_KEYS))
-    section = _map.get(
-        select_section(t("patent.view"), _labels, key=f"patent_section_v5_{get_lang()}"),
-        PATENT_SECTION_KEYS[0],
-    )
-
-    if section == "tt_eu":
-        from data.app_build import APP_BUILD
-
-        st.caption(t("patent.tt_eu_subtitle"))
-        st.caption(t("patent.tt_eu_build", build=APP_BUILD))
-        domain = _tt_patent_domain_filter()
-        render_tt_europe_patent_section(domain=domain)
-        return
+    st.caption(t("patent.tt_eu_build", build=APP_BUILD))
 
     st.markdown(f"**{t('patent.what_title')}**")
     st.markdown(t("patent.what_body"))
