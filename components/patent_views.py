@@ -13,7 +13,8 @@ from components.charts import (
     render_company_patent_domain_chart,
     render_patent_density_heatmap,
     render_patent_sunburst,
-    render_patent_tfidf_map,
+    render_patent_topic_landscape,
+    render_patent_domain_keywords,
     render_patent_trends_chart,
     render_patent_topic_mix_chart,
 )
@@ -180,15 +181,15 @@ def render_patent_intelligence_module():
 
     st.markdown(t("patent.map_heading"))
     st.caption(t("patent.map_caption"))
-    if current_view_mode() == "expert":
-        with st.expander(t("patent.map_read_title"), expanded=False):
-            st.markdown(t("patent.map_read_body"))
-            st.markdown(t("patent.map_read_expert"))
-    df_map = PatentService.get_tfidf_map_df(company_arg, topic)
-    if df_map.empty:
+    if len(patents) < 2:
         show_empty(t("patent.empty_map"))
     else:
-        show_plotly(render_patent_tfidf_map(df_map))
+        show_plotly(render_patent_topic_landscape(patents))
+        df_kw = PatentService.get_domain_keywords_df(company_arg, topic)
+        if not df_kw.empty:
+            st.markdown(t("patent.kw_heading"))
+            st.caption(t("patent.kw_caption"))
+            show_plotly(render_patent_domain_keywords(df_kw))
 
     st.markdown(t("patent.list_heading"))
     st.caption(t("patent.list_caption"))

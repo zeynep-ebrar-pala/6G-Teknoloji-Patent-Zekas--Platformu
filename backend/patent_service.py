@@ -439,6 +439,38 @@ class PatentService:
         return pd.DataFrame(records)
 
     @staticmethod
+    def get_domain_keywords_df(
+        company: Optional[str] = None,
+        domain: Optional[str] = None,
+        *,
+        top_n: int = 5,
+    ) -> pd.DataFrame:
+        """Konu başına en sık geçen kelimeler — sunum çubuk grafiği."""
+        from collections import Counter
+
+        stop = {
+            "a", "an", "the", "for", "and", "or", "in", "of", "to", "via", "using",
+            "method", "apparatus", "system", "methods", "apparatuses", "based",
+            "thereof", "therefor", "with", "from",
+        }
+        rows: List[Dict[str, Any]] = []
+        scoped = _scoped(company, domain)
+        for dname in TECHNOLOGY_DOMAINS:
+            subset = [p for p in scoped if p.get("domain") == dname]
+            if not subset:
+                continue
+            counter: Counter = Counter()
+            for p in subset:
+                words = p["title"].lower().replace("-", " ").replace("(", " ").replace(")", " ").split()
+                for w in words:
+                    w = w.strip(",.")
+                    if len(w) > 3 and w not in stop:
+                        counter[w] += 1
+            for word, count in counter.most_common(top_n):
+                rows.append({"domain": dname, "keyword": word, "count": int(count)})
+        return pd.DataFrame(rows)
+
+    @staticmethod
     def get_tfidf_map_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
         return _build_tfidf_map(company, domain)
 

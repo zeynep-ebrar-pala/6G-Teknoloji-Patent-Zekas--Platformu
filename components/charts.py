@@ -6,11 +6,14 @@ Safe fallback if networkx is missing.
 
 from __future__ import annotations
 
+import math
+
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 from typing import Dict, Any, List, Optional
 
+from data.patents import TECHNOLOGY_DOMAINS
 from data.tt_europe import place_sort_key
 from i18n.core import get_lang, t, topic_label
 
@@ -824,127 +827,161 @@ def render_patent_sunburst(df_tree: pd.DataFrame) -> go.Figure:
     return fig
 
 
-def render_patent_tfidf_map(df_map: pd.DataFrame) -> go.Figure:
-    """Patent başlıkları — konu kümeleri; eksen sayıları gizli (sunum okunurluğu)."""
-    work = df_map.copy()
-    fig = px.scatter(
-        work,
-        x="x",
-        y="y",
-        color="domain",
-        hover_name="title",
-        hover_data={"company": True, "id": True, "year": True, "x": False, "y": False, "domain": True},
-        color_discrete_map=DOMAIN_COLORS,
-        color_discrete_sequence=QUALITATIVE_COLORS,
-    )
-    fig.update_traces(marker=dict(size=11, opacity=0.88, line=dict(width=1, color="#FFFFFF")))
+def render_patent_topic_landscape(patents: List[Dict[str, Any]]) -> go.Figure:
+    """6G konuları sabit daire düzeninde — PCA yok, eksen sayısı yok."""
+    from collections import defaultdict
 
-    for domain, sub in work.groupby("domain"):
-        if sub.empty:
+    by_domain: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+    for p in patents:
+        dom = str(p.get("domain") or "").strip()
+        if dom:
+            by_domain[dom].append(p)
+
+    domains = [d for d in TECHNOLOGY_DOMAINS if by_domain.get(d)]
+    if not domains:
+        return go.Figure()
+
+    n = len(domains)
+    centers: Dict[str, tuple[float, float]] = {}
+    for i, domain in enumerate(domains):
+        angle = (2 * math.pi * i / n) - (math.pi / 2)
+        centers[domain] = (1.35 * math.cos(angle), 1.35 * math.sin(angle))
+
+    xs: List[float] = []
+    ys: List[float] = []
+    colors: List[str] = []
+    titles: List[str] = []
+    companies: List[str] = []
+    years: List[Any] = []
+    ids: List[str] = []
+    domains_out: List[str] = []
+
+    for domain, items in by_domain.items():
+        if domain not in centers:
             continue
-        color = DOMAIN_COLORS.get(str(domain), "#94A3B8")
-        cx = float(sub["x"].mean())
-        cy = float(sub["y"].mean())
-        spread_x = float(sub["x"].std()) if len(sub) > 1 else 0.04
-        spread_y = float(sub["y"].std()) if len(sub) > 1 else 0.04
-        rx = max(spread_x * 2.2, 0.06)
-        ry = max(spread_y * 2.2, 0.06)
+        cx, cy = centers[domain]
+        color = DOMAIN_COLORS.get(domain, "#94A3B8")
+        m = len(items)
+        for j, p in enumerate(items):
+            ring = 0.12 + 0.07 * (j % 4)
+            ang = (2 * math.pi * j / max(m, 1)) + (0.15 if j % 2 else 0.0)
+            xs.append(cx + ring * math.cos(ang))
+            ys.append(cy + ring * math.sin(ang))
+            colors.append(color)
+            titles.append(str(p.get("title") or ""))
+            companies.append(str(p.get("assignee") or ""))
+            years.append(p.get("year"))
+            ids.append(str(p.get("publication_number") or p.get("id") or ""))
+            domains_out.append(domain)
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=xs,
+            y=ys,
+            mode="markers",
+            marker=dict(size=10, color=colors, line=dict(width=1, color="#FFFFFF"), opacity=0.9),
+            text=titles,
+            customdata=list(zip(companies, years, ids, domains_out)),
+            hovertemplate=(
+                "<b>%{text}</b><br>"
+                + t("patent.assignee")
+                + ": %{customdata[0]}<br>"
+                + t("patent.year")
+                + ": %{customdata[1]}<br>%{customdata[3]}<extra></extra>"
+            ),
+            showlegend=False,
+        )
+    )
+
+    for domain in domains:
+        cx, cy = centers[domain]
+        color = DOMAIN_COLORS.get(domain, "#94A3B8")
+        count = len(by_domain[domain])
         fig.add_shape(
             type="circle",
             xref="x",
             yref="y",
-            x0=cx - rx,
-            y0=cy - ry,
-            x1=cx + rx,
-            y1=cy + ry,
-            line=dict(color=color, width=1.5, dash="dot"),
+            x0=cx - 0.42,
+            y0=cy - 0.42,
+            x1=cx + 0.42,
+            y1=cy + 0.42,
+            line=dict(color=color, width=2),
             fillcolor=color,
-            opacity=0.1,
+            opacity=0.12,
             layer="below",
         )
-        label = topic_label(str(domain))
         fig.add_annotation(
             x=cx,
-            y=cy,
-            text=f"<b>{label}</b><br>{t('charts.map_cluster_n', n=len(sub))}",
+            y=cy + 0.52,
+            text=f"<b>{topic_label(domain)}</b><br>{t('charts.map_cluster_n', n=count)}",
             showarrow=False,
-            font=dict(size=11, color="#F8FAFC"),
-            bgcolor="rgba(26, 31, 43, 0.82)",
+            font=dict(size=12, color="#FFFFFF"),
+            bgcolor="rgba(26, 31, 43, 0.9)",
             bordercolor=color,
-            borderwidth=1.5,
-            borderpad=5,
+            borderwidth=2,
+            borderpad=6,
         )
-
-    x_min, x_max = float(work["x"].min()), float(work["x"].max())
-    y_min, y_max = float(work["y"].min()), float(work["y"].max())
-    pad_x = max((x_max - x_min) * 0.12, 0.08)
-    pad_y = max((y_max - y_min) * 0.12, 0.08)
-    mid_y = (y_min + y_max) / 2.0
-    fig.add_annotation(
-        x=x_min - pad_x * 0.35,
-        y=mid_y,
-        text=t("charts.map_hint_far"),
-        showarrow=False,
-        font=dict(size=10, color="#94A3B8"),
-        xref="x",
-        yref="y",
-    )
-    fig.add_annotation(
-        x=x_max + pad_x * 0.35,
-        y=mid_y,
-        text=t("charts.map_hint_near"),
-        showarrow=False,
-        font=dict(size=10, color="#94A3B8"),
-        xref="x",
-        yref="y",
-    )
 
     _apply_layout(
         fig,
-        title=dict(text=f"<b>{t('charts.tfidf')}</b>", x=0.02, y=0.97, font=dict(size=15, color="#FFFFFF")),
-        height=480,
-        margin=dict(l=24, r=24, t=56, b=96),
+        title=dict(text=f"<b>{t('charts.tfidf')}</b>", x=0.02, y=0.98, font=dict(size=16, color="#FFFFFF")),
+        height=520,
+        margin=dict(l=8, r=8, t=64, b=8),
+        showlegend=False,
     )
-    fig.update_xaxes(
-        visible=False,
-        range=[x_min - pad_x, x_max + pad_x],
-        constrain="domain",
-    )
-    fig.update_yaxes(
-        visible=False,
-        range=[y_min - pad_y, y_max + pad_y],
-        scaleanchor="x",
-        scaleratio=1,
-    )
+    fig.update_xaxes(visible=False, fixedrange=True, range=[-2.0, 2.0])
+    fig.update_yaxes(visible=False, fixedrange=True, range=[-2.0, 2.0], scaleanchor="x", scaleratio=1)
     return fig
 
 
-def render_patent_wordcloud(keywords_dict: Dict[str, int]):
-    """Patent başlıklarından kelime bulutu (matplotlib). Başarısızsa None döner."""
-    try:
-        import matplotlib
-        matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
-        from wordcloud import WordCloud
-    except ImportError:
-        return None
-    if not keywords_dict:
-        return None
-    wc = WordCloud(
-        width=900,
-        height=380,
-        background_color="#1A1F2B",
-        colormap="tab10",
-        prefer_horizontal=0.9,
-        min_font_size=10,
-    ).generate_from_frequencies(keywords_dict)
-    fig, ax = plt.subplots(figsize=(9, 3.8))
-    ax.imshow(wc, interpolation="bilinear")
-    ax.axis("off")
-    fig.patch.set_facecolor("#1A1F2B")
-    ax.set_facecolor("#1A1F2B")
-    fig.tight_layout(pad=0)
+def render_patent_domain_keywords(df_kw: pd.DataFrame) -> go.Figure:
+    """Konu başına en sık kelimeler — yatay çubuk."""
+    if df_kw.empty:
+        return go.Figure()
+    work = df_kw.copy()
+    work["domain_label"] = work["domain"].map(lambda d: topic_label(str(d)))
+    work = work.sort_values(["domain", "count"], ascending=[True, True])
+    fig = px.bar(
+        work,
+        x="count",
+        y="keyword",
+        color="domain",
+        facet_col="domain_label",
+        facet_col_wrap=3,
+        orientation="h",
+        color_discrete_map=DOMAIN_COLORS,
+        labels={"count": t("charts.kw_x"), "keyword": ""},
+    )
+    fig.update_traces(marker_line_width=0)
+    fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
+    _apply_layout(
+        fig,
+        title=dict(text=f"<b>{t('charts.domain_keywords')}</b>", x=0.02, y=0.98, font=dict(size=15, color="#FFFFFF")),
+        height=max(360, 120 * ((len(work["domain"].unique()) + 2) // 3)),
+        margin=dict(l=40, r=20, t=56, b=40),
+        showlegend=False,
+    )
+    fig.update_xaxes(title_text=t("charts.kw_x"), showgrid=True, gridcolor="rgba(200,209,220,0.08)")
+    fig.update_yaxes(title_text="")
     return fig
+
+
+def render_patent_tfidf_map(df_map: pd.DataFrame) -> go.Figure:
+    """Geriye dönük uyumluluk — PCA kullanılmaz."""
+    patents: List[Dict[str, Any]] = []
+    if not df_map.empty:
+        for _, row in df_map.iterrows():
+            patents.append(
+                {
+                    "domain": row.get("domain"),
+                    "title": row.get("title"),
+                    "assignee": row.get("company"),
+                    "year": row.get("year"),
+                    "publication_number": row.get("id"),
+                }
+            )
+    return render_patent_topic_landscape(patents)
 
 
 def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") -> go.Figure:

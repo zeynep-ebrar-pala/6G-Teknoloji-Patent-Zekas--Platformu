@@ -358,22 +358,14 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
             "tree_heading": "### Patent Ağacı",
             "tree_caption": "Treemap: dış kutu firma, iç kutu 6G konusu. Alan = Lens total. İsim tekrar etmez; yayın numarası yok.",
             "empty_tree": "Ağaç grafiği için veri yok.",
-            "map_heading": "### Patent Teknoloji Haritası",
+            "map_heading": "### Patent Konu Haritası",
             "map_caption": (
-                "Her nokta bir patent başlığıdır. **Renk** = 6G konusu. "
-                "**Birbirine yakın** noktalar benzer ifade kullanan patentleri gösterir; "
-                "eksende sayı yok — yalnızca yakınlık ve renk okunur."
+                "Her renkli daire bir 6G konusunu temsil eder. İçindeki noktalar o konudaki patent "
+                "başlıklarıdır. Eksen ve sayı yok — yalnızca konu adı ve patent adedi okunur."
             ),
-            "map_read_title": "Teknik not (Uzman)",
-            "map_read_body": (
-                "Konum, patent başlıklarındaki kelimelerin benzerliğinden üretilir (TF-IDF + PCA). "
-                "Eksen sayıları birim taşımaz; yalnızca göreli küme yapısı sunum içindir."
-            ),
-            "map_read_expert": (
-                "Harita çekilen başlık örneklemine dayanır; Lens toplam sayısı değildir. "
-                "Küme etiketleri konu merkezini gösterir."
-            ),
-            "empty_map": "Harita için en az 2 patent ve scikit-learn gerekir.",
+            "kw_heading": "### Konu başına öne çıkan kelimeler",
+            "kw_caption": "Her panelde o konunun patent başlıklarında en sık geçen kelimeler (çubuk = tekrar sayısı).",
+            "empty_map": "Harita için en az 2 patent gerekir.",
             "network": "### Assignee ↔ Alan Ağ Analizi",
             "empty_net": "Ağ grafiği için bağlantı verisi yok.",
             "list_heading": "### Çekilen 6G patent listesi",
@@ -1163,10 +1155,9 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "company": "Firma",
             "density": "Patent yoğunluğu (firma × alan, kayıt sayısı)",
             "sunburst": "Patent ağacı (firma → konu, Lens total)",
-            "tfidf": "Patent konuları — başlık benzerliği",
+            "tfidf": "6G patent konuları — daire harita",
+            "domain_keywords": "Konu başına öne çıkan kelimeler",
             "map_cluster_n": "{n} patent",
-            "map_hint_near": "Yakın = benzer başlık",
-            "map_hint_far": "Uzak = farklı başlık",
             "oa_bar_x": "Makale sayısı",
             "tt_office": "TT-grup — hangi patent ofisinde tescil var (kilitli küme)",
             "tt_office_x": "Patent ofisi",
@@ -1582,21 +1573,14 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
             "tree_heading": "### Patent tree",
             "tree_caption": "Treemap: outer box = firm, inner box = 6G topic. Area = Lens total. Names do not repeat; no publication numbers.",
             "empty_tree": "No data for a tree chart.",
-            "map_heading": "### Patent technology map",
+            "map_heading": "### Patent topic map",
             "map_caption": (
-                "Each dot is one patent title. **Colour** = 6G topic. "
-                "**Close dots** use similar wording; there are no axis numbers — read proximity and colour only."
+                "Each coloured circle is one 6G topic. Dots inside are patent titles in that topic. "
+                "No axes or abstract numbers — read the topic name and patent count only."
             ),
-            "map_read_title": "Technical note (Expert)",
-            "map_read_body": (
-                "Position comes from title-word similarity (TF-IDF + PCA). "
-                "Axis numbers carry no unit; only the relative cluster layout is shown."
-            ),
-            "map_read_expert": (
-                "The map uses pulled title samples only, not Lens totals. "
-                "Cluster labels mark topic centres."
-            ),
-            "empty_map": "The map needs at least two patents and scikit-learn.",
+            "kw_heading": "### Top keywords per topic",
+            "kw_caption": "Each panel shows the most frequent words in patent titles for that topic (bar = count).",
+            "empty_map": "The map needs at least two patents.",
             "network": "### Assignee ↔ domain network",
             "empty_net": "No edge data for a network graph.",
             "list_heading": "### Pulled 6G patent list",
@@ -2385,10 +2369,9 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "company": "Company",
             "density": "Patent density (company × domain, record count)",
             "sunburst": "Patent tree (firm → topic, Lens total)",
-            "tfidf": "Patent topics — title similarity",
+            "tfidf": "6G patent topics — circle map",
+            "domain_keywords": "Top keywords per topic",
             "map_cluster_n": "{n} patents",
-            "map_hint_near": "Close = similar title",
-            "map_hint_far": "Far = different title",
             "oa_bar_x": "Paper count",
             "tt_office": "TT-group — which patent office granted the locked records",
             "tt_office_x": "Patent office",
