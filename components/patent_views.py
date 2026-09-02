@@ -16,7 +16,6 @@ from components.charts import (
     render_patent_tfidf_map,
     render_patent_trends_chart,
     render_patent_topic_mix_chart,
-    render_patent_wordcloud,
 )
 
 from components.ui_helpers import (
@@ -164,15 +163,6 @@ def render_patent_intelligence_module():
     else:
         show_plotly(render_company_patent_domain_chart(df_density))
 
-    st.markdown(t("patent.wordcloud"))
-    st.caption(t("patent.wordcloud_caption"))
-    kw_dict = PatentService.get_patent_keywords(company_arg, topic)
-    wc_fig = render_patent_wordcloud(kw_dict) if kw_dict else None
-    if wc_fig is None:
-        show_empty(t("patent.empty_wc"))
-    else:
-        st.pyplot(wc_fig, clear_figure=True)
-
     st.markdown(t("patent.tree_heading"))
     st.caption(t("patent.tree_caption"))
     df_tree = PatentService.get_sunburst_df(company_arg, topic)
@@ -190,9 +180,9 @@ def render_patent_intelligence_module():
 
     st.markdown(t("patent.map_heading"))
     st.caption(t("patent.map_caption"))
-    with st.expander(t("patent.map_read_title"), expanded=False):
-        st.markdown(t("patent.map_read_body"))
-        if current_view_mode() == "expert":
+    if current_view_mode() == "expert":
+        with st.expander(t("patent.map_read_title"), expanded=False):
+            st.markdown(t("patent.map_read_body"))
             st.markdown(t("patent.map_read_expert"))
     df_map = PatentService.get_tfidf_map_df(company_arg, topic)
     if df_map.empty:

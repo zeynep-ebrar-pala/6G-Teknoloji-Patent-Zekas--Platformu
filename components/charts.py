@@ -825,36 +825,96 @@ def render_patent_sunburst(df_tree: pd.DataFrame) -> go.Figure:
 
 
 def render_patent_tfidf_map(df_map: pd.DataFrame) -> go.Figure:
-    """Patent başlıklarının TF-IDF + PCA 2D haritası."""
+    """Patent başlıkları — konu kümeleri; eksen sayıları gizli (sunum okunurluğu)."""
+    work = df_map.copy()
     fig = px.scatter(
-        df_map,
+        work,
         x="x",
         y="y",
         color="domain",
         hover_name="title",
-        hover_data={"company": True, "id": True, "year": True, "x": False, "y": False},
+        hover_data={"company": True, "id": True, "year": True, "x": False, "y": False, "domain": True},
         color_discrete_map=DOMAIN_COLORS,
         color_discrete_sequence=QUALITATIVE_COLORS,
     )
-    fig.update_traces(marker=dict(size=12, line=dict(width=1, color="#FFFFFF")))
+    fig.update_traces(marker=dict(size=11, opacity=0.88, line=dict(width=1, color="#FFFFFF")))
+
+    for domain, sub in work.groupby("domain"):
+        if sub.empty:
+            continue
+        color = DOMAIN_COLORS.get(str(domain), "#94A3B8")
+        cx = float(sub["x"].mean())
+        cy = float(sub["y"].mean())
+        spread_x = float(sub["x"].std()) if len(sub) > 1 else 0.04
+        spread_y = float(sub["y"].std()) if len(sub) > 1 else 0.04
+        rx = max(spread_x * 2.2, 0.06)
+        ry = max(spread_y * 2.2, 0.06)
+        fig.add_shape(
+            type="circle",
+            xref="x",
+            yref="y",
+            x0=cx - rx,
+            y0=cy - ry,
+            x1=cx + rx,
+            y1=cy + ry,
+            line=dict(color=color, width=1.5, dash="dot"),
+            fillcolor=color,
+            opacity=0.1,
+            layer="below",
+        )
+        label = topic_label(str(domain))
+        fig.add_annotation(
+            x=cx,
+            y=cy,
+            text=f"<b>{label}</b><br>{t('charts.map_cluster_n', n=len(sub))}",
+            showarrow=False,
+            font=dict(size=11, color="#F8FAFC"),
+            bgcolor="rgba(26, 31, 43, 0.82)",
+            bordercolor=color,
+            borderwidth=1.5,
+            borderpad=5,
+        )
+
+    x_min, x_max = float(work["x"].min()), float(work["x"].max())
+    y_min, y_max = float(work["y"].min()), float(work["y"].max())
+    pad_x = max((x_max - x_min) * 0.12, 0.08)
+    pad_y = max((y_max - y_min) * 0.12, 0.08)
+    mid_y = (y_min + y_max) / 2.0
+    fig.add_annotation(
+        x=x_min - pad_x * 0.35,
+        y=mid_y,
+        text=t("charts.map_hint_far"),
+        showarrow=False,
+        font=dict(size=10, color="#94A3B8"),
+        xref="x",
+        yref="y",
+    )
+    fig.add_annotation(
+        x=x_max + pad_x * 0.35,
+        y=mid_y,
+        text=t("charts.map_hint_near"),
+        showarrow=False,
+        font=dict(size=10, color="#94A3B8"),
+        xref="x",
+        yref="y",
+    )
+
     _apply_layout(
         fig,
-        title=dict(text=f"<b>{t('charts.tfidf')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
-        xaxis=dict(
-            title=t("charts.pca_axis_x"),
-            gridcolor="rgba(200, 209, 220, 0.1)",
-            zeroline=True,
-            zerolinecolor="rgba(200, 209, 220, 0.35)",
-            zerolinewidth=1,
-        ),
-        yaxis=dict(
-            title=t("charts.pca_axis_y"),
-            gridcolor="rgba(200, 209, 220, 0.1)",
-            zeroline=True,
-            zerolinecolor="rgba(200, 209, 220, 0.35)",
-            zerolinewidth=1,
-        ),
-        height=440,
+        title=dict(text=f"<b>{t('charts.tfidf')}</b>", x=0.02, y=0.97, font=dict(size=15, color="#FFFFFF")),
+        height=480,
+        margin=dict(l=24, r=24, t=56, b=96),
+    )
+    fig.update_xaxes(
+        visible=False,
+        range=[x_min - pad_x, x_max + pad_x],
+        constrain="domain",
+    )
+    fig.update_yaxes(
+        visible=False,
+        range=[y_min - pad_y, y_max + pad_y],
+        scaleanchor="x",
+        scaleratio=1,
     )
     return fig
 
