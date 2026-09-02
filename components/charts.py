@@ -840,8 +840,20 @@ def render_patent_tfidf_map(df_map: pd.DataFrame) -> go.Figure:
     _apply_layout(
         fig,
         title=dict(text=f"<b>{t('charts.tfidf')}</b>", x=0.02, y=0.95, font=dict(size=15, color="#FFFFFF")),
-        xaxis=dict(title="PCA-1", gridcolor="rgba(200, 209, 220, 0.1)", zeroline=False),
-        yaxis=dict(title="PCA-2", gridcolor="rgba(200, 209, 220, 0.1)", zeroline=False),
+        xaxis=dict(
+            title=t("charts.pca_axis_x"),
+            gridcolor="rgba(200, 209, 220, 0.1)",
+            zeroline=True,
+            zerolinecolor="rgba(200, 209, 220, 0.35)",
+            zerolinewidth=1,
+        ),
+        yaxis=dict(
+            title=t("charts.pca_axis_y"),
+            gridcolor="rgba(200, 209, 220, 0.1)",
+            zeroline=True,
+            zerolinecolor="rgba(200, 209, 220, 0.35)",
+            zerolinewidth=1,
+        ),
         height=440,
     )
     return fig

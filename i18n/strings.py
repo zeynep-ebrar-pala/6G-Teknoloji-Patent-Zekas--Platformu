@@ -359,7 +359,22 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
             "tree_caption": "Treemap: dış kutu firma, iç kutu 6G konusu. Alan = Lens total. İsim tekrar etmez; yayın numarası yok.",
             "empty_tree": "Ağaç grafiği için veri yok.",
             "map_heading": "### Patent Teknoloji Haritası",
-            "map_caption": "Koordinatlar çekilen başlıkların TF-IDF vektörlerinin PCA ile 2 boyuta indirgenmesidir; konum uydurulmaz.",
+            "map_caption": "Her nokta bir patent başlığıdır. Konum, kelime benzerliğini gösterir; eksendeki −0,2 / +0,2 patent sayısı veya yıl değildir.",
+            "map_read_title": "Bu grafiği nasıl okurum?",
+            "map_read_body": (
+                "**TF-IDF (Term Frequency–Inverse Document Frequency — terim sıklığı–ters belge frekansı):** "
+                "Patent başlığındaki kelimeleri sayısal vektöre çevirir; o patentte ayırt edici kelimeler daha ağırlıklıdır.\n\n"
+                "**PCA (Principal Component Analysis — Temel Bileşen Analizi):** "
+                "Yüzlerce kelime boyutunu iki özet eksene indirger; grafikte yalnızca göreli konum anlamlıdır.\n\n"
+                "• **Yakın noktalar** → benzer kelime dağarcığı / tema\n"
+                "• **Uzak noktalar** → farklı ifade biçimi\n"
+                "• **Renk** → atanan 6G konusu (ISAC, RIS, NTN …)\n"
+                "• **0 noktası** → tüm başlıkların ortalama merkezi; «sıfır patent» anlamına gelmez"
+            ),
+            "map_read_expert": (
+                "PCA eksenlerinin işareti (sol/sağ, yukarı/aşağı) rastgele olabilir; NTN kümesinin sağda görünmesi "
+                "«NTN daha üstün» demek değildir. Harita yalnızca çekilen başlık örneklemine dayanır; Lens toplam sayısı değildir."
+            ),
             "empty_map": "Harita için en az 2 patent ve scikit-learn gerekir.",
             "network": "### Assignee ↔ Alan Ağ Analizi",
             "empty_net": "Ağ grafiği için bağlantı verisi yok.",
@@ -1150,7 +1165,9 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "company": "Firma",
             "density": "Patent yoğunluğu (firma × alan, kayıt sayısı)",
             "sunburst": "Patent ağacı (firma → konu, Lens total)",
-            "tfidf": "Patent teknoloji haritası (TF-IDF + PCA, başlık vektörleri)",
+            "tfidf": "Patent teknoloji haritası — başlık benzerliği",
+            "pca_axis_x": "Başlık benzerliği — 1. eksen",
+            "pca_axis_y": "Başlık benzerliği — 2. eksen",
             "oa_bar_x": "Makale sayısı",
             "tt_office": "TT-grup — hangi patent ofisinde tescil var (kilitli küme)",
             "tt_office_x": "Patent ofisi",
@@ -1567,7 +1584,22 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
             "tree_caption": "Treemap: outer box = firm, inner box = 6G topic. Area = Lens total. Names do not repeat; no publication numbers.",
             "empty_tree": "No data for a tree chart.",
             "map_heading": "### Patent technology map",
-            "map_caption": "Coordinates are TF-IDF vectors of pulled titles reduced to 2-D with PCA; positions are not invented.",
+            "map_caption": "Each dot is one patent title. Position shows word similarity; axis values such as −0.2 or +0.2 are not patent counts or years.",
+            "map_read_title": "How to read this chart",
+            "map_read_body": (
+                "**TF-IDF (term frequency–inverse document frequency):** "
+                "Turns title words into numeric vectors; distinctive words in a title weigh more.\n\n"
+                "**PCA (principal component analysis):** "
+                "Compresses hundreds of word dimensions into two summary axes; only relative position matters.\n\n"
+                "• **Close dots** → similar vocabulary / theme\n"
+                "• **Far dots** → different wording\n"
+                "• **Colour** → assigned 6G topic (ISAC, RIS, NTN …)\n"
+                "• **Origin (0)** → average centre of all titles; not “zero patents”"
+            ),
+            "map_read_expert": (
+                "PCA axis sign (left/right, up/down) can flip between runs; NTN appearing on the right does not mean "
+                "“NTN is better”. The map uses pulled title samples only; it is not a Lens total count."
+            ),
             "empty_map": "The map needs at least two patents and scikit-learn.",
             "network": "### Assignee ↔ domain network",
             "empty_net": "No edge data for a network graph.",
@@ -2357,7 +2389,9 @@ Developer: <strong>Zeynep Ebrar Pala</strong>.
             "company": "Company",
             "density": "Patent density (company × domain, record count)",
             "sunburst": "Patent tree (firm → topic, Lens total)",
-            "tfidf": "Patent technology map (TF-IDF + PCA, title vectors)",
+            "tfidf": "Patent technology map — title similarity",
+            "pca_axis_x": "Title similarity — axis 1",
+            "pca_axis_y": "Title similarity — axis 2",
             "oa_bar_x": "Paper count",
             "tt_office": "TT-group — which patent office granted the locked records",
             "tt_office_x": "Patent office",

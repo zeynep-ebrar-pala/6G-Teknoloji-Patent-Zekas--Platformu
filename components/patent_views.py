@@ -190,6 +190,10 @@ def render_patent_intelligence_module():
 
     st.markdown(t("patent.map_heading"))
     st.caption(t("patent.map_caption"))
+    with st.expander(t("patent.map_read_title"), expanded=False):
+        st.markdown(t("patent.map_read_body"))
+        if current_view_mode() == "expert":
+            st.markdown(t("patent.map_read_expert"))
     df_map = PatentService.get_tfidf_map_df(company_arg, topic)
     if df_map.empty:
         show_empty(t("patent.empty_map"))
