@@ -3,8 +3,6 @@ Modül 2 — Patent Zekası ve Rakip Analizi arayüzü.
 Grafikler Lens.org toplamı / çekilen kayıttır. Kilitli örnek yok.
 """
 
-from typing import Any, Dict, List
-
 import streamlit as st
 
 from backend.patent_service import PatentService, sort_patent_rows
@@ -34,7 +32,7 @@ from components.ui_helpers import (
 from components.topic_panels import render_patent_topic_panel
 from components.tt_europe_views import render_tt_europe_patent_section
 
-PATENT_SECTION_KEYS = ["tt_eu", "charts"]
+PATENT_SECTION_KEYS = ["charts", "tt_eu"]
 
 
 def _tt_patent_domain_filter() -> str | None:
@@ -73,72 +71,77 @@ def _lens_token_box() -> None:
     st.link_button(t("patent.key_lens"), "https://www.lens.org/lens/user/subscriptions")
 
 
-def _chart_payload() -> Dict[str, Any]:
-    from backend.config import get_lens_token
-    from backend.patent_prefetch import ensure_prefetch, frames_from_snapshot, snapshot
+def render_patent_intelligence_module():
+    render_module_header(
+        t("patent.title"),
+        t("patent.subtitle", source=PatentService.get_data_source()),
+    )
 
-    topic = st.session_state.get("_pat_topic")
-    company_arg = st.session_state.get("_pat_company")
-    spec = PatentService.get_spec_companies()
-    firms = tuple(spec)
-    if get_lens_token():
-        ensure_prefetch(topic, firms)
-    snap = snapshot(topic, firms)
-    firm_all, topic_counts, df_density, df_trends, df_tree = frames_from_snapshot(snap, list(spec))
-    if company_arg:
-        firm_counts = {company_arg: int(firm_all.get(company_arg) or 0)} if company_arg in firm_all else {}
-        firm_names = [company_arg]
-        if not df_density.empty:
-            df_density = df_density[df_density["Company"] == company_arg]
-        if not df_trends.empty and company_arg in df_trends.columns:
-            df_trends = df_trends[["Years", company_arg]]
-        elif not df_trends.empty:
-            df_trends = df_trends.iloc[0:0]
-        if not df_tree.empty:
-            df_tree = df_tree[df_tree["company"] == company_arg]
-        patents = sort_patent_rows(
-            [p for p in (snap.get("rows") or []) if p.get("assignee") == company_arg]
-        )
-    else:
-        firm_counts = firm_all
-        firm_names = list(spec)
-        patents = sort_patent_rows(list(snap.get("rows") or []))
-    return {
-        "snap": snap,
-        "topic": topic,
-        "company_arg": company_arg,
-        "firm_counts": firm_counts,
-        "firm_names": firm_names,
-        "topic_counts": topic_counts,
-        "df_density": df_density,
-        "df_trends": df_trends,
-        "df_tree": df_tree,
-        "patents": patents,
-    }
+    _labels = [t(f"patent.section.{k}") for k in PATENT_SECTION_KEYS]
+    _map = dict(zip(_labels, PATENT_SECTION_KEYS))
+    section = _map.get(
+        select_section(t("patent.view"), _labels, key=f"patent_section_v5_{get_lang()}"),
+        PATENT_SECTION_KEYS[0],
+    )
 
+    if section == "tt_eu":
+        from data.app_build import APP_BUILD
 
-def _draw_count_charts(payload: Dict[str, Any], *, heavy: bool) -> None:
-    from backend.patent_apis import lens_last_error
+        st.caption(t("patent.tt_eu_subtitle"))
+        st.caption(t("patent.tt_eu_build", build=APP_BUILD))
+        domain = _tt_patent_domain_filter()
+        render_tt_europe_patent_section(domain=domain)
+        return
+
+    st.markdown(f"**{t('patent.what_title')}**")
+    st.markdown(t("patent.what_body"))
+    st.markdown(f"**{t('patent.access_title')}**")
+    st.markdown(t("patent.access_body"))
+    if current_view_mode() == "expert":
+        with st.expander(t("patent.expert_title"), expanded=False):
+            st.markdown(t("patent.expert_body"))
+        st.link_button(t("patent.key_lens"), "https://www.lens.org/lens/user/subscriptions")
+
+    _lens_token_box()
+    render_spec_patent_sources()
+    topic = render_patent_topic_panel("patent")
+
+    from backend.patent_apis import key_fingerprint, lens_last_error, live_assignee_counts
     from backend.source_links import assignee_patent_links
     from data.patents import TECHNOLOGY_DOMAINS
 
-    snap = payload["snap"]
-    topic = payload["topic"]
-    company_arg = payload["company_arg"]
-    firm_counts: Dict[str, int] = payload["firm_counts"]
-    firm_names: List[str] = payload["firm_names"]
-    topic_counts: Dict[str, int] = payload["topic_counts"]
-    df_density = payload["df_density"]
-    df_trends = payload["df_trends"]
-    df_tree = payload["df_tree"]
-    patents: List[Dict[str, Any]] = payload["patents"]
+    spec = PatentService.get_spec_companies()
+    filter_options = ["all"] + spec
+    company = st.selectbox(
+        t("patent.filter"),
+        options=filter_options,
+        index=0,
+        format_func=lambda x: t("patent.all") if x == "all" else x,
+        key="patent_company_filter",
+    )
+    company_arg = None if company == "all" else company
+    keys = key_fingerprint()
 
-    if snap.get("running") or not snap.get("complete"):
-        st.caption(t("patent.bg_partial"))
-    api_err = (snap.get("error") or "") or lens_last_error()
+    with st.spinner(t("patent.live_gp_spin")):
+        xhr_totals = live_assignee_counts(
+            topic or "",
+            tuple(spec) if not company_arg else (company_arg,),
+            keys,
+        )
+        topic_counts = PatentService.get_topic_counts(company_arg, topic)
+        df_density = PatentService.get_density_df(company_arg, topic)
+        df_trends = PatentService.get_patent_trends_df(company_arg, topic)
+        patents = sort_patent_rows(PatentService.get_top_patents(company_arg, topic))
+
+    api_err = lens_last_error()
     if api_err:
         st.warning(t("patent.api_error", detail=str(api_err).replace("{", "(").replace("}", ")")))
 
+    firm_names = [company_arg] if company_arg else list(spec)
+    firm_counts = {
+        name: int(xhr_totals[name]) if isinstance(xhr_totals.get(name), int) else 0
+        for name in firm_names
+    }
     if firm_counts and any(firm_counts.values()):
         leader_company, leader_count = max(firm_counts.items(), key=lambda kv: kv[1])
     else:
@@ -201,25 +204,6 @@ def _draw_count_charts(payload: Dict[str, Any], *, heavy: bool) -> None:
     else:
         show_plotly(render_company_patent_domain_chart(df_density))
 
-    st.markdown(t("patent.list_heading"))
-    st.caption(t("patent.list_caption"))
-    if not patents:
-        show_empty(
-            t("patent.empty_topic", topic=topic)
-            if topic
-            else t("patent.empty_company", company=company_arg or t("patent.all"))
-        )
-    else:
-        cap = 12
-        for pat in patents[:cap]:
-            render_patent_card(pat)
-        extra = len(patents) - cap
-        if extra > 0:
-            st.caption(t("patent.cards_more", n=format_int(cap), rest=format_int(extra)))
-
-    if not heavy:
-        return
-
     st.markdown(t("patent.wordcloud"))
     st.caption(t("patent.wordcloud_caption"))
     kw_dict = PatentService.get_patent_keywords(company_arg, topic)
@@ -231,6 +215,7 @@ def _draw_count_charts(payload: Dict[str, Any], *, heavy: bool) -> None:
 
     st.markdown(t("patent.tree_heading"))
     st.caption(t("patent.tree_caption"))
+    df_tree = PatentService.get_sunburst_df(company_arg, topic)
     if df_tree.empty:
         show_empty(t("patent.empty_tree"))
     else:
@@ -251,69 +236,14 @@ def _draw_count_charts(payload: Dict[str, Any], *, heavy: bool) -> None:
     else:
         show_plotly(render_patent_tfidf_map(df_map))
 
-
-def render_patent_intelligence_module():
-    render_module_header(
-        t("patent.title"),
-        t("patent.subtitle", source=PatentService.get_data_source()),
-    )
-
-    _labels = [t(f"patent.section.{k}") for k in PATENT_SECTION_KEYS]
-    _map = dict(zip(_labels, PATENT_SECTION_KEYS))
-    section = _map.get(
-        select_section(t("patent.view"), _labels, key=f"patent_section_v4_{get_lang()}"),
-        PATENT_SECTION_KEYS[0],
-    )
-
-    if section == "tt_eu":
-        from data.app_build import APP_BUILD
-
-        st.caption(t("patent.tt_eu_subtitle"))
-        st.caption(t("patent.tt_eu_build", build=APP_BUILD))
-        domain = _tt_patent_domain_filter()
-        render_tt_europe_patent_section(domain=domain)
+    st.markdown(t("patent.list_heading"))
+    st.caption(t("patent.list_caption"))
+    if not patents:
+        show_empty(
+            t("patent.empty_topic", topic=topic)
+            if topic
+            else t("patent.empty_company", company=company if company != "all" else t("patent.all"))
+        )
         return
-
-    st.markdown(f"**{t('patent.what_title')}**")
-    st.markdown(t("patent.what_body"))
-    st.markdown(f"**{t('patent.access_title')}**")
-    st.markdown(t("patent.access_body"))
-    if current_view_mode() == "expert":
-        with st.expander(t("patent.expert_title"), expanded=False):
-            st.markdown(t("patent.expert_body"))
-        st.link_button(t("patent.key_lens"), "https://www.lens.org/lens/user/subscriptions")
-
-    _lens_token_box()
-    render_spec_patent_sources()
-    topic = render_patent_topic_panel("patent")
-
-    spec = PatentService.get_spec_companies()
-    filter_options = ["all"] + spec
-    company = st.selectbox(
-        t("patent.filter"),
-        options=filter_options,
-        format_func=lambda x: t("patent.all") if x == "all" else x,
-        key="patent_company_filter",
-    )
-    company_arg = None if company == "all" else company
-    st.session_state["_pat_topic"] = topic
-    st.session_state["_pat_company"] = company_arg
-    from backend.config import get_lens_token
-    from backend.live_refresh import render_watch
-    from backend.patent_prefetch import ensure_prefetch
-
-    if get_lens_token():
-        ensure_prefetch(topic, tuple(spec), force=False)
-    render_watch("lens", "patent")
-    payload = _chart_payload()
-    complete = bool(payload["snap"].get("complete"))
-    if not complete:
-        st.caption(t("patent.bg_partial"))
-        if st.button(t("patent.bg_refresh"), key="pat_bg_refresh"):
-            st.rerun()
-    heavy = complete and st.checkbox(
-        t("patent.heavy_toggle"),
-        value=False,
-        key="pat_heavy_charts",
-    )
-    _draw_count_charts(payload, heavy=heavy)
+    for pat in patents:
+        render_patent_card(pat)
