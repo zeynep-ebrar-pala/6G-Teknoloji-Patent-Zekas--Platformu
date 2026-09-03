@@ -1,4 +1,4 @@
-"""Ana Sayfa kartları — Temel: resmi ve herkesin anlayacağı dil; Uzman: teknik kod."""
+"""Ana Sayfa kartları — Temel: herkesin anlayacağı dil; Uzman: tam cümleli teknik özet."""
 
 HOME_CARDS_TR = {
     "isac": {
@@ -11,11 +11,12 @@ HOME_CARDS_TR = {
             "Hazırlık seviyesi 4'tür: laboratuvarda doğrulanmıştır. Türk Telekom şebekesinde henüz yoktur."
         ),
         "blurb_expert": (
-            "Baz istasyonu veri taşır; çevreyi ölçmez. Kamera sis ve karanlıkta körleşir; "
-            "ayrı radar ikinci spektrum ve ikinci anten ister. "
+            "Baz istasyonu Shannon kanalında bit taşır; yansıyan enerjiden kinematik çıkarmaz. "
+            "Ayrı radar ikinci spektrum lisansı ve ikinci RF zinciri ister. "
             "ISAC (Integrated Sensing and Communication — Entegre Algılama ve İletişim) "
-            "aynı RF zincirinde hem bit hem yankı işler: gecikme mesafe, Doppler hız verir. "
-            "TRL 4 — 3GPP Rel-19 (TR 22.837); laboratuvar. Türk Telekom şebekesinde henüz kullanılmamaktadır."
+            "aynı RF zincirinde hem iletişimi hem yankıyı işler: gecikme mesafeyi, Doppler hızı verir. "
+            "Bugünkü olgunluk TRL 4’tür; 3GPP Rel-19 çalışma kalemi (TR 22.837) ve laboratuvar doğrulaması "
+            "bu seviyeyi destekler. Türk Telekom şebekesinde henüz kullanılmamaktadır."
         ),
     },
     "ris": {
@@ -29,10 +30,12 @@ HOME_CARDS_TR = {
             "Hazırlık seviyesi 5'tir: prototip aşamasındadır. Ticari şebeke dağıtımında değildir."
         ),
         "blurb_expert": (
-            "Yüksek frekansta dalga köşeyi dönmez; her kör nokta için yeni gNB dikmek CAPEX ve kent yüküdür. "
+            "Yüksek frekansta dalga köşeyi dönmez; her kör nokta için yeni gNB dikmek "
+            "CAPEX (sermaye harcaması) ve kent yükünü artırır. "
             "RIS (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey) "
-            "cephedeki programlanabilir yansıtıcıdır: eleman fazı θ_n hüzmeyi UE'ye çevirir. "
-            "TRL 5 — ETSI RIS ISG ve 3GPP Rel-19/20. Türk Telekom şebekesinde henüz ölçülmemiştir."
+            "cephedeki programlanabilir yansıtıcıdır: eleman fazı θ_n hüzmeyi kullanıcı ekipmanına (UE) çevirir. "
+            "Olgunluk TRL 5’tir; ETSI RIS ISG ile 3GPP Rel-19/20 çalışma kalemleri bu aşamayı tanımlar. "
+            "Türk Telekom şebekesinde henüz ölçülmemiştir."
         ),
     },
     "cell_free": {
@@ -46,9 +49,11 @@ HOME_CARDS_TR = {
             "Hazırlık seviyesi 4'tür: araştırma prototipidir. Türk Telekom şebekesinde henüz yoktur."
         ),
         "blurb_expert": (
-            "Hücre kenarında SINR düşer; handover kopma riski taşır. "
-            "Hücresiz Massive MIMO, yayılmış erişim noktalarının ortak ön kodlama ile hizmetidir. "
-            "TRL 4 — 3GPP Rel-19/20 dağıtık MIMO. Türk Telekom şebekesinde henüz kullanılmamaktadır."
+            "Hücre kenarında SINR (signal-to-interference-plus-noise ratio — sinyal–girişim–gürültü oranı) düşer; "
+            "handover kopma riski taşır. Hücresiz Massive MIMO, yayılmış erişim noktalarının "
+            "ortak ön kodlama ile aynı frekans–zamanda hizmet vermesidir. "
+            "Olgunluk TRL 4’tür; 3GPP Rel-19/20 dağıtık MIMO çalışma kalemi bu sınıfı çerçeveler. "
+            "Türk Telekom şebekesinde henüz kullanılmamaktadır."
         ),
     },
     "thz": {
@@ -61,8 +66,10 @@ HOME_CARDS_TR = {
             "6G yalnızca THz demek değildir."
         ),
         "blurb_expert": (
-            "Sub-6 GHz ve mmWave dar kalabilir. THz spektrumu açar; Shannon'da kapasite önce B ile büyür. "
-            "Bedeli FSPL ve moleküler emilimdir. TRL 3 — 3GPP TR 38.807. 6G yalnızca THz değildir."
+            "Sub-6 GHz ve mmWave bantları bazı hop’larda Shannon kapasitesinin bant genişliği tavanını dar bırakır. "
+            "THz spektrumu açar; kapasite önce bant genişliği B ile büyür, ancak serbest uzay kaybı (FSPL) "
+            "ve moleküler emilim menzili kısaltır. Olgunluk TRL 3’tür (3GPP TR 38.807). "
+            "6G yalnızca THz demek değildir."
         ),
     },
     "ai_ran": {
@@ -76,9 +83,11 @@ HOME_CARDS_TR = {
             "İnsansız işletim için saha doğrulaması henüz yoktur."
         ),
         "blurb_expert": (
-            "Sabit RRM kuralı dolu stadyum ile boş geceyi aynı tarifeyle yönetir. "
+            "Sabit RRM (radio resource management — radyo kaynak yönetimi) kuralı, "
+            "dolu stadyum ile boş geceyi aynı tarifeyle yönetir. "
             "AI-RAN ölçüme göre milisaniye–saniye döngüsünde kaynak kaydırır. "
-            "TRL 5 — 3GPP TR 38.843 ve O-RAN RIC. İnsansız işletim için saha doğrulaması yoktur."
+            "Olgunluk TRL 5’tir; 3GPP TR 38.843 ve O-RAN RIC deneme sınıfı bu aşamayı tanımlar. "
+            "İnsansız işletim için saha doğrulaması yoktur."
         ),
     },
     "ntn": {
@@ -92,9 +101,10 @@ HOME_CARDS_TR = {
             "Şehir kulesinin yerine geçmez; onu tamamlar."
         ),
         "blurb_expert": (
-            "Karasal gNB şehir ve asfaltı kapsar; dağ, deniz ve enkaz boş kalır. "
-            "NTN LEO/HAPS düğümlerini 3GPP Rel-17+ ile çekirdeğe bağlar. Bedeli gecikme ve Doppler'dir. "
-            "TRL 6 — TR 38.811; direct-to-cell denemeleri. Karasal kuleye tamamlayıcıdır."
+            "Karasal gNB şehir ve yol ağını kapsar; dağ, deniz ve enkaz bölgesi boş kalabilir. "
+            "NTN, LEO veya HAPS düğümlerini 3GPP Rel-17+ ile çekirdeğe bağlar; bedeli gecikme ve Doppler kaymasıdır. "
+            "Olgunluk TRL 6’dır (TR 38.811); kamuya açık direct-to-cell denemeleri vardır. "
+            "Karasal kuleye tamamlayıcıdır, onun yerine geçmez."
         ),
     },
     "ambient_iot": {
@@ -107,8 +117,9 @@ HOME_CARDS_TR = {
         ),
         "blurb_expert": (
             "Koli ve sera ölçeğinde pil değiştirmek ekonomik değildir. "
-            "Ambient IoT ortam RF'sinden enerji toplayıp backscatter ile kısa kimlik bildirir. "
-            "TRL 4 — 3GPP TR 38.848. Türk Telekom şebekesinde henüz ölçülmemiştir."
+            "Ambient IoT ortam RF’sinden enerji toplayıp backscatter ile kısa kimlik bildirir; "
+            "kendi güç yükselteci yoktur. Olgunluk TRL 4’tür (3GPP TR 38.848). "
+            "Türk Telekom şebekesinde henüz ölçülmemiştir."
         ),
     },
 }
@@ -124,9 +135,11 @@ HOME_CARDS_EN = {
             "Readiness level 4: validated in the laboratory. Not yet in the Türk Telekom network."
         ),
         "blurb_expert": (
-            "A base station carries data; it does not measure the scene. "
-            "ISAC processes bits and echo on the same RF chain. "
-            "TRL 4 — 3GPP Rel-19 (TR 22.837). Not yet used in the Türk Telekom network."
+            "A base station carries bits on a Shannon channel; it does not extract kinematics from reflected energy. "
+            "A separate radar needs a second spectrum licence and a second RF chain. "
+            "ISAC processes communication and echo on the same RF chain: delay gives range, Doppler gives speed. "
+            "Maturity is TRL 4; 3GPP Rel-19 (TR 22.837) and laboratory validation support that level. "
+            "Not yet used in the Türk Telekom network."
         ),
     },
     "ris": {
@@ -139,8 +152,10 @@ HOME_CARDS_EN = {
             "Readiness level 5: prototype stage. Not in commercial network deployment."
         ),
         "blurb_expert": (
-            "At high frequency a wave does not turn the corner. "
-            "RIS steers with element phase θ_n. TRL 5 — ETSI RIS ISG and 3GPP Rel-19/20."
+            "At high frequency a wave does not turn the corner; a new gNB for every blind spot "
+            "raises CAPEX and urban load. A RIS is a programmable façade reflector: "
+            "element phase θ_n steers the beam toward the UE. Maturity is TRL 5 "
+            "(ETSI RIS ISG and 3GPP Rel-19/20). Not yet measured on the Türk Telekom network."
         ),
     },
     "cell_free": {
@@ -152,8 +167,10 @@ HOME_CARDS_EN = {
             "Readiness level 4: research prototype. Not yet in the Türk Telekom network."
         ),
         "blurb_expert": (
-            "SINR drops at the cell edge. Cell-free Massive MIMO uses joint precoding. "
-            "TRL 4 — 3GPP Rel-19/20. Not yet used in the Türk Telekom network."
+            "SINR drops at the cell edge and handover can drop the link. "
+            "Cell-free Massive MIMO is joint precoding across geographically distributed access points "
+            "on the same time–frequency resources. Maturity is TRL 4 "
+            "(3GPP Rel-19/20 distributed MIMO). Not yet used in the Türk Telekom network."
         ),
     },
     "thz": {
@@ -166,8 +183,9 @@ HOME_CARDS_EN = {
             "6G does not mean THz alone."
         ),
         "blurb_expert": (
-            "THz opens spectrum; FSPL and absorption shorten range. "
-            "TRL 3 — 3GPP TR 38.807. 6G is not THz alone."
+            "Sub-6 GHz and mmWave can leave Shannon bandwidth too narrow on some hops. "
+            "THz opens spectrum; capacity grows first with bandwidth B, while FSPL and molecular "
+            "absorption shorten range. Maturity is TRL 3 (3GPP TR 38.807). 6G is not THz alone."
         ),
     },
     "ai_ran": {
@@ -180,8 +198,10 @@ HOME_CARDS_EN = {
             "Readiness level 5: trial stage. No field validation yet for unattended operation."
         ),
         "blurb_expert": (
-            "AI-RAN shifts resources on a millisecond-to-second loop. "
-            "TRL 5 — 3GPP TR 38.843 and O-RAN RIC."
+            "A fixed RRM rule treats a full stadium and an empty night with the same tariff. "
+            "AI-RAN shifts resources on a millisecond-to-second measurement loop. "
+            "Maturity is TRL 5 (3GPP TR 38.843 and O-RAN RIC trial class). "
+            "There is no field validation yet for unattended operation."
         ),
     },
     "ntn": {
@@ -194,7 +214,10 @@ HOME_CARDS_EN = {
             "Readiness level 6: public trials exist. It complements the city tower; it does not replace it."
         ),
         "blurb_expert": (
-            "NTN joins LEO/HAPS with Rel-17+. TRL 6 — TR 38.811. Complements the terrestrial site."
+            "A terrestrial gNB covers the city and road network; mountain, sea, and debris zones may stay empty. "
+            "NTN joins LEO or HAPS nodes to the core with 3GPP Rel-17+; the cost is delay and Doppler. "
+            "Maturity is TRL 6 (TR 38.811), with public direct-to-cell trials. "
+            "It complements the terrestrial site; it does not replace it."
         ),
     },
     "ambient_iot": {
@@ -206,7 +229,9 @@ HOME_CARDS_EN = {
             "Readiness level 4: laboratory-validated. Not in commercial network deployment."
         ),
         "blurb_expert": (
-            "Ambient IoT uses backscatter identity. TRL 4 — 3GPP TR 38.848. "
+            "Battery swaps at parcel and greenhouse scale are uneconomic. "
+            "Ambient IoT harvests ambient RF and reports a short identity by backscatter; "
+            "it has no power amplifier of its own. Maturity is TRL 4 (3GPP TR 38.848). "
             "Not yet measured on the Türk Telekom network."
         ),
     },

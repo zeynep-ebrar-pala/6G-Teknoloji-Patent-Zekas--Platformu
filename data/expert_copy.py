@@ -1,402 +1,457 @@
 """
-Uzman katmanı — aynı başlık sırası, farklı cümle.
-Temel katmanı atlamaz: problem→ihtiyaç→yöntem durur; üzerine denklem, varsayım, 3GPP, alternatif, sınır eklenir.
+Uzman katmanı — aynı başlık sırası, farklı cümleler.
+
+Temel katman atlanmaz: problem → ihtiyaç → yöntem sırası korunur.
+Üzerine denklem ilişkisi, varsayım, 3GPP referansı, alternatif ve sınır eklenir.
+Anlatım telegraphic fragman değil; tam cümleli, terimli teknik prozedir.
 """
 
 EXPERT_COPY = {
     "isac": {
         "problem": (
-            "gNB (next-generation Node B) yalnızca Shannon kanalını (C = B log₂(1+SNR)) eniyiler; "
-            "yansıyan enerjiden kinematik çıkarmaz. Ayrı radar, ikinci spektrum lisansı ve ikinci RF zinciri "
-            "demektir; komşu bant EMI (Electromagnetic Interference — elektromanyetik girişim) üretir. "
-            "Varsayım: haberleşme ve algılama aynı P_t ve B bütçesini paylaşır — bağımsız iki görev değildir."
+            "gNB (next-generation Node B — yeni nesil baz istasyonu) bugün yalnızca Shannon "
+            "kanalını eniyiler: C = B log₂(1+SNR). Yansıyan enerjiden mesafe, hız veya açı "
+            "çıkarmaz. Ayrı bir radar ikinci spektrum lisansı ve ikinci RF zinciri demektir; "
+            "komşu bantlarda EMI (Electromagnetic Interference — elektromanyetik girişim) üretir. "
+            "ISAC varsayımı şudur: haberleşme ile algılama aynı P_t ve B bütçesini paylaşır; "
+            "iki bağımsız görev gibi davranmazlar."
         ),
         "why_needed": (
-            "Operatör spektrumu ve kentsel site geometrisi zaten ödenmiştir. Ayrı bir UTM/radar şebekesi "
-            "CAPEX + EMI'yi ikiye katlar. ISAC'nin rasyoneli, mevcut EIRP'nin bir kısmını kestirim "
-            "(delay, Doppler, AoA) için kullanmaktır. Ödünleşme Pareto yüzeyindedir: P_com artınca C artar, "
-            "SNR_radar düşer. Bu platformda saha SNR ölçülmedi."
+            "Operatör spektrumu ve kentsel site geometrisi zaten ödenmiştir. Ayrı bir UTM veya "
+            "radar şebekesi CAPEX ile EMI yükünü ikiye katlar. ISAC’nin gerekçesi, mevcut EIRP’nin "
+            "bir kısmını kestirim (gecikme, Doppler, geliş açısı) için kullanmaktır. Ödünleşme "
+            "Pareto yüzeyindedir: iletişime ayrılan güç artınca kapasite yükselir, radar SNR’ı düşer. "
+            "Bu platformda saha SNR ölçülmemiştir."
         ),
         "what": (
-            "ISAC / DFRC (Dual-Functional Radar-Communication) / JCR (Joint Communication and Sensing): "
-            "aynı taşıyıcı ve dizi üzerinde kullanıcı düzlemi ile yansıyan ekonun ortak tasarımı. "
-            "Monostatik (aynı gNB Tx/Rx) veya bistatik (komşu gNB Rx) olabilir. Yanına radar kutusu "
-            "park etmek ISAC değildir; o iki sistem, iki saat, iki spektrumdur."
+            "ISAC, DFRC (Dual-Functional Radar-Communication) ve JCR (Joint Communication and Sensing) "
+            "aynı taşıyıcı ve dizi üzerinde kullanıcı düzlemi ile yansıyan ekonun ortak tasarımıdır. "
+            "Mimari monostatik (aynı gNB hem Tx hem Rx) veya bistatik (komşu gNB Rx) olabilir. "
+            "Yanına ayrı bir radar kutusu park etmek ISAC değildir; o durumda iki sistem, iki saat "
+            "ve iki spektrum vardır."
         ),
         "mental_model": (
-            "Gidiş: serbest uzay ~1/R². Dönüş: hedef RCS (radar cross-section, σ) üzerinden bir kez daha "
-            "~1/R² → radar denkleminde R⁴. ΔR ≈ c/(2B) menzil çözünürlüğüdür; B dar ise santimetre fiziken "
-            "çıkmaz. CRB (Cramér–Rao Bound) yansız kestiricinin varyans tabanıdır; Shannon C aynı P ve B'yi "
-            "paylaşır. Far-field, nokta hedef, clutter yok sayılır — kentte bu varsayım iyimserdir."
+            "Gidiş yolunda güç serbest uzayda yaklaşık 1/R² ile yayılır; dönüşte hedef RCS "
+            "(radar cross-section — radar kesiti, σ) üzerinden bir kez daha 1/R² zayıflama eklenir "
+            "ve radar denkleminde R⁴ terimi doğar. Menzil çözünürlüğü ΔR ≈ c/(2B) ile verilir; "
+            "bant dar ise santimetre çözünürlük fiziken çıkmaz. CRB (Cramér–Rao Bound) yansız "
+            "kestiricinin varyans alt sınırıdır; Shannon kapasitesi C aynı güç ve bantı paylaşır. "
+            "Uzak alan, nokta hedef ve clutter yok sayımı varsayımları kentte iyimser kalır."
         ),
         "how_steps": [
-            "Dalga şekli: OFDM veya OTFS (Orthogonal Time Frequency Space) kullanıcı çerçevesi aynı zamanda radar probudur; ayrı chirp kamyonu yoktur.",
-            "Kestirim: τ = 2R/c menzil, f_d Doppler hız, dizi faz farkı AoA/AoD. FFT tabanlı kestirim yüksek SNR'de CRB'ye yaklaşır.",
-            "Kaynak paylaşımı: zaman/frekans/kod dikliği (orthogonal) bit ile ekonun birbirini bozmamasını hedefler; tam diklik pratikte kırılır.",
-            "Kenar: nokta bulutu veya iz özeti Near-RT RIC / kenar buluta gider. Ham I/Q fronthaul'u Rel-19 ürün varsayımı değildir.",
+            "Dalga şekli olarak OFDM veya OTFS (Orthogonal Time Frequency Space) kullanıcı çerçevesi aynı zamanda radar probu işlevi görür; ayrı bir chirp kamyonu yoktur.",
+            "Kestirimde τ = 2R/c menzili, f_d Doppler hızı, dizi faz farkı ise AoA/AoD’yi verir; FFT tabanlı kestirim yüksek SNR’de CRB’ye yaklaşır.",
+            "Zaman, frekans veya kod dikliği bit ile ekonun birbirini bozmamasını hedefler; pratikte tam diklik çoğu zaman kırılır.",
+            "Kenarda nokta bulutu veya iz özeti Near-RT RIC ya da kenar buluta gider; ham I/Q’nun fronthaul üzerinden taşınması Rel-19 ürün varsayımı değildir.",
         ],
         "analogy": (
-            "Alternatif 1: ayrı otomotiv/askeri radar + hücresel şebeke — olgun, CAPEX/EMI pahalı. "
-            "Alternatif 2: kamera/LiDAR — semantik zengin, sis/gece/gizlilik zayıf. "
-            "ISAC üçüncü sınıf: ortak dalga şekli, spektrum tasarrufu adayı, clutter ve gizlilik kısıtı."
+            "Birinci alternatif, ayrı otomotiv veya askeri radar ile hücresel şebekenin yan yana "
+            "çalışmasıdır: ürünler olgundur ama CAPEX ve EMI pahalıdır. İkinci alternatif kamera "
+            "veya LiDAR’dır: semantik zengindir, sis, gece ve gizlilikte zayıftır. ISAC üçüncü "
+            "sınıftır: ortak dalga şekli, spektrum tasarrufu adayı, clutter ve gizlilik kısıtı."
         ),
         "analogy_technical_map": (
-            "Geçerlilik: uzak alan, tek gidiş-dönüş, düzenli istatistiksel model. "
-            "R iki katına çıkınca SNR_radar ~16 kat (~12 dB) düşer. B artınca hem C hem ΔR incelir ama gürültü ve işlem büyür. "
-            "3GPP Rel-19 çalışma kalemi TR 22.837 çerçevedir; 1 cm bu eşitsizlikten türetilmiş saha garantisi değildir."
+            "Geçerlilik penceresi uzak alan, tek gidiş–dönüş ve düzenli istatistiksel modeldir. "
+            "R iki katına çıkınca SNR_radar yaklaşık 16 kat (~12 dB) düşer. B artınca hem C hem "
+            "ΔR incelir; buna karşılık gürültü ve işlem yükü büyür. 3GPP Rel-19 çalışma kalemi "
+            "TR 22.837 çerçevedir; «1 cm» bu eşitsizlikten türetilmiş bir saha garantisi değildir."
         ),
         "when_used": (
-            "Kule geometrisi sahneyi kesiyorsa (yol, koridor, kıyı), optik kör, ayrı radar bandı lisanslanamıyorsa. "
-            "Bistatik geometri küçük RCS'i büyütebilir. V2X / UTM araştırma yatağı bu sınıfa girer."
+            "Kule geometrisi sahneyi kestiğinde (yol, koridor, kıyı), optik kör kaldığında ve "
+            "ayrı radar bandı lisanslanamadığında ISAC adaydır. Bistatik geometri küçük RCS’i "
+            "büyütebilir. V2X ve UTM araştırma yatakları bu sınıfa girer."
         ),
         "when_not": (
-            "Çoklu yansımalı kavşakta tek yol varsayımı kırılır. KVKK/ePrivacy çözülmeden kamusal izleme ürünü değildir. "
-            "Tıbbi mikro-Doppler literatürdür, cihaz onayı yoktur. Bu platformda saha CRB/SNR ölçülmedi."
+            "Çoklu yansımalı kavşakta tek yol varsayımı kırılır. KVKK ve ePrivacy çözülmeden "
+            "kamusal izleme ürünü değildir. Tıbbi mikro-Doppler literatürdür; cihaz onayı yoktur. "
+            "Bu platformda saha CRB veya SNR ölçülmemiştir."
         ),
         "not_to_confuse": (
-            "Co-sited radar ≠ ISAC. Computer vision piksel üretir; RF eko üretmez. "
-            "Ambient IoT (TR 38.848) işbirlikçi etikettir; ISAC hedefi çoğu zaman non-cooperative yansıtıcıdır."
+            "Aynı siteye konmuş ayrı radar, ISAC değildir. Bilgisayarlı görü piksel üretir; "
+            "RF eko üretmez. Ambient IoT (TR 38.848) işbirlikçi etikettir; ISAC hedefi çoğu zaman "
+            "işbirlikçi olmayan yansıtıcıdır."
         ),
         "real_world": (
-            "TR 22.837 Rel-19 SI, Hexa-X-II mimari raporları, IEEE ComSoc ISAC ETI, satıcı test yatağı. "
-            "Satıcı '100 Gbps + 1 cm' birlikte bu platformda doğrulanmış metrik değildir."
+            "TR 22.837 Rel-19 SI, Hexa-X-II mimari raporları, IEEE ComSoc ISAC ETI ve satıcı "
+            "test yatakları bu izi taşır. Satıcıların «100 Gbps + 1 cm» iddiası bu platformda "
+            "doğrulanmış bir metrik değildir."
         ),
         "tt_impact": (
-            "Boğaz kıyı gNB'si su yolunu keser; dron koridoru kule azimutunu kullanır; enkaz optik yok. "
-            "TRL 4 — laboratuvar / Rel-19 SI. Adaylık; abone şebekesinde ölçülmedi."
+            "Boğaz kıyı gNB’si su yolunu keser; dron koridoru kule azimutunu kullanır; enkazda "
+            "optik yoktur. Olgunluk TRL 4’tür (laboratuvar / Rel-19 SI). Bu bir adaylıktır; "
+            "abone şebekesinde ölçülmemiştir."
         ),
     },
     "ris": {
         "problem": (
-            "mmWave ve üzeri bantlarda LoS (line of sight) yoksa yol kaybı ve tıkanma kapasiteyi düşürür. "
-            "Aktif röle kendi RF zinciri, PA'sı ve girişimini taşır. Varsayım: kanal iki hoptur "
-            "(gNB→RIS→UE); tek hop Friis geçerli değildir."
+            "mmWave ve üzeri bantlarda LoS (line of sight — görüş hattı) yoksa yol kaybı ve "
+            "tıkanma kapasiteyi düşürür. Aktif röle kendi RF zincirini, güç yükseltecini ve "
+            "girişimini taşır. RIS varsayımı kanalın iki hop’tan oluşmasıdır (gNB→RIS→UE); "
+            "tek hop Friis modeli geçerli değildir."
         ),
         "why_needed": (
-            "Kör nokta başına gNB, CAPEX ve EMC yüküdür. RIS, sınır koşulunu programlayarak ortamı "
-            "kontrol edilebilir kanal yapma adayıdır. Enerji tasarrufu, aktif röleye kıyasla iddiadır; "
-            "N² ölçek ancak kanal kestirimi ve faz tutarlılığı varsa. %90 tasarruf literatür/hedef; "
-            "bu platformda saha faturası yok."
+            "Kör nokta başına yeni gNB dikmek CAPEX ve EMC yüküdür. RIS, sınır koşulunu "
+            "programlayarak ortamı kontrol edilebilir kanal yapma adayıdır. Enerji tasarrufu "
+            "aktif röleye kıyasla bir iddiadır; N² ölçek ancak kanal kestirimi ve faz tutarlılığı "
+            "varsa anlamlıdır. «%90 tasarruf» literatür veya hedeftir; bu platformda saha faturası yoktur."
         ),
         "what": (
-            "RIS (Reconfigurable Intelligent Surface): N ayarlanabilir eleman, PIN/varaktör ile "
-            "θ_n ∈ [0, 2π). Etkin kanal h_rᴴ Φ G, Φ = diag(e^{jθ_n}). Yüzey internet üretmez; "
-            "gNB aydınlatıcısını UE'ye (user equipment) yönlendirir. ETSI RIS ISG + Rel-19/20 çalışma kalemi."
+            "RIS (Reconfigurable Intelligent Surface), N ayarlanabilir elemandan oluşur; "
+            "PIN veya varaktör ile θ_n ∈ [0, 2π) aralığında faz yazılır. Etkin kanal "
+            "h_rᴴ Φ G biçimindedir ve Φ = diag(e^{jθ_n})’dir. Yüzey internet üretmez; "
+            "gNB aydınlatıcısını UE’ye (user equipment — kullanıcı ekipmanı) yönlendirir. "
+            "ETSI RIS ISG ile Rel-19/20 çalışma kalemi bu sınıfı çerçeveler."
         ),
         "mental_model": (
-            "Pasif/yarı-pasif sınır: eleman alıcı değildir, kanalı kendi başına ölçemez. "
+            "Pasif veya yarı-pasif sınırda eleman alıcı değildir; kanalı kendi başına ölçemez. "
             "Çift yol kaybı (double path-loss) Tx→RIS→Rx çarpımıdır. İdeal faz hizasında N eleman "
-            "güç ~N²; CSI (channel state information) gecikmesi veya faz kuantizasyonu bu ölçeği kırar. "
-            "Denetleyici gecikmesi kullanıcı hızına yetmezse hüzme sapar."
+            "güç kazancını yaklaşık N² ölçeğine taşır; CSI (channel state information — kanal "
+            "durum bilgisi) gecikmesi veya faz kuantizasyonu bu ölçeği kırar. Denetleyici gecikmesi "
+            "kullanıcı hızına yetmezse hüzme sapar."
         ),
         "how_steps": [
-            "Yüzey: cephe/cam/tünel — PCB üzerinde PIN/MEMS/LC eleman; PA yok veya mW mertebesi sürücü.",
-            "Faz yazımı: FPGA/MCU, gNB C-plane komutuyla Φ'yi günceller. Kontrol hattı düşük bit hızlıdır.",
-            "Kanal kestirimi: pasif eleman ölçmez; gNB/UE pilotlarından Φ seçilir. Bu adım kazancın koşuludur.",
-            "Hüzme: dizi faktörü hedef UE'ye. Snell ötesi yönlendirme iddiası Maxwell'i iptal etmez; sınır programlanır.",
+            "Yüzey cephe, cam veya tünelde PCB üzerinde PIN, MEMS veya LC elemanlarla kurulur; güç yükselteci yoktur veya sürücü miliwatt mertebesindedir.",
+            "Faz yazımı FPGA veya MCU üzerinden yapılır; gNB C-plane komutu Φ’yi günceller ve kontrol hattı düşük bit hızlıdır.",
+            "Pasif eleman ölçüm yapmadığı için Φ, gNB veya UE pilotlarından seçilir; bu adım kazancın koşuludur.",
+            "Hüzme, dizi faktörü ile hedef UE’ye yönelir; «Snell ötesi» iddiası Maxwell yasalarını iptal etmez, yalnızca sınırı programlar.",
         ],
         "analogy": (
-            "Aktif röle / small cell: kendi vericisi var, enerji ve girişim taşır. "
-            "Pasif yansıtıcı (düz ayna): faz programlanamaz. "
-            "RIS: programlanabilir sınır, ortak aydınlatıcı gNB. Üçü aynı CAPEX sınıfı değildir."
+            "Aktif röle veya small cell kendi vericisini taşır; enerji ve girişim bedeli yüksektir. "
+            "Pasif düz ayna faz programlanamaz. RIS programlanabilir bir sınırdır ve ortak "
+            "aydınlatıcı gNB’dir. Üçü aynı CAPEX sınıfında değildir."
         ),
         "analogy_technical_map": (
-            "Geçerlilik: darband, yavaş sönümlenme, Φ güncellemesi koherens süresinin altında. "
-            "N artınca kazanç teoretik N²; pratik kısıt kestirim boyutu ve kontrol gecikmesidir. "
-            "ISAC ile birlikte kullanılabilir; RIS tek başına radar denklemi yazmaz."
+            "Geçerlilik penceresi darbant, yavaş sönümlenme ve Φ güncellemesinin koherens "
+            "süresinin altında kalmasıdır. N artınca teorik kazanç N²’ye gider; pratik kısıt "
+            "kestirim boyutu ve kontrol gecikmesidir. RIS, ISAC ile birlikte kullanılabilir; "
+            "tek başına radar denklemi yazmaz."
         ),
         "when_used": (
-            "N-LoS kentsel kanyon, tünel kıvrımı, tribün, tarihi dokuda kule yasağı, iç mekân mmWave. "
-            "Aktif röleden düşük enerji istenen geometri; kanal kestirimi çözülebilir kabul edilir."
+            "N-LoS kentsel kanyon, tünel kıvrımı, tribün, tarihi dokuda kule yasağı ve iç mekân "
+            "mmWave geometrilerinde adaydır. Aktif röleden düşük enerji istenen ve kanal "
+            "kestiriminin çözülebilir kabul edildiği senaryolarda tercih edilir."
         ),
         "when_not": (
-            "Yüksek mobilite + yavaş denetleyici. CSI yok. Çift hop kaybının Friis tek hopu geçtiği uzun menzil. "
-            "Tak-çalıştır emtia her cephede yoktur. Türk Telekom şebekesinde henüz ölçülmemiştir (TRL 5, operatör denemesi)."
+            "Yüksek mobilite ile yavaş denetleyici bir arada olduğunda, CSI yoksa veya çift hop "
+            "kaybının Friis tek hop’unu geçtiği uzun menzilde uygun değildir. Tak-çalıştır emtia "
+            "her cephede yoktur. Türk Telekom şebekesinde henüz ölçülmemiştir (TRL 5, operatör denemesi)."
         ),
         "not_to_confuse": (
-            "Small cell değildir. 'Görünmez pelerin' pazarlaması metamalzeme sınırını abartır. "
-            "Massive MIMO dizisi gNB'dedir; RIS ayrı bir yüzeydir."
+            "RIS small cell değildir. «Görünmez pelerin» pazarlaması metamalzeme sınırını abartır. "
+            "Massive MIMO dizisi gNB’dedir; RIS ayrı bir yüzeydir."
         ),
         "real_world": (
-            "ETSI ISG RIS, 3GPP Rel-19/20 RIS SI, RISE-6G, ZTE/Huawei/NTT PoC. "
-            "Operatör saha denemesi ≠ abone şebekesinde varsayılan ürün."
+            "ETSI ISG RIS, 3GPP Rel-19/20 RIS SI, RISE-6G ve ZTE/Huawei/NTT PoC’leri bu izi taşır. "
+            "Operatör saha denemesi, abone şebekesinde varsayılan ürün anlamına gelmez."
         ),
         "tt_impact": (
-            "Yarımada, tünel, plaza camı: kule dikmeden kapsama adayı. TRL 5 — ilgili ortam prototipi. "
-            "Kontrol hattı ve CSI prosedürü tasarlanmadan saha vaadi yazılmaz."
+            "Yarımada, tünel ve plaza camı: kule dikmeden kapsama adayıdır. Olgunluk TRL 5’tir "
+            "(ilgili ortam prototipi). Kontrol hattı ve CSI prosedürü tasarlanmadan saha vaadi yazılmaz."
         ),
     },
     "cell_free": {
         "problem": (
             "Klasik hücresel dilimde kenar SINR_k paydası komşu hücrenin girişim terimidir. "
-            "Handover, hücre kimliği değişince düşer. Varsayım: tek serving gNB. "
-            "Bu varsayım stadyum/terminal yükünde kırılır."
+            "Handover, hücre kimliği değişince düşebilir. Varsayım tek serving gNB’dir; "
+            "stadyum veya terminal yükünde bu varsayım kırılır."
         ),
         "why_needed": (
-            "Dağıtık AP (access point) yolu kısaltır ve girişimi ortak işlemle (joint precoding) "
-            "bastırılabilir kılar. Bedel fronthaul (eCPRI/RoF) kapasitesi ve senkron (IEEE 1588 sınıfı). "
-            "5×–10× spektral kazanç literatür aralığıdır; bu platformda ölçülmedi."
+            "Dağıtık AP (access point — erişim noktası) yolu kısaltır ve girişimi ortak işlem "
+            "(joint precoding) ile bastırılabilir kılar. Bedel fronthaul (eCPRI/RoF) kapasitesi "
+            "ve senkronizasyondur (IEEE 1588 sınıfı). «5×–10× spektral kazanç» literatür aralığıdır; "
+            "bu platformda ölçülmemiştir."
         ),
         "what": (
-            "Cell-free Massive MIMO: M coğrafi AP, aynı TTI ve aynı frekansta K kullanıcıya ortak hizmet. "
-            "Hücre sınırı tasarım nesnesi olarak kalkar. Rel-19/20 dağıtık MIMO çalışma kalemi; "
-            "CoMP atasıdır ama hücre kimliğini tutmaz."
+            "Cell-free Massive MIMO, M coğrafi AP’nin aynı TTI ve aynı frekansta K kullanıcıya "
+            "ortak hizmet vermesidir. Hücre sınırı tasarım nesnesi olarak kalkar. Rel-19/20 "
+            "dağıtık MIMO çalışma kalemi bu sınıfı çerçeveler; CoMP atasıdır ama hücre kimliğini tutmaz."
         ),
         "mental_model": (
-            "SINR_k payı |Σ_m g_mkᴴ w_mk|², payda diğer kullanıcıların sızıntısı + σ². "
-            "w CPU'da MMSE veya ZF ile yazılır. Fronthaul gecikmesi veya faz kayması w'yi yanlış kılar; "
-            "kazanç tersine döner. Fiber yoksa ortak ön kodlama tanımsızdır."
+            "SINR_k payı |Σ_m g_mkᴴ w_mk|², payda ise diğer kullanıcıların sızıntısı ile σ²’dir. "
+            "Ağırlık vektörü w CPU’da MMSE veya ZF ile yazılır. Fronthaul gecikmesi veya faz "
+            "kayması w’yi yanlış kılar ve kazanç tersine döner. Fiber yoksa ortak ön kodlama tanımsızdır."
         ),
         "how_steps": [
-            "Yerleşim: düşük karmaşıklıklı AP; yerel DSP sınırlı, ağır matris CPU/kenarda.",
-            "Fronthaul: eCPRI veya RoF; senkron kaybı hüzme kazancını eritir.",
-            "Kestirim: ortak uplink pilot; pilot contamination hâlâ kısıttır.",
-            "Ön kodlama: MMSE/ZF w_mk. Kenar 'yok' iddiası senkron+fronthaul varsayımına bağlıdır.",
+            "Yerleşimde düşük karmaşıklıklı AP’ler kullanılır; yerel DSP sınırlıdır, ağır matris işlemleri CPU veya kenarda yapılır.",
+            "Fronthaul eCPRI veya RoF ile kurulur; senkron kaybı hüzme kazancını eritir.",
+            "Ortak uplink pilot ile kanal kestirilir; pilot contamination hâlâ bir kısıttır.",
+            "Ön kodlama MMSE veya ZF ile w_mk üretir; «kenar yok» iddiası senkron ve fronthaul varsayımına bağlıdır.",
         ],
         "analogy": (
-            "Small-cell ormanı: her hücre kendi kenarını taşır. "
-            "Klasik CoMP: ortak işlem, hücre kimliği kalır. "
-            "Wi-Fi roaming: sembol aynı anda çok AP'den taşınmaz. "
-            "Hücresiz MIMO: 'hücre yok' varsayımına kadar gider."
+            "Small-cell ormanı her hücrede kendi kenarını taşır. Klasik CoMP ortak işlem yapar "
+            "ama hücre kimliği kalır. Wi-Fi roaming sembolü aynı anda çok AP’den taşımaz. "
+            "Hücresiz MIMO, «hücre yok» varsayımına kadar gider."
         ),
         "analogy_technical_map": (
-            "Geçerlilik: mükemmel veya yeterince iyi CSI, fronthaul gecikmesi koherens altında, "
-            "faz kilitli dizi. Seyrek kırsalda her direğe fiber CAPEX-anlamsızdır — NTN/makro alternatif."
+            "Geçerlilik için yeterince iyi CSI, fronthaul gecikmesinin koherens altında kalması "
+            "ve faz kilitli dizi gerekir. Seyrek kırsalda her direğe fiber CAPEX açısından "
+            "anlamsızdır; NTN veya makro alternatif kalır."
         ),
         "when_used": (
-            "Yüksek yoğunluk + hareket + adalet hedefi: stadyum, havalimanı, üretim hattı, iç mekân. "
-            "Makro estetiğinin istenmediği geometri."
+            "Yüksek yoğunluk, hareket ve adalet hedefi bir arada olduğunda (stadyum, havalimanı, "
+            "üretim hattı, iç mekân) adaydır. Makro kule estetiğinin istenmediği geometride tercih edilir."
         ),
         "when_not": (
-            "Seyrek kırsal, fiber olmayan cadde. CPU karmaşıklığı gerçek zamanı kaçırıyorsa. "
-            "Terabit 'her kullanıcı' bu platformda ölçülmedi. TRL 4, literatür prototip."
+            "Seyrek kırsalda veya fiber olmayan caddede uygun değildir. CPU karmaşıklığı gerçek "
+            "zamanı kaçırıyorsa kazanç tersine döner. «Her kullanıcıya terabit» bu platformda "
+            "ölçülmemiştir. Olgunluk TRL 4’tür (literatür prototip)."
         ),
         "not_to_confuse": (
-            "DAS (distributed antenna system) analog dağıtım olabilir; hücresiz MIMO dijital ortak ön kodlamadır. "
-            "Massive MIMO tek sitede dizi büyütmektir; cell-free coğrafi dağıtımdır."
+            "DAS (distributed antenna system) analog dağıtım olabilir; hücresiz MIMO dijital "
+            "ortak ön kodlamadır. Massive MIMO tek sitede diziyi büyütmektir; cell-free coğrafi dağıtımdır."
         ),
         "real_world": (
-            "Björnson/Larsson literatürü, IEEE cell-free özel sayıları, Rel-19/20 dağıtık MIMO, "
-            "Ericsson/Nokia laboratuvar gösterimi. Şehir geneli ürün değil."
+            "Björnson/Larsson literatürü, IEEE cell-free özel sayıları, Rel-19/20 dağıtık MIMO "
+            "ve Ericsson/Nokia laboratuvar gösterimleri bu izi taşır. Şehir geneli ürün değildir."
         ),
         "tt_impact": (
-            "Havalimanı, stadyum, depo kenar şikâyeti. TRL 4. Önce yoğun mekân; fronthaul faturası tasarım kısıtıdır."
+            "Havalimanı, stadyum ve depo kenar şikâyeti aday senaryolardır. Olgunluk TRL 4’tür. "
+            "Önce yoğun mekân seçilir; fronthaul faturası tasarım kısıtıdır."
         ),
     },
     "thz": {
         "problem": (
-            "Shannon'da C = B log₂(1+SNR). Sub-6 ve mmWave'de B tavanı intra-DC mesh ve kule köprüsü için "
-            "dar kalabilir. Frekans yükseldikçe FSPL ∝ (f d)² ve moleküler emilim e^{K(f)d} büyür. "
-            "Varsayım: LoS, hizalı hüzme, kısa d."
+            "Shannon’da C = B log₂(1+SNR) geçerlidir. Sub-6 ve mmWave’de B tavanı, veri merkezi "
+            "içi mesh veya kule köprüsü için dar kalabilir. Frekans yükseldikçe FSPL ∝ (f d)² "
+            "ve moleküler emilim e^{K(f)d} büyür. Varsayım LoS, hizalı hüzme ve kısa mesafedir."
         ),
         "why_needed": (
-            "Fiber her geometriye gitmez. THz, doğru hopta onlarca GHz B adayıdır. "
-            "'1 Tbps her abone' pazarlamadır; C, SNR emilimde çökerse B yetmez. "
-            "TRL 3 — TR 38.807; saha şebekesinde kullanılmamaktadır."
+            "Fiber her geometriye gitmez. THz, doğru hop’ta onlarca GHz bant adayıdır. "
+            "«Her aboneye 1 Tbps» pazarlamadır; emilimde SNR çökerse B yetmez. "
+            "Olgunluk TRL 3’tür (TR 38.807); saha şebekesinde kullanılmamaktadır."
         ),
         "what": (
-            "THz / sub-THz: kabaca 0,1–10 THz, pratik 6G adayı çoğu zaman 100–300 GHz penceresi "
-            "(NR beyond 52.6 GHz, TR 38.807). 5G mmWave (28–39 GHz) bu sınıf değildir. "
-            "IEEE 802.15.3d ayrı bir WPAN izidir."
+            "THz / sub-THz kabaca 0,1–10 THz aralığıdır; pratik 6G adayı çoğu zaman "
+            "100–300 GHz penceresidir (NR beyond 52.6 GHz, TR 38.807). 5G mmWave "
+            "(28–39 GHz) bu sınıf değildir. IEEE 802.15.3d ayrı bir WPAN izidir."
         ),
         "mental_model": (
-            "L(f,d) = (4π f d / c)² · e^{K(f)d}. K(f) su buharı çizgilerinde sıçrar. "
-            "B büyüdükçe C neredeyse lineer artar ancak SNR paydasındaki N_0 B ve emilim log terimini yer. "
-            "Dar hüzme EIRP kazancı verir, blockage olasılığını yükseltir."
+            "Yol kaybı L(f,d) = (4π f d / c)² · e^{K(f)d} ile yazılır; K(f) su buharı "
+            "çizgilerinde sıçrar. B büyüdükçe C neredeyse lineer artar, ancak SNR paydasındaki "
+            "N_0 B ve emilim logaritmik terimi yer. Dar hüzme EIRP kazancı verir; blockage "
+            "olasılığını yükseltir."
         ),
         "how_steps": [
-            "Pencere seçimi: K(f) düşük spektral pencereler; 'her THz Hertz' kullanılabilir değildir.",
-            "RF ön uç: InP/GaN/grafen adayları; olgun CMOS değildir — TRL'nin düşük olmasının nedeni.",
-            "ADC/DAC: yüksek örnekleme, güç ve ısı. 100 GSa/s sınıfı iddia literatür/hedeftir.",
-            "Geometri: raf, salon, kule hop. Makro sokak bu denklemin geçerlilik penceresi dışındadır.",
+            "Önce K(f)’nin düşük olduğu spektral pencereler seçilir; her THz hertz’i kullanılabilir değildir.",
+            "RF ön uçta InP, GaN veya grafen adaydır; olgun CMOS bu bantta varsayılan çözüm değildir ve TRL’nin düşük kalmasının nedenidir.",
+            "ADC/DAC yüksek örnekleme, güç ve ısı ister; 100 GSa/s sınıfı iddia literatür veya hedeftir.",
+            "Geometri raf, salon veya kule hop’u ile sınırlıdır; makro sokak bu denklemin geçerlilik penceresi dışındadır.",
         ],
         "analogy": (
-            "Kablosuz fiber: yüksek B, kısa d, hizalı. "
-            "Serbest uzay optiği (lazer): farklı dalga boyu, sis/yağmurda ayrı fizik. "
-            "Makro hücresel taşıyıcı: THz değildir."
+            "Kablosuz fiber benzetmesi yüksek B, kısa d ve hizalı hüzmeyi anlatır. "
+            "Serbest uzay optiği (lazer) farklı dalga boyudur; sis ve yağmurda ayrı fizik "
+            "geçerlidir. Makro hücresel taşıyıcı THz değildir."
         ),
         "analogy_technical_map": (
-            "Geçerlilik: LoS, dar hüzme, d onlarca–yüzlerce metre, yağmursuz veya kısa hop. "
-            "El/yaprak keser (blockage). 'Hacklenmesi imkânsız' dar hüzmeden türetilmiş güvenlik garantisi değildir."
+            "Geçerlilik LoS, dar hüzme, onlarca–yüzlerce metre mesafe ve yağmursuz veya kısa "
+            "hop varsayar. El veya yaprak keser (blockage). «Hacklenmesi imkânsız» iddiası "
+            "dar hüzmeden türetilmiş bir güvenlik garantisi değildir."
         ),
         "when_used": (
-            "Veri merkezi mesh, kısa backhaul/fronthaul, kontrollü iç mekân, spektroskopi. "
-            "Yedek LoS ve hizalama bütçesi varsa."
+            "Veri merkezi mesh, kısa backhaul/fronthaul, kontrollü iç mekân ve spektroskopi "
+            "adaydır. Yedek LoS ve hizalama bütçesi varsa anlamlıdır."
         ),
         "when_not": (
-            "Açık şehir makrosu, uzun yağmurlu hop, cep-cep kilometre, tıbbi nanosensör Rel-19 özelliği. "
-            "6G = yalnızca THz değildir. Bu platformda Tbps ölçülmedi."
+            "Açık şehir makrosu, uzun yağmurlu hop, cep–cep kilometre ve tıbbi nanosensör "
+            "Rel-19 özelliği bu sınıf değildir. 6G yalnızca THz demek değildir. "
+            "Bu platformda Tbps ölçülmemiştir."
         ),
         "not_to_confuse": (
-            "mmWave ≠ THz. ISAC THz dalga şekli kullanabilir; THz tek başına algılama standardı değildir."
+            "mmWave, THz değildir. ISAC THz dalga şekli kullanabilir; THz tek başına "
+            "algılama standardı değildir."
         ),
         "real_world": (
-            "IEEE 802.15.3d, ITU-R WRC spektrum çalışmaları, TR 38.807, satıcı sub-THz gösterimleri. "
-            "Abone elsetinde varsayılan bant değil."
+            "IEEE 802.15.3d, ITU-R WRC spektrum çalışmaları, TR 38.807 ve satıcı sub-THz "
+            "gösterimleri bu izi taşır. Abone elsetinde varsayılan bant değildir."
         ),
         "tt_impact": (
-            "Raf ve fiber çekilemeyen kule köprüsü adayı. TRL 3, laboratuvar. Cep hızı vaadi yazılmaz."
+            "Raf ve fiber çekilemeyen kule köprüsü adaydır. Olgunluk TRL 3’tür (laboratuvar). "
+            "Cep hızı vaadi yazılmaz."
         ),
     },
     "ai_ran": {
         "problem": (
-            "Sabit RRM eşiği yerel optimumda sıkışır; trafik/kanal/enerji non-stationary'dir. "
-            "İnsan her 10 ms'de politika yazamaz. Varsayım: ölçüm kalitesi yüksek, geri alma tanımlı. "
-            "Kara kutu düzenleyiciye açıklanamaz — bu bir ürün kısıtıdır, stil tercihi değil."
+            "Sabit RRM eşiği yerel optimumda sıkışır; trafik, kanal ve enerji non-stationary’dir. "
+            "İnsan her 10 ms’de politika yazamaz. Varsayım ölçüm kalitesinin yüksek ve geri "
+            "almanın tanımlı olmasıdır. Kara kutu düzenleyiciye açıklanamaz; bu bir ürün "
+            "kısıtıdır, stil tercihi değildir."
         ),
         "why_needed": (
-            "Near-RT RIC (~10 ms, O-RAN tanımı) hüzme/handover; Non-RT rApp saniye+ enerji ve kestirim. "
-            "Öğrenen döngü ölçüme bağlı uyarlama ihtiyacını karşılar. GPU/NPU kendi enerjisini yer; "
-            "net kazanç ölçülmeden '%50–70' iddiası hedef/pazarlamadır. TR 38.843 + O-RAN WG2/10."
+            "Near-RT RIC (~10 ms, O-RAN tanımı) hüzme ve handover’ı; Non-RT rApp saniye ve "
+            "üzerinde enerji ile kestirimi yönetir. Öğrenen döngü ölçüme bağlı uyarlama "
+            "ihtiyacını karşılar. GPU/NPU kendi enerjisini yer; net kazanç ölçülmeden "
+            "«%50–70» iddiası hedef veya pazarlamadır. Referanslar TR 38.843 ile O-RAN WG2/10’dur."
         ),
         "what": (
-            "AI-native RAN iki kattır: (1) pratik giriş — xApp/rApp ile RRM politikası; "
-            "(2) araştırma ucu — otokodlayıcı PHY, hava arayüzünün öğrenilmiş temsili. "
-            "O-RAN arayüzdür; AI uygulama. Sohbet asistanı AI-RAN değildir."
+            "AI-native RAN iki kattır. Birinci kat pratik giriştir: xApp/rApp ile RRM politikası. "
+            "İkinci kat araştırma ucudur: otokodlayıcı PHY ve hava arayüzünün öğrenilmiş temsili. "
+            "O-RAN bir arayüzdür; AI uygulamadır. Sohbet asistanı AI-RAN değildir."
         ),
         "mental_model": (
-            "RL: durum s (SINR, PRB, yük), eylem a (RRM), ödül r (kapasite/enerji/kesinti). "
-            "Q(s,a) ← Q + α[r + γ max Q' − Q]. Otokodlayıcı kaybı E[||s − f_D(f_E(s)+n)||²]. "
-            "Yanlış ödül şebekeyi kilitler; rollback tasarımın parçasıdır. Denetim kalkmaz."
+            "Pekiştirmeli öğrenmede durum s (SINR, PRB, yük), eylem a (RRM kararı) ve ödül r "
+            "(kapasite, enerji, kesinti) tanımlanır; güncelleme Q(s,a) ← Q + α[r + γ max Q′ − Q] "
+            "biçimindedir. Otokodlayıcı kaybı E[||s − f_D(f_E(s)+n)||²] ile yazılır. "
+            "Yanlış ödül şebekeyi kilitleyebilir; rollback tasarımın parçasıdır ve denetim kalkmaz."
         ),
         "how_steps": [
-            "Ölç: yük, SINR, PRB, enerji, arıza öncülü — model verinin kalitesini aşamaz.",
-            "Near-RT xApp: onlarca ms hüzme/handover. Non-RT rApp: saniye+ uyku ve tahmin.",
-            "Uygula: politika gNB'ye yazılır. Geri alma yolu yoksa canlı şebekeye otonom pilot denmez.",
-            "Öğren: ödül kötüyse güncelle. Zero-touch (ZTN) araştırma ucudur, saha kanıtı yoktur (TRL 5).",
+            "Önce yük, SINR, PRB, enerji ve arıza öncülü ölçülür; model verinin kalitesini aşamaz.",
+            "Near-RT xApp onlarca milisaniyede hüzme ve handover’ı günceller; Non-RT rApp saniye ölçeğinde uyku ve tahmin uygular.",
+            "Politika gNB’ye yazılır; geri alma yolu yoksa canlı şebekeye otonom pilot denmez.",
+            "Ödül kötüyse öğrenme güncellenir; zero-touch (ZTN) araştırma ucudur ve saha kanıtı yoktur (TRL 5).",
         ],
         "analogy": (
-            "Klasik SON: kural tabanlı self-organizing. "
-            "AI-RAN RRM: öğrenilmiş politika, aynı döngü, ölçüm şart. "
-            "Nöral PHY: ayrı katman, Rel-18/TR 38.843 çalışma alanı, laboratuvar."
+            "Klasik SON kural tabanlı self-organizing’dir. AI-RAN RRM öğrenilmiş politika ile "
+            "aynı döngüyü ölçüm şartına bağlar. Nöral PHY ayrı bir katmandır; Rel-18 / TR 38.843 "
+            "çalışma alanıdır ve laboratuvardadır."
         ),
         "analogy_technical_map": (
-            "Geçerlilik: i.i.d. olmayan trafik, dağılım kayması (drift) izlenmeli. "
-            "Açıklanabilirlik (XAI) düzenleyici kısıt. O-RAN ≠ çok tedarikçili AI garantisi; arayüz standardıdır."
+            "Geçerlilik için i.i.d. olmayan trafik ve dağılım kayması (drift) izlenmelidir. "
+            "Açıklanabilirlik (XAI) düzenleyici bir kısıttır. O-RAN çok tedarikçili AI garantisi "
+            "değildir; arayüz standardıdır."
         ),
         "when_used": (
-            "Değişken yük, enerji hedefi, kestirimci bakım, RIC denemesi. Ölçüm kalitesi ve rollback varsa."
+            "Değişken yük, enerji hedefi, kestirimci bakım ve RIC denemesinde adaydır. "
+            "Ölçüm kalitesi ve rollback tanımlıysa anlamlıdır."
         ),
         "when_not": (
-            "Eğitilmemiş model, saha verisi yok, kara kutu kabul edilmiyor. "
-            "'Sıfır insan' pazarlamadır. Bu platformda enerji faturası ölçülmedi."
+            "Eğitilmemiş model, saha verisi yokluğu veya kara kutunun kabul edilmediği "
+            "ortamlarda uygun değildir. «Sıfır insan» pazarlamadır. Bu platformda enerji "
+            "faturası ölçülmemiştir."
         ),
         "not_to_confuse": (
-            "Platform sohbet botu ≠ AI-RAN. O-RAN açık arayüz; AI onun üstünde xApp olabilir veya olmayabilir."
+            "Platform sohbet botu AI-RAN değildir. O-RAN açık arayüzdür; AI onun üstünde "
+            "xApp olabilir veya olmayabilir."
         ),
         "real_world": (
-            "AI-RAN Alliance, O-RAN WG2/WG10, TR 38.843, NVIDIA Aerial test yatakları, operatör RIC PoC. "
-            "Tam nöral hava arayüzü laboratuvar."
+            "AI-RAN Alliance, O-RAN WG2/WG10, TR 38.843, NVIDIA Aerial test yatakları ve "
+            "operatör RIC PoC’leri bu izi taşır. Tam nöral hava arayüzü laboratuvardadır."
         ),
         "tt_impact": (
-            "Maç çıkışı kaynak, gece uyku, arıza öncülü. TRL 5, RIC deneme sınıfı. İnsan denetimi kapanmaz."
+            "Maç çıkışı kaynak kaydırma, gece uyku ve arıza öncülü aday senaryolardır. "
+            "Olgunluk TRL 5’tir (RIC deneme sınıfı). İnsan denetimi kapanmaz."
         ),
     },
     "ntn": {
         "problem": (
-            "Karasal kapsama kule+fiber geometrisidir. LEO ~500–1200 km, v ≈ 7,5 km/s → "
-            "Doppler f_d = f_c (v/c) cosθ ve sık handover. GEO RTT ~250 ms sınıfı (literatür). "
-            "FSPL ∝ (d f)². Varsayım: Rel-17+ NTN modem, feeder link, gateway."
+            "Karasal kapsama kule ve fiber geometrisidir. LEO yaklaşık 500–1200 km irtifada "
+            "v ≈ 7,5 km/s ile hareket eder; Doppler f_d = f_c (v/c) cosθ ve sık handover doğurur. "
+            "GEO RTT yaklaşık 250 ms sınıfındadır (literatür). FSPL ∝ (d f)²’dir. Varsayım "
+            "Rel-17+ NTN modem, feeder link ve gateway’dir."
         ),
         "why_needed": (
-            "Kırsal CAPEX, deniz, havacılık, afet (site düşünce) karasal modeli kırar. "
+            "Kırsal CAPEX, deniz, havacılık ve afet (site düşünce) karasal modeli kırar. "
             "Aynı 3GPP kimliği ile boşluğu kapatma ihtiyacıdır. Şehir kapasitesi ve URLLC için "
-            "birincil yol değildir. TRL 6 — TR 38.811, kamuya açık direct-to-cell."
+            "birincil yol değildir. Olgunluk TRL 6’dır (TR 38.811, kamuya açık direct-to-cell)."
         ),
         "what": (
-            "NTN: LEO/GEO/HAPS düğümünün Rel-17+ ile karasal çekirdeğe bağlanması. "
-            "Direct-to-cell: standart UE'nin uydu hücresini görmesi; VSAT çanak değildir. "
-            "HAPS stratosfer platformudur, uydu değildir. Tüketici LEO genişbantı (ör. Starlink) "
-            "ile NTN hücresi aynı ürün olmak zorunda değildir."
+            "NTN, LEO, GEO veya HAPS düğümünün Rel-17+ ile karasal çekirdeğe bağlanmasıdır. "
+            "Direct-to-cell, standart UE’nin uydu hücresini görmesidir; VSAT çanak değildir. "
+            "HAPS stratosfer platformudur, uydu değildir. Tüketici LEO genişbantı ile NTN "
+            "hücresi aynı ürün olmak zorunda değildir."
         ),
         "mental_model": (
-            "Karasal birincil; NTN kapsama deliği. Link bütçesi FSPL + atmosfer + anten kazancı. "
-            "PHY Doppler ve gecikme ön düzeltmesi yoksa PRACH tutmaz. "
-            "Regenerative payload uyduda gNB işler; transparent payload yere taşır — ikisi aynı gecikme değildir."
+            "Karasal birincildir; NTN kapsama deliğini kapatır. Link bütçesi FSPL, atmosfer "
+            "ve anten kazancından oluşur. PHY’de Doppler ve gecikme ön düzeltmesi yoksa PRACH "
+            "tutmaz. Regenerative payload uyduda gNB işler; transparent payload yere taşır — "
+            "ikisi aynı gecikme sınıfında değildir."
         ),
         "how_steps": [
-            "Hücre seçimi: şehirde gNB; boşlukta NTN hücresi. Öncelik karasaldır.",
-            "Feeder: uydu → gateway → 5GC/6GC. Yer kapısı operatör varlığıdır.",
-            "Telafi: f_d ve timing advance; Rel-17 NTN şartnamesi (TR 38.811) çerçeve.",
-            "Servis sınıfı: acil SMS/ses önce. Terabit şehir deneyimi bu denklemin çıktısı değildir.",
+            "Hücre seçiminde şehirde gNB, boşlukta NTN hücresi tercih edilir; öncelik karasaldır.",
+            "Feeder uydu → gateway → 5GC/6GC yolunu kurar; yer kapısı operatör varlığıdır.",
+            "f_d ve timing advance telafi edilir; Rel-17 NTN şartnamesi (TR 38.811) çerçevedir.",
+            "Servis sınıfında acil SMS/ses önce gelir; terabit şehir deneyimi bu denklemin çıktısı değildir.",
         ],
         "analogy": (
-            "VSAT: çanak, ayrı sistem. Direct-to-cell: elset anteni, Rel-17+ modem. "
-            "HAPS: 20 km sınıfı, uydu yörüngesi değil. ISAC 'gökyüzü radar' NTN değildir."
+            "VSAT çanaklı ayrı bir sistemdir. Direct-to-cell elset anteni ve Rel-17+ modem kullanır. "
+            "HAPS yaklaşık 20 km sınıfindadır ve uydu yörüngesi değildir. ISAC «gökyüzü radarı» "
+            "NTN değildir."
         ),
         "analogy_technical_map": (
-            "Geçerlilik: görünür uydu, yeterli EIRP, düzenlenmiş spektrum. "
-            "'%100 küresel sıfır boşluk' pazarlamadır. Bu platformda uydu gecikmesi saha ölçülmedi."
+            "Geçerlilik görünür uydu, yeterli EIRP ve düzenlenmiş spektrum varsayar. "
+            "«%100 küresel sıfır boşluk» pazarlamadır. Bu platformda uydu gecikmesi saha ölçülmemiştir."
         ),
         "when_used": (
-            "FSPL ve saha CAPEX karasal hopu geçersiz kıldığında: kırsal/dağ, deniz, havacılık, "
-            "kule düşünce afet yedek. Feeder + gateway şarttır; regenerative vs transparent payload "
-            "gecikme sınıfını belirler. Şehir makro kapasitesinin yerine geçmez."
+            "FSPL ve saha CAPEX karasal hop’u geçersiz kıldığında (kırsal/dağ, deniz, havacılık, "
+            "kule düşünce afet yedek) adaydır. Feeder ve gateway şarttır; regenerative ile "
+            "transparent payload gecikme sınıfını belirler. Şehir makro kapasitesinin yerine geçmez."
         ),
         "when_not": (
-            "Şehir içi kapasite, sub-ms URLLC birincil yol. Her eski cihaz Rel-17 NTN garantisi değildir."
+            "Şehir içi kapasite ve sub-ms URLLC birincil yol olarak uygun değildir. "
+            "Her eski cihaz Rel-17 NTN garantisi taşımaz."
         ),
         "not_to_confuse": (
-            "Direct-to-cell ≠ VSAT. HAPS ≠ LEO. NTN tamamlayıcıdır, 6G makrosunun rakibi değil."
+            "Direct-to-cell VSAT değildir. HAPS LEO değildir. NTN tamamlayıcıdır; "
+            "6G makrosunun rakibi değildir."
         ),
         "real_world": (
-            "TR 38.811, Rel-17/18/19 NTN WI, kamuya açık direct-to-cell denemeleri (operatör-uydu ortaklıkları). "
-            "Afet yedek hattı stratejidir, saha garantisi değil."
+            "TR 38.811, Rel-17/18/19 NTN WI ve kamuya açık direct-to-cell denemeleri "
+            "(operatör–uydu ortaklıkları) bu izi taşır. Afet yedek hattı stratejidir; "
+            "saha garantisi değildir."
         ),
         "tt_impact": (
-            "Afet, filo, kırsal. TRL 6 — yedi dilimin en olgunu. Tamamlayıcı; şehir kulesinin yerine geçmez."
+            "Afet, filo ve kırsal aday senaryolardır. Olgunluk TRL 6’dır — yedi dilimin en "
+            "olgunu. Tamamlayıcıdır; şehir kulesinin yerine geçmez."
         ),
     },
     "ambient_iot": {
         "problem": (
-            "NB-IoT/RedCap hâlâ bir enerji kaynağı ister. Palet/sera ölçeğinde pil lojistiği CAPEX+OPEX'tir. "
-            "Backscatter yansıyan gücü zayıftır; menzil Friis hasadı × η_rectenna ile sınırlıdır. "
-            "Varsayım: ortamda yeterli RF, yakın okuyucu, dar bit."
+            "NB-IoT veya RedCap hâlâ bir enerji kaynağı ister. Palet ve sera ölçeğinde pil "
+            "lojistiği CAPEX ve OPEX’tir. Backscatter yansıyan gücü zayıftır; menzil Friis "
+            "hasadı ile η_rectenna çarpımıyla sınırlıdır. Varsayım ortamda yeterli RF, yakın "
+            "okuyucu ve dar bittir."
         ),
         "why_needed": (
-            "'Nerede / kaç derece' işi bakım ekibi olmadan. Amaç video değil, seyrek kimlik. "
-            "'1 sent, trilyon nesne' hedef/pazarlamadır. TR 38.848 Rel-19 SI; ticari dağıtım aşamasında değildir."
+            "«Nerede / kaç derece» işi bakım ekibi olmadan yapılmak istenir. Amaç video değil, "
+            "seyrek kimliktir. «1 sent, trilyon nesne» hedef veya pazarlamadır. TR 38.848 "
+            "Rel-19 SI’dir; ticari dağıtım aşamasında değildir."
         ),
         "what": (
-            "Ambient IoT: pilsiz veya mikro-kapasitörlü etiket; rectenna RF→DC; iletişim çoğunlukla "
-            "backscatter (anten empedansı ile gelen taşıyıcıyı modüle, PA yok). "
-            "Okuyucu gNB veya yardımcı aydınlatıcı. ISAC non-cooperative eko ölçer; bu sınıf kasıtlı etikettir."
+            "Ambient IoT pilsiz veya mikro-kapasitörlü etikettir; rectenna RF’yi DC’ye çevirir "
+            "ve iletişim çoğunlukla backscatter’tır (anten empedansı ile gelen taşıyıcıyı "
+            "modüle eder, PA yoktur). Okuyucu gNB veya yardımcı aydınlatıcıdır. ISAC "
+            "işbirlikçi olmayan eko ölçer; bu sınıf kasıtlı etikettir."
         ),
         "mental_model": (
-            "P_rec = P_tx G_tx G_rx (λ/4πd)² η. y(t) = α x(t) b(t) + n(t). "
-            "RF zayıf ceplede etiket susar — sıfır pil maliyeti enerji garantisi değildir. "
-            "RFID atası; fark 3GPP hücresel okuyucu ve Rel-19 adresleme hedefi."
+            "Alınan güç P_rec = P_tx G_tx G_rx (λ/4πd)² η ile yazılır; gözlenen sinyal "
+            "y(t) = α x(t) b(t) + n(t) biçimindedir. RF zayıf ceplede etiket susar — sıfır "
+            "pil maliyeti enerji garantisi değildir. RFID atasıdır; fark 3GPP hücresel "
+            "okuyucu ve Rel-19 adresleme hedefidir."
         ),
         "how_steps": [
-            "Hasat: rectenna; verim η < 1, mesafe Friis ile düşer.",
-            "Modülasyon: b(t) empedans anahtarı; kendi PA'sı yoktur, menzil kısa (literatür < 10–50 m sınıfı, geometriye bağlı).",
-            "Okuma: yüksek hassasiyetli dizi zayıf eko+biti ayırır. Protokol dardır (kbps).",
-            "Bulut: dar kimlik ('koli, °C'). Video/telemetri bu denklemden çıkmaz.",
+            "Hasat rectenna ile yapılır; verim η < 1’dir ve mesafe Friis ile düşer.",
+            "Modülasyon b(t) empedans anahtarıdır; kendi PA’sı yoktur ve menzil kısa kalır (literatürde çoğu zaman 10–50 m sınıfı, geometriye bağlı).",
+            "Okuma yüksek hassasiyetli dizi ile zayıf eko ve biti ayırır; protokol dardır (kbps).",
+            "Buluta dar kimlik gider («koli, °C»); video veya zengin telemetri bu denklemden çıkmaz.",
         ],
         "analogy": (
-            "Mağaza kapısı RFID: atası, hücresel çoklu okuyucu değil. "
-            "Güneş+pilli hasatlı sensör: ayrı sınıf, Ambient IoT 'sıfır pil' iddiası değildir her zaman. "
-            "ISAC: işbirlikçi olmayan yansıtıcı."
+            "Mağaza kapısı RFID atasıdır ama hücresel çoklu okuyucu değildir. Güneş veya "
+            "pilli hasatlı sensör ayrı bir sınıftır; Ambient IoT her zaman «sıfır pil» "
+            "iddiası taşımaz. ISAC işbirlikçi olmayan yansıtıcıyı ölçer."
         ),
         "analogy_technical_map": (
-            "Geçerlilik: aydınlatıcı mevcut, d kısa, bit seyrek. "
-            "Sınırsız ömür ancak okunabilir bit hasada bağlıdır. TT sahası ölçülmedi (TRL 4)."
+            "Geçerlilik aydınlatıcının mevcut, mesafenin kısa ve bitin seyrek olmasını "
+            "varsayar. Sınırsız ömür ancak okunabilir bit hasada bağlıdır. TT sahası "
+            "ölçülmemiştir (TRL 4)."
         ),
         "when_used": (
-            "Palet, soğuk zincir, sera, sayaç, yapı sağlığı — kısa menzil, düşük bit, uzun ömür hedefi."
+            "Palet, soğuk zincir, sera, sayaç ve yapı sağlığı — kısa menzil, düşük bit "
+            "ve uzun ömür hedefi bir arada olduğunda adaydır."
         ),
         "when_not": (
-            "Ses/görüntü, kilometre, hareketli araç telemetrisi, RF'siz köşe. Telefonun yerini almaz."
+            "Ses veya görüntü, kilometre menzil, hareketli araç telemetrisi ve RF’siz "
+            "köşe uygun değildir. Telefonun yerini almaz."
         ),
         "not_to_confuse": (
-            "Shop-floor RFID ≠ Rel-19 Ambient IoT. Energy-harvesting (güneş) sensor ≠ backscatter etiket."
+            "Shop-floor RFID, Rel-19 Ambient IoT değildir. Energy-harvesting (güneş) "
+            "sensör backscatter etiket değildir."
         ),
         "real_world": (
-            "TR 38.848, akademik backscatter, Wiliot/Qualcomm pilsiz etiket denemeleri. "
-            "TT IoT platformuna akış senaryodur; her rafta değildir."
+            "TR 38.848, akademik backscatter ve Wiliot/Qualcomm pilsiz etiket denemeleri "
+            "bu izi taşır. TT IoT platformuna akış senaryodur; her rafta değildir."
         ),
         "tt_impact": (
-            "Depo paleti, sera, sayaç adayı. TRL 4, PoC. Pil lojistiğini silme vaadi saha ölçümü değildir."
+            "Depo paleti, sera ve sayaç adaydır. Olgunluk TRL 4’tür (PoC). "
+            "Pil lojistiğini silme vaadi saha ölçümü değildir."
         ),
     },
 }

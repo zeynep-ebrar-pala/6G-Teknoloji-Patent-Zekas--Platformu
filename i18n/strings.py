@@ -148,27 +148,41 @@ sayı yükseldikçe sahaya yaklaşır. Bu yedisi henüz ticari şebekede yaygın
             "intro_expert": """<div class="home-intro">
 <h4>6G nedir — uzman okuma (temel katman atlanmaz)</h4>
 <p>
-<strong>Temel:</strong> 6G, 5G'nin iletişim-only mimarisine algılama, programlanabilir kanal,
-dağıtık anten, uydu hücresi, öğrenen RRM ve pilsiz etiket adaylarını ekler.
-<strong>Uzman:</strong> ISAC: ortak dalga şekli, R⁴, CRB–Shannon ödünleşmesi (TR 22.837).
-RIS: Φ = diag(e^{jθ_n}), çift yol kaybı, CSI gecikmesi (ETSI RIS ISG).
-Hücresiz MIMO: ortak ön kodlama, bedel fronthaul/senkron (Rel-19/20).
-NTN: Rel-17 TR 38.811, Doppler f_d = f_c (v/c) cosθ, TRL 6.
-AI-RAN: O-RAN RIC xApp/rApp, TR 38.843; nöral PHY araştırma ucu.
-Ambient IoT: Friis hasadı × backscatter, TR 38.848.
-THz: L(f,d) = FSPL · e^{K(f)d}, TR 38.807, TRL 3.
+<strong>Temel çerçeve:</strong> 6G, 5G’nin yalnızca bit taşıyan erişim mimarisine algılama,
+programlanabilir kanal, dağıtık anten, uydu hücresi, öğrenen radyo kaynak yönetimi (RRM)
+ve pilsiz etiket adaylarını ekler. Aşağıdaki yedi girdi aynı olgunlukta değildir;
+her biri ayrı bir standartlaşma ve araştırma izidir.
+</p>
+<p>
+<strong>ISAC</strong> (Integrated Sensing and Communication — Entegre Algılama ve İletişim)
+aynı dalga şekli üzerinde hem iletişimi hem yankıdan kestirimi tasarlar; radar denkleminde
+güç mesafenin dördüncü kuvvetiyle zayıflar (R⁴) ve Cramér–Rao sınırı (CRB) ile Shannon
+kapasitesi aynı güç–bant bütçesini paylaşır (3GPP TR 22.837).
+<strong>RIS</strong> (Reconfigurable Intelligent Surface — Yeniden Yapılandırılabilir Akıllı Yüzey)
+eleman fazlarını Φ = diag(e^{jθ_n}) ile programlayarak çift yollu kayıpta hüzmeyi yönlendirir;
+kanal kestirimi gecikmesi kazancı kırar (ETSI RIS ISG).
+<strong>Hücresiz Massive MIMO</strong> coğrafi erişim noktalarının ortak ön kodlamasıdır;
+bedeli fronthaul kapasitesi ve senkronizasyondur (Rel-19/20).
+<strong>NTN</strong> (Non-Terrestrial Network — Karasal Olmayan Ağ) Rel-17 çerçevesinde
+(TR 38.811) LEO/HAPS düğümünü çekirdeğe bağlar; Doppler kayması f_d = f_c (v/c) cosθ
+ile tanımlanır ve bugün yedi dilimin en olgun adayıdır (TRL 6).
+<strong>AI-RAN</strong> O-RAN RIC üzerindeki xApp/rApp döngüsüyle RRM politikasını ölçüme bağlar
+(TR 38.843); nöral PHY hâlâ araştırma ucudur.
+<strong>Ambient IoT</strong> Friis hasadı ile backscatter kimliğini birleştirir (TR 38.848).
+<strong>THz</strong> yol kaybını L(f,d) = FSPL · e^{K(f)d} ile modeller (TR 38.807) ve
+henüz laboratuvar–spektrum kanıtı aşamasındadır (TRL 3).
 </p>
 <p class="home-intro-note">
-Yedi girdi tek bir ticari «6G ürünü» değildir; farklı olgunlukta standartlaşma girdileridir.
-Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong> uzman katmanındadır.
+Bu yedi girdi tek bir ticari «6G ürünü» değildir. Denklemlerin sembol tablosu, varsayımları
+ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong>nin uzman katmanında yer alır.
 </p>
 </div>""",
             "cards_heading": "Yedi temel teknoloji",
             "cards_caption": "Her kartta önce sorun, sonra çözüm vardır. Ayrıntılı anlatım için soldan «6G Teknoloji Rehberi»ni açın.",
             "card_cta": "Adım adım anlatım: 6G Teknoloji Rehberi → bu teknolojiyi seçin",
-            "cards_heading_expert": "Yedi yapı taşı",
-            "cards_caption_expert": "Kartta problem + teknik karşılık vardır. Shannon/CRB, 3GPP ve geçerlilik için «6G Teknoloji Rehberi»ne geçin.",
-            "card_cta_expert": "Denklem ve 3GPP bağlamı: 6G Teknoloji Rehberi → bu kartı seçin",
+            "cards_heading_expert": "Yedi yapı taşı — teknik özet",
+            "cards_caption_expert": "Her kart, sorunu ve teknik karşılığını tam cümleyle özetler. Shannon / CRB, 3GPP referansları ve geçerlilik sınırları için «6G Teknoloji Rehberi»ni açın.",
+            "card_cta_expert": "Denklem, varsayım ve 3GPP bağlamı: 6G Teknoloji Rehberi → bu teknolojiyi seçin",
             "radar_heading": "### Patent ve yayın yoğunluğu",
             "radar_caption": "Halkalar ve etiketler mutlak Lens/Springer toplamlarıdır; tablodaki sayılarla aynıdır.",
             "radar_empty": "Patent veya yayın toplamı henüz önbellekte yok. Patent Zekası veya Akademik Yayın sayfasını bir kez açın.",
@@ -187,11 +201,11 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
             "explainer_ris": "Seviye 5 — RIS ve AI-RAN: Prototip ve deneme aşamasındadır.",
             "explainer_lab": "Seviye 4 — ISAC, hücresiz MIMO ve Ambient IoT: Laboratuvarda doğrulanmıştır.",
             "explainer_thz": "Seviye 3 — THz: Laboratuvarda kanıt vardır; saha şebekesinde henüz kullanılmamaktadır.",
-            "explainer_body_expert": "1 = temel ilke, 9 = gerçek görevde kanıtlanmış ürün. Sayılar TT sahasında ölçülmedi: NASA/AB 1–9 ölçeği, 3GPP şartname/çalışma kalemi ve kamuya açık deneme sınıfına göre eşlenir.",
-            "explainer_ntn_expert": "TRL 6 — NTN: Rel-17 şartnamesi (TR 38.811) ve kamuya açık direct-to-cell denemeleri bu seviyeye denk gelir; karasal şehir kulesine tamamlayıcıdır.",
+            "explainer_body_expert": "TRL ölçeği 1’den 9’a gider: 1 temel ilkedir, 9 ise gerçek görevde kanıtlanmış üründür. Bu tamsayılar Türk Telekom şebekesinde ölçülmemiştir; NASA/AB 1–9 çerçevesi, 3GPP şartname veya çalışma kalemi ile kamuya açık deneme sınıfına göre eşlenir.",
+            "explainer_ntn_expert": "TRL 6 — NTN: Rel-17 şartnamesi (TR 38.811) ve kamuya açık direct-to-cell denemeleri bu seviyeyi destekler. Karasal şehir kulesinin yerine geçmez; onu tamamlar.",
             "explainer_ris_expert": "TRL 5 — RIS ve AI-RAN: ETSI RIS ISG, Rel-19–20 çalışma kalemleri ve O-RAN RIC deneme sınıfı prototip aşamasını tanımlar.",
-            "explainer_lab_expert": "TRL 4 — ISAC, hücresiz MIMO ve Ambient IoT: Rel-19 çalışma kalemleri ve laboratuvar doğrulaması (ISAC TR 22.837; Ambient IoT TR 38.848) bu seviyeye denk gelir.",
-            "explainer_thz_expert": "TRL 3 — THz: TR 38.807 ve laboratuvarda spektrum kanıtı vardır; saha şebekesinde henüz kullanılmamaktadır.",
+            "explainer_lab_expert": "TRL 4 — ISAC, hücresiz MIMO ve Ambient IoT: Rel-19 çalışma kalemleri ile laboratuvar doğrulaması (ISAC için TR 22.837; Ambient IoT için TR 38.848) bu seviyeyi destekler.",
+            "explainer_thz_expert": "TRL 3 — THz: TR 38.807 ve laboratuvar spektrum kanıtı vardır; saha şebekesinde henüz kullanılmamaktadır.",
             "scale_header": "Ölçek",
             "scale_title": "TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi)",
         },
@@ -202,7 +216,7 @@ Denklem, varsayım ve geçerlilik penceresi <strong>6G Teknoloji Rehberi</strong
             "tt_impact": "Türk Telekom'ta kayıtlı çalışmalar",
             "heading": "6G'yi ilk kez okuyorsanız buradan başlayın: önce sorun, sonra çözüm, en sonda gerçek hayat örneği. Denklemler ve 3GPP ayrıntıları Uzman katmanındadır.",
             "heading_compact": "Tanım katmanı (özet)",
-            "heading_expert": "Uzman katman — aynı sıra; denklem, varsayım, 3GPP ve alternatif. Cümleler Temel ile aynı değildir.",
+            "heading_expert": "Uzman katman — aynı sıra korunur; üzerine denklem, varsayım, 3GPP referansı ve alternatifler eklenir. Cümleler Temel katmanın kopyası değildir.",
             "rail_beginner": "1 Problem · 2 İhtiyaç · 3 Yöntem · 4 Mekanizma · 5 Sınır · 6 Uygulama",
             "rail_expert": "1 Problem · 2 İhtiyaç · 3 Yöntem · 4 Mekanizma · 5 Sınır · 6 Uygulama · denklem / 3GPP / alternatif",
             "mental_model": "Çalışma modeli",
@@ -1331,27 +1345,38 @@ the integer is mapped from a 3GPP technical report or a public trial class.
             "intro_expert": """<div class="home-intro">
 <h4>What is 6G — expert reading (foundation is not skipped)</h4>
 <p>
-<strong>Foundation:</strong> 6G adds sensing, a programmable channel, distributed antennas, a satellite cell,
-learned RRM and a batteryless tag as candidates on top of 5G’s communications-only architecture.
-<strong>Expert:</strong> ISAC: shared waveform, R⁴, CRB–Shannon trade-off (TR 22.837).
-RIS: Φ = diag(e^{jθ_n}), double-path loss, CSI delay (ETSI RIS ISG).
-Cell-free MIMO: joint precoding; the bill is fronthaul/sync (Rel-19/20).
-NTN: Rel-17 TR 38.811, Doppler f_d = f_c (v/c) cosθ, TRL 6.
-AI-RAN: O-RAN RIC xApp/rApp, TR 38.843; neural PHY is the research edge.
-Ambient IoT: Friis harvest × backscatter, TR 38.848.
-THz: L(f,d) = FSPL · e^{K(f)d}, TR 38.807, TRL 3.
+<strong>Foundation frame:</strong> 6G adds sensing, a programmable channel, distributed antennas,
+a satellite cell, learned radio resource management (RRM), and batteryless-tag candidates
+on top of 5G’s bit-carrying access architecture. The seven inputs below are not equally mature;
+each follows its own standards and research track.
+</p>
+<p>
+<strong>ISAC</strong> (Integrated Sensing and Communication) designs communication and echo estimation
+on a shared waveform; radar power falls with the fourth power of range (R⁴), and the Cramér–Rao bound (CRB)
+shares the same power–bandwidth budget with Shannon capacity (3GPP TR 22.837).
+<strong>RIS</strong> (Reconfigurable Intelligent Surface) programmes element phases Φ = diag(e^{jθ_n})
+to steer the beam under double-path loss; channel-state delay breaks the gain (ETSI RIS ISG).
+<strong>Cell-free Massive MIMO</strong> is joint precoding across geographic access points;
+the cost is fronthaul capacity and synchronisation (Rel-19/20).
+<strong>NTN</strong> (Non-Terrestrial Network) joins a LEO/HAPS node to the core under Rel-17
+(TR 38.811); Doppler is f_d = f_c (v/c) cosθ and is today the most mature of the seven (TRL 6).
+<strong>AI-RAN</strong> binds RRM policy to measurement through O-RAN RIC xApp/rApp loops
+(TR 38.843); neural PHY remains a research edge.
+<strong>Ambient IoT</strong> combines Friis harvest with backscatter identity (TR 38.848).
+<strong>THz</strong> models path loss as L(f,d) = FSPL · e^{K(f)d} (TR 38.807)
+and is still at laboratory–spectrum evidence (TRL 3).
 </p>
 <p class="home-intro-note">
-The seven inputs are not a single commercial “6G product”; they are standards inputs at different maturities.
-Equations, assumptions and validity windows sit in the expert layer of <strong>6G Technology Explorer</strong>.
+These seven inputs are not a single commercial “6G product”. Symbol tables, assumptions,
+and validity windows live in the expert layer of <strong>6G Technology Explorer</strong>.
 </p>
 </div>""",
             "cards_heading": "Seven Building Blocks",
             "cards_caption": "Each card states the field problem first, then the method. For the step-by-step walkthrough, equations, and documented Türk Telekom work, open 6G Technology Explorer in the sidebar.",
             "card_cta": "Step-by-step walkthrough: 6G Technology Explorer → select this card",
-            "cards_heading_expert": "Seven Building Blocks",
-            "cards_caption_expert": "Each card states the problem plus the technical counterpart. For Shannon/CRB, 3GPP and the validity window, open 6G Technology Explorer.",
-            "card_cta_expert": "Equations and 3GPP context: 6G Technology Explorer → select this card",
+            "cards_heading_expert": "Seven building blocks — technical summary",
+            "cards_caption_expert": "Each card states the problem and its technical counterpart in full sentences. For Shannon/CRB, 3GPP references, and validity limits, open 6G Technology Explorer.",
+            "card_cta_expert": "Equations, assumptions, and 3GPP context: 6G Technology Explorer → select this technology",
             "radar_heading": "### Patent and publication intensity",
             "radar_caption": "Rings and labels are absolute Lens/Springer totals; same numbers as the table.",
             "radar_empty": "Patent or publication totals are not cached yet. Open Patent Intelligence or Academic Publications once.",
@@ -1370,11 +1395,11 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
             "explainer_ris": "Level 5 — RIS and AI-RAN: In the prototype and trial stage.",
             "explainer_lab": "Level 4 — ISAC, cell-free MIMO, and Ambient IoT: Validated in the laboratory.",
             "explainer_thz": "Level 3 — THz: Laboratory evidence exists; not yet deployed in field networks.",
-            "explainer_body_expert": "1 is a basic principle; 9 is a product proven in an operational mission. These integers were not measured on a Türk Telekom network: the NASA/EU 1–9 scale is mapped from 3GPP specifications/work items and public trial class.",
-            "explainer_ntn_expert": "TRL 6 — NTN: Rel-17 specification (TR 38.811) and public Direct-to-Cell trials map to this level; complementary to the terrestrial tower.",
+            "explainer_body_expert": "The TRL scale runs from 1 to 9: 1 is a basic principle and 9 is a product proven in an operational mission. These integers were not measured on a Türk Telekom network; the NASA/EU 1–9 frame is mapped from 3GPP specifications or work items and public trial class.",
+            "explainer_ntn_expert": "TRL 6 — NTN: Rel-17 specification (TR 38.811) and public Direct-to-Cell trials support this level. It complements the terrestrial city tower; it does not replace it.",
             "explainer_ris_expert": "TRL 5 — RIS and AI-RAN: ETSI RIS ISG, Rel-19–20 work items, and the O-RAN RIC trial class define the prototype stage.",
-            "explainer_lab_expert": "TRL 4 — ISAC, cell-free MIMO, and Ambient IoT: Rel-19 work items and laboratory validation (ISAC TR 22.837; Ambient IoT TR 38.848) map to this level.",
-            "explainer_thz_expert": "TRL 3 — THz: TR 38.807 and laboratory spectrum evidence exist; not yet deployed in field networks.",
+            "explainer_lab_expert": "TRL 4 — ISAC, cell-free MIMO, and Ambient IoT: Rel-19 work items with laboratory validation (ISAC TR 22.837; Ambient IoT TR 38.848) support this level.",
+            "explainer_thz_expert": "TRL 3 — THz: TR 38.807 and laboratory spectrum evidence exist; the band is not yet used in field networks.",
             "scale_header": "Band",
             "scale_title": "Technology Readiness Level (TRL)",
         },
@@ -1385,7 +1410,7 @@ Equations, assumptions and validity windows sit in the expert layer of <strong>6
             "tt_impact": "Documented Türk Telekom work",
             "heading": "Foundation layer — problem, need, method. Equations and 3GPP sit in the expert layer.",
             "heading_compact": "Definition layer (summary)",
-            "heading_expert": "Expert layer — same sequence; equations, assumptions, 3GPP and alternatives. Sentences are not copies of Foundation.",
+            "heading_expert": "Expert layer — the same sequence is kept; equations, assumptions, 3GPP references, and alternatives are added on top. Sentences are not copies of the foundation layer.",
             "rail_beginner": "1 Problem · 2 Need · 3 Method · 4 Mechanism · 5 Limit · 6 Application",
             "rail_expert": "1 Problem · 2 Need · 3 Method · 4 Mechanism · 5 Limit · 6 Application · equation / 3GPP / alternative",
             "mental_model": "Operating model",
