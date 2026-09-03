@@ -6,7 +6,6 @@ Grafikler Lens.org toplamı / çekilen kayıttır. Kilitli örnek yok.
 import streamlit as st
 
 from backend.patent_service import PatentService, sort_patent_rows
-from data.app_build import APP_BUILD
 from i18n.core import format_int, t
 from components.charts import (
     render_company_counts_chart,
@@ -51,7 +50,6 @@ def render_patent_intelligence_module():
         t("patent.title"),
         t("patent.subtitle", source=PatentService.get_data_source()),
     )
-    st.caption(t("patent.tt_eu_build", build=APP_BUILD))
 
     st.markdown(f"**{t('patent.what_title')}**")
     st.markdown(t("patent.what_body"))

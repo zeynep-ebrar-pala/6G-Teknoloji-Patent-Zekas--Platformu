@@ -119,10 +119,6 @@ with st.sidebar:
                 st.session_state.pop(key, None)
             st.rerun()
 
-    from data.app_build import APP_BUILD
-
-    st.caption(t("patent.tt_eu_build", build=APP_BUILD))
-
 st.markdown(
     f"""<div class="tt-header-container">
 <span class="tt-badge">{t("app.badge")}</span>
