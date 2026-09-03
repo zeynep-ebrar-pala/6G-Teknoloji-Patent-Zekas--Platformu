@@ -143,7 +143,6 @@ _nav = st.navigation(
         st.Page("views/publications.py", title=t("nav.publications"), icon="📈"),
         st.Page("views/tt.py", title=t("nav.tt"), icon="🏢"),
         st.Page("views/ai.py", title=t("nav.ai"), icon="🤖"),
-        st.Page("views/about.py", title=t("nav.about"), icon="ℹ️"),
     ],
     position="sidebar",
     expanded=True,

@@ -26,7 +26,6 @@ UI = {
             "publications": "Akademik Yayın Analizi",
             "tt": "Türk Telekom Görünümü",
             "ai": "AI Asistanı",
-            "about": "Hakkında",
         },
         "tt_page": {
             "view": "Türk Telekom görünümü",
@@ -1083,44 +1082,6 @@ ve gerçek fiber topolojisi modele girmez. Sayıyı «ölçülmüş 6G performan
             "patent_by_topic": "Konuya göre:",
             "patent_examples": "Örnek kayıtlar:",
         },
-        "about": {
-            "heading": "### Hakkında",
-            "card": """<div class="glass-card" style="border-left: 5px solid #00E5FF;">
-<h4 style="color:#00E5FF; margin-top:0;">6G Technology &amp; Patent Intelligence Platform</h4>
-<p style="color:#E2E8F0; font-size:0.95rem; line-height:1.6; margin-bottom:0;">
-Türk Telekom 6G Ar-Ge ekibinde kullanılmak üzere 6G teknolojileri, akademik yayınlar
-ve patent trendlerini tek portalda sunan Streamlit uygulaması.
-Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
-</p>
-</div>""",
-            "modules": "#### Modüller",
-            "mod_left": """
-- **Ana Sayfa** — 7 teknolojinin TRL radar haritası; Dual-Depth (Temel/Uzman) giriş metnini değiştirir
-- **6G Teknoloji Rehberi** — tanım, çalışma prensibi, blok diyagram, mimari, kullanım, avantaj/dezavantaj, dünya çalışmaları, TT kayıtları, TRL
-- **Patent Zekası** — Nokia–Intel (9 firma); yedi 6G konusu; Lens.org; grafik: firma, yıl, konu, radar, bulut, ağaç, yoğunluk, harita
-- **Akademik Yayın Analizi** — Springer Nature Meta API; yıl / ülke / atıf
-            """,
-            "mod_right": """
-- **Türk Telekom Görünümü** — saha senaryo çözümleyici
-- **AI Asistanı** — TF-IDF yerel geri getirme; isteğe bağlı Groq / Gemini
-- **Hakkında** — bu sayfa (teslim / 15 dk sunum iskeleti)
-            """,
-            "stack": "#### Kullanılan teknolojiler",
-            "stack_body": "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. Opsiyonel: Groq API, Google Gemini API. Patent: Lens.org. Yayın: Springer Nature Meta API.",
-            "standard": "#### Anlatım standardı",
-            "standard_body": "Teknik içerik iki kademelidir: **Temel** (nedir / neden / nasıl / ne zaman) ve **Uzman** (denklem, varsayım, 3GPP). Uzman mod temel katmanı atlamaz. Kısaltmalar ilk geçişte açılır. Patent özeti, DOI ve sayı uydurulmaz.",
-            "talk": "#### 15 dakikalık sunum iskeleti",
-            "talk_body": """
-1. Amaç ve kapsam (1 dk)
-2. Ana Sayfa TRL radar (2 dk)
-3. Bir teknoloji (ör. RIS) — prensip + diyagram + TT senaryosu (3 dk)
-4. Patent Zekası — firma filtresi, yıl grafiği, TT Avrupa izi (3 dk)
-5. Akademik Yayın Analizi — Springer Nature Meta API + TT bağlılıklı DOI (3 dk)
-6. AI Asistan — «RIS nedir?» ve «NTN ile ISAC arasındaki fark» (2 dk)
-7. Kaynak doğrulama kuralı: uydurma ID/sayı yok (1 dk)
-        """,
-            "usage": "Kullanım adımları için depodaki USAGE_GUIDE.md dosyasına bakın.",
-        },
         "charts": {
             "year": "Takvim yılı",
             "trl_series": "TRL seviyesi",
@@ -1241,7 +1202,6 @@ Geliştirici: <strong>Zeynep Ebrar Pala</strong>.
             "publications": "Academic Publication Analysis",
             "tt": "Türk Telekom View",
             "ai": "AI Assistant",
-            "about": "About",
         },
         "tt_page": {
             "view": "Türk Telekom view",
@@ -2296,44 +2256,6 @@ and the real fibre topology are not in the model. Do not read the numbers as mea
             "patent_by_company": "By company:",
             "patent_by_topic": "By topic:",
             "patent_examples": "Example records:",
-        },
-        "about": {
-            "heading": "### About",
-            "card": """<div class="glass-card" style="border-left: 5px solid #00E5FF;">
-<h4 style="color:#00E5FF; margin-top:0;">6G Technology &amp; Patent Intelligence Platform</h4>
-<p style="color:#E2E8F0; font-size:0.95rem; line-height:1.6; margin-bottom:0;">
-A Streamlit portal for the Türk Telekom 6G R&amp;D team: 6G technologies, academic publications,
-and patent trends in one place.
-Developer: <strong>Zeynep Ebrar Pala</strong>.
-</p>
-</div>""",
-            "modules": "#### Modules",
-            "mod_left": """
-- **Home** — TRL radar for the seven technologies; dual-depth (foundation/expert) switches the intro
-- **6G Technology Explorer** — definition, operating principle, block diagram, architecture, use cases, advantages/disadvantages, global work, documented TT activity, TRL
-- **Patent Intelligence** — Nokia–Intel (9 firms); seven 6G topics; Lens.org; charts: firms, year, topic, radar, cloud, tree, density, map
-- **Academic Publication Analysis** — Springer Nature Meta API; year / country / cited
-            """,
-            "mod_right": """
-- **Türk Telekom View** — field scenario engine
-- **AI Assistant** — local TF-IDF retrieval; optional Groq / Gemini
-- **About** — this page (delivery / 15-minute talk outline)
-            """,
-            "stack": "#### Stack",
-            "stack_body": "Python, Streamlit, Pandas, Plotly, Matplotlib, NetworkX, WordCloud, scikit-learn. Optional: Groq API, Google Gemini API. Patents: Lens.org. Papers: Springer Nature Meta API.",
-            "standard": "#### Teaching standard",
-            "standard_body": "Technical content is two-layer: **foundation** (what / why / how / when) and **expert** (equation, assumption, 3GPP). Expert mode does not skip the foundation. Abbreviations expand on first use. Patent abstracts, DOIs, and numbers are not invented.",
-            "talk": "#### 15-minute talk outline",
-            "talk_body": """
-1. Purpose and scope (1 min)
-2. Home TRL radar (2 min)
-3. One technology (e.g. RIS) — principle + diagram + what TT has done (3 min)
-4. Patent Intelligence — company filter, year chart, TT Europe footprint (3 min)
-5. Academic Publication Analysis — Springer Nature Meta API + TT-affiliated DOI (3 min)
-6. AI Assistant — “What is RIS?” and “NTN vs ISAC” (2 min)
-7. Source rule: no invented IDs or counts (1 min)
-        """,
-            "usage": "See USAGE_GUIDE.md in the repository for walkthrough steps.",
         },
         "charts": {
             "year": "Calendar year",
