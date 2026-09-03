@@ -376,29 +376,38 @@ class PatentService:
 
     @staticmethod
     def get_topic_counts(company: Optional[str] = None, domain: Optional[str] = None) -> Dict[str, int]:
-        from backend.patent_apis import key_fingerprint, live_company_topic_matrix, live_topic_or_counts
+        from backend.patent_apis import peek_company_topic_matrix, peek_topic_or_counts
+        from backend.patent_prefetch import ensure_chart_counts_prefetch
 
         axes = tuple([domain] if _norm_domain(domain) else TECHNOLOGY_DOMAINS)
         firms = tuple([company] if company else SPEC_COMPANIES)
-        keys = key_fingerprint()
+        ensure_chart_counts_prefetch(domain if _norm_domain(domain) else None, firms)
         if company:
-            matrix = live_company_topic_matrix(tuple(TECHNOLOGY_DOMAINS), firms, keys)
+            matrix = peek_company_topic_matrix(tuple(TECHNOLOGY_DOMAINS), firms)
             row = matrix.get(company) or {}
-            return {d: int(row.get(d, 0) or 0) for d in TECHNOLOGY_DOMAINS}
-        return {d: int((live_topic_or_counts(axes, firms, keys) or {}).get(d, 0) or 0) for d in axes}
+            return {
+                d: int(row[d])
+                for d in TECHNOLOGY_DOMAINS
+                if isinstance(row.get(d), int)
+            }
+        raw = peek_topic_or_counts(axes, firms)
+        return {d: int(raw[d]) for d in axes if isinstance(raw.get(d), int)}
 
     @staticmethod
     def get_density_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
-        from backend.patent_apis import key_fingerprint, live_company_topic_matrix
+        from backend.patent_apis import peek_company_topic_matrix
+        from backend.patent_prefetch import ensure_chart_counts_prefetch
 
         firms = tuple([company] if company else SPEC_COMPANIES)
         axes = list(TECHNOLOGY_DOMAINS)
-        matrix = live_company_topic_matrix(tuple(axes), firms, key_fingerprint())
+        ensure_chart_counts_prefetch(domain if _norm_domain(domain) else None, firms)
+        matrix = peek_company_topic_matrix(tuple(axes), firms)
         rows = []
         for comp in firms:
             row: Dict[str, Any] = {"Company": comp}
             for dname in axes:
-                row[dname] = int((matrix.get(comp) or {}).get(dname, 0) or 0)
+                n = (matrix.get(comp) or {}).get(dname)
+                row[dname] = int(n) if isinstance(n, int) else 0
             rows.append(row)
         return pd.DataFrame(rows)
 
@@ -410,16 +419,21 @@ class PatentService:
 
     @staticmethod
     def get_patent_trends_df(company: Optional[str] = None, domain: Optional[str] = None) -> pd.DataFrame:
-        from backend.patent_apis import key_fingerprint, live_company_year_counts
+        from backend.patent_apis import peek_company_year_counts
+        from backend.patent_prefetch import ensure_chart_counts_prefetch
         from backend.years import year_tuple
 
         firms = tuple([company] if company else SPEC_COMPANIES)
         years = year_tuple()
-        raw = live_company_year_counts(domain or "", firms, years, key_fingerprint())
+        topic = domain if _norm_domain(domain) else None
+        ensure_chart_counts_prefetch(topic, firms)
+        raw = peek_company_year_counts(topic or "", firms, years)
+        if not any(isinstance((raw.get(c) or {}).get(y), int) for c in firms for y in years):
+            return pd.DataFrame()
         rows: Dict[str, List[int]] = {"Years": list(years)}
         for comp in firms:
-            counts = [int((raw.get(comp) or {}).get(y, 0) or 0) for y in years]
-            rows[comp] = counts
+            cell = raw.get(comp) or {}
+            rows[comp] = [int(cell[y]) if isinstance(cell.get(y), int) else 0 for y in years]
         return pd.DataFrame(rows)
 
     @staticmethod

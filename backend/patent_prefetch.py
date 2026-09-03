@@ -67,7 +67,7 @@ def _queries(topic: Optional[str], companies: Tuple[str, ...]) -> List[str]:
     return out
 
 
-def _work(topic: Optional[str], companies: Tuple[str, ...]) -> None:
+def _work(topic: Optional[str], companies: Tuple[str, ...], force_counts: bool = False) -> None:
     from backend.config import reload_env
     from backend.patent_apis import (
         _applicant_clause,
@@ -87,7 +87,7 @@ def _work(topic: Optional[str], companies: Tuple[str, ...]) -> None:
             total = len(queries) + (1 if topic else len(TECHNOLOGY_DOMAINS))
             _status_set(running=True, done=0, total=total, error="", job=_job_key(topic, companies))
             for q in queries:
-                _lens_count(q, force=True)
+                _lens_count(q, force=force_counts)
                 done += 1
                 _status_set(running=True, done=done, total=total)
                 time.sleep(0.08)
@@ -158,9 +158,21 @@ def ensure_prefetch(topic: Optional[str], companies: Tuple[str, ...], *, force: 
         ):
             return
         _status_set(running=True, done=0, total=max(int(snap.get("total") or 1), 1), error="", job=key)
-        t = threading.Thread(target=_work, args=(topic, companies), daemon=True, name=f"lens-{key[:24]}")
+        t = threading.Thread(
+            target=_work,
+            args=(topic, companies, force),
+            daemon=True,
+            name=f"lens-{key[:24]}",
+        )
         _threads[key] = t
         t.start()
+
+
+def ensure_chart_counts_prefetch(
+    topic: Optional[str], companies: Tuple[str, ...], *, force: bool = False
+) -> None:
+    """Grafik sayımları: disk çizilir; eksikler arka planda (_queries içinde yıl/firma)."""
+    ensure_prefetch(topic, companies, force=force)
 
 
 def _topic_year_work(topic: str) -> None:

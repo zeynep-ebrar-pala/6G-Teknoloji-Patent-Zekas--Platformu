@@ -64,7 +64,9 @@ def render_patent_intelligence_module():
     render_spec_patent_sources()
     topic = render_patent_topic_panel("patent")
 
-    from backend.patent_apis import key_fingerprint, lens_last_error, live_assignee_counts
+    from backend.live_refresh import render_watch
+    from backend.patent_apis import lens_last_error, peek_assignee_counts
+    from backend.patent_prefetch import ensure_chart_counts_prefetch, ensure_prefetch
     from backend.source_links import assignee_patent_links
     from data.patents import TECHNOLOGY_DOMAINS
 
@@ -78,24 +80,22 @@ def render_patent_intelligence_module():
         key="patent_company_filter",
     )
     company_arg = None if company == "all" else company
-    keys = key_fingerprint()
+    firms = tuple([company_arg] if company_arg else spec)
+    ensure_prefetch(topic, tuple(spec))
+    ensure_chart_counts_prefetch(topic, firms)
+    render_watch("lens", "patent")
 
-    with st.spinner(t("patent.live_gp_spin")):
-        xhr_totals = live_assignee_counts(
-            topic or "",
-            tuple(spec) if not company_arg else (company_arg,),
-            keys,
-        )
-        topic_counts = PatentService.get_topic_counts(company_arg, topic)
-        df_density = PatentService.get_density_df(company_arg, topic)
-        df_trends = PatentService.get_patent_trends_df(company_arg, topic)
-        patents = sort_patent_rows(PatentService.get_top_patents(company_arg, topic))
+    xhr_totals = peek_assignee_counts(topic or "", firms)
+    topic_counts = PatentService.get_topic_counts(company_arg, topic)
+    df_density = PatentService.get_density_df(company_arg, topic)
+    df_trends = PatentService.get_patent_trends_df(company_arg, topic)
+    patents = sort_patent_rows(PatentService.get_top_patents(company_arg, topic))
 
     api_err = lens_last_error()
     if api_err:
         st.warning(t("patent.api_error", detail=str(api_err).replace("{", "(").replace("}", ")")))
 
-    firm_names = [company_arg] if company_arg else list(spec)
+    firm_names = list(firms)
     firm_counts = {
         name: int(xhr_totals[name]) if isinstance(xhr_totals.get(name), int) else 0
         for name in firm_names

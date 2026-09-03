@@ -694,55 +694,131 @@ def fetch_office_counts(query: str, _keys: str = "") -> Dict[str, Optional[int]]
     }
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
-def live_assignee_counts(topic: str, companies: tuple, _keys: str = "") -> Dict[str, Optional[int]]:
-    """Firma çubuğu: yedi konu (veya seçilen konu) × applicant. Çekilen satır değil."""
+def _topic_dsl(topic: str) -> str:
+    return lens_topic_dsl(topic) if (topic or "").strip() else lens_explorer_dsl()
+
+
+def _assignee_query(topic: str, company: str) -> str:
+    return f"{_topic_dsl(topic)} AND {_applicant_clause(company)}"
+
+
+def _company_year_query(topic: str, company: str, year: int) -> str:
+    return f"{_assignee_query(topic, company)} AND year_published:{int(year)}"
+
+
+def _topic_or_query(topic: str, companies: tuple) -> str:
     names = [str(n).strip() for n in companies if str(n).strip()]
-    dsl = lens_topic_dsl(topic) if (topic or "").strip() else lens_explorer_dsl()
+    applicant_or = " OR ".join(_applicant_clause(n) for n in names)
+    return f"{lens_topic_dsl(topic)} AND ({applicant_or})"
+
+
+def peek_assignee_counts(topic: str, companies: tuple) -> Dict[str, Optional[int]]:
+    """Firma çubuğu — yalnız disk. Ağ yok."""
+    names = [str(n).strip() for n in companies if str(n).strip()]
+    return {name: peek_lens_count(_assignee_query(topic, name)) for name in names}
+
+
+def peek_topic_or_counts(topics: tuple, companies: tuple) -> Dict[str, Optional[int]]:
+    """Konu çubuğu — yalnız disk."""
+    names = [str(n).strip() for n in companies if str(n).strip()]
+    if not names:
+        return {str(t): None for t in topics}
     out: Dict[str, Optional[int]] = {}
-    for name in names:
-        n = _lens_count(f"{dsl} AND {_applicant_clause(name)}")
-        out[name] = int(n) if isinstance(n, int) else None
+    for topic in topics:
+        key = str(topic).strip()
+        if not key:
+            continue
+        out[key] = peek_lens_count(_topic_or_query(key, tuple(names)))
     return out
 
 
+def peek_company_topic_matrix(
+    topics: tuple, companies: tuple
+) -> Dict[str, Dict[str, Optional[int]]]:
+    """Firma × konu — yalnız disk."""
+    names = [str(n).strip() for n in companies if str(n).strip()]
+    axes = [str(t).strip() for t in topics if str(t).strip()]
+    out: Dict[str, Dict[str, Optional[int]]] = {name: {} for name in names}
+    for topic in axes:
+        for name in names:
+            out[name][topic] = peek_lens_count(lens_assignee_dsl(topic, name))
+    return out
+
+
+def peek_company_year_counts(
+    topic: str, companies: tuple, years: tuple
+) -> Dict[str, Dict[int, Optional[int]]]:
+    """Yıl × firma — yalnız disk."""
+    names = [str(n).strip() for n in companies if str(n).strip()]
+    out: Dict[str, Dict[int, Optional[int]]] = {name: {} for name in names}
+    for name in names:
+        for year in years:
+            try:
+                y = int(year)
+            except (TypeError, ValueError):
+                continue
+            out[name][y] = peek_lens_count(_company_year_query(topic, name, y))
+    return out
+
+
+def _fill_missing(query: str) -> Optional[int]:
+    """Diskte yoksa ağ; API başarısızsa None (0 uydurma)."""
+    hit = peek_lens_count(query)
+    if isinstance(hit, int):
+        return hit
+    return _lens_count(query)
+
+
 @st.cache_data(ttl=21600, show_spinner=False)
-def live_topic_or_counts(topics: tuple, companies: tuple, _keys: str = "") -> Dict[str, int]:
-    """Konu çubuğu: Lens total (size=0). 100 tavanı yok."""
+def live_assignee_counts(
+    topic: str, companies: tuple, _keys: str = "", _ver: str = "swr1"
+) -> Dict[str, Optional[int]]:
+    """Firma çubuğu: disk önce, eksik hücre için API. Başarısız → None."""
+    names = [str(n).strip() for n in companies if str(n).strip()]
+    return {name: _fill_missing(_assignee_query(topic, name)) for name in names}
+
+
+@st.cache_data(ttl=21600, show_spinner=False)
+def live_topic_or_counts(
+    topics: tuple, companies: tuple, _keys: str = "", _ver: str = "swr1"
+) -> Dict[str, int]:
+    """Konu çubuğu: disk önce. Ölçülemeyen hücre 0 değil — atlanır (UI peek kullanır)."""
     names = [str(n).strip() for n in companies if str(n).strip()]
     if not names:
-        return {str(t): 0 for t in topics}
-    applicant_or = " OR ".join(_applicant_clause(n) for n in names)
+        return {}
     out: Dict[str, int] = {}
     for topic in topics:
         key = str(topic).strip()
         if not key:
             continue
-        n = _lens_count(f"{lens_topic_dsl(key)} AND ({applicant_or})")
-        out[key] = int(n) if isinstance(n, int) else 0
+        n = _fill_missing(_topic_or_query(key, tuple(names)))
+        if isinstance(n, int):
+            out[key] = n
     return out
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
-def live_company_topic_matrix(topics: tuple, companies: tuple, _keys: str = "") -> Dict[str, Dict[str, int]]:
-    """Firma × konu Lens total. Yoğunluk / radar / ağaç. Çekilen 100 satır değil."""
+def live_company_topic_matrix(
+    topics: tuple, companies: tuple, _keys: str = "", _ver: str = "swr1"
+) -> Dict[str, Dict[str, int]]:
+    """Firma × konu: disk önce. Ölçülemeyen hücre yazılmaz."""
     names = [str(n).strip() for n in companies if str(n).strip()]
     axes = [str(t).strip() for t in topics if str(t).strip()]
-    out: Dict[str, Dict[str, int]] = {name: {t: 0 for t in axes} for name in names}
+    out: Dict[str, Dict[str, int]] = {name: {} for name in names}
     for topic in axes:
         for name in names:
-            n = _lens_count(lens_assignee_dsl(topic, name))
-            out[name][topic] = int(n) if isinstance(n, int) else 0
+            n = _fill_missing(lens_assignee_dsl(topic, name))
+            if isinstance(n, int):
+                out[name][topic] = n
     return out
 
 
 @st.cache_data(ttl=21600, show_spinner=False)
 def live_company_year_counts(
-    topic: str, companies: tuple, years: tuple, _keys: str = ""
+    topic: str, companies: tuple, years: tuple, _keys: str = "", _ver: str = "swr1"
 ) -> Dict[str, Dict[int, int]]:
-    """Yıl × firma Lens total. year_published tam sayı."""
+    """Yıl × firma: disk önce. API miss → hücre yok (0 uydurma)."""
     names = [str(n).strip() for n in companies if str(n).strip()]
-    dsl = lens_topic_dsl(topic) if (topic or "").strip() else lens_explorer_dsl()
     out: Dict[str, Dict[int, int]] = {name: {} for name in names}
     for name in names:
         for year in years:
@@ -750,6 +826,7 @@ def live_company_year_counts(
                 y = int(year)
             except (TypeError, ValueError):
                 continue
-            n = _lens_count(f"{dsl} AND {_applicant_clause(name)} AND year_published:{y}")
-            out[name][y] = int(n) if isinstance(n, int) else 0
+            n = _fill_missing(_company_year_query(topic, name, y))
+            if isinstance(n, int):
+                out[name][y] = n
     return out
