@@ -672,7 +672,12 @@ Avrupa'da Nokia veya Ericsson gibi <strong>RAN (Radio Access Network — telsiz 
 Harita yalnızca kaynakta adı geçen ülkeyi boyar.
 </p>""",
             "map_heading": "### Avrupa haritası (kaynakta adı geçen ülkeler)",
-            "map_caption": "Boyanan ülke TTI (Türk Telekom International) About’taki ilk giren toptan pazar, operatör merkezi, 6G Ar-Ge (Araştırma ve Geliştirme) ortağı, ETSI (European Telecommunications Standards Institute — Avrupa Telekomünikasyon Standartları Enstitüsü) merkezi veya MoU (Memorandum of Understanding — mutabakat zaptı) imza yeridir. KKTC ISO üç harfli kodu olmadığı için boyanmaz; KAP kararındaki konum işaretlenir. Abone veya pazar payı değildir.",
+            "map_caption": (
+                "Boyanan yer = kaynakta adı geçen yer. Hepsi TT abone şebekesi değildir: "
+                "TTI toptan first-mover, operatör merkezi, Ar-Ge ortağı ülkesi, ETSI merkezi, "
+                "MoU imza yeri veya KKTC şirket kurma kararı. Kartlarda «Ne yapıldı» cümlesi vardır. "
+                "Abone / pazar payı haritası değildir."
+            ),
             "map_fail": "Harita çizilemedi; aşağıdaki liste kaynakta adı geçen yerlerin tam kümesidir.",
             "role_heading": "### Kanıt türü (kaç ülkede adı geçti)",
             "role_caption": "Toptan 6 ülke TTI About «ilk giren pazar» listesidir; 19 veya 24’ün tamamı değildir. EP tescil çubuğu bu kümede olmadığı için çizilmez.",
@@ -693,8 +698,12 @@ Ofis USPTO’dur; kart düğmesi kaydı <strong>Lens.org</strong>’da açar. Sa
             "pat_section_lead": "Netsia Inc. kilitli kayıtlar — patent ofisi çubuğu bu sekmede yok.",
             "pat_tab_records": "Patent kartları",
             "pat_tab_charts": "Grafikler",
-            "named_heading": "### Kaynakta adı geçen yerler — TT burada ne yapıyor?",
-            "named_caption": "Her kart bir cümledir: ülke + TT’nin o yerdeki işi + kaynak. 19 veya 24 ülke adı raporda yok; eklenmez.",
+            "named_heading": "### Kaynakta adı geçen yerler — TT burada ne yaptı?",
+            "named_caption": (
+                "Her kart: yer + TT’nin o yerdeki somut kaydı + kaynak düğmesi. "
+                "Toptan pazar ≠ perakende abone; imza yeri ≠ o ülkede şebeke. "
+                "19 veya 24 ülke adı raporda yoksa eklenmez."
+            ),
             "named_col_place": "Yer",
             "open_place": "Bu yerin kaynağını aç ↗",
             "named_col_layer": "Katman",
@@ -1866,7 +1875,12 @@ It does not sell <strong>RAN (Radio Access Network)</strong> gear like Nokia or 
 The map paints only countries named in a source.
 </p>""",
             "map_heading": "### Europe map (places named in a source)",
-            "map_caption": "Painted countries are TTI (Türk Telekom International) About first-mover wholesale markets, operator HQ, a 6G R&amp;D (research and development) partner, the ETSI (European Telecommunications Standards Institute) seat, or an MoU (memorandum of understanding) venue. Northern Cyprus has no ISO-3166-1 code, so it is marked from the KAP decision rather than painted. Not subscriber or revenue share.",
+            "map_caption": (
+                "Painted place = named in a source. Not every paint is a TT retail network: "
+                "TTI wholesale first-mover, operator HQ, R&amp;D partner country, ETSI seat, "
+                "MoU venue, or Northern Cyprus company-formation decision. Cards use a «What was done» line. "
+                "Not a subscriber / market-share map."
+            ),
             "map_fail": "The map could not be drawn; the list below is the complete set of places named in a source.",
             "role_heading": "### Evidence type (how many named countries)",
             "role_caption": "Wholesale 6 is TTI About’s first-mover list, not the full 19 or 24. There is no EP-grant bar in this set, so none is drawn.",
@@ -1887,8 +1901,12 @@ The office is USPTO; the card button opens the record on <strong>Lens.org</stron
             "pat_section_lead": "Locked Netsia Inc. records — no patent-office bar chart on this tab.",
             "pat_tab_records": "Patent cards",
             "pat_tab_charts": "Charts",
-            "named_heading": "### Places named in a source — what TT does there",
-            "named_caption": "Each card is a sentence: place + TT’s activity there + source. The 19 or 24 country names are not in the report; they are not added.",
+            "named_heading": "### Places named in a source — what TT did there",
+            "named_caption": (
+                "Each card: place + TT’s concrete record there + source button. "
+                "Wholesale market ≠ retail subscribers; signing venue ≠ a network in that country. "
+                "The 19 or 24 country names are not in the report; they are not added."
+            ),
             "named_col_place": "Place",
             "open_place": "Open this place’s source ↗",
             "named_col_layer": "Layer",

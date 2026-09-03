@@ -326,28 +326,27 @@ TTI_WHOLESALE_FIRST_MOVER = [
 TTI_ABOUT_URL = "https://www.turktelekomint.com/about-us"
 TT_IR_2024_URL = "https://www.ttyatirimciiliskileri.com.tr/media/l10mbc5l/2024-integrated-annual-report.pdf"
 
-# KAP özel durum açıklaması (Temmuz 2025). ISO-3166-1’de KKTC kodu yok; choropleth CYP = Güney Kıbrıs, boyanmaz.
+# KAP özel durum açıklaması (Temmuz 2025). ISO-3166-1’de KKTC kodu yok; CYP boyanmaz, KKTC özel GeoJSON ile.
 TT_KKTC_SOURCE_URL = (
     "https://www.cnbce.com/borsa/turk-telekom-kktcde-sabit-altyapi-kurmak-icin-sirket-kurdu-h14897"
 )
 TT_KKTC_POINT = {
-    "iso3": "",
-    "lat": 35.198,
-    "lon": 33.356,
+    "iso3": "KKTC",
+    "geojson_id": "KKTC",
     "layer": "kktc_infra",
     "name_tr": "Kuzey Kıbrıs Türk Cumhuriyeti",
     "name_en": "Turkish Republic of Northern Cyprus",
     "label_tr": (
-        "Kamuyu Aydınlatma Platformu (KAP) açıklamasına göre Türk Telekom grubu, "
-        "KKTC’de sabit altyapı ve perakende sabit hizmet şirketi kurma kararı aldı (Temmuz 2025). "
-        "Bu bir 6G yayın sayısı değildir. ISO haritası Kuzey Kıbrıs’ı ayrı ülke olarak boyamaz; "
-        "ada üzerindeki işaret bu kararı gösterir. Güney Kıbrıs (CYP) bu kaynakta yoktur."
+        "Ne yapıldı: KAP açıklamasına göre Türk Telekom grubu KKTC’de sabit altyapı / perakende "
+        "hizmet için şirket kurma kararı aldı (Temmuz 2025; ~100 milyon USD yatırım hedefi duyuruldu). "
+        "Bu haritada abone sayısı veya tamamlanmış fiber şebeke çizilmez; kaynak karar/yatırım duyurusudur. "
+        "Güney Kıbrıs (CYP) bu kaynakta yoktur."
     ),
     "label_en": (
-        "Per a KAP (Public Disclosure Platform) notice, the Türk Telekom group decided to form a "
-        "company in Northern Cyprus for fixed infrastructure and retail fixed services (July 2025). "
-        "This is not a 6G paper count. ISO choropleths do not paint Northern Cyprus as a country; "
-        "the marker is that decision. The Republic of Cyprus (CYP) is not in this source."
+        "What was done: per KAP disclosure, the Türk Telekom group decided to form companies in "
+        "Northern Cyprus for fixed infrastructure / retail services (July 2025; ~USD 100m investment "
+        "target announced). This map does not draw subscriber counts or a finished fibre network — "
+        "the source is the decision/investment notice. The Republic of Cyprus (CYP) is not in this source."
     ),
     "color": "#E85A9A",
     "source_url": TT_KKTC_SOURCE_URL,
@@ -359,49 +358,48 @@ TT_MAP_RD = [
         "iso3": "TUR",
         "layer": "hq",
         "label_tr": (
-            "Türkiye, grubun operatör merkezi ve Ar-Ge (Araştırma ve Geliştirme) üssüdür. "
-            "Kilitli DOI kümesindeki Türk Telekom bağlılıklı makaleler buraya yazılır."
+            "Ne yapıldı: Türkiye, Türk Telekom’un operatör merkezi ve 6G Ar-Ge üssüdür. "
+            "Abone şebekesi burada işletilir; kilitli DOI makalelerinde yazar bağlılığı da buraya yazılır."
         ),
         "label_en": (
-            "Türkiye is the group’s operator headquarters and R&D (research and development) base. "
-            "Locked DOI papers with Türk Telekom affiliation are counted here."
+            "What was done: Türkiye is Türk Telekom’s operator HQ and 6G R&D base. "
+            "The retail network is run here; locked DOI papers with TT affiliation are counted here."
         ),
     },
     {
         "iso3": "SWE",
         "layer": "rd_collab",
         "label_tr": (
-            "İsveç’te 6G Ar-Ge ortaklığı: Net Insight ile duyurulan işbirliği. "
-            "Bu, İsveç’te TT abone şebekesi olduğu anlamına gelmez."
+            "Ne yapıldı: İsveç merkezli Net Insight ile GNSS bağımsız senkron / Open RAN işbirliği duyuruldu. "
+            "İsveç’te TT abone şebekesi olduğu anlamına gelmez — partner şirketin ülkesi boyanır."
         ),
         "label_en": (
-            "Sweden: 6G R&D partnership announced with Net Insight. "
-            "This is not a claim that TT runs a retail network in Sweden."
+            "What was done: collaboration with Sweden-based Net Insight on GNSS-independent sync / Open RAN. "
+            "This does not mean TT runs a retail network in Sweden — the partner’s country is painted."
         ),
     },
     {
         "iso3": "ESP",
         "layer": "mou_venue",
         "label_tr": (
-            "İspanya: MoU (Memorandum of Understanding — mutabakat zaptı) MWC Barcelona’da imzalandı. "
-            "İmza yeri, İspanya’da TT şebekesi olduğu anlamına gelmez."
+            "Ne yapıldı: Ericsson ile 6G Ar-Ge / standart MoU, MWC Barcelona’da imzalandı. "
+            "Boyanan yer imza mekânıdır; İspanya’da TT abone şebekesi iddiası değildir."
         ),
         "label_en": (
-            "Spain: an MoU (memorandum of understanding) was signed at MWC Barcelona. "
-            "The venue is not a Spanish retail network."
+            "What was done: 6G R&D / standards MoU with Ericsson signed at MWC Barcelona. "
+            "The painted place is the signing venue — not a Spanish retail-network claim."
         ),
     },
     {
         "iso3": "FRA",
         "layer": "standards",
         "label_tr": (
-            "Fransa: ETSI (European Telecommunications Standards Institute — Avrupa Telekomünikasyon "
-            "Standartları Enstitüsü) merkezi buradadır. TT’nin ilgili denemesi kaynakta Ankara’dadır; "
-            "Fransa’da toptan first-mover iddiası bu satır değildir."
+            "Ne yapıldı: İlgili ISAC denemesi Ankara’dadır; Fransa, ETSI standart organının merkezidir "
+            "(Sophia Antipolis). Fransa’da TT toptan first-mover veya abone şebekesi iddiası değildir."
         ),
         "label_en": (
-            "France is the seat of ETSI (European Telecommunications Standards Institute). "
-            "The related TT trial is in Ankara in the source; this row is not a French wholesale first-mover claim."
+            "What was done: the related ISAC trial is in Ankara; France is painted as ETSI’s seat "
+            "(Sophia Antipolis). This is not a French wholesale first-mover or retail-network claim."
         ),
     },
 ]

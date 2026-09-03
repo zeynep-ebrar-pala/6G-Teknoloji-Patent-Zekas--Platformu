@@ -985,7 +985,9 @@ def render_patent_tfidf_map(df_map: pd.DataFrame) -> go.Figure:
 
 
 def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") -> go.Figure:
-    """Yalnızca adı doğrulanmış ülkeler; KKTC ISO boyası değil kare işaret. 19/24 iddiası boyanmaz."""
+    """Yalnızca adı doğrulanmış ülkeler; KKTC özel çokgenle boyanır. 19/24 iddiası boyanmaz."""
+    from data.kktc_geojson import KKTC_GEOJSON
+
     name_col = "name_tr" if lang == "tr" else "name_en"
     label_col = "label_tr" if lang == "tr" else "label_en"
     place_col = t("tt_eu.named_col_place")
@@ -997,6 +999,32 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
         color = row.get("color") or "#64748B"
         layer = t(f"tt_eu.layer.{row.get('layer')}")
         iso = str(row.get("iso3") or "")
+        hover_body = str(row.get(label_col) or "")
+        if iso == "KKTC" or row.get("geojson_id") == "KKTC":
+            fig.add_trace(
+                go.Choropleth(
+                    geojson=KKTC_GEOJSON,
+                    locations=["KKTC"],
+                    featureidkey="properties.id",
+                    z=[1],
+                    zmin=0,
+                    zmax=1,
+                    colorscale=[[0, color], [1, color]],
+                    showscale=False,
+                    name=nm,
+                    showlegend=True,
+                    hovertext=nm,
+                    customdata=[[layer, hover_body]],
+                    hovertemplate=(
+                        "<b>%{hovertext}</b><br>"
+                        + layer_col
+                        + ": %{customdata[0]}<br>%{customdata[1]}<extra></extra>"
+                    ),
+                    marker_line_width=0.6,
+                    marker_line_color="rgba(200,209,220,0.35)",
+                )
+            )
+            continue
         if len(iso) == 3:
             fig.add_trace(
                 go.Choropleth(
@@ -1010,33 +1038,16 @@ def render_tt_europe_choropleth(rows: List[Dict[str, Any]], lang: str = "tr") ->
                     name=nm,
                     showlegend=True,
                     hovertext=nm,
-                    customdata=[[layer]],
-                    hovertemplate="<b>%{hovertext}</b><br>" + layer_col + ": %{customdata[0]}<extra></extra>",
+                    customdata=[[layer, hover_body]],
+                    hovertemplate=(
+                        "<b>%{hovertext}</b><br>"
+                        + layer_col
+                        + ": %{customdata[0]}<br>%{customdata[1]}<extra></extra>"
+                    ),
                     marker_line_width=0.6,
                     marker_line_color="rgba(200,209,220,0.35)",
                 )
             )
-            continue
-        if row.get("lat") is None or row.get("lon") is None:
-            continue
-        fig.add_trace(
-            go.Scattergeo(
-                lon=[row["lon"]],
-                lat=[row["lat"]],
-                text=[nm],
-                mode="markers+text",
-                textposition="top center",
-                marker=dict(
-                    size=13,
-                    color=color,
-                    symbol="square",
-                    line=dict(width=1.2, color="#FFFFFF"),
-                ),
-                name=nm,
-                hovertext=[row.get(label_col) or ""],
-                hovertemplate="<b>%{text}</b><br>%{hovertext}<extra></extra>",
-            )
-        )
     fig.update_geos(
         bgcolor="#1A1F2B",
         landcolor="#121620",

@@ -297,7 +297,7 @@ class TTEuropeService:
 
     @staticmethod
     def map_rows() -> List[Dict[str, Any]]:
-        """Harita katmanı: 6G Ar-Ge, yoksa TTI first-mover toptan. KKTC ISO boyası değil, nokta."""
+        """Harita katmanı: 6G Ar-Ge, yoksa TTI first-mover toptan. KKTC özel GeoJSON ile boyanır."""
         by_iso: Dict[str, Dict[str, Any]] = {}
         for row in TTI_WHOLESALE_FIRST_MOVER:
             name_tr = row["name_tr"]
@@ -308,14 +308,14 @@ class TTEuropeService:
                 "name_tr": name_tr,
                 "name_en": name_en,
                 "label_tr": (
-                    f"{name_tr}: TTI (Türk Telekom International), resmi About sayfasında "
-                    "toptan veri ve ses ağında ilk giren pazar olarak bu ülkeyi sayar. "
-                    "Abone şebekesi veya 6G yayın sayısı değildir."
+                    f"Ne yapıldı: {name_tr}, TTI (Türk Telekom International) resmi About sayfasında "
+                    "toptan veri/ses ağında «ilk giren pazar» olarak geçer. "
+                    "Bu, o ülkede TT perakende abone şebekesi veya 6G ürünü demek değildir."
                 ),
                 "label_en": (
-                    f"{name_en}: TTI (Türk Telekom International) names this country as a "
-                    "wholesale data/voice first-mover on its About page. "
-                    "It is not a retail network or a 6G paper count."
+                    f"What was done: {name_en} is named on TTI (Türk Telekom International)’s About page "
+                    "as a wholesale data/voice first-mover market. "
+                    "This is not a TT retail subscriber network or a 6G product in that country."
                 ),
                 "color": TT_COUNTRY_COLORS.get(row["iso3"], "#64748B"),
                 "source_url": TTI_ABOUT_URL,
