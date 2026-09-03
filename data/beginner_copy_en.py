@@ -161,8 +161,8 @@ BEGINNER_COPY = {
         ),
         "tt_impact": (
             "No verified RIS field pilot or retail-network installation for Türk Telekom on this "
-            "platform. The group tracks 6G architecture via the Ericsson R&D MoU and EUREKA "
-            "DRIVING-6G (Türkiye lead); TRL 5."
+            "platform. The group tracks 6G architecture via the Ericsson R&D MoU and as a "
+            "CELTIC-NEXT DRIVING-6G consortium partner (coordinator: CGC Aps, Denmark — not a Türkiye lead); TRL 5."
         ),
         "principle_html": (
             "<p><strong>1. Surface:</strong> a thin reflector on the façade. This is not a base station.</p>"

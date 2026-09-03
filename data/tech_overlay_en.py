@@ -237,7 +237,7 @@ TECH_OVERLAY_EN: dict = {
         ],
         "tt_scenarios": [
             "<strong>Verified field pilot:</strong> No recorded RIS field pilot or retail-network installation for Türk Telekom on this platform. TRL 5 — industry prototype class.",
-            "<strong>6G R&D frame:</strong> Ericsson 2026 R&D MoU; EUREKA DRIVING-6G (AI-native 6G, Türkiye lead) tracks 6G architecture; RIS is followed in literature.",
+            "<strong>6G R&D frame:</strong> Ericsson 2026 R&D MoU; EUREKA CELTIC-NEXT DRIVING-6G lists Türk Telekom as a consortium partner (coordinator: CGC Aps, Denmark — not a Türkiye lead). RIS is followed in literature.",
             "<strong>Patent footprint:</strong> Locked Netsia patents focus on programmable RAN and slicing; no RIS-specific Netsia dossier is listed on this platform.",
         ],
     },

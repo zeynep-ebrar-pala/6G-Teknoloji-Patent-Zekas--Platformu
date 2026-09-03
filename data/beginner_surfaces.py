@@ -223,9 +223,9 @@ BEGINNER_SURFACES = {
             {
                 "title": "6G Ar-Ge ve standart çerçevesi",
                 "body": (
-                    "Ericsson ile 2026'da 6G Ar-Ge mutabakatı imzalandı. EUREKA DRIVING-6G "
-                    "(AI-native 6G, Türkiye yürütücülüğü) projesinde grup 6G mimarisini "
-                    "takip ediyor; RIS literatürde izlenir."
+                    "Ericsson ile 2026'da 6G Ar-Ge mutabakatı imzalandı. EUREKA CELTIC-NEXT "
+                    "DRIVING-6G projesinde Türk Telekom konsorsiyum ortağıdır "
+                    "(koordinatör Danimarka CGC Aps; Türkiye yürütücülüğü değildir); RIS literatürde izlenir."
                 ),
             },
             {

@@ -207,7 +207,7 @@ TECHNOLOGIES = {
         ],
         "tt_scenarios": [
             "<strong>Doğrulanmış saha pilotu:</strong> Bu platformda Türk Telekom adına kayıtlı RIS saha pilotu veya abone şebekesi kurulumu yoktur. TRL 5 — endüstri prototip aşaması.",
-            "<strong>6G Ar-Ge çerçevesi:</strong> Ericsson ile 2026'da 6G Ar-Ge mutabakatı; EUREKA DRIVING-6G (AI-native 6G, Türkiye yürütücülüğü) projesinde 6G mimarisi takip edilir.",
+            "<strong>6G Ar-Ge çerçevesi:</strong> Ericsson ile 2026'da 6G Ar-Ge mutabakatı; EUREKA CELTIC-NEXT DRIVING-6G projesinde Türk Telekom konsorsiyum ortağıdır (koordinatör: Danimarka CGC Aps; «Türkiye yürütücülüğü» değildir).",
             "<strong>Patent izi:</strong> Kilitli Netsia patentleri programlanabilir RAN ve dilimleme ağırlıklıdır; RIS'e özel Netsia dosyası bu platformda listelenmemiştir."
         ],
         "references": [

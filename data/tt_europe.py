@@ -218,21 +218,25 @@ TT_AFFILIATED_PAPERS = [
 ]
 
 # Avrupa ülkesi = işbirliği / standart organı / etkinlik. Patent ofisi sayısı değildir.
+# Kart başlığında Türk Telekom adı açık yazılır; partner adı ikinci plandadır.
 TT_EUROPE_TOUCHPOINTS = [
     {
         "country": "SE",
         "country_name_tr": "İsveç",
         "country_name_en": "Sweden",
         "kind": "collaboration",
-        "title_tr": "Net Insight — GNSS bağımsız senkronizasyon / Open RAN",
-        "title_en": "Net Insight — GNSS-independent sync / Open RAN",
+        "title_tr": "Türk Telekom × Net Insight × Parallel Wireless — GNSS bağımsız senkron / Open RAN",
+        "title_en": "Türk Telekom × Net Insight × Parallel Wireless — GNSS-independent sync / Open RAN",
         "detail_tr": (
-            "Precision TimeNet overlay; 5G sahada, 6G Open RAN senkronizasyonu için Parallel Wireless ile genişletme. "
-            "İsveç PTS’nin GNSS bağımsız senkron zorunluluğu vaka metninde bağlam olarak geçer."
+            "Türk Telekom, İsveç merkezli Net Insight ve Parallel Wireless ile "
+            "GPS/GNSS bağımsız senkronizasyonu Open RAN mimarisine taşıma işbirliğini duyurdu. "
+            "Precision TimeNet overlay 5G sahada kullanılıyor; 6G standartlarına katkı hedefi "
+            "ortak basın metninde yazılıdır. Bu bir EP patent tescili değildir."
         ),
         "detail_en": (
-            "Precision TimeNet overlay; live 5G, extended toward 6G Open RAN sync with Parallel Wireless. "
-            "The Swedish PTS GNSS-independence rule is cited as regulatory context in the case study."
+            "Türk Telekom announced a collaboration with Sweden-based Net Insight and Parallel Wireless "
+            "to advance GPS/GNSS-independent synchronisation in Open RAN. Precision TimeNet is used "
+            "on live 5G; the joint press text targets 6G standards input. This is not an EP grant."
         ),
         "url": "https://netinsight.net/turktelekom-netinsight-parallel-wireless-partner-6g-standard/",
         "year": 2025,
@@ -242,15 +246,18 @@ TT_EUROPE_TOUCHPOINTS = [
         "country_name_tr": "İspanya",
         "country_name_en": "Spain",
         "kind": "collaboration",
-        "title_tr": "Ericsson — 6G standart MoU (MWC Barcelona)",
-        "title_en": "Ericsson — 6G standards MoU (MWC Barcelona)",
+        "title_tr": "Türk Telekom × Ericsson — 6G Ar-Ge / standart MoU (MWC Barcelona)",
+        "title_en": "Türk Telekom × Ericsson — 6G R&D / standards MoU (MWC Barcelona)",
         "detail_tr": (
-            "2026 MWC Barcelona’da imzalanan Ar-Ge mutabakatı: ikili projeler ve 6G standart katkısı. "
-            "İmza yeri İspanya’dır; bu bir EP patent tescili değildir."
+            "Türk Telekom ile Ericsson, 2026 MWC Barcelona’da 6G standardizasyon ve Network-AI "
+            "için ortak çalışma grubu kurma mutabakatını imzaladı. İmza yeri İspanya’dır; "
+            "çalışmalar Türk Telekom 6G Ar-Ge laboratuvarları ve Ericsson Araştırma Türkiye ile "
+            "yürütülecektir. Bu bir EP patent tescili değildir."
         ),
         "detail_en": (
-            "R&D memorandum signed at MWC Barcelona 2026: bilateral projects and 6G standards input. "
-            "The venue is Spain; it is not an EP grant."
+            "Türk Telekom and Ericsson signed an MoU at MWC Barcelona 2026 to form a joint working "
+            "group on 6G standardisation and Network-AI. The venue is Spain; work is planned with "
+            "Türk Telekom’s 6G R&D labs and Ericsson Research Türkiye. This is not an EP grant."
         ),
         "url": "https://www.ericsson.com/en/press-releases/5/2026/turk-telekom-partners-with-ericsson-to-shape-6g-standards",
         "year": 2026,
@@ -260,17 +267,25 @@ TT_EUROPE_TOUCHPOINTS = [
         "country_name_tr": "Fransa",
         "country_name_en": "France",
         "kind": "standards",
-        "title_tr": "ETSI ISAC ISG — hücresel + Wi-Fi ortak algılama denemesi",
-        "title_en": "ETSI ISAC ISG — collaborative cellular + Wi-Fi sensing trial",
+        "title_tr": "Türk Telekom × InterDigital — ISAC denemesi (ETSI ISAC ISG kavramları)",
+        "title_en": "Türk Telekom × InterDigital — ISAC trial (ETSI ISAC ISG concepts)",
         "detail_tr": (
-            "InterDigital ile Ankara test merkezinde ön 6G ISAC mimarisi; ETSI ISAC ISG taban kavramları. "
-            "ETSI merkezi Sophia Antipolis (FR). Deneme yeri Türkiye’dir."
+            "Türk Telekom Ankara İnovasyon ve Test Merkezi’nde InterDigital ile "
+            "hücresel + Wi-Fi ortak algılama (ön 6G ISAC mimarisi) denemesi duyuruldu. "
+            "Mimari kavramlar ETSI ISAC ISG ilk sürümüne dayanır; ETSI merkezi Fransa "
+            "(Sophia Antipolis). Deneme yeri Türkiye’dir — Fransa etiketi standart organı içindir."
         ),
         "detail_en": (
-            "Trial with InterDigital at the Ankara test centre on preliminary 6G ISAC architecture, "
-            "using ETSI ISAC ISG baseline concepts. ETSI is seated in Sophia Antipolis (FR). The trial site is Türkiye."
+            "At Türk Telekom’s Innovation and Test Centre in Ankara, InterDigital and Türk Telekom "
+            "announced a collaborative cellular + Wi-Fi sensing trial on a preliminary 6G ISAC "
+            "architecture using ETSI ISAC ISG baseline concepts. ETSI is seated in Sophia Antipolis (FR); "
+            "the trial site is Türkiye — the France label marks the standards body, not the lab."
         ),
-        "url": "https://www.marketscreener.com/news/interdigital-and-turk-telekom-achieve-world-s-first-collaborative-cellular-and-wi-fi-sensing-using-p-ce7e5dd2d18bf027",
+        "url": (
+            "https://ir.interdigital.com/news-events/press-releases/news-details/2026/"
+            "InterDigital-and-Trk-Telekom-Achieve-Worlds-First-Collaborative-Cellular-and-Wi-Fi-Sensing-"
+            "Using-Preliminary-6G-Architecture/default.aspx"
+        ),
         "year": 2026,
     },
     {
@@ -278,17 +293,21 @@ TT_EUROPE_TOUCHPOINTS = [
         "country_name_tr": "EUREKA / CELTIC-NEXT",
         "country_name_en": "EUREKA / CELTIC-NEXT",
         "kind": "project",
-        "title_tr": "DRIVING-6G — AI-native 6G (Türkiye yürütücülüğü)",
-        "title_en": "DRIVING-6G — AI-native 6G (Türkiye lead)",
+        "title_tr": "Türk Telekom — DRIVING-6G konsorsiyum ortağı (CELTIC-NEXT)",
+        "title_en": "Türk Telekom — DRIVING-6G consortium partner (CELTIC-NEXT)",
         "detail_tr": (
-            "EUREKA CELTIC-NEXT kümesinde 8 ülkeden 12 kuruluş. Ülke tek tek listesi bu platformda "
-            "proje sözleşmesinden doğrulanmadı; sayı uydurulmaz."
+            "CELTIC-NEXT projesi DRIVING-6G (C2024/2-7) konsorsiyumunda "
+            "Türk Telekomünikasyon A.Ş. ortak olarak listelenir (Vestel ve InterDigital Europe ile birlikte). "
+            "Proje koordinatörü Danimarka’daki CGC Aps’tir — «Türkiye yürütücülüğü» değildir. "
+            "Durum: set-up (Temmuz 2026 – Aralık 2028). Ülke listesi proje sayfasındaki konsorsiyum satırından alınır."
         ),
         "detail_en": (
-            "EUREKA CELTIC-NEXT cluster: 12 organisations from 8 countries. Individual country names "
-            "were not verified from the grant text on this platform; they are not invented."
+            "On the CELTIC-NEXT project DRIVING-6G (C2024/2-7), Türk Telekomünikasyon A.Ş. is listed "
+            "as a consortium partner (with Vestel and InterDigital Europe among others). "
+            "The project coordinator is CGC Aps in Denmark — not a Türkiye lead. "
+            "Status: set-up (July 2026 – Dec 2028). Country names follow the consortium list on the project page."
         ),
-        "url": "https://celticnext.eu/",
+        "url": "https://www.celticnext.eu/project-driving-6g/",
         "year": 2026,
     },
 ]
