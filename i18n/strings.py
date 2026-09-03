@@ -30,82 +30,89 @@ UI = {
         "tt_page": {
             "view": "Türk Telekom görünümü",
             "section": {
-                "done": "Yapıldı — doğrulanmış kayıtlar",
-                "roadmap": "Yapılacak — hedef ve senaryo",
+                "done": "Ne yapıldı? (kaynaklı kayıtlar)",
+                "roadmap": "Ne yapılacak? (hedefler ve senaryo)",
             },
             "done": {
-                "banner_title": "Doğrulanmış kayıtlar",
+                "banner_title": "Ne yapıldı?",
                 "banner_body": (
-                    "Bu sekmede yalnızca bu platformda kaynakla bağlanan işler listelenir: "
-                    "resmi duyuru, patent ofisi kaydı, kilitli DOI yayını, TTI toptan pazarı veya "
-                    "standart / MoU katılımı. Abone şebekesinde ticari 6G ürünü vaadi değildir."
+                    "Bu sekme, Türk Telekom’un 6G ile ilgili şu ana kadar platformda "
+                    "kaynağı bulunan işlerini gösterir: resmi duyuru, patent kaydı, bilimsel makale, "
+                    "TTI (Türk Telekom International) toptan pazar ülkesi veya standart / mutabakat (MoU) katılımı. "
+                    "Burada listelenenler, abonelere satılan hazır bir 6G ürünü anlamına gelmez."
                 ),
-                "badges": "Kaynak türü:",
+                "badges": "Kaydın türü:",
                 "badge_announce": "Duyuru",
                 "badge_patent": "Patent",
-                "badge_pub": "Yayın",
+                "badge_pub": "Makale",
                 "badge_standard": "Standart",
                 "badge_tti": "TTI",
-                "tech_heading": "### Teknolüye göre — ne yapıldı?",
+                "tech_heading": "### Teknolojiye göre — ne yapıldı?",
                 "tech_caption": (
-                    "Her satır Modül 1 ile aynı kaynaktan gelir. Kayıt yoksa açıkça yazılır. "
-                    "Detay için 6G Teknolojileri sayfasındaki «Türk Telekom ne yaptı?» bölümüne gidin."
+                    "Her teknoloji kartında, kaynakla bağlanan TT adımları özetlenir. "
+                    "Kayıt yoksa yazılmaz. Daha ayrıntı için «6G Teknoloji Rehberi»ndeki "
+                    "«Türk Telekom ne yaptı?» bölümüne bakın."
                 ),
-                "open_tech": "6G Teknolojileri sayfasını aç",
+                "open_tech": "6G Teknoloji Rehberini aç",
                 "field_heading": "### Saha, laboratuvar ve resmi duyurular",
-                "records_heading": "### Patent, yayın ve Avrupa izi",
+                "records_heading": "### Patent, makale ve Avrupa izi",
                 "records_caption": (
-                    "Patent ve yayın sayıları kilitli örnek kümedir; pazar payı veya küresel liderlik değildir. "
-                    "Harita TTI About ve resmi duyurularda adı geçen ülkeleri boyar."
+                    "Aşağıdaki patent ve makale listeleri bu platformdaki örnek kümedir; "
+                    "pazar payı veya «dünya lideri» iddiası değildir. "
+                    "Harita, TTI veya resmi duyurularda adı geçen ülkeleri boyar."
                 ),
             },
             "roadmap": {
-                "banner_title": "Hedef ve senaryo",
+                "banner_title": "Ne yapılacak?",
                 "banner_body": (
-                    "Burada strateji yönü ve kural tabanlı senaryo eşleştirmesi vardır. "
-                    "Gbps, ms ve yüzde skorları saha ölçümü değil; literatür hedefi veya model çıktısıdır."
+                    "Bu sekme ileriye bakar: hangi yönde ilerlenmesi hedeflenir ve "
+                    "seçtiğiniz bölge / önceliğe göre örnek bir senaryo nasıl çıkar. "
+                    "Buradaki Gbps, ms veya yüzde değerleri saha ölçümü değildir; "
+                    "literatür hedefi veya model çıktısıdır."
                 ),
-                "strategy_heading": "### Strateji hedefleri",
+                "strategy_heading": "### Hedef listesi",
                 "strategy_caption": (
-                    "Nitel hedefler; her satırda bağlı teknoloji, bugünkü TRL ve kaynak türü. "
-                    "Tarih ve performans sayısı uydurulmaz."
+                    "Her satır bir yön belirtir: hangi teknolojiye bağlandığı, "
+                    "bugünkü TRL (Technology Readiness Level — Teknoloji Hazırlık Seviyesi) aralığı "
+                    "ve bilginin türü (duyuru, standart, hedef vb.). "
+                    "Kesin teslim tarihi veya uydurma performans sayısı yazılmaz."
                 ),
-                "strategy_col_goal": "Hedef",
-                "strategy_col_tech": "Bağlı teknoloji",
-                "strategy_col_trl": "TRL bugün",
-                "strategy_col_source": "Kaynak türü",
-                "scenario_sub": "Senaryo çalıştırıcı",
+                "strategy_col_goal": "Ne hedefleniyor?",
+                "strategy_col_tech": "Hangi teknoloji?",
+                "strategy_col_trl": "Bugünkü TRL",
+                "strategy_col_source": "Bilgi türü",
+                "scenario_sub": "Senaryo çalıştırıcı — bölge ve öncelik seçin",
             },
             "strategy": [
                 {
-                    "goal": "3GPP Rel-19/20 6G standart katkısı ve ISAC / AI-RAN mimari izleme",
+                    "goal": "Uluslararası standartlarda (3GPP Rel-19/20) 6G’ye katkı; özellikle ISAC ve AI-RAN mimarisini izlemek",
                     "tech": "ISAC, AI-RAN",
                     "trl": "4–5",
-                    "source": "Standart / MoU",
+                    "source": "Standart / mutabakat",
                 },
                 {
-                    "goal": "Yeşil şebeke — enerji verimliliği ve dinamik kaynak yönetimi",
+                    "goal": "Daha az enerji tüketen şebeke: kaynakları ihtiyaca göre ayarlamak",
                     "tech": "AI-RAN, hücresiz MIMO",
                     "trl": "4–5",
                     "source": "Strateji hedefi",
                 },
                 {
-                    "goal": "Afet ve acil iletişim yedekliliği (karasal kule çöküşü senaryosu)",
+                    "goal": "Afet veya kule arızasında iletişimin kopmaması (yedek yol: uydu / algılama)",
                     "tech": "NTN, ISAC",
                     "trl": "4–6",
                     "source": "Strateji hedefi",
                 },
                 {
-                    "goal": "Avrupa toptan görünürlük ve standart organlarında TT temsili",
-                    "tech": "TTI, ETSI katılımı",
+                    "goal": "Avrupa’da toptan görünürlük ve standart kurumlarında TT temsili",
+                    "tech": "TTI, ETSI",
                     "trl": "—",
                     "source": "Duyuru / TTI",
                 },
                 {
-                    "goal": "6G-bitişik patent ve yayın izinin genişletilmesi",
-                    "tech": "Tüm yedi teknoloji",
+                    "goal": "6G’ye yakın patent ve bilimsel yayın izini güçlendirmek",
+                    "tech": "Yedi teknoloji",
                     "trl": "Mevcut TRL",
-                    "source": "Patent / yayın",
+                    "source": "Patent / makale",
                 },
             ],
         },
@@ -1206,82 +1213,89 @@ ve gerçek fiber topolojisi modele girmez. Sayıyı «ölçülmüş 6G performan
         "tt_page": {
             "view": "Türk Telekom view",
             "section": {
-                "done": "Done — verified records",
-                "roadmap": "Planned — goals and scenarios",
+                "done": "What was done? (sourced records)",
+                "roadmap": "What is next? (goals and scenarios)",
             },
             "done": {
-                "banner_title": "Verified records",
+                "banner_title": "What was done?",
                 "banner_body": (
-                    "This tab lists only work tied to a source on this platform: official announcements, "
-                    "patent-office records, locked DOI papers, TTI wholesale markets, or standards / MoU participation. "
-                    "It is not a retail-network 6G product claim."
+                    "This tab shows Türk Telekom 6G-related work that already has a source on this platform: "
+                    "an official announcement, a patent record, a scientific paper, a TTI "
+                    "(Türk Telekom International) wholesale-market country, or standards / MoU participation. "
+                    "Listed items are not a retail 6G product sold to subscribers."
                 ),
-                "badges": "Source type:",
+                "badges": "Record type:",
                 "badge_announce": "Announcement",
                 "badge_patent": "Patent",
-                "badge_pub": "Publication",
+                "badge_pub": "Paper",
                 "badge_standard": "Standards",
                 "badge_tti": "TTI",
-                "tech_heading": "### By technology — what was done",
+                "tech_heading": "### By technology — what was done?",
                 "tech_caption": (
-                    "Each row comes from the same source as Module 1. Gaps are stated explicitly. "
-                    "For detail, open «What Türk Telekom has done» on the 6G Technologies page."
+                    "Each technology card summarises TT steps tied to a source. "
+                    "Gaps are not invented. For more detail, open «What Türk Telekom has done» "
+                    "in the 6G Technology Explorer."
                 ),
-                "open_tech": "Open 6G Technologies",
+                "open_tech": "Open 6G Technology Explorer",
                 "field_heading": "### Field, laboratory, and official announcements",
-                "records_heading": "### Patents, publications, and European footprint",
+                "records_heading": "### Patents, papers, and European footprint",
                 "records_caption": (
-                    "Patent and publication counts are from a locked sample set — not market share or global leadership. "
-                    "The map paints countries named in TTI About and official announcements."
+                    "The patent and paper lists below are this platform’s sample set — "
+                    "not market share or a «world leader» claim. "
+                    "The map paints countries named in TTI materials or official announcements."
                 ),
             },
             "roadmap": {
-                "banner_title": "Goals and scenarios",
+                "banner_title": "What is next?",
                 "banner_body": (
-                    "Strategic direction and rule-based scenario matching live here. "
-                    "Gbps, ms, and percentage scores are not field measurements — they are literature targets or model output."
+                    "This tab looks ahead: which directions are targeted, and how a sample scenario "
+                    "is built from the region and priority you pick. "
+                    "Gbps, ms, or percentage figures here are not field measurements — "
+                    "they are literature targets or model output."
                 ),
-                "strategy_heading": "### Strategic goals",
+                "strategy_heading": "### Goal list",
                 "strategy_caption": (
-                    "Qualitative goals with linked technology, today’s TRL, and source type. "
-                    "Dates and performance numbers are not invented."
+                    "Each row is a direction: linked technology, today’s TRL "
+                    "(Technology Readiness Level) range, and information type "
+                    "(announcement, standards, goal, etc.). "
+                    "Exact delivery dates and invented performance numbers are not written."
                 ),
-                "strategy_col_goal": "Goal",
-                "strategy_col_tech": "Linked technology",
+                "strategy_col_goal": "What is targeted?",
+                "strategy_col_tech": "Which technology?",
                 "strategy_col_trl": "TRL today",
-                "strategy_col_source": "Source type",
-                "scenario_sub": "Scenario engine",
+                "strategy_col_source": "Info type",
+                "scenario_sub": "Scenario runner — pick a region and priority",
             },
             "strategy": [
                 {
-                    "goal": "3GPP Rel-19/20 6G standards contribution and ISAC / AI-RAN architecture tracking",
+                    "goal": "Contribute to 6G in international standards (3GPP Rel-19/20); track ISAC and AI-RAN architecture",
                     "tech": "ISAC, AI-RAN",
                     "trl": "4–5",
                     "source": "Standards / MoU",
                 },
                 {
-                    "goal": "Green network — energy efficiency and dynamic resource management",
+                    "goal": "A greener network: tune resources to demand and cut energy use",
                     "tech": "AI-RAN, cell-free MIMO",
                     "trl": "4–5",
                     "source": "Strategic goal",
                 },
                 {
-                    "goal": "Disaster and emergency communications backup (terrestrial site failure scenario)",
+                    "goal": "Keep connectivity if towers fail in a disaster (backup path: satellite / sensing)",
                     "tech": "NTN, ISAC",
                     "trl": "4–6",
                     "source": "Strategic goal",
                 },
                 {
                     "goal": "European wholesale visibility and TT representation in standards bodies",
-                    "tech": "TTI, ETSI participation",
+                    "tech": "TTI, ETSI",
                     "trl": "—",
                     "source": "Announcement / TTI",
                 },
                 {
-                    "goal": "Expand the 6G-adjacent patent and publication footprint",
-                    "tech": "All seven technologies",
+                    "goal": "Strengthen the 6G-adjacent patent and scientific-paper footprint",
+                    "tech": "Seven technologies",
                     "trl": "Current TRL",
-                    "source": "Patent / publication",
+                    "source": "Patent / paper",
                 },
             ],
         },

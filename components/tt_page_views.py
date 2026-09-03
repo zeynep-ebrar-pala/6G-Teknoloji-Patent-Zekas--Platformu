@@ -1,5 +1,5 @@
 """
-Türk Telekom Görünümü — Yapıldı / Yapılacak sayfa düzeni.
+Türk Telekom Görünümü — Ne yapıldı? / Ne yapılacak? sayfa düzeni.
 """
 
 from __future__ import annotations
@@ -130,7 +130,7 @@ def render_tt_roadmap_section() -> None:
 
 
 def render_tt_done_section() -> None:
-    """Yapıldı — doğrulanmış patent, yayın, duyuru ve Avrupa izi."""
+    """Ne yapıldı? — kaynaklı patent, makale, duyuru ve Avrupa izi."""
     from backend.tt_europe_service import TTEuropeService
     from components.charts import render_tt_vs_vendors_chart
     from components.tt_europe_views import (
