@@ -651,9 +651,9 @@ Firma filtresindeki Nokia–ZTE kümesi rakip örneklemdir; burası TT grubu ör
 </p>""",
             "expert_title": "Bu kümede ne doğrulandı, ne doğrulanmadı?",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.9rem;line-height:1.65;margin:8px 0 0 0;">
-Google Patents’te bu platformun kilitlediği TT-grup 6G-komşu tesciller <strong>Netsia Inc.</strong> altındadır.
-Netsia, Argela/Türk Telekom ABD Ar-Ge iştirakidir; hukuki assignee Netsia’dır.
-Bu örnekte Avrupa Patent Ofisi ve Türkiye Patent ve Marka Kurumu kaydı yoktur — uydurulmaz, boş çubuk da çizilmez.
+Bu platformun kilitlediği TT-grup 6G-komşu tesciller <strong>Netsia Inc.</strong> altındadır.
+Netsia, Argela/Türk Telekom ABD Ar-Ge iştirakidir; hukuki assignee Netsia’dır; ofis USPTO’dur.
+Kartlar <strong>Lens.org</strong>’da açılır. Bu örnekte Avrupa Patent Ofisi ve Türkiye Patent ve Marka Kurumu kaydı yoktur — uydurulmaz, boş çubuk da çizilmez.
 Yayınlarda ham bağlılık «Türk Telekom, Ankara/İstanbul, Türkiye». Kurum grafı
 bazı kaydı DE/MY/CZ şirketine yanlış düşürebilir; ülke çubuğu o hatayı TT Avrupa yayını diye okumaz.
 </p>""",
@@ -683,12 +683,12 @@ Harita yalnızca kaynakta adı geçen ülkeyi boyar.
             "office_lock_all": "Konu taraması: tüm konular. ABD Patent ve Marka Ofisi {us} tescil (Netsia). Avrupa Patent Ofisi ve Türkiye Patent ve Marka Kurumu bu örnekte yok.",
             "office_lock_one": "Konu taraması kilitledi: «{topic}». ABD Patent ve Marka Ofisi {us} tescil (Netsia). Diğer ofisler bu konuda yok; boş çubuk çizilmez.",
             "empty_topic": "Kilitli Netsia kümesinde «{topic}» tescili yok. Boş ofis çubuğu çizilmez; konu taramasındaki ofis düğmeleri aynı sorguyu dış sitede açar.",
-            "pat_list_heading": "### Netsia Inc. (Türk Telekom grubu) — Google Patents",
-            "pat_list_caption": "Hak sahibi (assignee): Netsia Inc. Kartlar yıla göre yeniden eskiye (2025 → 2023). Rakip (Nokia–ZTE) kümesine karıştırılmaz.",
+            "pat_list_heading": "### Netsia Inc. (Türk Telekom grubu) — Lens.org",
+            "pat_list_caption": "Hak sahibi (assignee): Netsia Inc. Kayıtlar USPTO tescilidir; kartlar Lens.org’da açılır. Yıla göre yeniden eskiye (2025 → 2023). Rakip (Nokia–ZTE) kümesine karıştırılmaz.",
             "pat_intro_title": "Bu bölüm ne ölçer?",
             "pat_intro_body": """<p style="color:#CBD5E1;font-size:0.9rem;line-height:1.6;margin:0;">
-Google Patents’te kilitlenen TT-grup 6G-komşu tesciller <strong>Netsia Inc.</strong> altındadır (Argela / TT ABD Ar-Ge iştiraki).
-Sayılar kilitli örnek kümedir; Lens rakip toplamı veya küresel SEP payı değildir.
+Bu platformun kilitlediği TT-grup 6G-komşu tesciller <strong>Netsia Inc.</strong> altındadır (Argela / TT ABD Ar-Ge iştiraki).
+Ofis USPTO’dur; kart düğmesi kaydı <strong>Lens.org</strong>’da açar. Sayılar kilitli örnek kümedir; rakip Lens toplamı veya küresel SEP payı değildir.
 </p>""",
             "pat_section_lead": "Netsia Inc. kilitli kayıtlar — patent ofisi çubuğu bu sekmede yok.",
             "pat_tab_records": "Patent kartları",
@@ -1845,9 +1845,9 @@ The Nokia–ZTE filter is a vendor sample; this tab is the TT-group sample.
 </p>""",
             "expert_title": "What this set verified — and what it did not",
             "expert_body": """<p style="color:#E2E8F0;font-size:0.9rem;line-height:1.65;margin:8px 0 0 0;">
-Google Patents records locked here for the TT group sit under <strong>Netsia Inc.</strong>.
-Netsia is Argela/Türk Telekom’s US R&amp;D affiliate; the legal assignee is Netsia.
-This sample has no European Patent Office or Turkish Patent and Trademark Office grant — counts are not invented and empty office bars are not drawn.
+TT-group 6G-adjacent grants locked on this platform sit under <strong>Netsia Inc.</strong>
+Netsia is Argela/Türk Telekom’s US R&amp;D affiliate; the legal assignee is Netsia; the office is USPTO.
+Cards open on <strong>Lens.org</strong>. This sample has no European Patent Office or Turkish Patent and Trademark Office grant — counts are not invented and empty office bars are not drawn.
 Papers’ raw affiliation is “Türk Telekom, Ankara/Istanbul, Türkiye”. The institution graph
 can mis-map a record to a DE/MY/CZ company; the country bar on the global tab is not read as TT’s European output.
 </p>""",
@@ -1877,12 +1877,12 @@ The map paints only countries named in a source.
             "office_lock_all": "Topic search: all topics. U.S. Patent and Trademark Office {us} grants (Netsia). No European Patent Office or Turkish Patent and Trademark Office record in this sample.",
             "office_lock_one": "Topic search locked to “{topic}”. U.S. Patent and Trademark Office {us} grants (Netsia). Other offices have no record on this topic; empty bars are not drawn.",
             "empty_topic": "The locked Netsia set has no “{topic}” grant. Empty office bars are not drawn. The office buttons in Topic search open the same query on the external site.",
-            "pat_list_heading": "### Netsia Inc. (Türk Telekom group) — Google Patents",
-            "pat_list_caption": "Assignee: Netsia Inc. Cards are newest to oldest (2025 → 2023). These cards are not mixed into the Nokia–ZTE vendor set.",
+            "pat_list_heading": "### Netsia Inc. (Türk Telekom group) — Lens.org",
+            "pat_list_caption": "Assignee: Netsia Inc. Records are USPTO grants; cards open on Lens.org. Newest to oldest (2025 → 2023). Not mixed into the Nokia–ZTE vendor set.",
             "pat_intro_title": "What this section measures",
             "pat_intro_body": """<p style="color:#CBD5E1;font-size:0.9rem;line-height:1.6;margin:0;">
-Locked TT-group 6G-adjacent grants on Google Patents sit under <strong>Netsia Inc.</strong> (Argela / TT US R&D affiliate).
-Counts are from a locked sample — not Lens rival totals or global SEP share.
+Locked TT-group 6G-adjacent grants sit under <strong>Netsia Inc.</strong> (Argela / TT US R&amp;D affiliate).
+The office is USPTO; the card button opens the record on <strong>Lens.org</strong>. Counts are from a locked sample — not Lens rival totals or global SEP share.
 </p>""",
             "pat_section_lead": "Locked Netsia Inc. records — no patent-office bar chart on this tab.",
             "pat_tab_records": "Patent cards",

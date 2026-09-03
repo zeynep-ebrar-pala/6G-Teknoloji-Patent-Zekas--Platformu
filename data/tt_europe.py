@@ -79,7 +79,7 @@ def place_sort_key(name: str, lang: str = "tr") -> tuple:
     return tuple(idxs)
 
 # Hukuki assignee Netsia Inc. (Türk Telekom grubu ABD Ar-Ge iştiraki).
-# Verdict.co.uk bu aileleri TT'ye atfeder; Google Patents kaydı Netsia'dır.
+# Verdict.co.uk bu aileleri TT'ye atfeder; ofis USPTO, kart açılışı Lens.org.
 # Liste yeniden eskiye (2025 → 2023).
 TT_GROUP_PATENTS = [
     {
@@ -89,10 +89,10 @@ TT_GROUP_PATENTS = [
         "group": "Türk Telekom",
         "year": 2025,
         "office": "US",
-        "office_label": "Google Patents",
+        "office_label": "USPTO",
         "region": "ABD",
         "domain": "AI-RAN",
-        "url": "https://patents.google.com/patent/US12243096B2/en",
+        "url": "https://www.lens.org/lens/patent/US_12243096_B2",
         "abstract": (
             "Kullanılmayan baz istasyonu kapasitesinin dilim olarak ilan/kiralanması (RANxChange); "
             "programlanabilir RAN (Radio Access Network — radyo erişim ağı)."
@@ -105,10 +105,10 @@ TT_GROUP_PATENTS = [
         "group": "Türk Telekom",
         "year": 2024,
         "office": "US",
-        "office_label": "Google Patents",
+        "office_label": "USPTO",
         "region": "ABD",
         "domain": "AI-RAN",
-        "url": "https://patents.google.com/patent/US12021560B1/en",
+        "url": "https://www.lens.org/lens/patent/US_12021560_B1",
         "abstract": (
             "RAN (Radio Access Network — radyo erişim ağı) ve PON (Passive Optical Network — pasif optik ağ) "
             "denetleyicilerini ortak kesit (slice) profiline bağlayan erişim+backhaul dilimleme; "
@@ -122,10 +122,10 @@ TT_GROUP_PATENTS = [
         "group": "Türk Telekom",
         "year": 2023,
         "office": "US",
-        "office_label": "Google Patents",
+        "office_label": "USPTO",
         "region": "ABD",
         "domain": "AI-RAN",
-        "url": "https://patents.google.com/patent/US11765049B2/en",
+        "url": "https://www.lens.org/lens/patent/US_11765049_B2",
         "abstract": (
             "RIC (RAN Intelligent Controller — RAN zekâ denetleyicisi) altında dilim güvence işlevi; "
             "SLA (Service Level Agreement — hizmet seviyesi anlaşması) sapınca kaynak yeniden dağıtımı."
