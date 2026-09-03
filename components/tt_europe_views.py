@@ -475,14 +475,20 @@ def _rd_touchpoints() -> None:
     st.markdown(t("tt_eu.presence_heading"))
     st.caption(t("tt_eu.presence_caption"))
     lang = get_lang()
+    tt_badge = "Türk Telekom" if lang == "tr" else "Türk Telekom"
     for row in TTEuropeService.get_touchpoints():
         title = row["title_tr"] if lang == "tr" else row["title_en"]
         detail = row["detail_tr"] if lang == "tr" else row["detail_en"]
         place = row["country_name_tr"] if lang == "tr" else row["country_name_en"]
+        year = row.get("year") or ""
         st.markdown(
             f"""<div class="glass-card" style="margin-bottom:8px;padding:16px;">
+<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+<span class="trl-pill trl-mid" style="border:1px solid #E20074;">{tt_badge}</span>
 <span class="trl-pill trl-mid">{place}</span>
-<h4 style="color:#FFFFFF;margin:8px 0 6px 0;">{title}</h4>
+<span style="color:#94A3B8;font-size:0.78rem;font-family:'JetBrains Mono',monospace;">{year}</span>
+</div>
+<h4 style="color:#FFFFFF;margin:10px 0 6px 0;">{title}</h4>
 <p style="color:#C8D1DC;font-size:0.88rem;margin:0;">{detail}</p>
 </div>""",
             unsafe_allow_html=True,
